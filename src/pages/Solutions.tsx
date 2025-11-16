@@ -60,7 +60,7 @@ const Solutions = () => {
       ],
     },
     {
-      division: "Infinitive DevWorks",
+      division: "Codesway",
       icon: Code,
       color: "from-primary to-accent",
       services: [
@@ -87,7 +87,7 @@ const Solutions = () => {
       ],
     },
     {
-      division: "Infinitive AI Labs",
+      division: "CodinAI",
       icon: Sparkles,
       color: "from-accent to-primary-hover",
       services: [

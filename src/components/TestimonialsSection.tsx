@@ -21,7 +21,7 @@ const TestimonialsSection = () => {
       name: "Amit Patel",
       company: "Digital Agency Pro",
       role: "Founder",
-      content: "The AI solutions from Infinitive AI Labs automated our customer support completely. We've saved countless hours and our clients love the instant responses. Outstanding service!",
+      content: "The AI solutions from CodinAI automated our customer support completely. We've saved countless hours and our clients love the instant responses. Outstanding service!",
       rating: 5,
     },
   ];

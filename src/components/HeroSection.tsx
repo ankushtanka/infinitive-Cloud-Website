@@ -32,6 +32,11 @@ const HeroSection = () => {
           <h1 className="mb-6 leading-tight">
             <span className="gradient-text">Future-Ready Cloud</span>, Hosting & AI Solutions
           </h1>
+          
+          {/* Tagline - Only on Homepage */}
+          <p className="text-lg text-primary font-semibold mb-4">
+            Limitless Solution for Cloud and Web Hostings
+          </p>
 
           {/* Subheadline */}
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">

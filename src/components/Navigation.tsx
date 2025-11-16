@@ -28,12 +28,7 @@ const Navigation = () => {
               alt="Infinitive Cloud Logo" 
               className="h-12 w-auto group-hover:scale-105 transition-transform"
             />
-            <div className="flex flex-col">
-              <span className="text-xl font-bold text-foreground">INFINITIVE CLOUD</span>
-              <span className="text-xs text-primary font-medium uppercase tracking-wide">
-                Limitless Solution for Cloud and Web Hostings
-              </span>
-            </div>
+            <span className="text-xl font-bold text-foreground">INFINITIVE CLOUD</span>
           </Link>
 
           {/* Desktop Navigation */}
