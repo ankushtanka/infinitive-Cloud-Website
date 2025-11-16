@@ -22,13 +22,13 @@ const Navigation = () => {
       <div className="section-container">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
+          <Link to="/" className="flex items-center gap-2 group">
             <img 
               src={logo} 
               alt="Infinitive Cloud Logo" 
-              className="h-12 w-auto group-hover:scale-105 transition-transform"
+              className="h-10 w-auto group-hover:scale-105 transition-transform"
             />
-            <span className="text-xl font-bold text-foreground">INFINITIVE CLOUD</span>
+            <span className="text-lg font-bold text-foreground tracking-wide">INFINITIVE CLOUD</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -42,11 +42,6 @@ const Navigation = () => {
                 {link.label}
               </Link>
             ))}
-            <Link to="/contact">
-              <Button className="btn-gradient text-white font-semibold">
-                Request a Quote
-              </Button>
-            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -72,11 +67,6 @@ const Navigation = () => {
                   {link.label}
                 </Link>
               ))}
-              <Link to="/contact" onClick={() => setIsOpen(false)}>
-                <Button className="btn-gradient text-white font-semibold w-full">
-                  Request a Quote
-                </Button>
-              </Link>
             </div>
           </div>
         )}
