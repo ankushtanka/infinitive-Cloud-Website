@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { Cloud, Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -8,26 +9,29 @@ const Footer = () => {
     {
       title: "Solutions",
       links: [
-        { label: "Cloud Services", path: "/solutions" },
-        { label: "Web Hosting", path: "/solutions" },
-        { label: "Development", path: "/solutions" },
-        { label: "AI Solutions", path: "/solutions" },
+        { label: "Cloud Solutions", path: "/solutions#cloud" },
+        { label: "Web Hosting", path: "/solutions#hosting" },
+        { label: "Domain Services", path: "/solutions#domains" },
+        { label: "Development", path: "/solutions#development" },
+        { label: "AI Solutions", path: "/solutions#ai" },
       ],
     },
     {
       title: "Company",
       links: [
         { label: "About Us", path: "/about" },
-        { label: "Our Divisions", path: "/solutions" },
+        { label: "Careers", path: "/careers" },
+        { label: "Blog", path: "/blog" },
         { label: "Contact", path: "/contact" },
       ],
     },
     {
-      title: "Resources",
+      title: "Legal",
       links: [
-        { label: "Documentation", path: "#" },
-        { label: "Support Center", path: "#" },
-        { label: "Blog", path: "#" },
+        { label: "Privacy Policy", path: "/privacy" },
+        { label: "Terms of Service", path: "/terms" },
+        { label: "SLA", path: "/sla" },
+        { label: "Refund Policy", path: "/refund" },
       ],
     },
   ];
@@ -39,26 +43,37 @@ const Footer = () => {
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                <Cloud className="w-6 h-6 text-primary-foreground" />
+              <img 
+                src={logo} 
+                alt="Infinitive Cloud Logo" 
+                className="h-10 w-auto"
+              />
+              <div className="flex flex-col">
+                <span className="text-lg font-bold text-foreground">INFINITIVE CLOUD</span>
+                <span className="text-[10px] text-primary font-medium uppercase tracking-wide">
+                  Limitless Solution for Cloud and Web Hostings
+                </span>
               </div>
-              <span className="text-xl font-bold gradient-text">Infinitive Cloud</span>
             </Link>
-            <p className="text-muted-foreground mb-4 max-w-sm">
+            <p className="text-muted-foreground mb-4 max-w-sm text-sm">
               Future-ready cloud, hosting, and AI solutions built for zero downtime and infinite scalability.
             </p>
             <div className="space-y-2 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4" />
-                <span>contact@infinitivecloud.com</span>
+                <Mail className="w-4 h-4 text-primary" />
+                <a href="mailto:info@infinitivecloud.com" className="hover:text-primary transition-colors">
+                  info@infinitivecloud.com
+                </a>
               </div>
               <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4" />
-                <span>+1 (555) 123-4567</span>
+                <Mail className="w-4 h-4 text-primary" />
+                <a href="mailto:sales@infinitivecloud.com" className="hover:text-primary transition-colors">
+                  sales@infinitivecloud.com
+                </a>
               </div>
               <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4" />
-                <span>Global Infrastructure</span>
+                <MapPin className="w-4 h-4 text-primary" />
+                <span>Navrangpura, Ahmedabad, India</span>
               </div>
             </div>
           </div>
