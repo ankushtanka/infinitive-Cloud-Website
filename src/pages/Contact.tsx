@@ -180,18 +180,6 @@ const Contact = () => {
                   </Card>
                 );
               })}
-
-              <Card className="bg-gradient-to-br from-primary/10 to-accent/10 border-primary/20 animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
-                <CardContent className="pt-6">
-                  <h3 className="font-semibold mb-2">Prefer a Quick Chat?</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Book a free 30-minute consultation with our cloud experts.
-                  </p>
-                  <Button variant="outline" className="w-full border-primary hover:bg-primary/5">
-                    Schedule Call
-                  </Button>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </div>
