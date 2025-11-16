@@ -45,7 +45,7 @@ const HeroSection = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Link to="/contact">
+            <Link to="/quote">
               <Button size="lg" className="btn-gradient text-white group text-base font-semibold px-8">
                 Request a Quote
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
