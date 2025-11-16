@@ -27,13 +27,13 @@ const Contact = () => {
     {
       icon: Mail,
       title: "Email Us",
-      value: "contact@infinitivecloud.com",
+      value: "info@infinitivecloud.com",
       description: "We respond within 2-4 hours",
     },
     {
       icon: Phone,
       title: "Call Us",
-      value: "+1 (555) 123-4567",
+      value: "+91 7737393087",
       description: "24×7 support available",
     },
     {

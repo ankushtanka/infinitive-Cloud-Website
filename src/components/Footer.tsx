@@ -60,6 +60,12 @@ const Footer = () => {
             </p>
             <div className="space-y-2 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
+                <Phone className="w-4 h-4 text-primary" />
+                <a href="tel:+917737393087" className="hover:text-primary transition-colors">
+                  +91 7737393087
+                </a>
+              </div>
+              <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-primary" />
                 <a href="mailto:info@infinitivecloud.com" className="hover:text-primary transition-colors">
                   info@infinitivecloud.com

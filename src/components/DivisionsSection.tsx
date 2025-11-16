@@ -23,7 +23,7 @@ const DivisionsSection = () => {
     },
     {
       icon: Code,
-      name: "Infinitive DevWorks",
+      name: "Codesway",
       tagline: "Full Development Studio",
       description: "Custom websites, web apps, mobile apps, software development, and API integrations.",
       features: ["Web Development", "Mobile Apps", "Custom Software", "UX/UI Design"],
@@ -31,7 +31,7 @@ const DivisionsSection = () => {
     },
     {
       icon: Sparkles,
-      name: "Infinitive AI Labs",
+      name: "CodinAI",
       tagline: "AI Solutions & Automation",
       description: "AI-powered chatbots, website builders, automation tools, and custom AI model development.",
       features: ["AI Chatbots", "AI Automation", "Custom Models", "Data Analytics"],
