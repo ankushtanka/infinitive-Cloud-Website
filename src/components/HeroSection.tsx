@@ -28,7 +28,7 @@ const HeroSection = () => {
 
           {/* Subheadline - Tagline */}
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Limitless solution for cloud and web hosting
+            Limitless Sulution for Cloud and Web Hosting
           </p>
 
           {/* CTA Buttons */}
