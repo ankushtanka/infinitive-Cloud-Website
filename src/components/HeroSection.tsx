@@ -1,12 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useParallax } from "@/hooks/use-parallax";
 
 const HeroSection = () => {
+  const parallaxOffset = useParallax(0.3);
+  
   return (
     <section className="relative pt-40 pb-32 overflow-hidden min-h-[90vh] flex items-center">
-      {/* Premium gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-muted/30 to-background">
+      {/* Premium gradient background with parallax */}
+      <div 
+        className="absolute inset-0 bg-gradient-to-br from-background via-muted/30 to-background"
+        style={{ transform: `translateY(${parallaxOffset}px)` }}
+      >
         <div className="absolute inset-0" style={{ background: 'var(--gradient-glow)' }} />
       </div>
       

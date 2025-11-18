@@ -1,7 +1,9 @@
 import { Shield, Clock, TrendingUp } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { useParallax } from "@/hooks/use-parallax";
 
 const WhyTrustUsSection = () => {
+  const parallaxOffset = useParallax(0.2);
   const proofPoints = [
     {
       icon: Shield,
@@ -25,9 +27,15 @@ const WhyTrustUsSection = () => {
 
   return (
     <section className="py-32 bg-gradient-to-b from-background to-muted/20 relative overflow-hidden">
-      {/* Premium background effects */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(34,211,238,0.1),transparent_50%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(59,130,246,0.1),transparent_50%)]" />
+      {/* Premium background effects with parallax */}
+      <div 
+        className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(34,211,238,0.1),transparent_50%)]" 
+        style={{ transform: `translateY(${parallaxOffset}px)` }}
+      />
+      <div 
+        className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(59,130,246,0.1),transparent_50%)]" 
+        style={{ transform: `translateY(${-parallaxOffset}px)` }}
+      />
       
       <div className="section-container relative z-10">
         <div className="text-center mb-20 animate-fade-in">
