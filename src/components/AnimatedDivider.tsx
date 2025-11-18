@@ -6,8 +6,8 @@ const AnimatedDivider = () => {
   const [activeService, setActiveService] = useState(0);
   
   const services = [
-    { icon: Code, text: "Development", color: "from-cyan-500 to-blue-500" },
-    { icon: Database, text: "Hosting", color: "from-blue-500 to-purple-500" },
+    { icon: Code, text: "Development Solutions", color: "from-cyan-500 to-blue-500" },
+    { icon: Database, text: "Hosting Solutions", color: "from-blue-500 to-purple-500" },
     { icon: Cloud, text: "Cloud Solutions", color: "from-purple-500 to-pink-500" },
     { icon: Cpu, text: "AI Solutions", color: "from-pink-500 to-cyan-500" }
   ];
