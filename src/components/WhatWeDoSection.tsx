@@ -43,7 +43,7 @@ const WhatWeDoSection = () => {
     },
     {
       icon: Mail,
-      title: "Emails",
+      title: "Email",
       description: "Targeted email campaigns that convert subscribers into customers.",
       details: [
         "Automated drip campaigns — nurture leads while you sleep",
