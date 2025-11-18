@@ -1,58 +1,67 @@
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin } from "lucide-react";
 import logo from "@/assets/logo.png";
-
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-
-  const footerSections = [
-    {
-      title: "Solutions",
-      links: [
-        { label: "Cloud Solutions", path: "/solutions#cloud" },
-        { label: "Web Hosting", path: "/solutions#hosting" },
-        { label: "Domain Services", path: "/solutions#domains" },
-        { label: "Development", path: "/solutions#development" },
-        { label: "AI Solutions", path: "/solutions#ai" },
-      ],
-    },
-    {
-      title: "Company",
-      links: [
-        { label: "About Us", path: "/about" },
-        { label: "Careers", path: "/careers" },
-        { label: "Blog", path: "/blog" },
-        { label: "Contact", path: "/contact" },
-      ],
-    },
-    {
-      title: "Legal",
-      links: [
-        { label: "Privacy Policy", path: "/privacy" },
-        { label: "Terms of Service", path: "/terms" },
-        { label: "SLA", path: "/sla" },
-        { label: "Refund Policy", path: "/refund" },
-      ],
-    },
-  ];
-
-  return (
-    <footer className="bg-muted border-t border-border">
+  const footerSections = [{
+    title: "Solutions",
+    links: [{
+      label: "Cloud Solutions",
+      path: "/solutions#cloud"
+    }, {
+      label: "Web Hosting",
+      path: "/solutions#hosting"
+    }, {
+      label: "Domain Services",
+      path: "/solutions#domains"
+    }, {
+      label: "Development",
+      path: "/solutions#development"
+    }, {
+      label: "AI Solutions",
+      path: "/solutions#ai"
+    }]
+  }, {
+    title: "Company",
+    links: [{
+      label: "About Us",
+      path: "/about"
+    }, {
+      label: "Careers",
+      path: "/careers"
+    }, {
+      label: "Blog",
+      path: "/blog"
+    }, {
+      label: "Contact",
+      path: "/contact"
+    }]
+  }, {
+    title: "Legal",
+    links: [{
+      label: "Privacy Policy",
+      path: "/privacy"
+    }, {
+      label: "Terms of Service",
+      path: "/terms"
+    }, {
+      label: "SLA",
+      path: "/sla"
+    }, {
+      label: "Refund Policy",
+      path: "/refund"
+    }]
+  }];
+  return <footer className="bg-muted border-t border-border">
       <div className="section-container py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-2 mb-4">
-              <img 
-                src={logo} 
-                alt="Infinitive Cloud Logo" 
-                className="h-10 w-auto"
-              />
+              <img src={logo} alt="Infinitive Cloud Logo" className="h-10 w-auto" />
               <div className="flex flex-col">
                 <span className="text-lg font-bold text-foreground">INFINITIVE CLOUD</span>
-                <span className="text-[10px] text-primary font-medium uppercase tracking-wide">
-                  Limitless Solution for Cloud and Web Hostings
-                </span>
+                
               </div>
             </Link>
             <p className="text-muted-foreground mb-4 max-w-sm text-sm">
@@ -85,23 +94,16 @@ const Footer = () => {
           </div>
 
           {/* Link Columns */}
-          {footerSections.map((section) => (
-            <div key={section.title}>
+          {footerSections.map(section => <div key={section.title}>
               <h4 className="font-semibold mb-4">{section.title}</h4>
               <ul className="space-y-2">
-                {section.links.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      to={link.path}
-                      className="text-muted-foreground hover:text-foreground transition-colors text-sm"
-                    >
+                {section.links.map(link => <li key={link.label}>
+                    <Link to={link.path} className="text-muted-foreground hover:text-foreground transition-colors text-sm">
                       {link.label}
                     </Link>
-                  </li>
-                ))}
+                  </li>)}
               </ul>
-            </div>
-          ))}
+            </div>)}
         </div>
 
         {/* Bottom Bar */}
@@ -119,8 +121,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
