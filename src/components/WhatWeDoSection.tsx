@@ -1,4 +1,5 @@
 import { Cloud, Server, Globe, Code, Sparkles } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 
 const WhatWeDoSection = () => {
   const services = [
@@ -6,7 +7,7 @@ const WhatWeDoSection = () => {
       icon: Cloud,
       title: "Cloud",
       description: "We run your apps on infrastructure that scales automatically when traffic spikes.",
-      bullets: [
+      details: [
         "Zero-downtime migrations — we migrate live sites with no business interruption",
         "Auto-scaling handled — your site stays fast during traffic surges"
       ]
@@ -15,7 +16,7 @@ const WhatWeDoSection = () => {
       icon: Server,
       title: "Hosting",
       description: "Managed hosting that keeps your site running while you focus on your business.",
-      bullets: [
+      details: [
         "We moved Ajay's retail site to our managed cloud and cut page load time in half",
         "Automatic daily backups — restore any version from the last 30 days"
       ]
@@ -24,7 +25,7 @@ const WhatWeDoSection = () => {
       icon: Globe,
       title: "Domains",
       description: "Domain registration and management without the headaches.",
-      bullets: [
+      details: [
         "One-click DNS setup — no technical knowledge needed",
         "Free SSL certificates included with every domain"
       ]
@@ -33,7 +34,7 @@ const WhatWeDoSection = () => {
       icon: Code,
       title: "Development",
       description: "We build custom web and mobile apps that solve real business problems.",
-      bullets: [
+      details: [
         "Built a booking system for a Surat clinic that cut appointment no-shows by 40%",
         "Fixed deployment workflow for an agency — now they ship updates in minutes, not hours"
       ]
@@ -42,7 +43,7 @@ const WhatWeDoSection = () => {
       icon: Sparkles,
       title: "AI",
       description: "Practical AI tools that improve how your team works, not science fiction.",
-      bullets: [
+      details: [
         "Added smart search to an e-commerce site — customers find products 3x faster",
         "Automated support responses for common questions — support team handles 60% fewer tickets"
       ]
@@ -50,46 +51,57 @@ const WhatWeDoSection = () => {
   ];
 
   return (
-    <section className="section-container py-20 bg-gradient-subtle">
-      <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-[36px] md:text-[40px] mb-4">
-            What we do
+    <section className="py-32 bg-gradient-to-b from-background via-muted/20 to-background relative overflow-hidden">
+      {/* Decorative glow effects */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
+      
+      <div className="section-container relative z-10">
+        <div className="text-center mb-20 animate-fade-in">
+          <h2 className="mb-6">
+            What <span className="gradient-text">We Do</span>
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Five services. All designed to keep your business running smoothly.
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto font-medium">
+            End-to-end cloud, hosting, development, and AI solutions for businesses ready to scale.
           </p>
         </div>
 
-        <div className="space-y-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => {
             const Icon = service.icon;
             return (
-              <div
+              <Card
                 key={service.title}
-                className="bg-card p-8 rounded-xl border border-border hover:border-primary/50 transition-all card-hover animate-fade-in-up"
+                className="card-premium group hover:border-primary/30 animate-fade-in-up overflow-hidden"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="flex items-start gap-6">
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center flex-shrink-0">
-                    <Icon className="w-6 h-6 text-white" />
+                <CardContent className="p-8">
+                  {/* Icon with gradient background and glow */}
+                  <div className="relative mb-6">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary to-accent opacity-20 rounded-2xl blur-xl group-hover:opacity-40 transition-opacity" />
+                    <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center" style={{ boxShadow: 'var(--shadow-medium)' }}>
+                      <Icon className="w-8 h-8 text-white" />
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-bold mb-3">{service.title}</h3>
-                    <p className="text-base text-muted-foreground mb-4 leading-relaxed">
-                      {service.description}
-                    </p>
-                    <ul className="space-y-2">
-                      {service.bullets.map((bullet, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm text-foreground">
-                          <span className="text-primary mt-1">•</span>
-                          <span className="leading-relaxed">{bullet}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
+                  
+                  <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">
+                    {service.title}
+                  </h3>
+                  <p className="text-muted-foreground mb-6 leading-relaxed text-base">
+                    {service.description}
+                  </p>
+                  
+                  {/* Premium detail list */}
+                  <ul className="space-y-3">
+                    {service.details.map((detail) => (
+                      <li key={detail} className="flex items-start gap-3 text-sm">
+                        <span className="text-primary mt-1 font-bold text-lg">•</span>
+                        <span className="text-foreground/80 font-medium">{detail}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
             );
           })}
         </div>

@@ -18,30 +18,44 @@ const Navigation = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50 shadow-soft">
       <div className="section-container">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <img 
-              src={logo} 
-              alt="Infinitive Cloud Logo" 
-              className="h-10 w-auto group-hover:scale-105 transition-transform"
-            />
-            <span className="text-lg font-bold text-foreground tracking-wide">INFINITIVE CLOUD</span>
+        <div className="flex items-center justify-between h-20">
+          {/* Premium Logo */}
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary to-accent opacity-20 rounded-xl blur-md group-hover:opacity-40 transition-opacity" />
+              <img 
+                src={logo} 
+                alt="Infinitive Cloud Logo" 
+                className="h-12 w-auto relative z-10 group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xl font-black text-foreground tracking-tight">INFINITIVE CLOUD</span>
+              <span className="text-[9px] text-primary font-semibold uppercase tracking-wider">
+                Limitless Solution
+              </span>
+            </div>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          {/* Desktop Navigation - Premium styling */}
+          <div className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className="text-foreground/80 hover:text-primary transition-colors font-semibold text-sm"
+                className="relative px-4 py-2 text-foreground/70 hover:text-foreground transition-all font-semibold text-sm group"
               >
                 {link.label}
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary to-accent scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
               </Link>
             ))}
+            <Link to="/quote" className="ml-4">
+              <Button className="btn-gradient glow-effect shadow-medium">
+                Get Quote
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
