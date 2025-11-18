@@ -33,7 +33,7 @@ const Navigation = () => {
           {/* Premium Logo */}
           <Link to="/" className="flex items-center gap-3 group">
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary to-accent opacity-20 rounded-xl blur-md group-hover:opacity-40 transition-opacity" />
+              <div className="absolute inset-0 bg-background rounded-xl" />
               <img src={logo} alt="Infinitive Cloud Logo" className="h-12 w-auto relative z-10 group-hover:scale-105 transition-transform duration-300" />
             </div>
             <div className="flex flex-col">
