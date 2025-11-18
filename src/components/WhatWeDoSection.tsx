@@ -7,7 +7,7 @@ const WhatWeDoSection = () => {
   const services = [
     {
       icon: Globe,
-      title: "Domains",
+      title: "Domain",
       description: "Domain registration and management without the headaches.",
       details: [
         "One-click DNS setup — no technical knowledge needed",
