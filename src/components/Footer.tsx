@@ -59,8 +59,10 @@ const Footer = () => {
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-3 mb-4 group">
               <div className="relative">
-                <div className="absolute inset-0 bg-primary/20 rounded-lg blur-md group-hover:bg-primary/30 transition-all" />
-                <img src={logo} alt="Infinitive Cloud Logo" className="h-12 w-auto relative brightness-110" />
+                <div className="absolute inset-0 bg-gradient-to-br from-primary to-accent opacity-20 rounded-lg blur-md group-hover:opacity-30 transition-all" />
+                <div className="relative bg-gradient-to-br from-primary/10 to-accent/10 p-2 rounded-lg backdrop-blur-sm border border-primary/20">
+                  <img src={logo} alt="Infinitive Cloud Logo" className="h-10 w-auto" />
+                </div>
               </div>
               <div className="flex flex-col">
                 <span className="text-lg font-bold text-foreground">INFINITIVE CLOUD</span>
