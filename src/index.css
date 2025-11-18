@@ -9,52 +9,56 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* Backgrounds - Clean white */
-    --background: 0 0% 98%;
-    --foreground: 0 0% 0%;
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
 
     /* Card surfaces */
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 0%;
+    --card-foreground: 222 47% 11%;
 
     /* Popover surfaces */
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
+    --popover-foreground: 222 47% 11%;
 
-    /* Primary brand - Bold Yellow/Gold */
-    --primary: 45 100% 51%;
-    --primary-foreground: 0 0% 0%;
-    --primary-hover: 45 100% 45%;
+    /* Primary brand - Cyan (matching logo) */
+    --primary: 186 100% 53%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 186 100% 45%;
+    --primary-glow: 186 100% 60%;
 
-    /* Secondary - Light gray */
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 0%;
+    /* Secondary - Blue (matching logo) */
+    --secondary: 217 91% 60%;
+    --secondary-foreground: 0 0% 100%;
 
-    /* Accent - Gold */
-    --accent: 45 100% 51%;
-    --accent-foreground: 0 0% 0%;
+    /* Accent - Cyan-Blue blend */
+    --accent: 199 89% 48%;
+    --accent-foreground: 0 0% 100%;
 
     /* Muted backgrounds */
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 210 40% 98%;
+    --muted-foreground: 215 16% 47%;
 
     /* Destructive */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     /* Borders and inputs */
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 45 100% 51%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 186 100% 53%;
 
-    /* Gradients - Minimal */
-    --gradient-primary: linear-gradient(135deg, hsl(45 100% 51%), hsl(40 100% 45%));
-    --gradient-hero: linear-gradient(135deg, hsl(0 0% 98%) 0%, hsl(0 0% 100%) 100%);
-    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(0 0% 98%) 100%);
+    /* Gradients - Premium Cyan to Blue */
+    --gradient-primary: linear-gradient(135deg, hsl(186 100% 53%), hsl(217 91% 60%));
+    --gradient-secondary: linear-gradient(135deg, hsl(199 89% 48%), hsl(186 100% 53%));
+    --gradient-hero: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(210 40% 98%) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 40% 98%) 100%);
+    --gradient-glow: radial-gradient(circle at 50% 50%, hsl(186 100% 53% / 0.15), transparent 70%);
 
-    /* Shadows - Subtle */
-    --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.05);
-    --shadow-medium: 0 4px 16px -4px hsl(0 0% 0% / 0.08);
-    --shadow-strong: 0 8px 24px -6px hsl(0 0% 0% / 0.12);
+    /* Shadows - Premium with cyan glow */
+    --shadow-soft: 0 2px 8px -2px hsl(186 100% 53% / 0.08);
+    --shadow-medium: 0 8px 24px -8px hsl(186 100% 53% / 0.15);
+    --shadow-strong: 0 16px 48px -12px hsl(186 100% 53% / 0.25);
+    --shadow-glow: 0 0 32px hsl(186 100% 53% / 0.3);
 
     /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -80,39 +84,47 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* Dark mode - Inverted minimal design */
-    --background: 0 0% 7%;
-    --foreground: 0 0% 98%;
+    /* Dark mode - Premium dark with cyan accent */
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 10%;
-    --card-foreground: 0 0% 98%;
+    --card: 222 47% 13%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 222 47% 13%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 45 100% 51%;
-    --primary-foreground: 0 0% 0%;
-    --primary-hover: 45 100% 45%;
+    --primary: 186 100% 53%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 186 100% 60%;
+    --primary-glow: 186 100% 60%;
 
-    --secondary: 0 0% 14%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 217 91% 60%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 0 0% 14%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 45 100% 51%;
-    --accent-foreground: 0 0% 0%;
+    --accent: 199 89% 48%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 45 100% 51%;
+    --border: 217 33% 20%;
+    --input: 217 33% 20%;
+    --ring: 186 100% 53%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(45 100% 51%), hsl(40 100% 45%));
-    --gradient-hero: linear-gradient(135deg, hsl(0 0% 7%) 0%, hsl(0 0% 10%) 100%);
-    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 7%) 0%, hsl(0 0% 10%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(186 100% 53%), hsl(217 91% 60%));
+    --gradient-secondary: linear-gradient(135deg, hsl(199 89% 48%), hsl(186 100% 53%));
+    --gradient-hero: linear-gradient(135deg, hsl(222 47% 11%) 0%, hsl(217 33% 17%) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(222 47% 11%) 0%, hsl(217 33% 17%) 100%);
+    --gradient-glow: radial-gradient(circle at 50% 50%, hsl(186 100% 53% / 0.2), transparent 70%);
+    
+    --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
+    --shadow-medium: 0 8px 24px -8px hsl(186 100% 53% / 0.2);
+    --shadow-strong: 0 16px 48px -12px hsl(186 100% 53% / 0.3);
+    --shadow-glow: 0 0 32px hsl(186 100% 53% / 0.4);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -157,7 +169,7 @@ All colors MUST be HSL.
   }
 
   .gradient-text {
-    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent;
   }
 
   .gradient-bg {
@@ -165,11 +177,51 @@ All colors MUST be HSL.
   }
 
   .card-hover {
-    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+    @apply transition-all duration-500 hover:-translate-y-2;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .card-hover:hover {
+    box-shadow: var(--shadow-strong);
+  }
+
+  .card-premium {
+    @apply bg-card border border-border rounded-xl transition-all duration-300;
+    @apply backdrop-blur-sm;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .card-premium:hover {
+    box-shadow: var(--shadow-medium);
   }
 
   .btn-gradient {
-    @apply bg-gradient-to-r from-primary to-accent text-primary-foreground;
+    @apply bg-gradient-to-r from-primary via-accent to-secondary text-primary-foreground;
     @apply hover:opacity-90 transition-all duration-300;
+    @apply font-bold;
+  }
+
+  .btn-gradient:hover {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .glow-effect {
+    position: relative;
+  }
+
+  .glow-effect::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: var(--gradient-primary);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: -1;
+    filter: blur(8px);
+  }
+
+  .glow-effect:hover::before {
+    opacity: 0.6;
   }
 }
