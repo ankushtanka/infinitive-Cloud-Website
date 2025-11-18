@@ -1,7 +1,9 @@
 import { Cloud, Server, Globe, Code, Sparkles } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { useParallax } from "@/hooks/use-parallax";
 
 const WhatWeDoSection = () => {
+  const parallaxOffset = useParallax(0.15);
   const services = [
     {
       icon: Cloud,
@@ -52,9 +54,9 @@ const WhatWeDoSection = () => {
 
   return (
     <section className="py-32 bg-gradient-to-b from-background via-muted/20 to-background relative overflow-hidden">
-      {/* Decorative glow effects */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
+      {/* Decorative glow effects with parallax */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" style={{ transform: `translateY(${parallaxOffset}px)` }} />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" style={{ transform: `translateY(${-parallaxOffset}px)` }} />
       
       <div className="section-container relative z-10">
         <div className="text-center mb-20 animate-fade-in">
