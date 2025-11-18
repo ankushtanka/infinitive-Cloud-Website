@@ -22,7 +22,7 @@ const AnimatedDivider = () => {
   const ActiveIcon = services[activeService].icon;
 
   return (
-    <div className="relative py-32 overflow-hidden">
+    <div className="relative py-40 overflow-hidden">
       {/* Background gradient glow */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
       
@@ -31,9 +31,9 @@ const AnimatedDivider = () => {
         <div className="w-full max-w-4xl h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
       </div>
 
-      <div className="relative section-container flex flex-col items-center justify-center gap-12">
+      <div className="relative section-container flex flex-col items-center justify-center gap-16">
         {/* Logo with rotating service icons */}
-        <div className="relative w-48 h-48 flex items-center justify-center">
+        <div className="relative w-96 h-96 flex items-center justify-center">
           {/* Outer rotating ring */}
           <div className="absolute inset-0 rounded-full border-2 border-primary/20 animate-spin" style={{ animationDuration: '15s' }} />
           
@@ -44,19 +44,19 @@ const AnimatedDivider = () => {
             return (
               <div
                 key={index}
-                className="absolute w-12 h-12 flex items-center justify-center"
+                className="absolute w-16 h-16 flex items-center justify-center"
                 style={{
-                  transform: `rotate(${angle}deg) translateX(90px) rotate(-${angle}deg)`,
+                  transform: `rotate(${angle}deg) translateX(180px) rotate(-${angle}deg)`,
                   transition: 'all 0.5s ease',
                 }}
               >
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 ${
+                <div className={`w-16 h-16 rounded-full flex items-center justify-center transition-all duration-500 border-2 ${
                   activeService === index 
-                    ? 'bg-gradient-to-br ' + service.color + ' scale-125 shadow-lg' 
-                    : 'bg-background/50 border-2 border-border scale-100'
+                    ? 'bg-gradient-to-br ' + service.color + ' scale-125 shadow-2xl border-transparent' 
+                    : 'bg-background/80 border-primary/30 scale-100'
                 }`}>
-                  <Icon className={`w-5 h-5 transition-all duration-500 ${
-                    activeService === index ? 'text-white' : 'text-muted-foreground'
+                  <Icon className={`w-7 h-7 transition-all duration-500 ${
+                    activeService === index ? 'text-white' : 'text-primary'
                   }`} />
                 </div>
               </div>
@@ -64,18 +64,18 @@ const AnimatedDivider = () => {
           })}
 
           {/* Center logo */}
-          <div className="relative z-10 w-40 h-40 flex items-center justify-center">
+          <div className="relative z-10 w-48 h-48 flex items-center justify-center">
             <div className="absolute inset-0 bg-background rounded-full" />
             <img 
               src={logo} 
               alt="Infinitive Cloud" 
-              className="relative z-10 w-36 h-36 object-contain"
+              className="relative z-10 w-44 h-44 object-contain"
             />
           </div>
         </div>
 
         {/* Animated service text */}
-        <div className="relative h-16 flex items-center justify-center">
+        <div className="relative h-20 flex items-center justify-center">
           {services.map((service, index) => (
             <div
               key={index}
@@ -85,7 +85,7 @@ const AnimatedDivider = () => {
                   : 'opacity-0 scale-95 translate-y-4'
               }`}
             >
-              <h3 className={`text-3xl md:text-4xl font-bold bg-gradient-to-r ${service.color} bg-clip-text text-transparent`}>
+              <h3 className={`text-4xl md:text-5xl font-bold bg-gradient-to-r ${service.color} bg-clip-text text-transparent`}>
                 {service.text}
               </h3>
             </div>
