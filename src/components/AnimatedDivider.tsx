@@ -65,11 +65,11 @@ const AnimatedDivider = () => {
 
           {/* Center logo */}
           <div className="relative z-10 w-40 h-40 flex items-center justify-center">
-            <div className="absolute inset-0 bg-background/80 rounded-full blur-xl" />
+            <div className="absolute inset-0 bg-background rounded-full" />
             <img 
               src={logo} 
               alt="Infinitive Cloud" 
-              className="relative z-10 w-36 h-36 object-contain drop-shadow-2xl"
+              className="relative z-10 w-36 h-36 object-contain"
             />
           </div>
         </div>
