@@ -1,4 +1,4 @@
-import { Cloud, Server, Globe, Code, Sparkles } from "lucide-react";
+import { Cloud, Server, Globe, Code, Sparkles, Mail } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useParallax } from "@/hooks/use-parallax";
 
@@ -6,12 +6,12 @@ const WhatWeDoSection = () => {
   const parallaxOffset = useParallax(0.15);
   const services = [
     {
-      icon: Cloud,
-      title: "Cloud",
-      description: "We run your apps on infrastructure that scales automatically when traffic spikes.",
+      icon: Globe,
+      title: "Domains",
+      description: "Domain registration and management without the headaches.",
       details: [
-        "Zero-downtime migrations — we migrate live sites with no business interruption",
-        "Auto-scaling handled — your site stays fast during traffic surges"
+        "One-click DNS setup — no technical knowledge needed",
+        "Free SSL certificates included with every domain"
       ]
     },
     {
@@ -24,12 +24,12 @@ const WhatWeDoSection = () => {
       ]
     },
     {
-      icon: Globe,
-      title: "Domains",
-      description: "Domain registration and management without the headaches.",
+      icon: Cloud,
+      title: "Cloud",
+      description: "We run your apps on infrastructure that scales automatically when traffic spikes.",
       details: [
-        "One-click DNS setup — no technical knowledge needed",
-        "Free SSL certificates included with every domain"
+        "Zero-downtime migrations — we migrate live sites with no business interruption",
+        "Auto-scaling handled — your site stays fast during traffic surges"
       ]
     },
     {
@@ -39,6 +39,15 @@ const WhatWeDoSection = () => {
       details: [
         "Built a booking system for a Surat clinic that cut appointment no-shows by 40%",
         "Fixed deployment workflow for an agency — now they ship updates in minutes, not hours"
+      ]
+    },
+    {
+      icon: Mail,
+      title: "Email Marketing",
+      description: "Targeted email campaigns that convert subscribers into customers.",
+      details: [
+        "Automated drip campaigns — nurture leads while you sleep",
+        "A/B testing built-in — optimize subject lines and content for maximum engagement"
       ]
     },
     {
