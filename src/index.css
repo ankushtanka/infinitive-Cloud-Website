@@ -7,6 +7,17 @@ All colors MUST be HSL.
 */
 
 @layer base {
+  /* Smooth scroll behavior for better UX */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Better focus visibility for accessibility */
+  *:focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+  }
+
   :root {
     /* Backgrounds - Clean white */
     --background: 0 0% 100%;
@@ -143,11 +154,16 @@ All colors MUST be HSL.
 
   html {
     scroll-behavior: smooth;
+    /* Account for sticky nav height */
+    scroll-padding-top: 5rem;
   }
 
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    /* Better text rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {

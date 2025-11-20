@@ -55,18 +55,33 @@ const Navigation = () => {
             </Link>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button onClick={() => setIsOpen(!isOpen)} className="md:hidden p-2 text-foreground">
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          {/* Mobile Menu Button - Larger touch target */}
+          <button 
+            onClick={() => setIsOpen(!isOpen)} 
+            className="lg:hidden p-3 text-foreground hover:bg-muted rounded-lg transition-colors"
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isOpen}
+          >
+            {isOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
           </button>
         </div>
 
-        {/* Mobile Navigation */}
-        {isOpen && <div className="md:hidden py-4 border-t border-border animate-fade-in-up">
-            <div className="flex flex-col gap-4">
-              {navLinks.map(link => <Link key={link.path} to={link.path} onClick={() => setIsOpen(false)} className="text-foreground/80 hover:text-primary transition-colors font-semibold py-2">
+        {/* Mobile Navigation - Better touch targets and spacing */}
+        {isOpen && <div className="lg:hidden py-6 border-t border-border animate-fade-in">
+            <div className="flex flex-col gap-2">
+              {navLinks.map(link => <Link 
+                key={link.path} 
+                to={link.path} 
+                onClick={() => setIsOpen(false)} 
+                className="text-foreground hover:text-primary hover:bg-muted transition-colors font-semibold py-4 px-4 rounded-lg text-lg"
+              >
                   {link.label}
                 </Link>)}
+              <Link to="/quote" onClick={() => setIsOpen(false)} className="mt-4">
+                <Button className="btn-gradient glow-effect w-full h-14 text-lg">
+                  Get Quote
+                </Button>
+              </Link>
             </div>
           </div>}
       </div>
