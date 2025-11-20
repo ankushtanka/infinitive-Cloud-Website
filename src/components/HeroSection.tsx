@@ -19,7 +19,7 @@ const HeroSection = () => {
       <div className="section-container w-full relative z-10">
         <div className="max-w-6xl mx-auto animate-fade-in">
           {/* Main Headline - Massive Typography with Premium Gradient */}
-          <h1 className="mb-8 leading-[0.95] font-black">
+          <h1 className="mb-8 leading-[0.95] font-black text-5xl md:text-7xl lg:text-8xl">
             Helping businesses{" "}
             <span className="gradient-text inline-block">
               win
@@ -27,32 +27,32 @@ const HeroSection = () => {
             <span className="text-foreground">online</span>
           </h1>
 
-          {/* Subheadline - Premium Typography */}
-          <p className="text-xl md:text-3xl text-foreground/80 mb-6 max-w-2xl font-semibold">
+          {/* Subheadline - Premium Typography with better contrast */}
+          <p className="text-xl md:text-2xl lg:text-3xl text-foreground mb-6 max-w-2xl font-semibold leading-tight">
             Limitless Solution for Cloud and Web Hosting
           </p>
           
-          <p className="text-base md:text-lg text-muted-foreground mb-12 max-w-xl">
+          <p className="text-base md:text-lg lg:text-xl text-foreground/70 mb-12 max-w-xl leading-relaxed">
             Enterprise-grade infrastructure with zero-downtime guarantee. Scale infinitely with our premium cloud solutions.
           </p>
 
-          {/* Premium CTAs with glow effect */}
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Link to="/quote">
+          {/* Premium CTAs with glow effect - Better mobile experience */}
+          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+            <Link to="/quote" className="w-full sm:w-auto">
               <Button 
                 size="lg" 
-                className="btn-gradient glow-effect text-lg px-12 h-16 rounded-xl group"
+                className="btn-gradient glow-effect text-base md:text-lg px-8 md:px-12 h-14 md:h-16 rounded-xl group w-full sm:w-auto font-bold shadow-lg hover:shadow-xl transition-all"
                 style={{ boxShadow: 'var(--shadow-medium)' }}
               >
                 Get Started
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
-            <Link to="/solutions">
+            <Link to="/solutions" className="w-full sm:w-auto">
               <Button 
                 size="lg"
                 variant="outline"
-                className="text-lg px-12 h-16 rounded-xl border-2 border-primary/30 hover:border-primary hover:bg-primary/5 transition-all"
+                className="text-base md:text-lg px-8 md:px-12 h-14 md:h-16 rounded-xl border-2 border-foreground/20 hover:border-primary hover:bg-primary/10 transition-all w-full sm:w-auto font-semibold"
               >
                 View Solutions
               </Button>
