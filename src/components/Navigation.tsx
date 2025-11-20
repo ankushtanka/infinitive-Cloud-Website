@@ -27,64 +27,58 @@ const Navigation = () => {
     label: "Contact",
     path: "/contact"
   }];
-  return <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-lg border-b border-border/50">
+  return <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50 shadow-soft">
       <div className="section-container">
-        <div className="flex items-center justify-between h-16 md:h-18">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 group">
+        <div className="flex items-center justify-between h-20">
+          {/* Premium Logo */}
+          <Link to="/" className="flex items-center gap-3 group">
             <div className="relative">
-              <img 
-                src={logo} 
-                alt="Infinitive Cloud" 
-                className="h-9 md:h-10 w-auto group-hover:scale-105 transition-transform duration-200" 
-              />
+              <div className="absolute inset-0 bg-background rounded-xl" />
+              <img src={logo} alt="Infinitive Cloud Logo" className="h-12 w-auto relative z-10 group-hover:scale-105 transition-transform duration-300" />
             </div>
-            <span className="text-lg md:text-xl font-display font-bold text-foreground tracking-tight">
-              INFINITIVE CLOUD
-            </span>
+            <div className="flex flex-col">
+              <span className="text-xl font-black text-foreground tracking-tight">INFINITIVE CLOUD</span>
+              
+            </div>
           </Link>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation - Premium styling */}
           <div className="hidden lg:flex items-center gap-1">
-            {navLinks.map(link => <Link 
-              key={link.path} 
-              to={link.path} 
-              className="relative px-3 py-2 text-foreground/70 hover:text-foreground transition-colors font-medium text-sm group"
-            >
+            {navLinks.map(link => <Link key={link.path} to={link.path} className="relative px-4 py-2 text-foreground/70 hover:text-foreground transition-all font-semibold text-sm group">
                 {link.label}
-                <span className="absolute bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-primary to-accent scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-200" />
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary to-accent scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
               </Link>)}
-            <Link to="/quote" className="ml-3">
-              <Button className="btn-gradient font-semibold text-sm h-10 px-5">
+            <Link to="/quote" className="ml-4">
+              <Button className="btn-gradient glow-effect shadow-medium">
                 Get Quote
               </Button>
             </Link>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button - Larger touch target */}
           <button 
             onClick={() => setIsOpen(!isOpen)} 
-            className="lg:hidden p-2 text-foreground hover:bg-muted/50 rounded-lg transition-colors"
+            className="lg:hidden p-3 text-foreground hover:bg-muted rounded-lg transition-colors"
             aria-label={isOpen ? "Close menu" : "Open menu"}
             aria-expanded={isOpen}
           >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
           </button>
         </div>
 
-        {/* Mobile Navigation */}
-        {isOpen && <div className="lg:hidden py-4 border-t border-border/50 animate-fade-in">
-            <div className="flex flex-col gap-1">
+        {/* Mobile Navigation - Better touch targets and spacing */}
+        {isOpen && <div className="lg:hidden py-6 border-t border-border animate-fade-in">
+            <div className="flex flex-col gap-2">
               {navLinks.map(link => <Link 
                 key={link.path} 
                 to={link.path} 
                 onClick={() => setIsOpen(false)} 
-                className="text-foreground hover:text-primary hover:bg-muted/50 transition-colors font-medium py-3 px-3 rounded-lg"
+                className="text-foreground hover:text-primary hover:bg-muted transition-colors font-semibold py-4 px-4 rounded-lg text-lg"
               >
                   {link.label}
                 </Link>)}
-              <Link to="/quote" onClick={() => setIsOpen(false)} className="mt-2">
-                <Button className="btn-gradient w-full h-12 font-semibold">
+              <Link to="/quote" onClick={() => setIsOpen(false)} className="mt-4">
+                <Button className="btn-gradient glow-effect w-full h-14 text-lg">
                   Get Quote
                 </Button>
               </Link>
