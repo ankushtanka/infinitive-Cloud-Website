@@ -61,7 +61,7 @@ const Footer = () => {
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary to-accent opacity-20 rounded-lg blur-md group-hover:opacity-30 transition-all" />
                 <div className="relative bg-gradient-to-br from-primary/10 to-accent/10 p-2 rounded-lg backdrop-blur-sm border border-primary/20">
-                  <img src={logo} alt="Infinitive Cloud Logo" className="h-10 w-auto" />
+                  <img src={logo} alt="Infinitive Cloud Logo" className="h-10 w-auto" style={{ filter: 'brightness(0) saturate(100%) invert(56%) sepia(89%) saturate(4839%) hue-rotate(191deg) brightness(101%) contrast(101%)' }} />
                 </div>
               </div>
               <div className="flex flex-col">
