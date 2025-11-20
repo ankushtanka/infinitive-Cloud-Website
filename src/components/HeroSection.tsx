@@ -4,74 +4,73 @@ import { Link } from "react-router-dom";
 import { useParallax } from "@/hooks/use-parallax";
 
 const HeroSection = () => {
-  const parallaxOffset = useParallax(0.3);
+  const parallaxOffset = useParallax(0.2);
   
   return (
-    <section className="relative pt-40 pb-32 overflow-hidden min-h-[90vh] flex items-center">
-      {/* Premium gradient background with parallax */}
+    <section className="relative pt-32 md:pt-40 pb-20 md:pb-28 overflow-hidden min-h-[85vh] flex items-center">
+      {/* Subtle gradient background */}
       <div 
-        className="absolute inset-0 bg-gradient-to-br from-background via-muted/30 to-background"
-        style={{ transform: `translateY(${parallaxOffset}px)` }}
+        className="absolute inset-0 bg-gradient-to-b from-background via-muted/20 to-background"
+        style={{ transform: `translateY(${parallaxOffset * 0.5}px)` }}
       >
-        <div className="absolute inset-0" style={{ background: 'var(--gradient-glow)' }} />
+        <div className="absolute inset-0 opacity-50" style={{ background: 'var(--gradient-glow)' }} />
       </div>
       
       <div className="section-container w-full relative z-10">
-        <div className="max-w-6xl mx-auto animate-fade-in">
-          {/* Main Headline - Massive Typography with Premium Gradient */}
-          <h1 className="mb-8 leading-[0.95] font-black text-5xl md:text-7xl lg:text-8xl">
+        <div className="max-w-5xl mx-auto animate-fade-in">
+          {/* Main Headline - Clean, powerful typography */}
+          <h1 className="mb-6">
             Helping businesses{" "}
-            <span className="gradient-text inline-block">
-              win
-            </span>{" "}
-            <span className="text-foreground">online</span>
+            <span className="gradient-text">
+              win online
+            </span>
           </h1>
 
-          {/* Subheadline - Premium Typography with better contrast */}
-          <p className="text-xl md:text-2xl lg:text-3xl text-foreground mb-6 max-w-2xl font-semibold leading-tight">
-            Limitless Solution for Cloud and Web Hosting
+          {/* Subheadline - Clear value proposition */}
+          <p className="text-xl md:text-2xl text-foreground/90 mb-5 max-w-2xl font-medium">
+            Powerful cloud infrastructure and hosting solutions built for modern businesses
           </p>
           
-          <p className="text-base md:text-lg lg:text-xl text-foreground/70 mb-12 max-w-xl leading-relaxed">
-            Enterprise-grade infrastructure with zero-downtime guarantee. Scale infinitely with our premium cloud solutions.
+          <p className="text-base md:text-lg text-foreground/60 mb-10 max-w-xl">
+            Enterprise-grade infrastructure with 99.99% uptime guarantee. 
+            Scale effortlessly with our reliable cloud platform.
           </p>
 
-          {/* Premium CTAs with glow effect - Better mobile experience */}
-          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+          {/* Clear call-to-action buttons */}
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
             <Link to="/quote" className="w-full sm:w-auto">
               <Button 
                 size="lg" 
-                className="btn-gradient glow-effect text-base md:text-lg px-8 md:px-12 h-14 md:h-16 rounded-xl group w-full sm:w-auto font-bold shadow-lg hover:shadow-xl transition-all"
-                style={{ boxShadow: 'var(--shadow-medium)' }}
+                className="btn-gradient text-base px-8 h-12 md:h-14 rounded-lg group w-full sm:w-auto font-semibold"
               >
                 Get Started
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </Button>
             </Link>
             <Link to="/solutions" className="w-full sm:w-auto">
               <Button 
                 size="lg"
                 variant="outline"
-                className="text-base md:text-lg px-8 md:px-12 h-14 md:h-16 rounded-xl border-2 border-foreground/20 hover:border-primary hover:bg-primary/10 transition-all w-full sm:w-auto font-semibold"
+                className="text-base px-8 h-12 md:h-14 rounded-lg hover:bg-muted/50 transition-all w-full sm:w-auto font-medium"
               >
-                View Solutions
+                Explore Solutions
               </Button>
             </Link>
           </div>
 
-          {/* Premium Trust Badges */}
-          <div className="mt-16 flex flex-wrap gap-6 items-center text-sm text-muted-foreground">
+          {/* Trust indicators */}
+          <div className="mt-12 flex flex-wrap gap-x-8 gap-y-3 items-center text-sm">
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-primary" />
-              <span className="font-medium">99.99% Uptime SLA</span>
+              <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0" />
+              <span className="text-foreground/70">99.99% Uptime</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-primary" />
-              <span className="font-medium">24/7 Expert Support</span>
+              <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0" />
+              <span className="text-foreground/70">24/7 Support</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-primary" />
-              <span className="font-medium">Enterprise Security</span>
+              <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0" />
+              <span className="text-foreground/70">Enterprise Security</span>
             </div>
           </div>
         </div>
