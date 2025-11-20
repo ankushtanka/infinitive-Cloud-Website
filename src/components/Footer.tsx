@@ -58,11 +58,8 @@ const Footer = () => {
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-3 mb-4 group">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary to-accent opacity-20 rounded-lg blur-md group-hover:opacity-30 transition-all" />
-                <div className="relative bg-gradient-to-br from-primary/10 to-accent/10 p-2 rounded-lg backdrop-blur-sm border border-primary/20">
-                  <img src={logo} alt="Infinitive Cloud Logo" className="h-10 w-auto" />
-                </div>
+              <div className="relative bg-muted p-2 rounded-lg border border-border">
+                <img src={logo} alt="Infinitive Cloud Logo" className="h-10 w-auto" />
               </div>
               <div className="flex flex-col">
                 <span className="text-lg font-bold text-foreground">INFINITIVE CLOUD</span>
