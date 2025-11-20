@@ -58,7 +58,7 @@ const Footer = () => {
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-3 mb-4 group">
-              <div className="relative bg-muted p-2 rounded-lg border border-border">
+              <div className="relative bg-muted p-2 rounded-lg">
                 <img src={logo} alt="Infinitive Cloud Logo" className="h-10 w-auto" />
               </div>
               <div className="flex flex-col">
