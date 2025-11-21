@@ -158,12 +158,28 @@ All colors MUST be HSL.
     scroll-padding-top: 5rem;
   }
 
+  /* Enhanced smooth scrolling for all browsers */
+  * {
+    scroll-behavior: smooth;
+  }
+
+  /* Optimize scrolling performance */
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
     /* Better text rendering */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* GPU acceleration for smoother scrolling */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+
+  /* Smooth momentum scrolling on iOS */
+  body,
+  .scroll-area,
+  [data-radix-scroll-area-viewport] {
+    -webkit-overflow-scrolling: touch;
   }
 
   h1, h2, h3, h4, h5, h6 {
