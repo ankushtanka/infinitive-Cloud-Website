@@ -1,6 +1,7 @@
 import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { StructuredData, createServiceSchema, createBreadcrumbSchema, createFAQSchema } from "@/components/StructuredData";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -10,6 +11,39 @@ import {
 } from "lucide-react";
 
 const AISolutions = () => {
+  const serviceSchema = createServiceSchema(
+    "AI Solutions & Artificial Intelligence Development Services",
+    "Custom AI solutions including chatbots, machine learning, business automation, NLP, and computer vision. Transform your business with cutting-edge artificial intelligence technology.",
+    "https://infinitivecloud.com/solutions/ai-solutions",
+    "Artificial Intelligence Development",
+    "₹15,000 - ₹5,00,000"
+  );
+
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: "Home", url: "https://infinitivecloud.com/" },
+    { name: "Solutions", url: "https://infinitivecloud.com/solutions" },
+    { name: "AI Solutions", url: "https://infinitivecloud.com/solutions/ai-solutions" }
+  ]);
+
+  const faqSchema = createFAQSchema([
+    {
+      question: "What AI solutions do you offer?",
+      answer: "We offer comprehensive AI solutions including AI chatbots & assistants, business automation, custom machine learning models, AI analytics, natural language processing (NLP), computer vision, and predictive AI systems. Our solutions are tailored to your specific business needs."
+    },
+    {
+      question: "How much does AI development cost in India?",
+      answer: "AI development costs vary based on complexity. Simple AI chatbots start from ₹15,000, while complex machine learning solutions range from ₹50,000 to ₹5,00,000+. We provide custom quotes after understanding your requirements."
+    },
+    {
+      question: "What technologies do you use for AI development?",
+      answer: "We use leading AI technologies including OpenAI GPT, TensorFlow, PyTorch, Hugging Face, LangChain, Anthropic Claude, Google Gemini, and custom machine learning models. We select the best technology stack for your specific use case."
+    },
+    {
+      question: "How long does it take to develop an AI solution?",
+      answer: "Timeline depends on project complexity. Simple AI chatbots can be deployed in 2-4 weeks, while complex machine learning systems may take 2-6 months. We provide detailed project timelines during consultation."
+    }
+  ]);
+
   const services = [
     {
       icon: Bot,
@@ -64,13 +98,22 @@ const AISolutions = () => {
   return (
     <>
       <Helmet>
-        <title>AI Solutions & Services India | Artificial Intelligence Development Company</title>
-        <meta name="description" content="Leading AI solutions company in India. Custom AI chatbots, machine learning, automation, NLP, and computer vision. Transform your business with artificial intelligence." />
-        <meta name="keywords" content="AI solutions India, artificial intelligence company, AI chatbot development, machine learning services, business automation, NLP services, AI development India" />
+        <title>AI Solutions India | #1 AI Development Company | Chatbots, ML, Automation</title>
+        <meta name="description" content="Top-rated AI solutions company in India ⭐ Custom AI chatbots, machine learning, business automation, NLP & computer vision. 500+ AI projects delivered. Free consultation. Get quote today!" />
+        <meta name="keywords" content="AI solutions India, artificial intelligence company, AI chatbot development India, machine learning services, AI business automation, NLP services India, computer vision, AI development company, best AI company India, ChatGPT integration, OpenAI services" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/ai-solutions" />
-        <meta property="og:title" content="AI Solutions & Services | Artificial Intelligence Development" />
-        <meta property="og:description" content="Custom AI solutions including chatbots, automation, machine learning, and NLP for business transformation." />
+        <meta property="og:title" content="Best AI Solutions Company India | Chatbots & Machine Learning" />
+        <meta property="og:description" content="Leading AI development company in India. Custom chatbots, ML models, automation. 500+ projects. Free consultation!" />
+        <meta property="og:url" content="https://infinitivecloud.com/solutions/ai-solutions" />
+        <meta property="og:type" content="service" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="AI Solutions India | AI Chatbots & Machine Learning Development" />
+        <meta name="twitter:description" content="Custom AI solutions: chatbots, ML, automation, NLP. 500+ projects delivered." />
       </Helmet>
+      
+      <StructuredData data={serviceSchema} />
+      <StructuredData data={breadcrumbSchema} />
+      <StructuredData data={faqSchema} />
 
       <div className="min-h-screen">
         <Navigation />

@@ -1,6 +1,7 @@
 import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { StructuredData, createServiceSchema, createBreadcrumbSchema, createFAQSchema } from "@/components/StructuredData";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -10,6 +11,39 @@ import {
 } from "lucide-react";
 
 const CloudHosting = () => {
+  const serviceSchema = createServiceSchema(
+    "Enterprise Cloud Hosting Services India",
+    "Premium cloud hosting with 99.99% uptime SLA, auto-scaling servers, enterprise security, SSD NVMe storage, and 24/7 expert support. Best cloud infrastructure for businesses in India.",
+    "https://infinitivecloud.com/solutions/cloud-hosting",
+    "Cloud Hosting Services",
+    "₹499 - ₹2,499"
+  );
+
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: "Home", url: "https://infinitivecloud.com/" },
+    { name: "Solutions", url: "https://infinitivecloud.com/solutions" },
+    { name: "Cloud Hosting", url: "https://infinitivecloud.com/solutions/cloud-hosting" }
+  ]);
+
+  const faqSchema = createFAQSchema([
+    {
+      question: "What is cloud hosting and how is it different from traditional hosting?",
+      answer: "Cloud hosting uses multiple interconnected servers to distribute resources, ensuring maximum uptime and scalability. Unlike traditional hosting that relies on a single server, cloud hosting spreads load across virtual servers for superior reliability, automatic scaling, and better performance."
+    },
+    {
+      question: "What are cloud hosting prices in India?",
+      answer: "Our cloud hosting plans start at ₹499/month for Starter Cloud (2 CPU, 4GB RAM, 50GB SSD), ₹999/month for Business Cloud (4 CPU, 8GB RAM, 100GB SSD), and ₹2,499/month for Enterprise Cloud (8 CPU, 16GB RAM, 250GB SSD). All plans include free SSL and 24/7 support."
+    },
+    {
+      question: "Do you offer 99.99% uptime guarantee?",
+      answer: "Yes, we provide a 99.99% uptime SLA guarantee with all cloud hosting plans. Our redundant infrastructure and automated failover systems ensure your website remains accessible at all times."
+    },
+    {
+      question: "Is cloud hosting suitable for e-commerce websites?",
+      answer: "Absolutely! Cloud hosting is perfect for e-commerce sites as it offers scalability during traffic spikes, enhanced security for payment processing, fast loading speeds, and guaranteed uptime to ensure you never miss sales opportunities."
+    }
+  ]);
+
   const features = [
     {
       icon: Server,
@@ -78,14 +112,22 @@ const CloudHosting = () => {
   return (
     <>
       <Helmet>
-        <title>Cloud Hosting Services India | Scalable Cloud Infrastructure - Infinitive Cloud</title>
-        <meta name="description" content="Premium cloud hosting services in India with 99.99% uptime SLA. Scalable cloud servers, automated backups, enterprise security, and 24/7 support. Starting at ₹499/month." />
-        <meta name="keywords" content="cloud hosting India, cloud servers, scalable hosting, VPS hosting, managed cloud, enterprise cloud hosting, cloud infrastructure" />
+        <title>Best Cloud Hosting India | 99.99% Uptime | Starting ₹499/mo - Infinitive Cloud</title>
+        <meta name="description" content="⭐ #1 Cloud Hosting Provider in India | 99.99% Uptime SLA | SSD NVMe Storage | Auto-Scaling | Free SSL | 24/7 Support | Enterprise Security | Starting ₹499/month. 10,000+ Happy Customers. Get Started Free!" />
+        <meta name="keywords" content="cloud hosting India, best cloud hosting, cheap cloud hosting India, managed cloud hosting, scalable cloud servers, enterprise cloud hosting, cloud infrastructure India, SSD cloud hosting, AWS alternative India, cloud VPS hosting, business cloud hosting" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/cloud-hosting" />
-        <meta property="og:title" content="Cloud Hosting Services India | Scalable Infrastructure" />
-        <meta property="og:description" content="Premium cloud hosting with 99.99% uptime SLA. Auto-scaling servers, enterprise security, and expert support." />
-        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Best Cloud Hosting India | 99.99% Uptime | From ₹499/month" />
+        <meta property="og:description" content="Premium cloud hosting with auto-scaling, enterprise security, and expert 24/7 support. Trusted by 10,000+ businesses." />
+        <meta property="og:url" content="https://infinitivecloud.com/solutions/cloud-hosting" />
+        <meta property="og:type" content="product" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Best Cloud Hosting India - 99.99% Uptime SLA" />
+        <meta name="twitter:description" content="Enterprise cloud hosting from ₹499/month. Auto-scaling, free SSL, 24/7 support." />
       </Helmet>
+      
+      <StructuredData data={serviceSchema} />
+      <StructuredData data={breadcrumbSchema} />
+      <StructuredData data={faqSchema} />
 
       <div className="min-h-screen">
         <Navigation />

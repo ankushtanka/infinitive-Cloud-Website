@@ -1,6 +1,7 @@
 import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { StructuredData, createServiceSchema, createBreadcrumbSchema, createFAQSchema } from "@/components/StructuredData";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -10,6 +11,39 @@ import {
 } from "lucide-react";
 
 const WebDevelopment = () => {
+  const serviceSchema = createServiceSchema(
+    "Professional Web Development Services India",
+    "Custom website development, e-commerce solutions, progressive web apps, and SaaS platforms. Expert React, Node.js, PHP, and WordPress developers in India.",
+    "https://infinitivecloud.com/solutions/web-development",
+    "Web Development Services",
+    "₹10,000 - ₹5,00,000"
+  );
+
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: "Home", url: "https://infinitivecloud.com/" },
+    { name: "Solutions", url: "https://infinitivecloud.com/solutions" },
+    { name: "Web Development", url: "https://infinitivecloud.com/solutions/web-development" }
+  ]);
+
+  const faqSchema = createFAQSchema([
+    {
+      question: "How much does website development cost in India?",
+      answer: "Website development costs vary based on complexity. Simple business websites start from ₹10,000, e-commerce sites from ₹50,000, and complex web applications from ₹1,00,000+. We provide custom quotes after understanding your requirements."
+    },
+    {
+      question: "What technologies do you use for web development?",
+      answer: "We use modern technologies including React.js, Next.js, Vue.js, Angular, Node.js, Python, PHP, Laravel, WordPress, and various databases like MongoDB and PostgreSQL. We select the best stack for your specific needs."
+    },
+    {
+      question: "How long does it take to develop a website?",
+      answer: "Development time depends on project scope. Simple websites take 2-4 weeks, e-commerce sites 6-8 weeks, and complex web applications 3-6 months. We provide detailed timelines during project planning."
+    },
+    {
+      question: "Do you provide website maintenance after launch?",
+      answer: "Yes, we offer ongoing website maintenance and support services including updates, bug fixes, security patches, performance optimization, and feature enhancements to keep your website running smoothly."
+    }
+  ]);
+
   const services = [
     {
       icon: Globe,
@@ -74,13 +108,22 @@ const WebDevelopment = () => {
   return (
     <>
       <Helmet>
-        <title>Web Development Company India | Custom Website Development Services</title>
-        <meta name="description" content="Professional web development company in India. Custom website design, e-commerce solutions, progressive web apps, and SaaS development. Expert React, Node.js, and PHP developers." />
-        <meta name="keywords" content="web development India, website development company, custom web design, e-commerce development, React development, Node.js developers, web application development" />
+        <title>Top Web Development Company India | Custom Website Design & Development</title>
+        <meta name="description" content="⭐ Leading Web Development Company in India | Custom Websites | E-Commerce | React, Node.js, PHP | 2000+ Websites Built | SEO-Friendly | Mobile Responsive | From ₹10,000. Free Consultation!" />
+        <meta name="keywords" content="web development company India, website development India, custom web development, e-commerce development India, React development company, Node.js developers India, PHP web development, WordPress development, website design company India, best web development company, affordable web development" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/web-development" />
-        <meta property="og:title" content="Professional Web Development Services India" />
-        <meta property="og:description" content="Custom website development, e-commerce solutions, and web applications built with modern technologies." />
+        <meta property="og:title" content="Best Web Development Company India | Custom Websites & E-Commerce" />
+        <meta property="og:description" content="Professional web development services. 2000+ websites built. React, Node.js, PHP experts. Free consultation!" />
+        <meta property="og:url" content="https://infinitivecloud.com/solutions/web-development" />
+        <meta property="og:type" content="service" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Web Development Company India - Custom Websites & E-Commerce" />
+        <meta name="twitter:description" content="Expert web development services. 2000+ websites delivered. React, Node.js, PHP, WordPress." />
       </Helmet>
+      
+      <StructuredData data={serviceSchema} />
+      <StructuredData data={breadcrumbSchema} />
+      <StructuredData data={faqSchema} />
 
       <div className="min-h-screen">
         <Navigation />
