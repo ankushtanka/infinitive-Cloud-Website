@@ -1,6 +1,7 @@
 import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { StructuredData, createServiceSchema, createBreadcrumbSchema, createFAQSchema } from "@/components/StructuredData";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -10,6 +11,39 @@ import {
 } from "lucide-react";
 
 const VPSHosting = () => {
+  const serviceSchema = createServiceSchema(
+    "VPS Hosting India - Virtual Private Server Solutions",
+    "High-performance VPS hosting in India with NVMe SSD storage, full root access, dedicated resources, and 99.99% uptime. Linux & Windows VPS servers with complete control and flexibility.",
+    "https://infinitivecloud.com/solutions/vps-hosting",
+    "VPS Hosting Services",
+    "₹799 - ₹2,999"
+  );
+
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: "Home", url: "https://infinitivecloud.com/" },
+    { name: "Solutions", url: "https://infinitivecloud.com/solutions" },
+    { name: "VPS Hosting", url: "https://infinitivecloud.com/solutions/vps-hosting" }
+  ]);
+
+  const faqSchema = createFAQSchema([
+    {
+      question: "What is VPS hosting?",
+      answer: "VPS (Virtual Private Server) hosting provides dedicated resources including CPU, RAM, and storage within a virtualized environment. You get the power and control of a dedicated server at a fraction of the cost, with guaranteed resources that aren't shared with other users."
+    },
+    {
+      question: "How much does VPS hosting cost in India?",
+      answer: "Our VPS hosting plans start at ₹799/month for VPS Starter (2 vCPU, 4GB RAM, 80GB NVMe SSD), ₹1,499/month for VPS Professional (4 vCPU, 8GB RAM, 160GB SSD), and ₹2,999/month for VPS Enterprise (8 vCPU, 16GB RAM, 320GB SSD). All plans include full root access."
+    },
+    {
+      question: "Do I get root access with VPS hosting?",
+      answer: "Yes, all our VPS hosting plans come with full root access, giving you complete control to install any software, customize configurations, and manage your server environment as needed."
+    },
+    {
+      question: "Can I upgrade my VPS plan later?",
+      answer: "Absolutely! You can easily upgrade your VPS resources (CPU, RAM, storage) at any time through your control panel or by contacting our support team. Upgrades are seamless with minimal downtime."
+    }
+  ]);
+
   const features = [
     {
       icon: Cpu,
@@ -65,13 +99,22 @@ const VPSHosting = () => {
   return (
     <>
       <Helmet>
-        <title>VPS Hosting India | Virtual Private Server Hosting - Infinitive Cloud</title>
-        <meta name="description" content="Best VPS hosting in India with SSD NVMe storage, full root access, and 99.99% uptime. Powerful virtual private servers starting at ₹799/month. Linux & Windows VPS available." />
-        <meta name="keywords" content="VPS hosting India, virtual private server, Linux VPS, Windows VPS, managed VPS, SSD VPS, cheap VPS India, dedicated VPS hosting" />
+        <title>Best VPS Hosting India | Linux & Windows VPS | NVMe SSD | From ₹799/mo</title>
+        <meta name="description" content="⭐ Premium VPS Hosting India | NVMe SSD Storage | Full Root Access | 99.99% Uptime | Dedicated Resources | Linux & Windows VPS | Starting ₹799/month. Managed VPS available. Free setup!" />
+        <meta name="keywords" content="VPS hosting India, best VPS India, cheap VPS hosting, Linux VPS hosting, Windows VPS hosting, managed VPS India, SSD VPS, NVMe VPS, dedicated VPS resources, virtual private server India, VPS India cheap, KVM VPS hosting" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/vps-hosting" />
-        <meta property="og:title" content="VPS Hosting India | Virtual Private Server Solutions" />
-        <meta property="og:description" content="High-performance VPS hosting with NVMe SSD, full root access, and expert support. Starting at ₹799/month." />
+        <meta property="og:title" content="Best VPS Hosting India | From ₹799/month | Full Root Access" />
+        <meta property="og:description" content="High-performance VPS hosting with NVMe SSD, dedicated resources, and 24/7 support. Linux & Windows VPS available." />
+        <meta property="og:url" content="https://infinitivecloud.com/solutions/vps-hosting" />
+        <meta property="og:type" content="product" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="VPS Hosting India - NVMe SSD VPS from ₹799/month" />
+        <meta name="twitter:description" content="Premium VPS hosting with full root access, dedicated resources, 99.99% uptime." />
       </Helmet>
+      
+      <StructuredData data={serviceSchema} />
+      <StructuredData data={breadcrumbSchema} />
+      <StructuredData data={faqSchema} />
 
       <div className="min-h-screen">
         <Navigation />

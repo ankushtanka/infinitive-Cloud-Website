@@ -1,6 +1,7 @@
 import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { StructuredData, createServiceSchema, createBreadcrumbSchema, createFAQSchema } from "@/components/StructuredData";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -10,6 +11,39 @@ import {
 } from "lucide-react";
 
 const MobileApps = () => {
+  const serviceSchema = createServiceSchema(
+    "Mobile App Development Company India - iOS & Android",
+    "Professional mobile app development services in India. Native iOS & Android apps, React Native, Flutter cross-platform development. Expert developers for startups and enterprises.",
+    "https://infinitivecloud.com/solutions/mobile-apps",
+    "Mobile App Development",
+    "₹25,000 - ₹10,00,000"
+  );
+
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: "Home", url: "https://infinitivecloud.com/" },
+    { name: "Solutions", url: "https://infinitivecloud.com/solutions" },
+    { name: "Mobile App Development", url: "https://infinitivecloud.com/solutions/mobile-apps" }
+  ]);
+
+  const faqSchema = createFAQSchema([
+    {
+      question: "How much does mobile app development cost in India?",
+      answer: "Mobile app development costs vary by complexity. Simple apps start from ₹25,000, medium complexity apps from ₹1,00,000, and enterprise apps from ₹5,00,000+. Cross-platform development (React Native/Flutter) costs 30-40% less than native development."
+    },
+    {
+      question: "Should I choose native or cross-platform development?",
+      answer: "Native apps (Swift for iOS, Kotlin for Android) offer best performance and user experience but require separate development. Cross-platform (React Native/Flutter) allows single codebase for both platforms, reducing costs by 30-40% while maintaining good quality. We help you choose based on your requirements and budget."
+    },
+    {
+      question: "How long does it take to develop a mobile app?",
+      answer: "Development time depends on app complexity. Simple apps take 6-8 weeks, medium complexity apps 3-4 months, and complex enterprise apps 6-12 months. Cross-platform development is typically 20-30% faster than native development for both platforms."
+    },
+    {
+      question: "Do you help with App Store and Play Store submission?",
+      answer: "Yes, we handle the complete app submission process including preparing app assets, writing descriptions, ensuring compliance with store guidelines, and submitting to both Apple App Store and Google Play Store. We also provide post-launch support and updates."
+    }
+  ]);
+
   const services = [
     {
       icon: Smartphone,
@@ -66,13 +100,22 @@ const MobileApps = () => {
   return (
     <>
       <Helmet>
-        <title>Mobile App Development Company India | iOS & Android App Development</title>
-        <meta name="description" content="Leading mobile app development company in India. Expert iOS, Android, React Native, and Flutter developers. Custom mobile applications for startups and enterprises." />
-        <meta name="keywords" content="mobile app development India, iOS app development, Android app development, React Native developers, Flutter development, cross-platform apps, mobile application company" />
+        <title>Best Mobile App Development Company India | iOS & Android App Developers</title>
+        <meta name="description" content="⭐ Top Mobile App Development Company in India | iOS & Android | React Native | Flutter | 1000+ Apps Built | Startup to Enterprise Solutions | From ₹25,000 | Free Consultation & Quote!" />
+        <meta name="keywords" content="mobile app development company India, iOS app development India, Android app development India, React Native developers, Flutter development company, cross-platform app development, best app developers India, mobile application development, native app development, startup app development" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/mobile-apps" />
-        <meta property="og:title" content="Professional Mobile App Development Services India" />
-        <meta property="og:description" content="Custom iOS and Android app development with native and cross-platform solutions." />
+        <meta property="og:title" content="Top Mobile App Development Company India | iOS & Android" />
+        <meta property="og:description" content="Expert mobile app development. 1000+ apps built. Native & cross-platform solutions. Free consultation!" />
+        <meta property="og:url" content="https://infinitivecloud.com/solutions/mobile-apps" />
+        <meta property="og:type" content="service" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Mobile App Development India - iOS, Android, React Native" />
+        <meta name="twitter:description" content="Professional mobile app development. 1000+ apps delivered. Native & cross-platform." />
       </Helmet>
+      
+      <StructuredData data={serviceSchema} />
+      <StructuredData data={breadcrumbSchema} />
+      <StructuredData data={faqSchema} />
 
       <div className="min-h-screen">
         <Navigation />
