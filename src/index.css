@@ -171,8 +171,11 @@ All colors MUST be HSL.
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     /* GPU acceleration for smoother scrolling */
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+    will-change: scroll-position;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
 
   /* Smooth momentum scrolling on iOS */
@@ -180,6 +183,20 @@ All colors MUST be HSL.
   .scroll-area,
   [data-radix-scroll-area-viewport] {
     -webkit-overflow-scrolling: touch;
+  }
+
+  /* Optimize all animated and transformed elements */
+  [class*="animate-"],
+  [style*="transform"] {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* Remove will-change after animation completes */
+  [class*="animate-"].animation-complete {
+    will-change: auto;
   }
 
   h1, h2, h3, h4, h5, h6 {
