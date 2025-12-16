@@ -107,9 +107,11 @@ const VPSHosting = () => {
         <meta property="og:description" content="High-performance VPS hosting with NVMe SSD, dedicated resources, and 24/7 support. Linux & Windows VPS available." />
         <meta property="og:url" content="https://infinitivecloud.com/solutions/vps-hosting" />
         <meta property="og:type" content="product" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="VPS Hosting India - NVMe SSD VPS from ₹799/month" />
         <meta name="twitter:description" content="Premium VPS hosting with full root access, dedicated resources, 99.99% uptime." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       
       <StructuredData data={serviceSchema} />

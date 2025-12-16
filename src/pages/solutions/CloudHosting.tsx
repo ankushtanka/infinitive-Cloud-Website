@@ -120,9 +120,11 @@ const CloudHosting = () => {
         <meta property="og:description" content="Premium cloud hosting with auto-scaling, enterprise security, and expert 24/7 support. Trusted by 10,000+ businesses." />
         <meta property="og:url" content="https://infinitivecloud.com/solutions/cloud-hosting" />
         <meta property="og:type" content="product" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Best Cloud Hosting India - 99.99% Uptime SLA" />
         <meta name="twitter:description" content="Enterprise cloud hosting from ₹499/month. Auto-scaling, free SSL, 24/7 support." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       
       <StructuredData data={serviceSchema} />

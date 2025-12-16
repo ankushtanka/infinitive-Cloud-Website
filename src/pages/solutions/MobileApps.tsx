@@ -108,9 +108,11 @@ const MobileApps = () => {
         <meta property="og:description" content="Expert mobile app development. 1000+ apps built. Native & cross-platform solutions. Free consultation!" />
         <meta property="og:url" content="https://infinitivecloud.com/solutions/mobile-apps" />
         <meta property="og:type" content="service" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Mobile App Development India - iOS, Android, React Native" />
         <meta name="twitter:description" content="Professional mobile app development. 1000+ apps delivered. Native & cross-platform." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       
       <StructuredData data={serviceSchema} />

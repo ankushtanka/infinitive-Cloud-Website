@@ -30,9 +30,11 @@ const Index = () => {
         <meta property="og:description" content="Enterprise cloud hosting, web development, AI solutions with 99.99% uptime. Trusted by 1000+ businesses." />
         <meta property="og:url" content="https://infinitivecloud.com/" />
         <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Infinitive Cloud - Best IT Solutions Company India" />
         <meta name="twitter:description" content="Enterprise cloud hosting, VPS, web development & AI solutions. 99.99% uptime, 24/7 support." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       
       <StructuredData data={organizationSchema} />
