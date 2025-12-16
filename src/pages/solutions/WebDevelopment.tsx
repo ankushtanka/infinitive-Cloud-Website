@@ -116,9 +116,11 @@ const WebDevelopment = () => {
         <meta property="og:description" content="Professional web development services. 2000+ websites built. React, Node.js, PHP experts. Free consultation!" />
         <meta property="og:url" content="https://infinitivecloud.com/solutions/web-development" />
         <meta property="og:type" content="service" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Web Development Company India - Custom Websites & E-Commerce" />
         <meta name="twitter:description" content="Expert web development services. 2000+ websites delivered. React, Node.js, PHP, WordPress." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       
       <StructuredData data={serviceSchema} />

@@ -106,9 +106,11 @@ const AISolutions = () => {
         <meta property="og:description" content="Leading AI development company in India. Custom chatbots, ML models, automation. 500+ projects. Free consultation!" />
         <meta property="og:url" content="https://infinitivecloud.com/solutions/ai-solutions" />
         <meta property="og:type" content="service" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="AI Solutions India | AI Chatbots & Machine Learning Development" />
         <meta name="twitter:description" content="Custom AI solutions: chatbots, ML, automation, NLP. 500+ projects delivered." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       
       <StructuredData data={serviceSchema} />

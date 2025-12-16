@@ -21,7 +21,7 @@ export const organizationSchema = {
   "name": "Infinitive Cloud",
   "alternateName": "Infinitive Cloud Solutions",
   "url": "https://infinitivecloud.com",
-  "logo": "https://infinitivecloud.com/logo.png",
+  "logo": "https://infinitivecloud.com/og-image.png",
   "description": "Enterprise-grade IT infrastructure, cloud hosting, web development, AI solutions, and mobile app development company in India. 99.99% uptime, 24×7 support, zero-downtime commitment.",
   "email": "ankush@infinitivecloud.com",
   "telephone": "+91-XXXXXXXXXX",
@@ -161,7 +161,7 @@ export const createArticleSchema = (
     "name": "Infinitive Cloud",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://infinitivecloud.com/logo.png"
+      "url": "https://infinitivecloud.com/og-image.png"
     }
   },
   ...(image && {
