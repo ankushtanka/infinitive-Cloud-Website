@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,8 +8,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { StructuredData, createBreadcrumbSchema } from "@/components/StructuredData";
 
 const Contact = () => {
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: "Home", url: "https://infinitivecloud.com/" },
+    { name: "Contact", url: "https://infinitivecloud.com/contact" }
+  ]);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -52,6 +58,24 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>Contact Infinitive Cloud - Get 24/7 IT Support & Consultation India</title>
+        <meta name="description" content="Contact Infinitive Cloud for cloud hosting, web development, and AI solutions. 24/7 expert support, fast response within 2-4 hours. Call +91 7737393087 or email us." />
+        <meta name="keywords" content="contact Infinitive Cloud, IT support India, cloud hosting support, web development inquiry, AI solutions consultation" />
+        <link rel="canonical" href="https://infinitivecloud.com/contact" />
+        <meta property="og:title" content="Contact Infinitive Cloud - 24/7 IT Support" />
+        <meta property="og:description" content="Get in touch for cloud, hosting, development, and AI solutions. 24/7 support available." />
+        <meta property="og:url" content="https://infinitivecloud.com/contact" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Contact Infinitive Cloud" />
+        <meta name="twitter:description" content="24/7 expert support for cloud, hosting, and development needs." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
+      </Helmet>
+      
+      <StructuredData data={breadcrumbSchema} />
+      
       <Navigation />
       <main className="pt-24 pb-20">
         {/* Hero */}

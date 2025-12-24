@@ -1,9 +1,17 @@
+import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
 const SLA = () => {
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>Service Level Agreement (SLA) - Infinitive Cloud | 99.99% Uptime Guarantee</title>
+        <meta name="description" content="Infinitive Cloud SLA. Our commitment to 99.99% uptime, performance standards, support response times, and compensation policies." />
+        <link rel="canonical" href="https://infinitivecloud.com/sla" />
+        <meta name="robots" content="index, follow" />
+      </Helmet>
+      
       <Navigation />
       <main className="pt-24 pb-20">
         <div className="section-container max-w-4xl">

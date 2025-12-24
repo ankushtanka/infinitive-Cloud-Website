@@ -1,9 +1,15 @@
+import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Target, Eye, CheckCircle2 } from "lucide-react";
+import { StructuredData, createBreadcrumbSchema } from "@/components/StructuredData";
 
 const About = () => {
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: "Home", url: "https://infinitivecloud.com/" },
+    { name: "About", url: "https://infinitivecloud.com/about" }
+  ]);
   const values = [
     "Trust & Transparency",
     "Innovation & Excellence",
@@ -15,6 +21,24 @@ const About = () => {
 
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>About Infinitive Cloud - Leading IT Solutions Company India | Our Mission & Vision</title>
+        <meta name="description" content="Learn about Infinitive Cloud, a global cloud hosting, web development, and AI solutions company. Our mission is to empower businesses with reliable, scalable digital infrastructure." />
+        <meta name="keywords" content="about Infinitive Cloud, IT company India, cloud solutions provider, web development company, AI solutions company, digital infrastructure" />
+        <link rel="canonical" href="https://infinitivecloud.com/about" />
+        <meta property="og:title" content="About Infinitive Cloud - Leading IT Solutions Company India" />
+        <meta property="og:description" content="Global cloud, hosting, development, and AI solutions company delivering high-performance, scalable, secure digital infrastructure." />
+        <meta property="og:url" content="https://infinitivecloud.com/about" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="About Infinitive Cloud - IT Solutions Company" />
+        <meta name="twitter:description" content="Learn about our mission to empower businesses with reliable cloud infrastructure." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
+      </Helmet>
+      
+      <StructuredData data={breadcrumbSchema} />
+      
       <Navigation />
       <main className="pt-24 pb-20">
         {/* Hero Section */}

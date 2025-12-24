@@ -1,11 +1,17 @@
+import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Check, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { StructuredData, createBreadcrumbSchema } from "@/components/StructuredData";
 
 const Pricing = () => {
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: "Home", url: "https://infinitivecloud.com/" },
+    { name: "Pricing", url: "https://infinitivecloud.com/pricing" }
+  ]);
   const pricingCards = [
     {
       title: "Cloud Solutions",
@@ -63,6 +69,24 @@ const Pricing = () => {
 
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>Pricing - Affordable Cloud Hosting, Web Development & AI Solutions India</title>
+        <meta name="description" content="Transparent pricing for cloud hosting starting ₹499/month, web hosting from ₹149/month, development from ₹25,000/project, and AI solutions from ₹999/month. No hidden fees." />
+        <meta name="keywords" content="cloud hosting pricing India, VPS hosting cost, web development pricing, mobile app development cost, AI solutions pricing, affordable hosting India" />
+        <link rel="canonical" href="https://infinitivecloud.com/pricing" />
+        <meta property="og:title" content="Affordable IT Solutions Pricing - Infinitive Cloud" />
+        <meta property="og:description" content="Cloud hosting from ₹499/month, web development from ₹25,000. Transparent pricing for all services." />
+        <meta property="og:url" content="https://infinitivecloud.com/pricing" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Pricing - Infinitive Cloud" />
+        <meta name="twitter:description" content="Affordable cloud, hosting, development, and AI solutions pricing." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
+      </Helmet>
+      
+      <StructuredData data={breadcrumbSchema} />
+      
       <Navigation />
       <main className="pt-24 pb-20">
         {/* Hero */}

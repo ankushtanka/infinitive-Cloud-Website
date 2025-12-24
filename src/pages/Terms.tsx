@@ -1,9 +1,17 @@
+import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
 const Terms = () => {
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>Terms of Service - Infinitive Cloud | Service Agreement</title>
+        <meta name="description" content="Infinitive Cloud Terms of Service. Read our service agreement, usage policies, and conditions for using our cloud, hosting, and development services." />
+        <link rel="canonical" href="https://infinitivecloud.com/terms" />
+        <meta name="robots" content="index, follow" />
+      </Helmet>
+      
       <Navigation />
       <main className="pt-24 pb-20">
         <div className="section-container max-w-4xl">
