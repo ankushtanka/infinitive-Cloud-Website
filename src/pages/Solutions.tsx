@@ -143,6 +143,13 @@ const Solutions = () => {
         <link rel="canonical" href="https://infinitivecloud.com/solutions" />
         <meta property="og:title" content="Complete IT Solutions & Services for Modern Businesses" />
         <meta property="og:description" content="Cloud infrastructure, hosting, development, and AI solutions to power your digital transformation." />
+        <meta property="og:url" content="https://infinitivecloud.com/solutions" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="IT Solutions - Infinitive Cloud" />
+        <meta name="twitter:description" content="Cloud, hosting, development, and AI solutions for businesses." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       
       <div className="min-h-screen">

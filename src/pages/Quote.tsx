@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,8 +9,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { FileText, Zap, Shield, TrendingUp } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { StructuredData, createBreadcrumbSchema } from "@/components/StructuredData";
 
 const Quote = () => {
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: "Home", url: "https://infinitivecloud.com/" },
+    { name: "Quote", url: "https://infinitivecloud.com/quote" }
+  ]);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -77,6 +83,24 @@ const Quote = () => {
 
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>Get Custom Quote - Cloud, Hosting & Development Services | Infinitive Cloud</title>
+        <meta name="description" content="Request a custom quote for cloud hosting, web development, mobile apps, or AI solutions. Free consultation, detailed proposal within 24 hours, no commitment required." />
+        <meta name="keywords" content="IT services quote India, cloud hosting quote, web development pricing, mobile app cost estimate, AI solutions proposal" />
+        <link rel="canonical" href="https://infinitivecloud.com/quote" />
+        <meta property="og:title" content="Get Custom Quote - Infinitive Cloud" />
+        <meta property="og:description" content="Request a personalized proposal for cloud, hosting, development, or AI services." />
+        <meta property="og:url" content="https://infinitivecloud.com/quote" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Get Quote - Infinitive Cloud" />
+        <meta name="twitter:description" content="Free consultation and custom proposal within 24 hours." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
+      </Helmet>
+      
+      <StructuredData data={breadcrumbSchema} />
+      
       <Navigation />
       <main className="pt-24 pb-20">
         {/* Hero */}

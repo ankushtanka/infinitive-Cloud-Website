@@ -1,11 +1,17 @@
+import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, ArrowRight, Cloud, Server, Code, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
+import { StructuredData, createBreadcrumbSchema } from "@/components/StructuredData";
 
 const Blog = () => {
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: "Home", url: "https://infinitivecloud.com/" },
+    { name: "Blog", url: "https://infinitivecloud.com/blog" }
+  ]);
   const categories = [
     { name: "Cloud", icon: Cloud, count: 12 },
     { name: "Hosting", icon: Server, count: 18 },
@@ -60,6 +66,24 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>Blog - Cloud Computing, Web Development & AI Insights | Infinitive Cloud</title>
+        <meta name="description" content="Expert insights, guides, and best practices on cloud computing, web hosting, development, and AI solutions. Stay updated with the latest technology trends and tips." />
+        <meta name="keywords" content="cloud computing blog, web development articles, AI technology insights, hosting tips, technology trends India, IT best practices" />
+        <link rel="canonical" href="https://infinitivecloud.com/blog" />
+        <meta property="og:title" content="Tech Blog - Infinitive Cloud" />
+        <meta property="og:description" content="Expert insights on cloud, hosting, development, and AI solutions." />
+        <meta property="og:url" content="https://infinitivecloud.com/blog" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Blog - Infinitive Cloud" />
+        <meta name="twitter:description" content="Cloud, hosting, and AI technology insights and guides." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
+      </Helmet>
+      
+      <StructuredData data={breadcrumbSchema} />
+      
       <Navigation />
       <main className="pt-24 pb-20">
         {/* Hero */}

@@ -1,10 +1,16 @@
+import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Briefcase, Users, Rocket, Heart, Mail } from "lucide-react";
+import { StructuredData, createBreadcrumbSchema } from "@/components/StructuredData";
 
 const Careers = () => {
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: "Home", url: "https://infinitivecloud.com/" },
+    { name: "Careers", url: "https://infinitivecloud.com/careers" }
+  ]);
   const benefits = [
     {
       icon: Rocket,
@@ -30,6 +36,24 @@ const Careers = () => {
 
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>Careers at Infinitive Cloud - Join Our Team | IT Jobs India</title>
+        <meta name="description" content="Join Infinitive Cloud and work on cutting-edge cloud, AI, and development projects. Growth opportunities, collaborative culture, and exciting projects. Ahmedabad, India." />
+        <meta name="keywords" content="IT jobs India, cloud computing careers, web development jobs, AI careers Ahmedabad, tech jobs India, software developer jobs" />
+        <link rel="canonical" href="https://infinitivecloud.com/careers" />
+        <meta property="og:title" content="Careers at Infinitive Cloud" />
+        <meta property="og:description" content="Join our team building the future of cloud infrastructure and AI solutions." />
+        <meta property="og:url" content="https://infinitivecloud.com/careers" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Careers - Infinitive Cloud" />
+        <meta name="twitter:description" content="Join our team and work on cutting-edge technology projects." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
+      </Helmet>
+      
+      <StructuredData data={breadcrumbSchema} />
+      
       <Navigation />
       <main className="pt-24 pb-20">
         {/* Hero */}

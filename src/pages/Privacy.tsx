@@ -1,9 +1,17 @@
+import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
 const Privacy = () => {
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>Privacy Policy - Infinitive Cloud | Data Protection & Security</title>
+        <meta name="description" content="Infinitive Cloud Privacy Policy. Learn how we collect, use, and protect your personal information. Your data security is our priority." />
+        <link rel="canonical" href="https://infinitivecloud.com/privacy" />
+        <meta name="robots" content="index, follow" />
+      </Helmet>
+      
       <Navigation />
       <main className="pt-24 pb-20">
         <div className="section-container max-w-4xl">

@@ -1,9 +1,17 @@
+import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
 const Refund = () => {
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>Refund Policy - Infinitive Cloud | Clear & Transparent Terms</title>
+        <meta name="description" content="Infinitive Cloud Refund Policy. Clear and transparent refund terms for cloud hosting, development services, and AI solutions." />
+        <link rel="canonical" href="https://infinitivecloud.com/refund" />
+        <meta name="robots" content="index, follow" />
+      </Helmet>
+      
       <Navigation />
       <main className="pt-24 pb-20">
         <div className="section-container max-w-4xl">
