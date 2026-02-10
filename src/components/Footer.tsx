@@ -62,12 +62,16 @@ const Footer = () => {
                 <img src={logo} alt="Infinitive Cloud Logo" className="h-10 w-auto" />
               </div>
               <div className="flex flex-col">
-                <span className="text-lg font-bold text-foreground">INFINITIVE CLOUD</span>
+                <span className="text-lg font-bold text-foreground">INFINITIVE CLOUD PRIVATE LIMITED</span>
               </div>
             </Link>
             <p className="text-muted-foreground mb-4 max-w-sm text-sm">
               Future-ready cloud, hosting, and AI solutions built for zero downtime and infinite scalability.
             </p>
+            <div className="space-y-1 text-xs text-muted-foreground mb-3">
+              <p><span className="font-medium">GSTIN:</span> 08AAICI5380A1ZP</p>
+              <p><span className="font-medium">CIN:</span> U62020RJ2025PTC109151</p>
+            </div>
             <div className="space-y-2 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-primary" />
@@ -85,6 +89,12 @@ const Footer = () => {
                 <Mail className="w-4 h-4 text-primary" />
                 <a href="mailto:sales@infinitivecloud.com" className="hover:text-primary transition-colors">
                   sales@infinitivecloud.com
+                </a>
+              </div>
+              <div className="flex items-center gap-2">
+                <Mail className="w-4 h-4 text-primary" />
+                <a href="mailto:ankush@infinitivecloud.com" className="hover:text-primary transition-colors">
+                  ankush@infinitivecloud.com
                 </a>
               </div>
               <div className="flex items-center gap-2">
@@ -110,7 +120,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">
-            © {currentYear} Infinitive Cloud. All rights reserved.
+            © {currentYear} Infinitive Cloud Private Limited. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm text-muted-foreground">
             <Link to="#" className="hover:text-foreground transition-colors">
