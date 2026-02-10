@@ -37,8 +37,8 @@ const Navigation = () => {
               <img src={logo} alt="Infinitive Cloud Logo" className="h-12 w-auto relative z-10 group-hover:scale-105 transition-transform duration-300" />
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-black text-foreground tracking-tight">INFINITIVE CLOUD
-PRIVATE LIMITED</span>
+              <span className="text-xl font-black text-foreground tracking-tight">INFINITIVE CLOUD PVT. LTD.
+            </span>
               
             </div>
           </Link>
