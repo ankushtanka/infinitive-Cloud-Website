@@ -37,7 +37,8 @@ const Navigation = () => {
               <img src={logo} alt="Infinitive Cloud Logo" className="h-12 w-auto relative z-10 group-hover:scale-105 transition-transform duration-300" />
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-black text-foreground tracking-tight">INFINITIVE CLOUD</span>
+              <span className="text-xl font-black text-foreground tracking-tight">INFINITIVE CLOUD
+PRIVATE LIMITED</span>
               
             </div>
           </Link>
@@ -56,12 +57,7 @@ const Navigation = () => {
           </div>
 
           {/* Mobile Menu Button - Larger touch target */}
-          <button 
-            onClick={() => setIsOpen(!isOpen)} 
-            className="lg:hidden p-3 text-foreground hover:bg-muted rounded-lg transition-colors"
-            aria-label={isOpen ? "Close menu" : "Open menu"}
-            aria-expanded={isOpen}
-          >
+          <button onClick={() => setIsOpen(!isOpen)} className="lg:hidden p-3 text-foreground hover:bg-muted rounded-lg transition-colors" aria-label={isOpen ? "Close menu" : "Open menu"} aria-expanded={isOpen}>
             {isOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
           </button>
         </div>
@@ -69,12 +65,7 @@ const Navigation = () => {
         {/* Mobile Navigation - Better touch targets and spacing */}
         {isOpen && <div className="lg:hidden py-6 border-t border-border animate-fade-in">
             <div className="flex flex-col gap-2">
-              {navLinks.map(link => <Link 
-                key={link.path} 
-                to={link.path} 
-                onClick={() => setIsOpen(false)} 
-                className="text-foreground hover:text-primary hover:bg-muted transition-colors font-semibold py-4 px-4 rounded-lg text-lg"
-              >
+              {navLinks.map(link => <Link key={link.path} to={link.path} onClick={() => setIsOpen(false)} className="text-foreground hover:text-primary hover:bg-muted transition-colors font-semibold py-4 px-4 rounded-lg text-lg">
                   {link.label}
                 </Link>)}
               <Link to="/quote" onClick={() => setIsOpen(false)} className="mt-4">
