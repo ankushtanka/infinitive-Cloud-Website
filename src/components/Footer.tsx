@@ -62,7 +62,7 @@ const Footer = () => {
                 <img src={logo} alt="Infinitive Cloud Logo" className="h-10 w-auto" />
               </div>
               <div className="flex flex-col">
-                <span className="text-lg font-bold text-foreground">INFINITIVE CLOUD PRIVATE LIMITED</span>
+                <span className="text-lg font-bold text-foreground">INFINITIVE CLOUD PVT. LTD.</span>
               </div>
             </Link>
             <p className="text-muted-foreground mb-4 max-w-sm text-sm">
