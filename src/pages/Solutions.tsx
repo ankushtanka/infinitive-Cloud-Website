@@ -37,6 +37,30 @@ const Solutions = () => {
           description: "Enterprise-grade SSL certificates and advanced security features.",
           link: "/solutions/cloud-hosting"
         },
+        {
+          icon: Zap,
+          title: "GPU Dedicated Server",
+          description: "High-performance GPU servers with 99.9% uptime for AI, rendering, and compute-heavy workloads.",
+          link: "/solutions/gpu-dedicated-server"
+        },
+        {
+          icon: Globe,
+          title: "WordPress Hosting",
+          description: "Managed WordPress hosting optimized for speed, security, and seamless performance.",
+          link: "/solutions/wordpress-hosting"
+        },
+        {
+          icon: Server,
+          title: "Streaming Servers",
+          description: "Unlimited streaming servers for flawless live and on-demand video delivery.",
+          link: "/solutions/streaming-servers"
+        },
+        {
+          icon: Database,
+          title: "Reseller Hosting",
+          description: "White-label hosting solutions to start and scale your own hosting business.",
+          link: "/solutions/reseller-hosting"
+        },
       ],
     },
     {
@@ -98,6 +122,12 @@ const Solutions = () => {
           title: "API Integration",
           description: "Seamless third-party integrations and custom API development.",
           link: "/solutions/web-development"
+        },
+        {
+          icon: Sparkles,
+          title: "Odoo Solutions",
+          description: "Customized Odoo ERP implementations that streamline your entire business operation.",
+          link: "/solutions/odoo-solutions"
         },
       ],
     },
