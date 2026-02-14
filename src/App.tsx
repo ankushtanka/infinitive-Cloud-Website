@@ -12,6 +12,11 @@ import VPSHosting from "./pages/solutions/VPSHosting";
 import WebDevelopment from "./pages/solutions/WebDevelopment";
 import MobileApps from "./pages/solutions/MobileApps";
 import AISolutions from "./pages/solutions/AISolutions";
+import GPUDedicatedServer from "./pages/solutions/GPUDedicatedServer";
+import WordPressHosting from "./pages/solutions/WordPressHosting";
+import StreamingServers from "./pages/solutions/StreamingServers";
+import ResellerHosting from "./pages/solutions/ResellerHosting";
+import OdooSolutions from "./pages/solutions/OdooSolutions";
 import Pricing from "./pages/Pricing";
 import Careers from "./pages/Careers";
 import Blog from "./pages/Blog";
@@ -41,6 +46,11 @@ const App = () => (
             <Route path="/solutions/web-development" element={<WebDevelopment />} />
             <Route path="/solutions/mobile-apps" element={<MobileApps />} />
             <Route path="/solutions/ai-solutions" element={<AISolutions />} />
+            <Route path="/solutions/gpu-dedicated-server" element={<GPUDedicatedServer />} />
+            <Route path="/solutions/wordpress-hosting" element={<WordPressHosting />} />
+            <Route path="/solutions/streaming-servers" element={<StreamingServers />} />
+            <Route path="/solutions/reseller-hosting" element={<ResellerHosting />} />
+            <Route path="/solutions/odoo-solutions" element={<OdooSolutions />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/careers" element={<Careers />} />
             <Route path="/blog" element={<Blog />} />
