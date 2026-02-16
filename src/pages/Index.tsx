@@ -10,10 +10,10 @@ import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { StructuredData, organizationSchema, websiteSchema, createBreadcrumbSchema } from "@/components/StructuredData";
 
 const Index = () => {
-  const animatedDivider = useScrollAnimation({ threshold: 0.2 });
-  const whatWeDo = useScrollAnimation({ threshold: 0.2 });
-  const whyTrust = useScrollAnimation({ threshold: 0.2 });
-  const caseStudy = useScrollAnimation({ threshold: 0.2 });
+  const animatedDivider = useScrollAnimation();
+  const whatWeDo = useScrollAnimation();
+  const whyTrust = useScrollAnimation();
+  const caseStudy = useScrollAnimation();
 
   const breadcrumbSchema = createBreadcrumbSchema([
     { name: "Home", url: "https://infinitivecloud.com/" }
@@ -50,44 +50,16 @@ const Index = () => {
       <Navigation />
       <main id="main-content">
         <HeroSection />
-        <div 
-          ref={animatedDivider.ref}
-          className={`transition-all duration-1000 ${
-            animatedDivider.isVisible 
-              ? 'opacity-100 translate-y-0' 
-              : 'opacity-0 translate-y-10'
-          }`}
-        >
+        <div ref={animatedDivider.ref}>
           <AnimatedDivider />
         </div>
-        <div 
-          ref={whatWeDo.ref}
-          className={`transition-all duration-1000 ${
-            whatWeDo.isVisible 
-              ? 'opacity-100 translate-y-0' 
-              : 'opacity-0 translate-y-10'
-          }`}
-        >
+        <div ref={whatWeDo.ref}>
           <WhatWeDoSection />
         </div>
-        <div 
-          ref={whyTrust.ref}
-          className={`transition-all duration-1000 ${
-            whyTrust.isVisible 
-              ? 'opacity-100 translate-y-0' 
-              : 'opacity-0 translate-y-10'
-          }`}
-        >
+        <div ref={whyTrust.ref}>
           <WhyTrustUsSection />
         </div>
-        <div 
-          ref={caseStudy.ref}
-          className={`transition-all duration-1000 ${
-            caseStudy.isVisible 
-              ? 'opacity-100 translate-y-0' 
-              : 'opacity-0 translate-y-10'
-          }`}
-        >
+        <div ref={caseStudy.ref}>
           <CaseStudySection />
         </div>
       </main>
