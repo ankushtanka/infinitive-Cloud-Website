@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface UseScrollAnimationOptions {
   threshold?: number;
@@ -12,10 +12,12 @@ export const useScrollAnimation = (options: UseScrollAnimationOptions = {}) => {
   } = options;
 
   const ref = useRef<HTMLDivElement>(null);
+  // Keep useState to maintain consistent hook count across HMR
+  const [hasAnimated, setHasAnimated] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || hasAnimated) return;
 
     // Start hidden
     el.style.opacity = '0';
@@ -28,10 +30,10 @@ export const useScrollAnimation = (options: UseScrollAnimationOptions = {}) => {
         if (entry.isIntersecting) {
           el.style.opacity = '1';
           el.style.transform = 'translateY(0)';
-          // Clean up will-change after animation
           setTimeout(() => {
             el.style.willChange = 'auto';
           }, 700);
+          setHasAnimated(true);
           observer.unobserve(el);
         }
       },
@@ -43,7 +45,7 @@ export const useScrollAnimation = (options: UseScrollAnimationOptions = {}) => {
     return () => {
       observer.unobserve(el);
     };
-  }, [threshold, rootMargin]);
+  }, [threshold, rootMargin, hasAnimated]);
 
   return { ref };
 };
