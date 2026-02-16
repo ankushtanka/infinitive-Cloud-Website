@@ -1,50 +1,49 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface UseScrollAnimationOptions {
   threshold?: number;
   rootMargin?: string;
-  triggerOnce?: boolean;
 }
 
 export const useScrollAnimation = (options: UseScrollAnimationOptions = {}) => {
   const {
     threshold = 0.1,
-    rootMargin = '0px',
-    triggerOnce = true,
+    rootMargin = '0px 0px -50px 0px',
   } = options;
 
   const ref = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    // Start hidden
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(24px)';
+    el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+    el.style.willChange = 'opacity, transform';
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true);
-          if (triggerOnce && ref.current) {
-            observer.unobserve(ref.current);
-          }
-        } else if (!triggerOnce) {
-          setIsVisible(false);
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+          // Clean up will-change after animation
+          setTimeout(() => {
+            el.style.willChange = 'auto';
+          }, 700);
+          observer.unobserve(el);
         }
       },
-      {
-        threshold,
-        rootMargin,
-      }
+      { threshold, rootMargin }
     );
 
-    const currentRef = ref.current;
-    if (currentRef) {
-      observer.observe(currentRef);
-    }
+    observer.observe(el);
 
     return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
+      observer.unobserve(el);
     };
-  }, [threshold, rootMargin, triggerOnce]);
+  }, [threshold, rootMargin]);
 
-  return { ref, isVisible };
+  return { ref };
 };
