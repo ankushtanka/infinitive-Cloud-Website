@@ -1,30 +1,24 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 
 export const useParallax = (speed: number = 0.5) => {
-  const [offset, setOffset] = useState(0);
+  const elementRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number | null>(null);
-  const lastScrollY = useRef(0);
+
+  const updatePosition = useCallback(() => {
+    if (elementRef.current) {
+      const scrollY = window.scrollY;
+      elementRef.current.style.transform = `translate3d(0, ${scrollY * speed}px, 0)`;
+    }
+    rafRef.current = null;
+  }, [speed]);
 
   useEffect(() => {
     const handleScroll = () => {
-      // Cancel any pending animation frame
-      if (rafRef.current !== null) {
-        cancelAnimationFrame(rafRef.current);
+      if (rafRef.current === null) {
+        rafRef.current = requestAnimationFrame(updatePosition);
       }
-
-      // Use requestAnimationFrame for smooth updates
-      rafRef.current = requestAnimationFrame(() => {
-        const scrollY = window.pageYOffset;
-        
-        // Only update if scroll position actually changed significantly
-        if (Math.abs(scrollY - lastScrollY.current) > 1) {
-          lastScrollY.current = scrollY;
-          setOffset(scrollY * speed);
-        }
-      });
     };
 
-    // Use passive listener for better scroll performance
     window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
@@ -33,7 +27,7 @@ export const useParallax = (speed: number = 0.5) => {
         cancelAnimationFrame(rafRef.current);
       }
     };
-  }, [speed]);
+  }, [updatePosition]);
 
-  return offset;
+  return elementRef;
 };
