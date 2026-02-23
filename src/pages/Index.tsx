@@ -8,11 +8,13 @@ import WhyTrustUsSection from "@/components/WhyTrustUsSection";
 import CaseStudySection from "@/components/CaseStudySection";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { StructuredData, organizationSchema, websiteSchema, createBreadcrumbSchema } from "@/components/StructuredData";
+import HomePricingSection from "@/components/HomePricingSection";
 
 const Index = () => {
   const animatedDivider = useScrollAnimation();
   const whatWeDo = useScrollAnimation();
   const whyTrust = useScrollAnimation();
+  const pricing = useScrollAnimation();
   const caseStudy = useScrollAnimation();
 
   const breadcrumbSchema = createBreadcrumbSchema([
@@ -58,6 +60,9 @@ const Index = () => {
         </div>
         <div ref={whyTrust.ref}>
           <WhyTrustUsSection />
+        </div>
+        <div ref={pricing.ref}>
+          <HomePricingSection />
         </div>
         <div ref={caseStudy.ref}>
           <CaseStudySection />
