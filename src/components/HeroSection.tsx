@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Server, Cloud, Shield, Headphones } from "lucide-react";
+import { ArrowRight, Shield, Headphones, Server, Cloud } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useParallax } from "@/hooks/use-parallax";
 
@@ -15,13 +15,6 @@ const HeroSection = () => {
         <div className="absolute inset-0" style={{ background: 'var(--gradient-glow)' }} />
       </div>
 
-      {/* Subtle hosting-related floating elements */}
-      <div className="absolute top-1/4 right-[10%] opacity-[0.06]">
-        <Server className="w-32 h-32" />
-      </div>
-      <div className="absolute bottom-1/4 left-[5%] opacity-[0.06]">
-        <Cloud className="w-40 h-40" />
-      </div>
       
       <div className="section-container w-full relative z-10">
         <div className="max-w-4xl mx-auto text-center animate-fade-in">
