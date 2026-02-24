@@ -7,10 +7,7 @@ All colors MUST be HSL.
 */
 
 @layer base {
-  /* Smooth scroll behavior for better UX */
-  html {
-    scroll-behavior: smooth;
-  }
+  /* Lenis handles smooth scrolling */
 
   /* Better focus visibility for accessibility */
   *:focus-visible {
@@ -153,14 +150,8 @@ All colors MUST be HSL.
   }
 
   html {
-    scroll-behavior: smooth;
-    /* Account for sticky nav height */
+    /* Lenis handles smooth scrolling */
     scroll-padding-top: 5rem;
-  }
-
-  /* Enhanced smooth scrolling for all browsers */
-  * {
-    scroll-behavior: smooth;
   }
 
   body {

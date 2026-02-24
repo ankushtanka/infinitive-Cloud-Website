@@ -2,7 +2,6 @@ import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import HeroSection from "@/components/HeroSection";
-import AnimatedDivider from "@/components/AnimatedDivider";
 import WhatWeDoSection from "@/components/WhatWeDoSection";
 import WhyTrustUsSection from "@/components/WhyTrustUsSection";
 import CaseStudySection from "@/components/CaseStudySection";
@@ -11,7 +10,6 @@ import { StructuredData, organizationSchema, websiteSchema, createBreadcrumbSche
 import HomePricingSection from "@/components/HomePricingSection";
 
 const Index = () => {
-  const animatedDivider = useScrollAnimation();
   const whatWeDo = useScrollAnimation();
   const whyTrust = useScrollAnimation();
   const pricing = useScrollAnimation();
@@ -42,7 +40,6 @@ const Index = () => {
       <StructuredData data={organizationSchema} />
       <StructuredData data={websiteSchema} />
       <StructuredData data={breadcrumbSchema} />
-      {/* Skip to content link for accessibility */}
       <a 
         href="#main-content" 
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:shadow-lg"
@@ -52,9 +49,6 @@ const Index = () => {
       <Navigation />
       <main id="main-content">
         <HeroSection />
-        <div ref={animatedDivider.ref}>
-          <AnimatedDivider />
-        </div>
         <div ref={whatWeDo.ref}>
           <WhatWeDoSection />
         </div>
