@@ -49,14 +49,14 @@ const Index = () => {
       <Navigation />
       <main id="main-content">
         <HeroSection />
+        <div ref={pricing.ref}>
+          <HomePricingSection />
+        </div>
         <div ref={whatWeDo.ref}>
           <WhatWeDoSection />
         </div>
         <div ref={whyTrust.ref}>
           <WhyTrustUsSection />
-        </div>
-        <div ref={pricing.ref}>
-          <HomePricingSection />
         </div>
         <div ref={caseStudy.ref}>
           <CaseStudySection />
