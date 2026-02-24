@@ -14,26 +14,25 @@ export const StructuredData = ({ data }: StructuredDataProps) => {
   );
 };
 
-// Organization Schema
 export const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "Infinitive Cloud",
-  "alternateName": "Infinitive Cloud Solutions",
+  "alternateName": "Infinitive Cloud Private Limited",
   "url": "https://infinitivecloud.com",
   "logo": "https://infinitivecloud.com/og-image.png",
-  "description": "Enterprise-grade IT infrastructure, cloud hosting, web development, AI solutions, and mobile app development company in India. 99.99% uptime, 24×7 support, zero-downtime commitment.",
-  "email": "ankush@infinitivecloud.com",
-  "telephone": "+91-XXXXXXXXXX",
+  "description": "Premium cloud hosting, VPS, dedicated servers, and domain services in India. 99.99% uptime SLA, 24×7 support, and 15-day free trial.",
+  "email": "info@infinitivecloud.com",
+  "telephone": "+91-7737393087",
   "address": {
     "@type": "PostalAddress",
-    "addressCountry": "IN",
-    "addressRegion": "India"
+    "addressLocality": "Ahmedabad",
+    "addressRegion": "Gujarat",
+    "addressCountry": "IN"
   },
   "sameAs": [
     "https://www.linkedin.com/company/infinitive-cloud",
-    "https://twitter.com/infinitivecloud",
-    "https://www.facebook.com/infinitivecloud"
+    "https://twitter.com/infinitivecloud"
   ],
   "aggregateRating": {
     "@type": "AggregateRating",
@@ -41,19 +40,14 @@ export const organizationSchema = {
     "reviewCount": "287",
     "bestRating": "5"
   },
-  "founders": [{
-    "@type": "Person",
-    "name": "Ankush"
-  }]
 };
 
-// Website Schema
 export const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "Infinitive Cloud",
   "url": "https://infinitivecloud.com",
-  "description": "Enterprise-grade IT solutions including cloud hosting, VPS, web development, AI solutions, and mobile app development.",
+  "description": "Premium cloud hosting, VPS, dedicated servers & domain services in India.",
   "publisher": {
     "@type": "Organization",
     "name": "Infinitive Cloud"
@@ -65,7 +59,6 @@ export const websiteSchema = {
   }
 };
 
-// Service Schema Generator
 export const createServiceSchema = (
   serviceName: string,
   description: string,
@@ -82,23 +75,13 @@ export const createServiceSchema = (
     "@type": "Organization",
     "name": "Infinitive Cloud",
     "url": "https://infinitivecloud.com",
-    "telephone": "+91-XXXXXXXXXX",
-    "email": "ankush@infinitivecloud.com"
+    "telephone": "+91-7737393087",
+    "email": "info@infinitivecloud.com"
   },
   "url": url,
   "areaServed": {
     "@type": "Country",
     "name": "India"
-  },
-  "availableChannel": {
-    "@type": "ServiceChannel",
-    "serviceUrl": url,
-    "servicePhone": {
-      "@type": "ContactPoint",
-      "telephone": "+91-XXXXXXXXXX",
-      "contactType": "customer service",
-      "availableLanguage": ["English", "Hindi"]
-    }
   },
   ...(priceRange && {
     "offers": {
@@ -110,7 +93,6 @@ export const createServiceSchema = (
   })
 });
 
-// BreadcrumbList Schema Generator
 export const createBreadcrumbSchema = (items: Array<{ name: string; url: string }>) => ({
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -122,7 +104,6 @@ export const createBreadcrumbSchema = (items: Array<{ name: string; url: string 
   }))
 });
 
-// FAQ Schema Generator
 export const createFAQSchema = (faqs: Array<{ question: string; answer: string }>) => ({
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -136,7 +117,6 @@ export const createFAQSchema = (faqs: Array<{ question: string; answer: string }
   }))
 });
 
-// Article Schema Generator
 export const createArticleSchema = (
   title: string,
   description: string,
@@ -164,10 +144,5 @@ export const createArticleSchema = (
       "url": "https://infinitivecloud.com/og-image.png"
     }
   },
-  ...(image && {
-    "image": {
-      "@type": "ImageObject",
-      "url": image
-    }
-  })
+  ...(image && { "image": { "@type": "ImageObject", "url": image } })
 });
