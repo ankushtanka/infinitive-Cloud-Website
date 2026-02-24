@@ -1,98 +1,130 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Check, ArrowRight, Star, Zap, Shield, Globe } from "lucide-react";
+import { Check, ArrowRight, Star, Zap, Shield, Server } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const categories = [
   {
-    icon: Globe,
-    title: "Web Hosting",
-    description: "Lightning-fast SSD hosting for websites of all sizes",
+    icon: Star,
+    title: "Shared Hosting",
+    description: "Perfect for personal websites & small businesses",
     plans: [
       {
-        name: "Premium",
-        originalPrice: "₹1,091",
-        price: "₹129",
+        name: "Starter",
+        originalPrice: "₹499",
+        price: "₹79",
         period: "/mo",
         popular: false,
-        features: ["3 Websites", "20 GB SSD Storage", "Free SSL", "Free Domain", "Weekly Backups"],
+        features: ["1 Website", "10 GB SSD Storage", "Free SSL Certificate", "Free Domain (1 yr)", "Weekly Backups", "99.99% Uptime SLA"],
       },
       {
         name: "Business",
-        originalPrice: "₹1,595",
+        originalPrice: "₹999",
         price: "₹199",
         period: "/mo",
         popular: true,
-        features: ["50 Websites", "50 GB NVMe Storage", "Free SSL & CDN", "Daily Backups", "AI Website Builder"],
+        features: ["Unlimited Websites", "50 GB NVMe Storage", "Free SSL & CDN", "Free Domain (1 yr)", "Daily Backups", "cPanel Control Panel"],
+      },
+      {
+        name: "Enterprise",
+        originalPrice: "₹1,999",
+        price: "₹399",
+        period: "/mo",
+        popular: false,
+        features: ["Unlimited Websites", "100 GB NVMe Storage", "Free SSL, CDN & IP", "Priority Support", "Real-time Backups", "Staging Environment"],
       },
     ],
   },
   {
     icon: Zap,
-    title: "Cloud Hosting",
-    description: "20x more power with dedicated cloud resources",
+    title: "VPS Hosting",
+    description: "Full root access with dedicated resources",
     plans: [
       {
-        name: "Startup",
-        originalPrice: "₹2,351",
-        price: "₹469",
+        name: "VPS Start",
+        originalPrice: "₹1,499",
+        price: "₹399",
         period: "/mo",
         popular: false,
-        features: ["2 CPU Cores", "4 GB RAM", "100 GB NVMe", "100 Websites", "Dedicated IP"],
+        features: ["1 vCPU Core", "2 GB RAM", "40 GB NVMe", "2 TB Bandwidth", "Free Backups", "Full Root Access"],
       },
       {
-        name: "Professional",
-        originalPrice: "₹3,527",
-        price: "₹699",
+        name: "VPS Pro",
+        originalPrice: "₹2,999",
+        price: "₹799",
         period: "/mo",
         popular: true,
-        features: ["4 CPU Cores", "8 GB RAM", "200 GB NVMe", "200 Websites", "Priority Support"],
+        features: ["2 vCPU Cores", "4 GB RAM", "80 GB NVMe", "4 TB Bandwidth", "Free Snapshots", "DDoS Protection"],
+      },
+      {
+        name: "VPS Elite",
+        originalPrice: "₹5,999",
+        price: "₹1,499",
+        period: "/mo",
+        popular: false,
+        features: ["4 vCPU Cores", "8 GB RAM", "160 GB NVMe", "8 TB Bandwidth", "Priority Support", "Managed Backups"],
       },
     ],
   },
   {
     icon: Shield,
-    title: "VPS Hosting",
-    description: "Full root access with enterprise-grade hardware",
+    title: "Cloud Hosting",
+    description: "Auto-scaling cloud with dedicated resources",
     plans: [
       {
-        name: "KVM 1",
-        originalPrice: "₹1,175",
-        price: "₹335",
+        name: "Cloud Basic",
+        originalPrice: "₹2,499",
+        price: "₹599",
         period: "/mo",
         popular: false,
-        features: ["1 vCPU Core", "4 GB RAM", "50 GB NVMe", "4 TB Bandwidth", "Free Backups"],
+        features: ["2 CPU Cores", "4 GB RAM", "80 GB NVMe", "Dedicated IP", "Free SSL & CDN", "Auto-scaling"],
       },
       {
-        name: "KVM 2",
-        originalPrice: "₹1,511",
-        price: "₹469",
+        name: "Cloud Plus",
+        originalPrice: "₹4,999",
+        price: "₹1,199",
         period: "/mo",
         popular: true,
-        features: ["2 vCPU Cores", "8 GB RAM", "100 GB NVMe", "8 TB Bandwidth", "Free Snapshots"],
+        features: ["4 CPU Cores", "8 GB RAM", "200 GB NVMe", "Dedicated IP", "Priority Support", "Load Balancer"],
+      },
+      {
+        name: "Cloud Max",
+        originalPrice: "₹9,999",
+        price: "₹2,499",
+        period: "/mo",
+        popular: false,
+        features: ["8 CPU Cores", "16 GB RAM", "400 GB NVMe", "Dedicated IP", "24/7 Priority Support", "Multi-zone Failover"],
       },
     ],
   },
   {
-    icon: Star,
-    title: "WordPress Hosting",
-    description: "Managed WordPress with AI-powered tools",
+    icon: Server,
+    title: "Dedicated Servers",
+    description: "Enterprise-grade bare metal performance",
     plans: [
       {
-        name: "Premium",
-        originalPrice: "₹1,091",
-        price: "₹129",
+        name: "Entry",
+        originalPrice: "₹7,999",
+        price: "₹3,999",
         period: "/mo",
         popular: false,
-        features: ["3 Websites", "20 GB SSD", "Free SSL", "Auto Updates", "Site Migration"],
+        features: ["Intel Xeon E-2236", "16 GB DDR4 RAM", "500 GB NVMe SSD", "10 TB Bandwidth", "Free Setup", "IPMI Access"],
       },
       {
-        name: "Business + AI",
-        originalPrice: "₹1,595",
-        price: "₹199",
+        name: "Business",
+        originalPrice: "₹14,999",
+        price: "₹7,999",
         period: "/mo",
         popular: true,
-        features: ["50 Websites", "50 GB NVMe", "AI Site Builder", "Staging Tool", "Free CDN"],
+        features: ["Intel Xeon E-2288G", "32 GB DDR4 RAM", "1 TB NVMe SSD", "Unlimited Bandwidth", "DDoS Protection", "Managed Support"],
+      },
+      {
+        name: "Enterprise",
+        originalPrice: "₹29,999",
+        price: "₹14,999",
+        period: "/mo",
+        popular: false,
+        features: ["Dual Xeon Gold", "64 GB DDR4 RAM", "2x 1TB NVMe RAID", "Unlimited Bandwidth", "24/7 Managed", "Hardware Firewall"],
       },
     ],
   },
@@ -100,84 +132,87 @@ const categories = [
 
 const HomePricingSection = () => {
   return (
-    <section className="py-20 bg-muted/30">
+    <section className="py-20 bg-muted/30" id="pricing">
       <div className="section-container">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Hosting & Cloud <span className="gradient-text">Solutions</span>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Hosting Plans That <span className="gradient-text">Scale With You</span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Enterprise-grade infrastructure at India's most competitive prices. All plans include 24/7 support and 99.9% uptime guarantee.
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Enterprise-grade infrastructure at India's most competitive prices. All plans include free SSL, 24/7 support, 99.99% uptime SLA, and a 15-day free trial.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
-          {categories.map((category, index) => (
-            <div key={index} className="space-y-6">
-              <div className="flex items-center gap-4 mb-4">
+        <div className="space-y-16">
+          {categories.map((category, catIndex) => (
+            <div key={catIndex}>
+              <div className="flex items-center gap-3 mb-8">
                 <div className="p-3 rounded-xl bg-primary/10">
                   <category.icon className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold">{category.title}</h3>
+                  <h3 className="text-xl md:text-2xl font-bold">{category.title}</h3>
                   <p className="text-sm text-muted-foreground">{category.description}</p>
                 </div>
               </div>
 
-              {category.plans.map((plan, planIndex) => (
-                <Card
-                  key={planIndex}
-                  className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 ${
-                    plan.popular ? "border-primary/50 shadow-primary/10 shadow-lg ring-1 ring-primary/20" : ""
-                  }`}
-                >
-                  {plan.popular && (
-                    <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary to-accent" />
-                  )}
-                  {plan.popular && (
-                    <div className="absolute top-4 right-4">
-                      <span className="text-xs font-bold bg-primary text-primary-foreground px-3 py-1 rounded-full uppercase tracking-wider">
-                        Popular
-                      </span>
-                    </div>
-                  )}
-                  <CardHeader className="pb-3 pt-6 px-6">
-                    <CardTitle className="text-lg">{plan.name}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="px-6 pb-6">
-                    <div className="mb-4">
-                      <span className="text-sm text-muted-foreground line-through">{plan.originalPrice}</span>
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-4xl font-black gradient-text">{plan.price}</span>
-                        <span className="text-base text-muted-foreground">{plan.period}</span>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {category.plans.map((plan, planIndex) => (
+                  <Card
+                    key={planIndex}
+                    className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 ${
+                      plan.popular ? "border-primary/50 shadow-primary/10 shadow-lg ring-2 ring-primary/20 scale-[1.02]" : ""
+                    }`}
+                  >
+                    {plan.popular && (
+                      <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary to-accent" />
+                    )}
+                    {plan.popular && (
+                      <div className="absolute top-4 right-4">
+                        <span className="text-xs font-bold bg-primary text-primary-foreground px-3 py-1 rounded-full uppercase tracking-wider">
+                          Most Popular
+                        </span>
                       </div>
-                    </div>
-                    <ul className="space-y-2.5 mb-6">
-                      {plan.features.map((feature, i) => (
-                        <li key={i} className="flex items-center gap-2.5">
-                          <Check className="w-4 h-4 text-primary flex-shrink-0" />
-                          <span className="text-sm text-muted-foreground">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <Link to="/quote">
-                      <Button
-                        className={`w-full h-11 text-sm font-bold ${plan.popular ? "btn-gradient" : "variant-outline"}`}
-                        variant={plan.popular ? "default" : "outline"}
-                      >
-                        Get Started
-                      </Button>
-                    </Link>
-                  </CardContent>
-                </Card>
-              ))}
+                    )}
+                    <CardHeader className="pb-3 pt-8 px-8">
+                      <CardTitle className="text-xl font-bold">{plan.name}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="px-8 pb-8">
+                      <div className="mb-6">
+                        <span className="text-sm text-muted-foreground line-through">{plan.originalPrice}</span>
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-4xl md:text-5xl font-black gradient-text">{plan.price}</span>
+                          <span className="text-base text-muted-foreground">{plan.period}</span>
+                        </div>
+                        <p className="text-xs text-primary font-medium mt-1">15 Days Free Trial</p>
+                      </div>
+                      <ul className="space-y-3 mb-8">
+                        {plan.features.map((feature, i) => (
+                          <li key={i} className="flex items-center gap-3">
+                            <Check className="w-4 h-4 text-primary flex-shrink-0" />
+                            <span className="text-sm text-muted-foreground">{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <Link to="/quote">
+                        <Button
+                          className={`w-full h-12 text-sm font-bold ${plan.popular ? "btn-gradient" : ""}`}
+                          variant={plan.popular ? "default" : "outline"}
+                        >
+                          Get Started
+                        </Button>
+                      </Link>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </div>
           ))}
         </div>
 
-        <div className="text-center mt-12">
+        <div className="text-center mt-14">
           <Link to="/pricing">
-            <Button size="lg" variant="outline" className="group">
+            <Button size="lg" variant="outline" className="group text-base">
               View All Plans & Compare
               <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Button>
