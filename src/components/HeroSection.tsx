@@ -80,18 +80,16 @@ const HeroSection = () => {
         <div className="max-w-6xl mx-auto animate-fade-in flex flex-col lg:flex-row items-center gap-8">
           <div className="flex-1">
             {/* Main Headline */}
-            <h1 className="mb-8 leading-[0.95] font-black text-5xl md:text-7xl lg:text-8xl">
-              Helping businesses{" "}
-              <span className="gradient-text inline-block">win</span>{" "}
-              <span className="text-foreground">online</span>
+            <h1 className="mb-6 leading-tight font-black text-3xl md:text-4xl lg:text-5xl">
+              Best <span className="gradient-text">Cloud Hosting</span>, Web Development &amp; AI Solutions in India
             </h1>
 
-            <p className="text-xl md:text-2xl lg:text-3xl text-foreground mb-6 max-w-2xl font-semibold leading-tight">
-              Limitless Solution for Cloud and Web Hosting
+            <p className="text-lg md:text-xl lg:text-2xl text-foreground mb-4 max-w-2xl font-semibold leading-snug">
+              Managed VPS, Dedicated Servers &amp; Enterprise IT Infrastructure
             </p>
             
-            <p className="text-base md:text-lg lg:text-xl text-foreground/70 mb-12 max-w-xl leading-relaxed">
-              Enterprise-grade infrastructure with zero-downtime guarantee. Scale infinitely with our premium cloud solutions.
+            <p className="text-sm md:text-base lg:text-lg text-foreground/70 mb-10 max-w-xl leading-relaxed">
+              From cloud hosting to mobile apps and AI — get enterprise-grade infrastructure with 99.99% uptime SLA, 24/7 expert support, and zero-downtime guarantee. Trusted by 1000+ businesses across India.
             </p>
 
             {/* CTAs */}
@@ -135,7 +133,7 @@ const HeroSection = () => {
           </div>
 
           {/* Mini animated orbit on bottom-right */}
-          <div className="hidden lg:flex items-center justify-center flex-shrink-0">
+          <div className="hidden lg:flex items-start justify-center flex-shrink-0 -mt-8">
             <MiniAnimatedOrbit />
           </div>
         </div>
