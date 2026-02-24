@@ -113,57 +113,56 @@ const HomePricingSection = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
           {categories.map((category, index) => (
-            <div key={index} className="space-y-4">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <category.icon className="w-5 h-5 text-primary" />
+            <div key={index} className="space-y-6">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="p-3 rounded-xl bg-primary/10">
+                  <category.icon className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold">{category.title}</h3>
-                  <p className="text-xs text-muted-foreground">{category.description}</p>
+                  <h3 className="text-xl font-bold">{category.title}</h3>
+                  <p className="text-sm text-muted-foreground">{category.description}</p>
                 </div>
               </div>
 
               {category.plans.map((plan, planIndex) => (
                 <Card
                   key={planIndex}
-                  className={`relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${
-                    plan.popular ? "border-primary/50 shadow-primary/10 shadow-md" : ""
+                  className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 ${
+                    plan.popular ? "border-primary/50 shadow-primary/10 shadow-lg ring-1 ring-primary/20" : ""
                   }`}
                 >
                   {plan.popular && (
-                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-accent" />
+                    <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary to-accent" />
                   )}
                   {plan.popular && (
-                    <div className="absolute top-3 right-3">
-                      <span className="text-[10px] font-bold bg-primary text-primary-foreground px-2 py-0.5 rounded-full uppercase tracking-wider">
+                    <div className="absolute top-4 right-4">
+                      <span className="text-xs font-bold bg-primary text-primary-foreground px-3 py-1 rounded-full uppercase tracking-wider">
                         Popular
                       </span>
                     </div>
                   )}
-                  <CardHeader className="pb-2 pt-4 px-4">
-                    <CardTitle className="text-base">{plan.name}</CardTitle>
+                  <CardHeader className="pb-3 pt-6 px-6">
+                    <CardTitle className="text-lg">{plan.name}</CardTitle>
                   </CardHeader>
-                  <CardContent className="px-4 pb-4">
-                    <div className="mb-3">
-                      <span className="text-xs text-muted-foreground line-through">{plan.originalPrice}</span>
+                  <CardContent className="px-6 pb-6">
+                    <div className="mb-4">
+                      <span className="text-sm text-muted-foreground line-through">{plan.originalPrice}</span>
                       <div className="flex items-baseline gap-1">
-                        <span className="text-3xl font-black gradient-text">{plan.price}</span>
-                        <span className="text-sm text-muted-foreground">{plan.period}</span>
+                        <span className="text-4xl font-black gradient-text">{plan.price}</span>
+                        <span className="text-base text-muted-foreground">{plan.period}</span>
                       </div>
                     </div>
-                    <ul className="space-y-1.5 mb-4">
+                    <ul className="space-y-2.5 mb-6">
                       {plan.features.map((feature, i) => (
-                        <li key={i} className="flex items-center gap-2">
-                          <Check className="w-3.5 h-3.5 text-primary flex-shrink-0" />
-                          <span className="text-xs text-muted-foreground">{feature}</span>
+                        <li key={i} className="flex items-center gap-2.5">
+                          <Check className="w-4 h-4 text-primary flex-shrink-0" />
+                          <span className="text-sm text-muted-foreground">{feature}</span>
                         </li>
                       ))}
                     </ul>
                     <Link to="/quote">
                       <Button
-                        size="sm"
-                        className={`w-full ${plan.popular ? "btn-gradient" : "variant-outline"}`}
+                        className={`w-full h-11 text-sm font-bold ${plan.popular ? "btn-gradient" : "variant-outline"}`}
                         variant={plan.popular ? "default" : "outline"}
                       >
                         Get Started

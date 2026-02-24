@@ -8,10 +8,10 @@ import logo from "@/assets/logo-icon.png";
 const MiniAnimatedOrbit = () => {
   const [activeService, setActiveService] = useState(0);
   const services = [
-    { icon: Code, color: "from-cyan-500 to-blue-500" },
-    { icon: Database, color: "from-blue-500 to-purple-500" },
-    { icon: Cloud, color: "from-purple-500 to-pink-500" },
-    { icon: Cpu, color: "from-pink-500 to-cyan-500" },
+    { icon: Code, color: "from-cyan-500 to-blue-500", label: "Development" },
+    { icon: Database, color: "from-blue-500 to-purple-500", label: "Database" },
+    { icon: Cloud, color: "from-purple-500 to-pink-500", label: "Cloud" },
+    { icon: Cpu, color: "from-pink-500 to-cyan-500", label: "AI & ML" },
   ];
 
   useEffect(() => {
@@ -22,35 +22,42 @@ const MiniAnimatedOrbit = () => {
   }, []);
 
   return (
-    <div className="relative w-48 h-48 md:w-64 md:h-64 flex items-center justify-center">
+    <div className="relative w-72 h-72 md:w-96 md:h-96 flex items-center justify-center">
       <div className="absolute inset-0 rounded-full border border-primary/20 animate-spin" style={{ animationDuration: '15s' }} />
+      <div className="absolute inset-8 rounded-full border border-primary/10 animate-spin" style={{ animationDuration: '25s', animationDirection: 'reverse' }} />
       {services.map((service, index) => {
         const angle = (index * 360) / services.length;
         const Icon = service.icon;
+        const radius = 130;
         return (
           <div
             key={index}
-            className="absolute w-8 h-8 md:w-10 md:h-10 flex items-center justify-center"
+            className="absolute flex flex-col items-center gap-1"
             style={{
-              transform: `rotate(${angle}deg) translateX(80px) rotate(-${angle}deg)`,
+              transform: `rotate(${angle}deg) translateX(${radius}px) rotate(-${angle}deg)`,
               transition: 'all 0.5s ease',
             }}
           >
-            <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center transition-all duration-500 border ${
+            <div className={`w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all duration-500 border ${
               activeService === index
                 ? 'bg-gradient-to-br ' + service.color + ' scale-125 shadow-xl border-transparent'
                 : 'bg-background/80 border-primary/30'
             }`}>
-              <Icon className={`w-4 h-4 md:w-5 md:h-5 transition-all duration-500 ${
+              <Icon className={`w-5 h-5 md:w-6 md:h-6 transition-all duration-500 ${
                 activeService === index ? 'text-white' : 'text-primary'
               }`} />
             </div>
+            <span className={`text-[10px] md:text-xs font-semibold transition-all duration-500 whitespace-nowrap ${
+              activeService === index ? 'text-primary' : 'text-muted-foreground'
+            }`}>
+              {service.label}
+            </span>
           </div>
         );
       })}
-      <div className="relative z-10 w-20 h-20 md:w-28 md:h-28 flex items-center justify-center">
+      <div className="relative z-10 w-28 h-28 md:w-36 md:h-36 flex items-center justify-center">
         <div className="absolute inset-0 bg-background rounded-full" />
-        <img src={logo} alt="Infinitive Cloud" className="relative z-10 w-18 h-18 md:w-24 md:h-24 object-contain" />
+        <img src={logo} alt="Infinitive Cloud" className="relative z-10 w-24 h-24 md:w-32 md:h-32 object-contain" />
       </div>
     </div>
   );
