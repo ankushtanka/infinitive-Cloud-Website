@@ -18,15 +18,15 @@ const HeroSection = () => {
       
       <div className="section-container w-full relative z-10">
         <div className="max-w-4xl mx-auto text-center animate-fade-in">
-          <h1 className="mb-6 leading-tight font-black text-3xl md:text-4xl lg:text-5xl">
+          <h1 className="mb-6 leading-tight font-black text-4xl md:text-5xl lg:text-6xl">
             Premium <span className="gradient-text">Cloud & Web Hosting</span> Solutions in India
           </h1>
 
-          <p className="text-lg md:text-xl text-muted-foreground mb-4 max-w-2xl mx-auto font-semibold">
+          <p className="text-xl md:text-2xl text-muted-foreground mb-4 max-w-2xl mx-auto font-semibold">
             99.99% Uptime • 24×7 Expert Support • 15 Days Free Trial
           </p>
           
-          <p className="text-sm md:text-base text-foreground/60 mb-10 max-w-xl mx-auto leading-relaxed">
+          <p className="text-base md:text-lg text-foreground/60 mb-10 max-w-xl mx-auto leading-relaxed">
             Limitless solutions for cloud and web hosting. Managed VPS, dedicated servers, shared hosting, and enterprise infrastructure — built for speed, security, and scale.
           </p>
 
