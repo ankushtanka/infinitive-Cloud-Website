@@ -14,8 +14,6 @@ import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { StructuredData, organizationSchema, websiteSchema, createBreadcrumbSchema, createFAQSchema } from "@/components/StructuredData";
 
 const Index = () => {
-  const pricing = useScrollAnimation();
-  const services = useScrollAnimation();
   const whyUs = useScrollAnimation();
   const trial = useScrollAnimation();
   const seo = useScrollAnimation();
@@ -65,12 +63,8 @@ const Index = () => {
       <main id="main-content">
         <HeroSection />
         <DomainSearchSection />
-        <div ref={pricing.ref}>
-          <HomePricingSection />
-        </div>
-        <div ref={services.ref}>
-          <WhatWeDoSection />
-        </div>
+        <HomePricingSection />
+        <WhatWeDoSection />
         <div ref={whyUs.ref}>
           <WhyTrustUsSection />
         </div>
