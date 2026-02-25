@@ -152,6 +152,7 @@ All colors MUST be HSL.
   html {
     /* Lenis handles smooth scrolling */
     scroll-padding-top: 5rem;
+    overflow-x: hidden;
   }
 
   body {
