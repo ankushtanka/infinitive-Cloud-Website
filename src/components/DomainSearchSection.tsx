@@ -2,18 +2,25 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Globe, ArrowRight, Check } from "lucide-react";
+import { Search, Globe, ArrowRight, Check, Shield, Zap, Clock, Lock } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const tlds = [
-  { ext: ".com", price: "₹799", original: "₹1,199", tag: "Most Popular" },
-  { ext: ".in", price: "₹449", original: "₹699", tag: "India #1" },
-  { ext: ".co.in", price: "₹299", original: "₹499", tag: null },
-  { ext: ".net", price: "₹899", original: "₹1,299", tag: null },
-  { ext: ".org", price: "₹749", original: "₹1,099", tag: null },
-  { ext: ".online", price: "₹199", original: "₹599", tag: "Best Value" },
-  { ext: ".site", price: "₹199", original: "₹499", tag: null },
-  { ext: ".xyz", price: "₹99", original: "₹299", tag: "Cheapest" },
+  { ext: ".com", price: "₹799", original: "₹1,199", tag: "Most Popular", icon: "🌐" },
+  { ext: ".in", price: "₹449", original: "₹699", tag: "India #1", icon: "🇮🇳" },
+  { ext: ".co.in", price: "₹299", original: "₹499", tag: null, icon: "🏢" },
+  { ext: ".net", price: "₹899", original: "₹1,299", tag: null, icon: "🔗" },
+  { ext: ".org", price: "₹749", original: "₹1,099", tag: null, icon: "🏛️" },
+  { ext: ".online", price: "₹199", original: "₹599", tag: "Best Value", icon: "💻" },
+  { ext: ".site", price: "₹199", original: "₹499", tag: null, icon: "🌍" },
+  { ext: ".xyz", price: "₹99", original: "₹299", tag: "Cheapest", icon: "⚡" },
+];
+
+const perks = [
+  { icon: Shield, label: "Free WHOIS Privacy" },
+  { icon: Zap, label: "Instant Activation" },
+  { icon: Clock, label: "24/7 DNS Management" },
+  { icon: Lock, label: "Free SSL Included" },
 ];
 
 const DomainSearchSection = () => {
@@ -28,102 +35,136 @@ const DomainSearchSection = () => {
   const baseName = domain.replace(/\..+$/, "").trim();
 
   return (
-    <section className="py-20 bg-gradient-to-b from-primary/5 via-accent/5 to-background border-y border-border/50">
+    <section className="py-20 bg-muted/30" id="domains">
       <div className="section-container">
-        <div className="max-w-4xl mx-auto text-center">
+        {/* Header */}
+        <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 bg-primary/10 text-primary font-semibold text-sm px-4 py-1.5 rounded-full mb-4">
             <Globe className="w-4 h-4" />
             Domain Registration Starting at ₹99/yr
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-3">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
             Find Your Perfect <span className="gradient-text">Domain Name</span>
           </h2>
-          <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-            Search, register, and secure your brand online. Free WHOIS privacy & instant activation included.
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Search, register, and secure your brand online. Every domain includes free WHOIS privacy, instant DNS activation, and enterprise-grade security.
           </p>
+        </div>
 
-          {/* Search Bar */}
-          <form onSubmit={handleSearch} className="flex gap-2 max-w-2xl mx-auto mb-6">
-            <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder="Type your dream domain... e.g. mybusiness"
-                value={domain}
-                onChange={(e) => { setDomain(e.target.value); setSearched(false); }}
-                className="pl-12 h-14 text-base md:text-lg rounded-xl border-2 focus:border-primary"
-              />
+        {/* Search Bar - Full Width Card */}
+        <Card className="max-w-4xl mx-auto mb-10 border-primary/20 shadow-lg shadow-primary/5">
+          <CardContent className="p-6 md:p-8">
+            <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">
+              <div className="relative flex-1">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <Input
+                  type="text"
+                  placeholder="Type your dream domain... e.g. mybusiness"
+                  value={domain}
+                  onChange={(e) => { setDomain(e.target.value); setSearched(false); }}
+                  className="pl-12 h-14 text-base md:text-lg rounded-xl border-2 focus:border-primary"
+                />
+              </div>
+              <Button type="submit" className="btn-gradient h-14 px-10 rounded-xl font-bold text-base">
+                <Search className="w-5 h-5 mr-2" />
+                Search Domain
+              </Button>
+            </form>
+            {/* Perks Row */}
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mt-5">
+              {perks.map((perk) => (
+                <div key={perk.label} className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <perk.icon className="w-4 h-4 text-primary" />
+                  <span>{perk.label}</span>
+                </div>
+              ))}
             </div>
-            <Button type="submit" className="btn-gradient h-14 px-8 rounded-xl font-bold text-base">
-              Search
-            </Button>
-          </form>
+          </CardContent>
+        </Card>
 
-          {/* Search Results */}
-          {searched && baseName && (
-            <div className="bg-card border-2 border-primary/20 rounded-2xl p-6 mb-8 animate-fade-in text-left">
-              <p className="text-sm text-muted-foreground mb-4">
-                Showing results for <span className="font-bold text-foreground">"{baseName}"</span>
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                {tlds.map((tld) => (
-                  <div
-                    key={tld.ext}
-                    className="flex items-center justify-between bg-muted/50 hover:bg-muted rounded-xl px-4 py-3 transition-colors group cursor-pointer border border-transparent hover:border-primary/20"
-                  >
+        {/* Search Results */}
+        {searched && baseName && (
+          <div className="max-w-5xl mx-auto mb-12 animate-fade-in">
+            <p className="text-sm text-muted-foreground mb-4">
+              Showing results for <span className="font-bold text-foreground">"{baseName}"</span>
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {tlds.map((tld) => (
+                <Card
+                  key={tld.ext}
+                  className="hover:border-primary/30 hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+                >
+                  <CardContent className="p-5 flex items-center justify-between">
                     <div>
-                      <span className="font-bold text-sm">{baseName}{tld.ext}</span>
-                      <div className="flex items-center gap-1 mt-0.5">
-                            <Check className="w-3 h-3 text-primary" />
-                            <span className="text-xs text-primary font-medium">Available</span>
+                      <span className="font-bold text-base">{baseName}{tld.ext}</span>
+                      <div className="flex items-center gap-1 mt-1">
+                        <Check className="w-3.5 h-3.5 text-primary" />
+                        <span className="text-xs text-primary font-semibold">Available</span>
                       </div>
                     </div>
                     <div className="text-right">
                       <span className="text-xs text-muted-foreground line-through block">{tld.original}/yr</span>
-                      <span className="text-sm text-primary font-black">{tld.price}/yr</span>
+                      <span className="text-lg text-primary font-black">{tld.price}<span className="text-xs font-medium">/yr</span></span>
                     </div>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4 text-center">
-                <Link to="/solutions/domains">
-                  <Button className="btn-gradient font-bold h-12 px-8">
-                    Register Now <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          )}
-
-          {/* Extension Cards */}
-          {!searched && (
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
-              {tlds.map((tld, i) => (
-                <div
-                  key={tld.ext}
-                  className="relative bg-card border border-border hover:border-primary/30 rounded-xl px-3 py-4 text-center transition-all hover:shadow-md hover:-translate-y-1 cursor-pointer animate-fade-in-up"
-                  style={{ animationDelay: `${i * 0.05}s` }}
-                >
-                  {tld.tag && (
-                    <span className="absolute -top-2 left-1/2 -translate-x-1/2 text-[9px] font-bold bg-primary text-primary-foreground px-2 py-0.5 rounded-full whitespace-nowrap">
-                      {tld.tag}
-                    </span>
-                  )}
-                  <span className="text-lg font-black text-foreground">{tld.ext}</span>
-                  <div className="mt-1">
-                    <span className="text-[10px] text-muted-foreground line-through block">{tld.original}</span>
-                    <span className="text-sm font-bold text-primary">{tld.price}/yr</span>
-                  </div>
-                </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
-          )}
-
-          <div className="mt-6">
-            <Link to="/solutions/domains" className="text-sm text-primary font-semibold hover:underline inline-flex items-center gap-1">
-              View all 500+ domain extensions <ArrowRight className="w-3 h-3" />
-            </Link>
+            <div className="mt-6 text-center">
+              <Link to="/solutions/domains">
+                <Button className="btn-gradient font-bold h-12 px-10 text-base">
+                  Register Now <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </Link>
+            </div>
           </div>
+        )}
+
+        {/* Extension Cards Grid */}
+        {!searched && (
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-5 max-w-5xl mx-auto">
+            {tlds.map((tld, i) => (
+              <Card
+                key={tld.ext}
+                className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer animate-fade-in-up ${
+                  tld.tag ? "border-primary/30 shadow-primary/5 shadow-md" : ""
+                }`}
+                style={{ animationDelay: `${i * 0.06}s` }}
+              >
+                {tld.tag && (
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-accent" />
+                )}
+                {tld.tag && (
+                  <div className="absolute top-3 right-3">
+                    <span className="text-[10px] font-bold bg-primary text-primary-foreground px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                      {tld.tag}
+                    </span>
+                  </div>
+                )}
+                <CardContent className="p-6 pt-8 text-center">
+                  <span className="text-2xl mb-1 block">{tld.icon}</span>
+                  <span className="text-2xl font-black text-foreground block">{tld.ext}</span>
+                  <div className="mt-3">
+                    <span className="text-xs text-muted-foreground line-through block">{tld.original}/yr</span>
+                    <span className="text-xl font-black gradient-text">{tld.price}</span>
+                    <span className="text-sm text-muted-foreground">/yr</span>
+                  </div>
+                  <Button variant="outline" size="sm" className="mt-4 w-full font-bold text-sm">
+                    Register
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+
+        <div className="text-center mt-10">
+          <Link to="/solutions/domains">
+            <Button size="lg" variant="outline" className="group text-base">
+              View All 500+ Domain Extensions
+              <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </Link>
         </div>
       </div>
     </section>
