@@ -45,7 +45,7 @@ const WhatWeDoSection = () => {
   return (
     <section className="py-24 bg-gradient-to-b from-background via-muted/20 to-background relative overflow-hidden">
       <div className="section-container relative z-10">
-        <div className="text-center mb-16 animate-fade-in">
+        <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
             Our Hosting <span className="gradient-text">Services</span>
           </h2>
@@ -60,8 +60,7 @@ const WhatWeDoSection = () => {
             return (
               <Link to={service.link} key={service.title}>
                 <Card
-                  className="card-premium group hover:border-primary/30 h-full animate-fade-in-up"
-                  style={{ animationDelay: `${index * 0.08}s` }}
+                  className="card-premium group hover:border-primary/30 h-full"
                 >
                   <CardContent className="p-8">
                     <div className="relative mb-5">
