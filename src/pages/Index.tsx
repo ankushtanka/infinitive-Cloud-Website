@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import HeroSection from "@/components/HeroSection";
 import DomainSearchSection from "@/components/DomainSearchSection";
 import HomePricingSection from "@/components/HomePricingSection";
-
+import WhatWeDoSection from "@/components/WhatWeDoSection";
 import WhyTrustUsSection from "@/components/WhyTrustUsSection";
 import FreeTrialSection from "@/components/FreeTrialSection";
 import SEOContentSection from "@/components/SEOContentSection";
@@ -64,7 +64,7 @@ const Index = () => {
         <HeroSection />
         <DomainSearchSection />
         <HomePricingSection />
-        
+        <WhatWeDoSection />
         <div ref={whyUs.ref}>
           <WhyTrustUsSection />
         </div>
