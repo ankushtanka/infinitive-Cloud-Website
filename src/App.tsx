@@ -18,6 +18,22 @@ import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import SLA from "./pages/SLA";
 import Refund from "./pages/Refund";
+import Solutions from "./pages/Solutions";
+import Knowledgebase from "./pages/Knowledgebase";
+
+// Solution pages
+import SharedHosting from "./pages/solutions/SharedHosting";
+import VPSHosting from "./pages/solutions/VPSHosting";
+import CloudHosting from "./pages/solutions/CloudHosting";
+import DedicatedServers from "./pages/solutions/DedicatedServers";
+import ResellerHosting from "./pages/solutions/ResellerHosting";
+import WordPressHosting from "./pages/solutions/WordPressHosting";
+import GPUDedicatedServer from "./pages/solutions/GPUDedicatedServer";
+import StreamingServers from "./pages/solutions/StreamingServers";
+import SSLCertificates from "./pages/solutions/SSLCertificates";
+import DomainRegistration from "./pages/solutions/DomainRegistration";
+import ServerManagement from "./pages/solutions/ServerManagement";
+import CloudMigration from "./pages/solutions/CloudMigration";
 
 const queryClient = new QueryClient();
 
@@ -58,6 +74,23 @@ const App = () => {
             <Route path="/terms" element={<Terms />} />
             <Route path="/sla" element={<SLA />} />
             <Route path="/refund" element={<Refund />} />
+            <Route path="/solutions" element={<Solutions />} />
+            <Route path="/knowledgebase" element={<Knowledgebase />} />
+
+            {/* Solution pages */}
+            <Route path="/solutions/shared-hosting" element={<SharedHosting />} />
+            <Route path="/solutions/vps-hosting" element={<VPSHosting />} />
+            <Route path="/solutions/cloud-hosting" element={<CloudHosting />} />
+            <Route path="/solutions/dedicated-servers" element={<DedicatedServers />} />
+            <Route path="/solutions/reseller-hosting" element={<ResellerHosting />} />
+            <Route path="/solutions/wordpress-hosting" element={<WordPressHosting />} />
+            <Route path="/solutions/gpu-dedicated-server" element={<GPUDedicatedServer />} />
+            <Route path="/solutions/streaming-servers" element={<StreamingServers />} />
+            <Route path="/solutions/ssl-certificates" element={<SSLCertificates />} />
+            <Route path="/solutions/domains" element={<DomainRegistration />} />
+            <Route path="/solutions/server-management" element={<ServerManagement />} />
+            <Route path="/solutions/cloud-migration" element={<CloudMigration />} />
+
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
