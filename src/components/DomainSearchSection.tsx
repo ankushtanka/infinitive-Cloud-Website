@@ -142,12 +142,12 @@ const DomainSearchSection = () => {
                   </div>
                 )}
                 <CardContent className="p-6 pt-8 text-center">
-                  <span className="text-2xl mb-1 block">{tld.icon}</span>
-                  <span className="text-2xl font-black text-foreground block">{tld.ext}</span>
-                  <div className="mt-3">
-                    <span className="text-xs text-muted-foreground line-through block">{tld.original}/yr</span>
-                    <span className="text-xl font-black gradient-text">{tld.price}</span>
-                    <span className="text-sm text-muted-foreground">/yr</span>
+                  <span className="text-3xl mb-2 block">{tld.icon}</span>
+                  <span className="text-3xl font-black text-foreground block">{tld.ext}</span>
+                  <div className="mt-4">
+                    <span className="text-sm text-muted-foreground line-through block">{tld.original}/yr</span>
+                    <span className="text-3xl md:text-4xl font-black gradient-text">{tld.price}</span>
+                    <span className="text-base text-muted-foreground">/yr</span>
                   </div>
                   <Button variant="outline" size="sm" className="mt-4 w-full font-bold text-sm">
                     Register
