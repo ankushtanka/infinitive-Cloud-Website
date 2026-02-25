@@ -10,15 +10,9 @@ import FreeTrialSection from "@/components/FreeTrialSection";
 import SEOContentSection from "@/components/SEOContentSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import FAQSection from "@/components/FAQSection";
-import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { StructuredData, organizationSchema, websiteSchema, createBreadcrumbSchema, createFAQSchema } from "@/components/StructuredData";
 
 const Index = () => {
-  const whyUs = useScrollAnimation();
-  const trial = useScrollAnimation();
-  const seo = useScrollAnimation();
-  const testimonials = useScrollAnimation();
-  const faq = useScrollAnimation();
 
   const breadcrumbSchema = createBreadcrumbSchema([
     { name: "Home", url: "https://infinitivecloud.com/" }
@@ -65,21 +59,11 @@ const Index = () => {
         <DomainSearchSection />
         <HomePricingSection />
         <WhatWeDoSection />
-        <div ref={whyUs.ref}>
-          <WhyTrustUsSection />
-        </div>
-        <div ref={trial.ref}>
-          <FreeTrialSection />
-        </div>
-        <div ref={testimonials.ref}>
-          <TestimonialsSection />
-        </div>
-        <div ref={seo.ref}>
-          <SEOContentSection />
-        </div>
-        <div ref={faq.ref}>
-          <FAQSection />
-        </div>
+        <WhyTrustUsSection />
+        <FreeTrialSection />
+        <TestimonialsSection />
+        <SEOContentSection />
+        <FAQSection />
       </main>
       <Footer />
     </div>
