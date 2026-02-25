@@ -6,33 +6,33 @@ import { Search, Globe, ArrowRight, Check, Shield, Zap, Clock, Lock } from "luci
 import { Link } from "react-router-dom";
 
 const tlds = [
-  { ext: ".com", price: "₹799", original: "₹1,199", tag: "Most Popular", color: "from-primary to-accent" },
-  { ext: ".in", price: "₹449", original: "₹699", tag: "India #1", color: "from-emerald-500 to-teal-500" },
-  { ext: ".co.in", price: "₹299", original: "₹499", tag: null, color: "from-slate-500 to-slate-600" },
-  { ext: ".net", price: "₹899", original: "₹1,299", tag: null, color: "from-blue-500 to-indigo-500" },
-  { ext: ".org", price: "₹749", original: "₹1,099", tag: null, color: "from-violet-500 to-purple-500" },
-  { ext: ".online", price: "₹199", original: "₹599", tag: "Best Value", color: "from-orange-500 to-amber-500" },
-  { ext: ".site", price: "₹199", original: "₹499", tag: null, color: "from-pink-500 to-rose-500" },
-  { ext: ".xyz", price: "₹99", original: "₹299", tag: "Cheapest", color: "from-cyan-500 to-sky-500" },
-];
+{ ext: ".com", price: "₹799", original: "₹1,199", tag: "Most Popular", color: "from-primary to-accent" },
+{ ext: ".in", price: "₹449", original: "₹699", tag: "India #1", color: "from-emerald-500 to-teal-500" },
+{ ext: ".co.in", price: "₹299", original: "₹499", tag: null, color: "from-slate-500 to-slate-600" },
+{ ext: ".net", price: "₹899", original: "₹1,299", tag: null, color: "from-blue-500 to-indigo-500" },
+{ ext: ".org", price: "₹749", original: "₹1,099", tag: null, color: "from-violet-500 to-purple-500" },
+{ ext: ".online", price: "₹199", original: "₹599", tag: "Best Value", color: "from-orange-500 to-amber-500" },
+{ ext: ".site", price: "₹199", original: "₹499", tag: null, color: "from-pink-500 to-rose-500" },
+{ ext: ".xyz", price: "₹99", original: "₹299", tag: "Cheapest", color: "from-cyan-500 to-sky-500" }];
+
 
 const perks = [
-  { icon: Shield, label: "Free WHOIS Privacy" },
-  { icon: Zap, label: "Instant Activation" },
-  { icon: Clock, label: "24/7 DNS Management" },
-  { icon: Lock, label: "Free SSL Included" },
-];
+{ icon: Shield, label: "Free WHOIS Privacy" },
+{ icon: Zap, label: "Instant Activation" },
+{ icon: Clock, label: "24/7 DNS Management" },
+{ icon: Lock, label: "Free SSL Included" }];
+
 
 const placeholderWords = [
-  "mybusiness",
-  "mystore",
-  "myportfolio",
-  "mycompany",
-  "mywebsite",
-  "mybrand",
-  "myagency",
-  "mystartup",
-];
+"mybusiness",
+"mystore",
+"myportfolio",
+"mycompany",
+"mywebsite",
+"mybrand",
+"myagency",
+"mystartup"];
+
 
 const DomainSearchSection = () => {
   const [domain, setDomain] = useState("");
@@ -92,7 +92,7 @@ const DomainSearchSection = () => {
             Find Your Perfect <span className="gradient-text">Domain Name</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Search, register, and secure your brand online. Every domain includes free WHOIS privacy, instant DNS activation, and enterprise-grade security.
+
           </p>
         </div>
 
@@ -106,9 +106,9 @@ const DomainSearchSection = () => {
                   type="text"
                   placeholder={domain ? "" : `Type your dream domain... e.g. ${animatedPlaceholder}|`}
                   value={domain}
-                  onChange={(e) => { setDomain(e.target.value); setSearched(false); }}
-                  className="pl-12 h-14 text-base md:text-lg rounded-xl border-2 focus:border-primary"
-                />
+                  onChange={(e) => {setDomain(e.target.value);setSearched(false);}}
+                  className="pl-12 h-14 text-base md:text-lg rounded-xl border-2 focus:border-primary" />
+
               </div>
               <Button type="submit" className="btn-gradient h-14 px-10 rounded-xl font-bold text-base">
                 <Search className="w-5 h-5 mr-2" />
@@ -116,28 +116,28 @@ const DomainSearchSection = () => {
               </Button>
             </form>
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mt-5">
-              {perks.map((perk) => (
-                <div key={perk.label} className="flex items-center gap-2 text-sm text-muted-foreground">
+              {perks.map((perk) =>
+              <div key={perk.label} className="flex items-center gap-2 text-sm text-muted-foreground">
                   <perk.icon className="w-4 h-4 text-primary" />
                   <span>{perk.label}</span>
                 </div>
-              ))}
+              )}
             </div>
           </CardContent>
         </Card>
 
         {/* Search Results */}
-        {searched && baseName && (
-          <div className="max-w-5xl mx-auto mb-12 animate-fade-in">
+        {searched && baseName &&
+        <div className="max-w-5xl mx-auto mb-12 animate-fade-in">
             <p className="text-sm text-muted-foreground mb-4">
               Showing results for <span className="font-bold text-foreground">"{baseName}"</span>
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {tlds.map((tld) => (
-                <Card
-                  key={tld.ext}
-                  className="hover:border-primary/30 hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-pointer"
-                >
+              {tlds.map((tld) =>
+            <Card
+              key={tld.ext}
+              className="hover:border-primary/30 hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-pointer">
+
                   <CardContent className="p-5 flex items-center justify-between">
                     <div>
                       <span className="font-bold text-base">{baseName}{tld.ext}</span>
@@ -152,7 +152,7 @@ const DomainSearchSection = () => {
                     </div>
                   </CardContent>
                 </Card>
-              ))}
+            )}
             </div>
             <div className="mt-6 text-center">
               <Link to="/solutions/domains">
@@ -162,29 +162,29 @@ const DomainSearchSection = () => {
               </Link>
             </div>
           </div>
-        )}
+        }
 
         {/* Extension Cards Grid */}
-        {!searched && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-5 max-w-5xl mx-auto">
-            {tlds.map((tld, i) => (
-              <Card
-                key={tld.ext}
-                className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer animate-fade-in-up group ${
-                  tld.tag ? "border-primary/20 shadow-md" : "border-border"
-                }`}
-                style={{ animationDelay: `${i * 0.06}s` }}
-              >
+        {!searched &&
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-5 max-w-5xl mx-auto">
+            {tlds.map((tld, i) =>
+          <Card
+            key={tld.ext}
+            className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer animate-fade-in-up group ${
+            tld.tag ? "border-primary/20 shadow-md" : "border-border"}`
+            }
+            style={{ animationDelay: `${i * 0.06}s` }}>
+
                 {/* Top gradient bar */}
                 <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${tld.color} opacity-80 group-hover:opacity-100 transition-opacity`} />
 
-                {tld.tag && (
-                  <div className="absolute top-3 right-3">
+                {tld.tag &&
+            <div className="absolute top-3 right-3">
                     <span className="text-[10px] font-bold bg-primary text-primary-foreground px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                       {tld.tag}
                     </span>
                   </div>
-                )}
+            }
 
                 <CardContent className="p-6 pt-7 text-center">
                   {/* Extension name with gradient underline */}
@@ -203,9 +203,9 @@ const DomainSearchSection = () => {
                   </Button>
                 </CardContent>
               </Card>
-            ))}
+          )}
           </div>
-        )}
+        }
 
         <div className="text-center mt-10">
           <Link to="/solutions/domains">
@@ -216,8 +216,8 @@ const DomainSearchSection = () => {
           </Link>
         </div>
       </div>
-    </section>
-  );
+    </section>);
+
 };
 
 export default DomainSearchSection;
