@@ -38,7 +38,7 @@ const WhyTrustUsSection = () => {
   return (
     <section className="py-24 bg-gradient-to-b from-background to-muted/20 relative overflow-hidden">
       <div className="section-container relative z-10">
-        <div className="text-center mb-16 animate-fade-in">
+        <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
             Why Choose <span className="gradient-text">Infinitive Cloud</span>
           </h2>
@@ -53,8 +53,7 @@ const WhyTrustUsSection = () => {
             return (
               <Card
                 key={item.title}
-                className="card-premium group hover:border-primary/30 animate-fade-in-up"
-                style={{ animationDelay: `${index * 0.08}s` }}
+                className="card-premium group hover:border-primary/30"
               >
                 <CardContent className="p-8 text-center">
                   <div className="relative inline-flex mb-5">

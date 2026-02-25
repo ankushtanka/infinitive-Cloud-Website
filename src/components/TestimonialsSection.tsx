@@ -28,7 +28,7 @@ const TestimonialsSection = () => {
 
   return (
     <section className="section-container py-20 bg-muted/30">
-      <div className="text-center mb-12 animate-fade-in">
+      <div className="text-center mb-12">
         <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
           Trusted by <span className="gradient-text">Industry Leaders</span>
         </h2>
@@ -41,8 +41,7 @@ const TestimonialsSection = () => {
         {testimonials.map((testimonial, index) => (
           <Card
             key={index}
-            className="card-hover animate-fade-in-up bg-card/50 backdrop-blur-sm"
-            style={{ animationDelay: `${index * 0.1}s` }}
+            className="card-hover bg-card/50"
           >
             <CardContent className="pt-6">
               <div className="flex gap-1 mb-4">
