@@ -6,14 +6,14 @@ import { Search, Globe, ArrowRight, Check, Shield, Zap, Clock, Lock } from "luci
 import { Link } from "react-router-dom";
 
 const tlds = [
-  { ext: ".com", price: "₹799", original: "₹1,199", tag: "Most Popular", Icon: Globe },
-  { ext: ".in", price: "₹449", original: "₹699", tag: "India #1", Icon: Shield },
-  { ext: ".co.in", price: "₹299", original: "₹499", tag: null, Icon: Globe },
-  { ext: ".net", price: "₹899", original: "₹1,299", tag: null, Icon: Zap },
-  { ext: ".org", price: "₹749", original: "₹1,099", tag: null, Icon: Lock },
-  { ext: ".online", price: "₹199", original: "₹599", tag: "Best Value", Icon: Globe },
-  { ext: ".site", price: "₹199", original: "₹499", tag: null, Icon: Globe },
-  { ext: ".xyz", price: "₹99", original: "₹299", tag: "Cheapest", Icon: Zap },
+  { ext: ".com", price: "₹799", original: "₹1,199", tag: "Most Popular", color: "from-primary to-accent" },
+  { ext: ".in", price: "₹449", original: "₹699", tag: "India #1", color: "from-emerald-500 to-teal-500" },
+  { ext: ".co.in", price: "₹299", original: "₹499", tag: null, color: "from-slate-500 to-slate-600" },
+  { ext: ".net", price: "₹899", original: "₹1,299", tag: null, color: "from-blue-500 to-indigo-500" },
+  { ext: ".org", price: "₹749", original: "₹1,099", tag: null, color: "from-violet-500 to-purple-500" },
+  { ext: ".online", price: "₹199", original: "₹599", tag: "Best Value", color: "from-orange-500 to-amber-500" },
+  { ext: ".site", price: "₹199", original: "₹499", tag: null, color: "from-pink-500 to-rose-500" },
+  { ext: ".xyz", price: "₹99", original: "₹299", tag: "Cheapest", color: "from-cyan-500 to-sky-500" },
 ];
 
 const perks = [
@@ -43,7 +43,7 @@ const DomainSearchSection = () => {
   const isDeletingRef = useRef(false);
 
   useEffect(() => {
-    if (domain) return; // stop animation when user is typing
+    if (domain) return;
     let timeout: ReturnType<typeof setTimeout>;
     const tick = () => {
       const word = placeholderWords[wordIndexRef.current];
@@ -96,8 +96,8 @@ const DomainSearchSection = () => {
           </p>
         </div>
 
-        {/* Search Bar - Full Width Card */}
-        <Card className="max-w-4xl mx-auto mb-10 border-primary/20 shadow-lg shadow-primary/5">
+        {/* Search Bar */}
+        <Card className="max-w-4xl mx-auto mb-12 border-primary/20 shadow-lg shadow-primary/5">
           <CardContent className="p-6 md:p-8">
             <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">
               <div className="relative flex-1">
@@ -115,7 +115,6 @@ const DomainSearchSection = () => {
                 Search Domain
               </Button>
             </form>
-            {/* Perks Row */}
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mt-5">
               {perks.map((perk) => (
                 <div key={perk.label} className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -171,14 +170,14 @@ const DomainSearchSection = () => {
             {tlds.map((tld, i) => (
               <Card
                 key={tld.ext}
-                className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer animate-fade-in-up ${
-                  tld.tag ? "border-primary/30 shadow-primary/5 shadow-md" : ""
+                className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer animate-fade-in-up group ${
+                  tld.tag ? "border-primary/20 shadow-md" : "border-border"
                 }`}
                 style={{ animationDelay: `${i * 0.06}s` }}
               >
-                {tld.tag && (
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-accent" />
-                )}
+                {/* Top gradient bar */}
+                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${tld.color} opacity-80 group-hover:opacity-100 transition-opacity`} />
+
                 {tld.tag && (
                   <div className="absolute top-3 right-3">
                     <span className="text-[10px] font-bold bg-primary text-primary-foreground px-2.5 py-0.5 rounded-full uppercase tracking-wider">
@@ -186,15 +185,20 @@ const DomainSearchSection = () => {
                     </span>
                   </div>
                 )}
-                <CardContent className="p-6 pt-8 text-center">
-                  <tld.Icon className="w-8 h-8 mx-auto mb-2 text-primary" />
-                  <span className="text-3xl font-black text-foreground block">{tld.ext}</span>
-                  <div className="mt-4">
+
+                <CardContent className="p-6 pt-7 text-center">
+                  {/* Extension name with gradient underline */}
+                  <span className="text-3xl font-black text-foreground block tracking-tight">{tld.ext}</span>
+                  <div className={`w-8 h-0.5 mx-auto mt-2 mb-4 rounded-full bg-gradient-to-r ${tld.color} opacity-60`} />
+
+                  {/* Pricing */}
+                  <div>
                     <span className="text-sm text-muted-foreground line-through block">{tld.original}/yr</span>
                     <span className="text-3xl md:text-4xl font-black gradient-text">{tld.price}</span>
                     <span className="text-base text-muted-foreground">/yr</span>
                   </div>
-                  <Button variant="outline" size="sm" className="mt-4 w-full font-bold text-sm">
+
+                  <Button variant="outline" size="sm" className="mt-5 w-full font-semibold text-sm border-primary/20 hover:bg-primary hover:text-primary-foreground transition-colors">
                     Register
                   </Button>
                 </CardContent>
