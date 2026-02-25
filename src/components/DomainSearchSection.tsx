@@ -6,14 +6,14 @@ import { Search, Globe, ArrowRight, Check, Shield, Zap, Clock, Lock } from "luci
 import { Link } from "react-router-dom";
 
 const tlds = [
-  { ext: ".com", price: "₹799", original: "₹1,199", tag: "Most Popular", icon: "🌐" },
-  { ext: ".in", price: "₹449", original: "₹699", tag: "India #1", icon: "🇮🇳" },
-  { ext: ".co.in", price: "₹299", original: "₹499", tag: null, icon: "🏢" },
-  { ext: ".net", price: "₹899", original: "₹1,299", tag: null, icon: "🔗" },
-  { ext: ".org", price: "₹749", original: "₹1,099", tag: null, icon: "🏛️" },
-  { ext: ".online", price: "₹199", original: "₹599", tag: "Best Value", icon: "💻" },
-  { ext: ".site", price: "₹199", original: "₹499", tag: null, icon: "🌍" },
-  { ext: ".xyz", price: "₹99", original: "₹299", tag: "Cheapest", icon: "⚡" },
+  { ext: ".com", price: "₹799", original: "₹1,199", tag: "Most Popular", Icon: Globe },
+  { ext: ".in", price: "₹449", original: "₹699", tag: "India #1", Icon: Shield },
+  { ext: ".co.in", price: "₹299", original: "₹499", tag: null, Icon: Globe },
+  { ext: ".net", price: "₹899", original: "₹1,299", tag: null, Icon: Zap },
+  { ext: ".org", price: "₹749", original: "₹1,099", tag: null, Icon: Lock },
+  { ext: ".online", price: "₹199", original: "₹599", tag: "Best Value", Icon: Globe },
+  { ext: ".site", price: "₹199", original: "₹499", tag: null, Icon: Globe },
+  { ext: ".xyz", price: "₹99", original: "₹299", tag: "Cheapest", Icon: Zap },
 ];
 
 const perks = [
@@ -187,7 +187,7 @@ const DomainSearchSection = () => {
                   </div>
                 )}
                 <CardContent className="p-6 pt-8 text-center">
-                  <span className="text-3xl mb-2 block">{tld.icon}</span>
+                  <tld.Icon className="w-8 h-8 mx-auto mb-2 text-primary" />
                   <span className="text-3xl font-black text-foreground block">{tld.ext}</span>
                   <div className="mt-4">
                     <span className="text-sm text-muted-foreground line-through block">{tld.original}/yr</span>
