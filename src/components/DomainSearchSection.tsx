@@ -24,14 +24,14 @@ const perks = [
 
 
 const placeholderWords = [
-"mybusiness",
-"mystore",
-"myportfolio",
-"mycompany",
-"mywebsite",
-"mybrand",
-"myagency",
-"mystartup"];
+"mybusiness.com",
+"mystore.in",
+"myportfolio.net",
+"mycompany.co.in",
+"mywebsite.online",
+"mybrand.org",
+"myagency.site",
+"mystartup.xyz"];
 
 
 const DomainSearchSection = () => {
