@@ -135,7 +135,7 @@ const HomePricingSection = () => {
     <section className="py-20 bg-muted/30" id="pricing">
       <div className="section-container">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
             Hosting Plans That <span className="gradient-text">Scale With You</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
