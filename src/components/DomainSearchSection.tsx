@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -23,9 +23,54 @@ const perks = [
   { icon: Lock, label: "Free SSL Included" },
 ];
 
+const placeholderWords = [
+  "mybusiness",
+  "mystore",
+  "myportfolio",
+  "mycompany",
+  "mywebsite",
+  "mybrand",
+  "myagency",
+  "mystartup",
+];
+
 const DomainSearchSection = () => {
   const [domain, setDomain] = useState("");
   const [searched, setSearched] = useState(false);
+  const [animatedPlaceholder, setAnimatedPlaceholder] = useState("");
+  const wordIndexRef = useRef(0);
+  const charIndexRef = useRef(0);
+  const isDeletingRef = useRef(false);
+
+  useEffect(() => {
+    if (domain) return; // stop animation when user is typing
+    let timeout: ReturnType<typeof setTimeout>;
+    const tick = () => {
+      const word = placeholderWords[wordIndexRef.current];
+      if (!isDeletingRef.current) {
+        charIndexRef.current++;
+        setAnimatedPlaceholder(word.slice(0, charIndexRef.current));
+        if (charIndexRef.current === word.length) {
+          isDeletingRef.current = true;
+          timeout = setTimeout(tick, 1800);
+        } else {
+          timeout = setTimeout(tick, 110);
+        }
+      } else {
+        charIndexRef.current--;
+        setAnimatedPlaceholder(word.slice(0, charIndexRef.current));
+        if (charIndexRef.current === 0) {
+          isDeletingRef.current = false;
+          wordIndexRef.current = (wordIndexRef.current + 1) % placeholderWords.length;
+          timeout = setTimeout(tick, 350);
+        } else {
+          timeout = setTimeout(tick, 55);
+        }
+      }
+    };
+    timeout = setTimeout(tick, 100);
+    return () => clearTimeout(timeout);
+  }, [domain]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,7 +104,7 @@ const DomainSearchSection = () => {
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <Input
                   type="text"
-                  placeholder="Type your dream domain... e.g. mybusiness"
+                  placeholder={domain ? "" : `Type your dream domain... e.g. ${animatedPlaceholder}|`}
                   value={domain}
                   onChange={(e) => { setDomain(e.target.value); setSearched(false); }}
                   className="pl-12 h-14 text-base md:text-lg rounded-xl border-2 focus:border-primary"
