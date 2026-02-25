@@ -40,9 +40,9 @@ const WhatWeDoSection = () => {
                 className="card-hover group"
               >
                 <CardHeader>
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                  <Link to={service.link} className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-3 group-hover:scale-110 transition-transform cursor-pointer">
                     <Icon className="w-6 h-6 text-white" />
-                  </div>
+                  </Link>
                   <CardTitle className="text-xl">{service.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
