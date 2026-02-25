@@ -188,9 +188,11 @@ const HomePricingSection = () => {
                       </div>
                       <ul className="space-y-3 mb-8">
                         {plan.features.map((feature, i) => (
-                          <li key={i} className="flex items-center gap-3">
-                            <Check className="w-4 h-4 text-primary flex-shrink-0" />
-                            <span className="text-sm text-muted-foreground">{feature}</span>
+                          <li key={i} className="flex items-center gap-3 bg-muted/50 rounded-lg px-3 py-2">
+                            <div className="w-5 h-5 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0">
+                              <Check className="w-3 h-3 text-primary" />
+                            </div>
+                            <span className="text-sm font-medium text-foreground">{feature}</span>
                           </li>
                         ))}
                       </ul>
