@@ -23,7 +23,7 @@ const perks = [
   { icon: Lock, label: "Free SSL Included" },
 ];
 
-const domainNames = [".com", ".in", ".co.in", ".net", ".org", ".online", ".site", ".xyz"];
+const domainNames = ["mycompany", "mybusiness", "mystore", "mywebsite", "mybrand", "myagency", "mystartup", "myportfolio"];
 
 const DomainSearchSection = () => {
   const [domain, setDomain] = useState("");
@@ -94,7 +94,7 @@ const DomainSearchSection = () => {
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <Input
                   type="text"
-                  placeholder={domain ? "" : `Search domain ${animatedPlaceholder}|`}
+                  placeholder={domain ? "" : `${animatedPlaceholder}|`}
                   value={domain}
                   onChange={(e) => { setDomain(e.target.value); setSearched(false); }}
                   className="pl-12 h-14 text-base md:text-lg rounded-xl border-2 focus:border-primary"
