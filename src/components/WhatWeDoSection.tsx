@@ -4,18 +4,60 @@ import { Cloud, Server, Globe, Shield, Zap, Database, Lock, HardDrive, ArrowRigh
 import { Link } from "react-router-dom";
 
 const services = [
-  { icon: Server, title: "Shared Hosting", description: "Affordable cPanel hosting with NVMe SSD, free SSL, and LiteSpeed.", link: "/solutions/shared-hosting" },
-  { icon: Zap, title: "VPS Hosting", description: "Full root access with dedicated resources and DDoS protection.", link: "/solutions/vps-hosting" },
-  { icon: Cloud, title: "Cloud Hosting", description: "Auto-scaling cloud with dedicated IP and multi-zone failover.", link: "/solutions/cloud-hosting" },
-  { icon: HardDrive, title: "Dedicated Servers", description: "Enterprise bare metal servers with Intel Xeon and IPMI access.", link: "/solutions/dedicated-servers" },
-  { icon: Database, title: "Reseller Hosting", description: "White-label hosting to start your own business with WHM/cPanel.", link: "/solutions/reseller-hosting" },
-  { icon: Globe, title: "WordPress Hosting", description: "Managed WordPress optimized for speed and security.", link: "/solutions/wordpress-hosting" },
-  { icon: Lock, title: "SSL Certificates", description: "Free and premium SSL with 256-bit encryption.", link: "/solutions/ssl-certificates" },
-  { icon: Globe, title: "Domain Registration", description: "Register .com, .in, and 500+ extensions with free WHOIS privacy.", link: "/solutions/domains" },
-  { icon: Server, title: "GPU Dedicated Servers", description: "High-performance GPU servers for AI and rendering workloads.", link: "/solutions/gpu-dedicated-server" },
-  { icon: Zap, title: "Streaming Servers", description: "Unlimited streaming for flawless live and on-demand delivery.", link: "/solutions/streaming-servers" },
-  { icon: Shield, title: "Server Management", description: "24/7 managed services with monitoring and security patching.", link: "/solutions/server-management" },
-  { icon: Cloud, title: "Cloud Migration", description: "Free zero-downtime migration from any hosting provider.", link: "/solutions/cloud-migration" },
+  {
+    icon: Server,
+    title: "Web Hosting",
+    description: "Reliable web hosting solutions with fast SSD storage, free SSL, and 99.99% uptime – ideal for websites of all sizes.",
+    link: "/solutions/shared-hosting",
+  },
+  {
+    icon: HardDrive,
+    title: "Servers",
+    description: "Enterprise-grade dedicated and VPS servers featuring robust security, scalable resources, and managed hardware.",
+    link: "/solutions/dedicated-servers",
+  },
+  {
+    icon: Lock,
+    title: "Email & Security",
+    description: "Professional business email, anti-spam protection, advanced firewalls, DDoS protection, and SSL certificates for complete security.",
+    link: "/solutions/email-security",
+  },
+  {
+    icon: Globe,
+    title: "WordPress Hosting",
+    description: "Optimized managed WordPress hosting with one-click installs, blazing speed, and automated security updates.",
+    link: "/solutions/wordpress-hosting",
+  },
+  {
+    icon: Shield,
+    title: "Server Management",
+    description: "24/7 server management, monitoring, updates, and proactive support by certified engineers for seamless performance.",
+    link: "/solutions/server-management",
+  },
+  {
+    icon: Database,
+    title: "Reseller Hosting",
+    description: "Launch your hosting business with powerful, white-label reseller plans complete with WHM/cPanel and priority support.",
+    link: "/solutions/reseller-hosting",
+  },
+  {
+    icon: Cloud,
+    title: "Cloud Services",
+    description: "Flexible cloud solutions with high availability, auto-scaling, and secure multi-zone infrastructure for every workload.",
+    link: "/solutions/cloud-hosting",
+  },
+  {
+    icon: Server,
+    title: "GPU Servers",
+    description: "Accelerated GPU servers tailored for AI, ML, scientific computing, and high-performance workloads.",
+    link: "/solutions/gpu-dedicated-server",
+  },
+  {
+    icon: Globe,
+    title: "Domain Registration",
+    description: "Register your domain from 500+ extensions with free WHOIS privacy, DNS management, and instant activation.",
+    link: "/solutions/domains",
+  },
 ];
 
 const WhatWeDoSection = () => {
