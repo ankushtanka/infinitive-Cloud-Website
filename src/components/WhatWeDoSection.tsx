@@ -66,7 +66,7 @@ const WhatWeDoSection = () => {
       <div className="section-container">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-            Our Hosting <span className="gradient-text">Services</span>
+            Our <span className="gradient-text">Services</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Everything you need to launch, grow, and scale your online presence — all backed by 99.99% uptime and 24/7 expert support.
