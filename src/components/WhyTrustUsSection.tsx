@@ -1,5 +1,6 @@
 import { Shield, Clock, TrendingUp, Server, Headphones, Eye } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import trustImg from "@/assets/trust-datacenter.jpg";
 
 const WhyTrustUsSection = () => {
   const reasons = [
@@ -37,6 +38,15 @@ const WhyTrustUsSection = () => {
 
   return (
     <section className="py-24 bg-gradient-to-b from-background to-muted/20 relative overflow-hidden">
+      {/* Subtle background image */}
+      <div className="absolute inset-0">
+        <img
+          src={trustImg}
+          alt="Modern data center infrastructure"
+          className="w-full h-full object-cover opacity-[0.04]"
+          loading="lazy"
+        />
+      </div>
       <div className="section-container relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
