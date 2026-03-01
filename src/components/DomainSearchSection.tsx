@@ -6,44 +6,45 @@ import { Search, Globe, ArrowRight, Check, Shield, Zap, Clock, Lock } from "luci
 import { Link } from "react-router-dom";
 
 const tlds = [
-{ ext: ".com", price: "₹799", original: "₹1,199", tag: "Most Popular", color: "from-primary to-accent" },
-{ ext: ".in", price: "₹449", original: "₹699", tag: "India #1", color: "from-emerald-500 to-teal-500" },
-{ ext: ".co.in", price: "₹299", original: "₹499", tag: null, color: "from-slate-500 to-slate-600" },
-{ ext: ".net", price: "₹899", original: "₹1,299", tag: null, color: "from-blue-500 to-indigo-500" },
-{ ext: ".org", price: "₹749", original: "₹1,099", tag: null, color: "from-violet-500 to-purple-500" },
-{ ext: ".online", price: "₹199", original: "₹599", tag: "Best Value", color: "from-orange-500 to-amber-500" },
-{ ext: ".site", price: "₹199", original: "₹499", tag: null, color: "from-pink-500 to-rose-500" },
-{ ext: ".xyz", price: "₹99", original: "₹299", tag: "Cheapest", color: "from-cyan-500 to-sky-500" }];
-
+  { ext: ".com", price: "₹799", original: "₹1,199", tag: "Most Popular", color: "from-primary to-accent" },
+  { ext: ".in", price: "₹449", original: "₹699", tag: "India #1", color: "from-emerald-500 to-teal-500" },
+  { ext: ".co.in", price: "₹299", original: "₹499", tag: null, color: "from-slate-500 to-slate-600" },
+  { ext: ".net", price: "₹899", original: "₹1,299", tag: null, color: "from-blue-500 to-indigo-500" },
+  { ext: ".org", price: "₹749", original: "₹1,099", tag: null, color: "from-violet-500 to-purple-500" },
+  { ext: ".online", price: "₹199", original: "₹599", tag: "Best Value", color: "from-orange-500 to-amber-500" },
+  { ext: ".site", price: "₹199", original: "₹499", tag: null, color: "from-pink-500 to-rose-500" },
+  { ext: ".xyz", price: "₹99", original: "₹299", tag: "Cheapest", color: "from-cyan-500 to-sky-500" }
+];
 
 const perks = [
-{ icon: Shield, label: "Free WHOIS Privacy" },
-{ icon: Zap, label: "Instant Activation" },
-{ icon: Clock, label: "24/7 DNS Management" },
-{ icon: Lock, label: "Free SSL Included" }];
-
+  { icon: Shield, label: "Free WHOIS Privacy" },
+  { icon: Zap, label: "Instant Activation" },
+  { icon: Clock, label: "24/7 DNS Management" },
+  { icon: Lock, label: "Free SSL Included" }
+];
 
 const placeholderWords = [
-"mybusiness.com",
-"mystore.in",
-"myportfolio.net",
-"mycompany.co.in",
-"mywebsite.online",
-"mybrand.org",
-"myagency.site",
-"mystartup.xyz"];
-
+  "mybusiness.com",
+  "mystore.in",
+  "myportfolio.net",
+  "mycompany.co.in",
+  "mywebsite.online",
+  "mybrand.org",
+  "myagency.site",
+  "mystartup.xyz"
+];
 
 const DomainSearchSection = () => {
   const [domain, setDomain] = useState("");
   const [searched, setSearched] = useState(false);
   const [animatedPlaceholder, setAnimatedPlaceholder] = useState("");
+  const [inputFocused, setInputFocused] = useState(false);
   const wordIndexRef = useRef(0);
   const charIndexRef = useRef(0);
   const isDeletingRef = useRef(false);
 
   useEffect(() => {
-    if (domain) return;
+    if (domain || inputFocused) return;
     let timeout: ReturnType<typeof setTimeout>;
     const tick = () => {
       const word = placeholderWords[wordIndexRef.current];
@@ -70,7 +71,7 @@ const DomainSearchSection = () => {
     };
     timeout = setTimeout(tick, 100);
     return () => clearTimeout(timeout);
-  }, [domain]);
+  }, [domain, inputFocused]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,11 +105,20 @@ const DomainSearchSection = () => {
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <Input
                   type="text"
-                  placeholder={domain ? "" : `${animatedPlaceholder}|`}
+                  placeholder={
+                    domain
+                      ? ""
+                      : (!inputFocused ? `${animatedPlaceholder}|` : "")
+                  }
                   value={domain}
-                  onChange={(e) => {setDomain(e.target.value);setSearched(false);}}
-                  className="pl-12 h-14 text-base md:text-lg rounded-xl border-2 focus:border-primary" />
-
+                  onFocus={() => setInputFocused(true)}
+                  onBlur={() => setInputFocused(false)}
+                  onChange={(e) => {
+                    setDomain(e.target.value);
+                    setSearched(false);
+                  }}
+                  className="pl-12 h-14 text-base md:text-lg rounded-xl border-2 focus:border-primary"
+                />
               </div>
               <Button type="submit" className="btn-gradient h-14 px-10 rounded-xl font-bold text-base">
                 <Search className="w-5 h-5 mr-2" />
@@ -117,7 +127,7 @@ const DomainSearchSection = () => {
             </form>
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mt-5">
               {perks.map((perk) =>
-              <div key={perk.label} className="flex items-center gap-2 text-sm text-muted-foreground">
+                <div key={perk.label} className="flex items-center gap-2 text-sm text-muted-foreground">
                   <perk.icon className="w-4 h-4 text-primary" />
                   <span>{perk.label}</span>
                 </div>
@@ -128,15 +138,15 @@ const DomainSearchSection = () => {
 
         {/* Search Results */}
         {searched && baseName &&
-        <div className="max-w-5xl mx-auto mb-12 animate-fade-in">
+          <div className="max-w-5xl mx-auto mb-12 animate-fade-in">
             <p className="text-sm text-muted-foreground mb-4">
               Showing results for <span className="font-bold text-foreground">"{baseName}"</span>
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {tlds.map((tld) =>
-            <Card
-              key={tld.ext}
-              className="hover:border-primary/30 hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-pointer">
+                <Card
+                  key={tld.ext}
+                  className="hover:border-primary/30 hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-pointer">
 
                   <CardContent className="p-5 flex items-center justify-between">
                     <div>
@@ -152,7 +162,7 @@ const DomainSearchSection = () => {
                     </div>
                   </CardContent>
                 </Card>
-            )}
+              )}
             </div>
             <div className="mt-6 text-center">
               <Link to="/solutions/domains">
@@ -166,25 +176,26 @@ const DomainSearchSection = () => {
 
         {/* Extension Cards Grid */}
         {!searched &&
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-5 max-w-5xl mx-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-5 max-w-5xl mx-auto">
             {tlds.map((tld, i) =>
-          <Card
-            key={tld.ext}
-            className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer animate-fade-in-up group ${
-            tld.tag ? "border-primary/20 shadow-md" : "border-border"}`
-            }
-            style={{ animationDelay: `${i * 0.06}s` }}>
+              <Card
+                key={tld.ext}
+                className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer animate-fade-in-up group ${
+                  tld.tag ? "border-primary/20 shadow-md" : "border-border"
+                }`
+                }
+                style={{ animationDelay: `${i * 0.06}s` }}>
 
                 {/* Top gradient bar */}
                 <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${tld.color} opacity-80 group-hover:opacity-100 transition-opacity`} />
 
                 {tld.tag &&
-            <div className="absolute top-3 right-3">
+                  <div className="absolute top-3 right-3">
                     <span className="text-[10px] font-bold bg-primary text-primary-foreground px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                       {tld.tag}
                     </span>
                   </div>
-            }
+                }
 
                 <CardContent className="p-6 pt-7 text-center">
                   {/* Extension name with gradient underline */}
@@ -203,7 +214,7 @@ const DomainSearchSection = () => {
                   </Button>
                 </CardContent>
               </Card>
-          )}
+            )}
           </div>
         }
 
@@ -216,8 +227,8 @@ const DomainSearchSection = () => {
           </Link>
         </div>
       </div>
-    </section>);
-
+    </section>
+  );
 };
 
 export default DomainSearchSection;
