@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Shield, Headphones, Server, Cloud } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useParallax } from "@/hooks/use-parallax";
+import heroServerImg from "@/assets/hero-server.jpg";
 
 const HeroSection = () => {
   const parallaxRef = useParallax(0.3);
@@ -10,8 +11,14 @@ const HeroSection = () => {
     <section className="relative pt-32 pb-20 overflow-hidden min-h-[80vh] flex items-center">
       <div
         ref={parallaxRef}
-        className="absolute inset-0 bg-gradient-to-br from-background via-muted/30 to-background will-change-transform">
-
+        className="absolute inset-0 will-change-transform">
+        <img
+          src={heroServerImg}
+          alt="Professional server room with blue LED lighting"
+          className="absolute inset-0 w-full h-full object-cover"
+          loading="eager"
+        />
+        <div className="absolute inset-0 bg-background/80" />
         <div className="absolute inset-0" style={{ background: 'var(--gradient-glow)' }} />
       </div>
 
