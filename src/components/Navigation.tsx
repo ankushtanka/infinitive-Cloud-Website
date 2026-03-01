@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Globe, ShoppingCart, User } from "lucide-react";
 import logo from "@/assets/logo-icon.png";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navLinks = [
-    { label: "Home", path: "/" },
+    { label: "Solutions", path: "/solutions" },
     { label: "Pricing", path: "/pricing" },
     { label: "About", path: "/about" },
     { label: "Blog", path: "/blog" },
@@ -16,51 +16,84 @@ const Navigation = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50 shadow-soft">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[hsl(222,47%,11%)] border-b border-white/10">
         <div className="section-container">
-          <div className="flex items-center justify-between h-20">
-            <Link to="/" className="flex items-center gap-3 group">
-              <div className="relative">
-                <div className="absolute inset-0 bg-background rounded-xl" />
-                <img src={logo} alt="Infinitive Cloud Logo" className="h-12 w-auto relative z-10 group-hover:scale-105 transition-transform duration-300" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-black text-foreground tracking-tight">INFINITIVE CLOUD</span>
-                <span className="text-[10px] font-medium text-muted-foreground tracking-wide">PRIVATE LIMITED</span>
-              </div>
+          <div className="flex items-center justify-between h-16">
+            {/* Logo - Left */}
+            <Link to="/" className="flex items-center gap-2.5 group shrink-0">
+              <img
+                src={logo}
+                alt="Infinitive Cloud Logo"
+                className="h-9 w-auto group-hover:scale-105 transition-transform duration-300"
+              />
+              <span className="text-lg font-bold text-white tracking-tight">
+                Infinitive Cloud
+              </span>
             </Link>
 
-            <div className="hidden lg:flex items-center gap-1">
-              {navLinks.map(link => (
-                <Link key={link.path} to={link.path} className="relative px-4 py-2 text-foreground/70 hover:text-foreground transition-all font-semibold text-sm group">
+            {/* Nav Links - Center */}
+            <div className="hidden lg:flex items-center gap-8">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className="text-white/70 hover:text-white transition-colors font-medium text-sm"
+                >
                   {link.label}
-                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary to-accent scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
                 </Link>
               ))}
-              <Link to="/free-trial" className="ml-4">
-                <Button className="btn-gradient glow-effect shadow-medium">
+            </div>
+
+            {/* Right Actions */}
+            <div className="hidden lg:flex items-center gap-2">
+              <div className="h-6 w-px bg-white/20 mx-2" />
+              <Link to="/free-trial">
+                <Button className="bg-white text-[hsl(222,47%,11%)] hover:bg-white/90 font-semibold text-sm h-9 px-5 rounded-full">
                   Start Free Trial
                 </Button>
               </Link>
+              <div className="h-6 w-px bg-white/20 mx-2" />
+              <button className="p-2 text-white/70 hover:text-white transition-colors" aria-label="Language">
+                <Globe className="w-5 h-5" />
+              </button>
+              <button className="p-2 text-white/70 hover:text-white transition-colors" aria-label="Cart">
+                <ShoppingCart className="w-5 h-5" />
+              </button>
+              <button className="p-2 text-white/70 hover:text-white transition-colors" aria-label="Account">
+                <User className="w-5 h-5" />
+              </button>
             </div>
 
-            <button onClick={() => setIsOpen(!isOpen)} className="lg:hidden p-3 text-foreground hover:bg-muted rounded-lg transition-colors" aria-label={isOpen ? "Close menu" : "Open menu"} aria-expanded={isOpen}>
-              {isOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
+            {/* Mobile Toggle */}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="lg:hidden p-2 text-white hover:bg-white/10 rounded-lg transition-colors"
+              aria-label={isOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isOpen}
+            >
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
       </nav>
 
+      {/* Mobile Menu */}
       {isOpen && (
-        <div className="lg:hidden fixed inset-0 top-20 bg-background z-[60] overflow-y-auto">
-          <div className="flex flex-col gap-2 px-6 py-6">
-            {navLinks.map(link => (
-              <Link key={link.path} to={link.path} onClick={() => setIsOpen(false)} className="text-foreground hover:text-primary hover:bg-muted transition-colors font-semibold py-4 px-4 rounded-lg text-lg">
+        <div className="lg:hidden fixed inset-0 top-16 bg-[hsl(222,47%,11%)] z-[60] overflow-y-auto">
+          <div className="flex flex-col gap-1 px-6 py-6">
+            {navLinks.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                onClick={() => setIsOpen(false)}
+                className="text-white/70 hover:text-white hover:bg-white/5 transition-colors font-medium py-3 px-4 rounded-lg text-base"
+              >
                 {link.label}
               </Link>
             ))}
-            <Link to="/free-trial" onClick={() => setIsOpen(false)} className="mt-4">
-              <Button className="btn-gradient glow-effect w-full h-14 text-lg">
+            <div className="h-px bg-white/10 my-4" />
+            <Link to="/free-trial" onClick={() => setIsOpen(false)}>
+              <Button className="bg-white text-[hsl(222,47%,11%)] hover:bg-white/90 font-semibold w-full h-12 text-base rounded-full">
                 Start Free Trial
               </Button>
             </Link>
