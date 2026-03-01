@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Check, ArrowRight, Star, Zap, Shield, Server } from "lucide-react";
+import { Check, ArrowRight, Star, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const categories = [
@@ -36,37 +36,6 @@ const categories = [
     ],
   },
   {
-    icon: Zap,
-    title: "VPS Hosting",
-    description: "Full root access with dedicated resources",
-    plans: [
-      {
-        name: "VPS Start",
-        originalPrice: "₹1,499",
-        price: "₹399",
-        period: "/mo",
-        popular: false,
-        features: ["1 vCPU Core", "2 GB RAM", "40 GB NVMe", "2 TB Bandwidth", "Free Backups", "Full Root Access"],
-      },
-      {
-        name: "VPS Pro",
-        originalPrice: "₹2,999",
-        price: "₹799",
-        period: "/mo",
-        popular: true,
-        features: ["2 vCPU Cores", "4 GB RAM", "80 GB NVMe", "4 TB Bandwidth", "Free Snapshots", "DDoS Protection"],
-      },
-      {
-        name: "VPS Elite",
-        originalPrice: "₹5,999",
-        price: "₹1,499",
-        period: "/mo",
-        popular: false,
-        features: ["4 vCPU Cores", "8 GB RAM", "160 GB NVMe", "8 TB Bandwidth", "Priority Support", "Managed Backups"],
-      },
-    ],
-  },
-  {
     icon: Shield,
     title: "Cloud Hosting",
     description: "Auto-scaling cloud with dedicated resources",
@@ -94,37 +63,6 @@ const categories = [
         period: "/mo",
         popular: false,
         features: ["8 CPU Cores", "16 GB RAM", "400 GB NVMe", "Dedicated IP", "24/7 Priority Support", "Multi-zone Failover"],
-      },
-    ],
-  },
-  {
-    icon: Server,
-    title: "Dedicated Servers",
-    description: "Enterprise-grade bare metal performance",
-    plans: [
-      {
-        name: "Entry",
-        originalPrice: "₹7,999",
-        price: "₹3,999",
-        period: "/mo",
-        popular: false,
-        features: ["Intel Xeon E-2236", "16 GB DDR4 RAM", "500 GB NVMe SSD", "10 TB Bandwidth", "Free Setup", "IPMI Access"],
-      },
-      {
-        name: "Business",
-        originalPrice: "₹14,999",
-        price: "₹7,999",
-        period: "/mo",
-        popular: true,
-        features: ["Intel Xeon E-2288G", "32 GB DDR4 RAM", "1 TB NVMe SSD", "Unlimited Bandwidth", "DDoS Protection", "Managed Support"],
-      },
-      {
-        name: "Enterprise",
-        originalPrice: "₹29,999",
-        price: "₹14,999",
-        period: "/mo",
-        popular: false,
-        features: ["Dual Xeon Gold", "64 GB DDR4 RAM", "2x 1TB NVMe RAID", "Unlimited Bandwidth", "24/7 Managed", "Hardware Firewall"],
       },
     ],
   },
