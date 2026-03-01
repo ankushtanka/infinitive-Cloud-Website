@@ -10,14 +10,14 @@ const Solutions = () => {
   const solutions = [
     {
       icon: Server,
-      title: "Shared Hosting",
+      title: "Hosting",
       description: "Affordable cPanel hosting with NVMe SSD, free SSL, and LiteSpeed for blogs and small businesses.",
       link: "/solutions/shared-hosting",
     },
     {
       icon: Zap,
-      title: "VPS Hosting",
-      description: "Full root access with dedicated resources, NVMe storage, and DDoS protection.",
+      title: "Servers",
+      description: "Advanced server solutions including VPS hosting, GPU dedicated servers, streaming servers, and storage servers.",
       link: "/solutions/vps-hosting",
     },
     {
@@ -28,7 +28,7 @@ const Solutions = () => {
     },
     {
       icon: HardDrive,
-      title: "Dedicated Servers",
+      title: "Email and Services",
       description: "Enterprise-grade bare metal servers with Intel Xeon processors and full IPMI access.",
       link: "/solutions/dedicated-servers",
     },
@@ -57,22 +57,10 @@ const Solutions = () => {
       link: "/solutions/gpu-dedicated-server",
     },
     {
-      icon: Zap,
-      title: "Streaming Servers",
-      description: "Unlimited streaming servers for flawless live and on-demand video delivery.",
-      link: "/solutions/streaming-servers",
-    },
-    {
       icon: Shield,
       title: "Server Management",
       description: "24/7 managed services with monitoring, security patching, and performance optimization.",
       link: "/solutions/server-management",
-    },
-    {
-      icon: Cloud,
-      title: "Cloud Migration",
-      description: "Free zero-downtime migration from any hosting provider with dedicated support.",
-      link: "/solutions/cloud-migration",
     },
   ];
 
