@@ -124,7 +124,7 @@ const Navigation = () => {
         >
           {serviceLinks.map((service) => (
             <div key={service.heading} className="flex flex-col">
-              <span className="px-2 pb-1 font-semibold text-foreground/90 text-base mb-2 border-b border-border mb-3">{service.heading}</span>
+              <span className="px-2 pb-1 font-semibold text-foreground/90 text-base border-b border-border mb-3">{service.heading}</span>
               {service.links && service.links.map((link) => (
                 <Link
                   key={link.path}
