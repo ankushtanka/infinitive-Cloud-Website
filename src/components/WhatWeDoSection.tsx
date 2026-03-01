@@ -2,7 +2,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Cloud, Server, Globe, Shield, Zap, Database, Lock, HardDrive, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import servicesImg from "@/assets/services-illustration.jpg";
 
 const services = [
   { icon: Server, title: "Shared Hosting", description: "Affordable cPanel hosting with NVMe SSD, free SSL, and LiteSpeed.", link: "/solutions/shared-hosting" },
@@ -24,14 +23,6 @@ const WhatWeDoSection = () => {
     <section className="py-20 bg-muted/30">
       <div className="section-container">
         <div className="text-center mb-16">
-          <div className="mb-6">
-            <img
-              src={servicesImg}
-              alt="Cloud hosting server infrastructure illustration"
-              className="w-28 h-28 mx-auto object-contain rounded-2xl"
-              loading="lazy"
-            />
-          </div>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
             Our Hosting <span className="gradient-text">Services</span>
           </h2>
