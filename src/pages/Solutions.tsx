@@ -45,12 +45,6 @@ const Solutions = () => {
       link: "/solutions/wordpress-hosting",
     },
     {
-      icon: Lock,
-      title: "SSL Certificates",
-      description: "Free and premium SSL certificates with 256-bit encryption for complete website security.",
-      link: "/solutions/ssl-certificates",
-    },
-    {
       icon: Globe,
       title: "Domain Registration",
       description: "Register .com, .in, and 500+ domain extensions with free WHOIS privacy protection.",
