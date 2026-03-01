@@ -22,7 +22,7 @@ const Solutions = () => {
     },
     {
       icon: Cloud,
-      title: "Cloud Hosting",
+      title: "Cloud Services",
       description: "Auto-scaling cloud infrastructure with dedicated IP, load balancing, and multi-zone failover.",
       link: "/solutions/cloud-hosting",
     },
