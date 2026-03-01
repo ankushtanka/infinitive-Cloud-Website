@@ -78,7 +78,27 @@ const DomainSearchSection = () => {
     if (domain.trim()) setSearched(true);
   };
 
-  const baseName = domain.replace(/\..+$/, "").trim();
+  // Get the entered domain name, separated into name and tld if available
+  const domainMatch = domain.trim().match(/^([a-zA-Z0-9-]+)(\.[a-zA-Z0-9-.]+)?$/);
+  const baseName = domainMatch ? domainMatch[1] : "";
+  const searchedTld = domainMatch && domainMatch[2] ? domainMatch[2].toLowerCase() : "";
+
+  // Filter the tlds for search results if the user provided a TLD, otherwise show all
+  let searchResultsTlds: typeof tlds = [];
+  if (searched && baseName) {
+    // If user specified a TLD, only show that extension, else all
+    if (searchedTld) {
+      const match = tlds.find((tld) => tld.ext.toLowerCase() === searchedTld);
+      searchResultsTlds = match ? [match] : [];
+    } else {
+      searchResultsTlds = tlds;
+    }
+  }
+
+  // Helper function to wrap a price string in <span className="font-mono tabular-nums">...</span>
+  function renderPrice(priceStr: string) {
+    return <span className="font-mono tabular-nums">{priceStr}</span>;
+  }
 
   return (
     <section className="py-20 bg-muted/30" id="domains">
@@ -87,7 +107,7 @@ const DomainSearchSection = () => {
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 bg-primary/10 text-primary font-semibold text-sm px-4 py-1.5 rounded-full mb-4">
             <Globe className="w-4 h-4" />
-            Domain Registration Starting at ₹99/yr
+            Domain Registration Starting at {renderPrice("₹99")}/yr
           </div>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
             Find Your Perfect <span className="gradient-text">Domain Name</span>
@@ -140,29 +160,54 @@ const DomainSearchSection = () => {
         {searched && baseName &&
           <div className="max-w-5xl mx-auto mb-12 animate-fade-in">
             <p className="text-sm text-muted-foreground mb-4">
-              Showing results for <span className="font-bold text-foreground">"{baseName}"</span>
+              Showing results for <span className="font-bold text-foreground">"{baseName}{searchedTld}"</span>
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {tlds.map((tld) =>
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-5">
+              {searchResultsTlds.length === 0 && (
+                <div className="col-span-full text-center py-10 text-muted-foreground text-lg font-medium">
+                  No matching domain extension found.
+                </div>
+              )}
+              {searchResultsTlds.map((tld, i) => (
                 <Card
                   key={tld.ext}
-                  className="hover:border-primary/30 hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-pointer">
+                  className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer animate-fade-in-up group ${
+                    tld.tag ? "border-primary/20 shadow-md" : "border-border"
+                  }`
+                  }
+                  style={{ animationDelay: `${i * 0.06}s` }}>
 
-                  <CardContent className="p-5 flex items-center justify-between">
+                  {/* Top gradient bar */}
+                  <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${tld.color} opacity-80 group-hover:opacity-100 transition-opacity`} />
+
+                  {tld.tag &&
+                    <div className="absolute top-3 right-3">
+                      <span className="text-[10px] font-bold bg-primary text-primary-foreground px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                        {tld.tag}
+                      </span>
+                    </div>
+                  }
+
+                  <CardContent className="p-6 pt-7 text-center">
+                    {/* Extension name with gradient underline */}
+                    <span className="text-3xl font-black text-foreground block tracking-tight">
+                      {baseName}{tld.ext}
+                    </span>
+                    <div className={`w-8 h-0.5 mx-auto mt-2 mb-4 rounded-full bg-gradient-to-r ${tld.color} opacity-60`} />
+
+                    {/* Pricing */}
                     <div>
-                      <span className="font-bold text-base">{baseName}{tld.ext}</span>
-                      <div className="flex items-center gap-1 mt-1">
-                        <Check className="w-3.5 h-3.5 text-primary" />
-                        <span className="text-xs text-primary font-semibold">Available</span>
-                      </div>
+                      <span className="text-sm text-muted-foreground line-through block">{renderPrice(tld.original)}/yr</span>
+                      <span className="text-3xl md:text-4xl font-black gradient-text">{renderPrice(tld.price)}</span>
+                      <span className="text-base text-muted-foreground">/yr</span>
                     </div>
-                    <div className="text-right">
-                      <span className="text-xs text-muted-foreground line-through block">{tld.original}/yr</span>
-                      <span className="text-lg text-primary font-black">{tld.price}<span className="text-xs font-medium">/yr</span></span>
-                    </div>
+
+                    <Button variant="outline" size="sm" className="mt-5 w-full font-semibold text-sm border-primary/20 hover:bg-primary hover:text-primary-foreground transition-colors">
+                      Register
+                    </Button>
                   </CardContent>
                 </Card>
-              )}
+              ))}
             </div>
             <div className="mt-6 text-center">
               <Link to="/solutions/domains">
@@ -204,8 +249,8 @@ const DomainSearchSection = () => {
 
                   {/* Pricing */}
                   <div>
-                    <span className="text-sm text-muted-foreground line-through block">{tld.original}/yr</span>
-                    <span className="text-3xl md:text-4xl font-black gradient-text">{tld.price}</span>
+                    <span className="text-sm text-muted-foreground line-through block">{renderPrice(tld.original)}/yr</span>
+                    <span className="text-3xl md:text-4xl font-black gradient-text">{renderPrice(tld.price)}</span>
                     <span className="text-base text-muted-foreground">/yr</span>
                   </div>
 
