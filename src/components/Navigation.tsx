@@ -36,7 +36,7 @@ const serviceLinks = [
     ],
   },
   {
-    heading: "Email & Productivity",
+    heading: "Email & Security",
     links: [
       { label: "Zoho Email Services", path: "/solutions/email-security#zoho" },
       { label: "Microsoft Office 365", path: "/solutions/email-security#office365" },
