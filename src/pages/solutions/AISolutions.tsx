@@ -139,7 +139,7 @@ const AISolutions = () => {
                 models, we build intelligent solutions that drive real business value.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link to="/quote">
+                <Link to="/contact">
                   <Button size="lg" className="btn-gradient glow-effect font-bold h-14 px-8">
                     Explore AI Solutions
                     <ArrowRight className="ml-2 w-5 h-5" />
@@ -273,7 +273,7 @@ const AISolutions = () => {
                 <p className="text-xl text-foreground/70 mb-8 max-w-2xl mx-auto">
                   Discover how AI can transform your business operations and customer experiences.
                 </p>
-                <Link to="/quote">
+                <Link to="/contact">
                   <Button size="lg" className="btn-gradient glow-effect font-bold h-14 px-10">
                     Schedule AI Consultation
                     <ArrowRight className="ml-2 w-5 h-5" />

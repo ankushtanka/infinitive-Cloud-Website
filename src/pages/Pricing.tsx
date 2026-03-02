@@ -520,7 +520,7 @@ const Pricing = () => {
                     ))}
                   </ul>
 
-                  <Link to="/quote">
+                  <Link to="/contact">
                     <Button
                       className={`w-full ${plan.popular ? "btn-gradient" : ""}`}
                       variant={plan.popular ? "default" : "outline"}

@@ -33,7 +33,7 @@ const FreeTrialSection = () => {
             ))}
           </div>
 
-          <Link to="/free-trial">
+          <Link to="/contact">
             <Button
               size="lg"
               className="btn-gradient glow-effect text-lg px-12 h-16 rounded-xl group font-bold"

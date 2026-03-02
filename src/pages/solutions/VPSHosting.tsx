@@ -140,7 +140,7 @@ const VPSHosting = () => {
                 businesses requiring more control than shared hosting but without the cost of dedicated servers.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link to="/quote">
+                <Link to="/contact">
                   <Button size="lg" className="btn-gradient glow-effect font-bold h-14 px-8">
                     Get Started Now
                     <ArrowRight className="ml-2 w-5 h-5" />
@@ -219,7 +219,7 @@ const VPSHosting = () => {
                         </li>
                       ))}
                     </ul>
-                    <Link to="/quote">
+                    <Link to="/contact">
                       <Button className={`w-full h-12 font-bold ${plan.popular ? 'btn-gradient' : ''}`}>
                         Order Now
                       </Button>
@@ -273,7 +273,7 @@ const VPSHosting = () => {
                 <p className="text-xl text-foreground/70 mb-8 max-w-2xl mx-auto">
                   Get started with powerful VPS hosting today. Free server setup and migration included.
                 </p>
-                <Link to="/quote">
+                <Link to="/contact">
                   <Button size="lg" className="btn-gradient glow-effect font-bold h-14 px-10">
                     Launch Your VPS
                     <ArrowRight className="ml-2 w-5 h-5" />

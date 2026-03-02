@@ -35,7 +35,7 @@ const ServerManagement = () => {
                 Let our expert team handle your server infrastructure so you can focus on growing your business. From setup to security to 24/7 monitoring — we've got you covered.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-                <Link to="/quote"><Button className="btn-gradient glow-effect font-bold h-14 px-8">Get a Quote</Button></Link>
+                <Link to="/contact"><Button className="btn-gradient glow-effect font-bold h-14 px-8">Get a Quote</Button></Link>
                 <Link to="/contact"><Button variant="outline" className="h-14 px-8 font-semibold">Talk to an Expert</Button></Link>
               </div>
             </div>
@@ -67,7 +67,7 @@ const ServerManagement = () => {
                 <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
                   Our certified engineers manage your infrastructure with enterprise-grade tools and processes.
                 </p>
-                <Link to="/quote"><Button className="btn-gradient glow-effect font-bold h-14 px-8">Get Custom Quote</Button></Link>
+                <Link to="/contact"><Button className="btn-gradient glow-effect font-bold h-14 px-8">Get Custom Quote</Button></Link>
               </CardContent>
             </Card>
           </section>

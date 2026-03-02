@@ -134,7 +134,7 @@ const HomePricingSection = () => {
                           </li>
                         ))}
                       </ul>
-                      <Link to="/quote">
+                      <Link to="/contact">
                         <Button
                           className={`w-full h-12 text-sm font-bold ${plan.popular ? "btn-gradient" : ""}`}
                           variant={plan.popular ? "default" : "outline"}

@@ -42,7 +42,7 @@ const CloudMigration = () => {
                 Moving to Infinitive Cloud? We handle everything — from files and databases to DNS configuration. Zero downtime, zero hassle, completely free.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-                <Link to="/quote"><Button className="btn-gradient glow-effect font-bold h-14 px-8">Request Free Migration</Button></Link>
+                <Link to="/contact"><Button className="btn-gradient glow-effect font-bold h-14 px-8">Request Free Migration</Button></Link>
                 <Link to="/contact"><Button variant="outline" className="h-14 px-8 font-semibold">Talk to Migration Team</Button></Link>
               </div>
             </div>

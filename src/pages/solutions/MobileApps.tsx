@@ -141,7 +141,7 @@ const MobileApps = () => {
                 developers deliver high-quality mobile experiences that users love.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link to="/quote">
+                <Link to="/contact">
                   <Button size="lg" className="btn-gradient glow-effect font-bold h-14 px-8">
                     Start Your App Project
                     <ArrowRight className="ml-2 w-5 h-5" />
@@ -274,7 +274,7 @@ const MobileApps = () => {
                 <p className="text-xl text-foreground/70 mb-8 max-w-2xl mx-auto">
                   Let's turn your app idea into reality. Get a free consultation and project estimate.
                 </p>
-                <Link to="/quote">
+                <Link to="/contact">
                   <Button size="lg" className="btn-gradient glow-effect font-bold h-14 px-10">
                     Get Free Quote
                     <ArrowRight className="ml-2 w-5 h-5" />

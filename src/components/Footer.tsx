@@ -23,7 +23,7 @@ const Footer = () => {
         { label: "Domain Registration", path: "/solutions/domains" },
         { label: "Server Management", path: "/solutions/server-management" },
         { label: "Cloud Migration", path: "/solutions/cloud-migration" },
-        { label: "Free Trial", path: "/free-trial" },
+        { label: "Contact Us", path: "/contact" },
         { label: "Pricing", path: "/pricing" },
       ],
     },
