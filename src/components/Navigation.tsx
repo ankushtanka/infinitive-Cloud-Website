@@ -237,7 +237,7 @@ const Navigation = () => {
                   );
                 }
               })}
-              <Link to="/free-trial" className="ml-4" onClick={handleCloseMenus}>
+              <Link to="/contact" className="ml-4" onClick={handleCloseMenus}>
                 <Button className="btn-gradient glow-effect shadow-medium">
                   Start Free Trial
                 </Button>
@@ -327,7 +327,7 @@ const Navigation = () => {
                   {link.label}
                 </Link>
               ))}
-            <Link to="/free-trial" onClick={handleCloseMenus} className="mt-4">
+            <Link to="/contact" onClick={handleCloseMenus} className="mt-4">
               <Button className="btn-gradient glow-effect w-full h-14 text-lg">
                 Start Free Trial
               </Button>

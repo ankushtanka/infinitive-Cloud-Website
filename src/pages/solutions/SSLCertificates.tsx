@@ -103,7 +103,7 @@ const SSLCertificates = () => {
                         </li>
                       ))}
                     </ul>
-                    <Link to="/quote">
+                    <Link to="/contact">
                       <Button className={`w-full h-12 font-bold ${plan.popular ? "btn-gradient" : ""}`} variant={plan.popular ? "default" : "outline"}>
                         Get SSL
                       </Button>
@@ -147,7 +147,7 @@ const SSLCertificates = () => {
                   Every hosting plan includes a free DV SSL certificate. Need premium SSL? Contact our team.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link to="/free-trial"><Button className="btn-gradient glow-effect font-bold h-14 px-8">Get Free SSL with Hosting</Button></Link>
+                  <Link to="/contact"><Button className="btn-gradient glow-effect font-bold h-14 px-8">Get Free SSL with Hosting</Button></Link>
                   <Link to="/contact"><Button variant="outline" className="h-14 px-8 font-semibold">Talk to an Expert</Button></Link>
                 </div>
               </CardContent>

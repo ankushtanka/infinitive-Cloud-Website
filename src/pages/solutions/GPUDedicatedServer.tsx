@@ -35,7 +35,7 @@ const GPUDedicatedServer = () => {
                 High-performance GPU servers built for AI training, 3D rendering, video processing, and any workload that demands raw computing power. No shared resources — the entire server is yours.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-                <Link to="/quote">
+                <Link to="/contact">
                   <Button className="btn-gradient glow-effect font-bold h-14 px-8">Get a Quote</Button>
                 </Link>
                 <Link to="/contact">

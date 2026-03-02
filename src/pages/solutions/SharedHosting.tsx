@@ -117,7 +117,7 @@ const SharedHosting = () => {
                         </li>
                       ))}
                     </ul>
-                    <Link to="/quote">
+                    <Link to="/contact">
                       <Button className={`w-full h-12 font-bold ${plan.popular ? "btn-gradient" : ""}`} variant={plan.popular ? "default" : "outline"}>
                         Get Started
                       </Button>
@@ -161,7 +161,7 @@ const SharedHosting = () => {
                   Try any shared hosting plan free for 15 days. No credit card required.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link to="/free-trial"><Button className="btn-gradient glow-effect font-bold h-14 px-8">Start Free Trial</Button></Link>
+                  <Link to="/contact"><Button className="btn-gradient glow-effect font-bold h-14 px-8">Start Free Trial</Button></Link>
                   <Link to="/contact"><Button variant="outline" className="h-14 px-8 font-semibold">Talk to Sales</Button></Link>
                 </div>
               </CardContent>

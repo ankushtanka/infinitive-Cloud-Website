@@ -264,7 +264,7 @@ const DomainRegistration = () => {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link to="/contact"><Button className="btn-gradient glow-effect font-bold h-14 px-8">Register Domain</Button></Link>
-                  <Link to="/quote"><Button variant="outline" className="h-14 px-8 font-semibold">Get a Quote</Button></Link>
+                  <Link to="/contact"><Button variant="outline" className="h-14 px-8 font-semibold">Get a Quote</Button></Link>
                 </div>
               </CardContent>
             </Card>

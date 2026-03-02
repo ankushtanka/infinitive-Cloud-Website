@@ -35,7 +35,7 @@ const OdooSolutions = () => {
                 Customized Odoo ERP implementations that streamline your entire business — from sales and inventory to accounting and HR. One platform, every department connected.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-                <Link to="/quote"><Button className="btn-gradient glow-effect font-bold h-14 px-8">Get a Quote</Button></Link>
+                <Link to="/contact"><Button className="btn-gradient glow-effect font-bold h-14 px-8">Get a Quote</Button></Link>
                 <Link to="/contact"><Button variant="outline" className="h-14 px-8 font-semibold">Talk to an Expert</Button></Link>
               </div>
             </div>

@@ -94,7 +94,7 @@ const CaseStudySection = () => {
 
           {/* CTA */}
           <div className="text-center mt-16">
-            <Link to="/quote">
+            <Link to="/contact">
               <Button 
                 size="lg"
                 className="btn-gradient glow-effect text-lg px-12 h-16 rounded-xl group"

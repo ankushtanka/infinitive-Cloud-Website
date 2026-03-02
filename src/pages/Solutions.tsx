@@ -130,7 +130,7 @@ const Solutions = () => {
                       Talk to an Expert
                     </Button>
                   </Link>
-                  <Link to="/free-trial">
+                  <Link to="/contact">
                     <Button size="lg" variant="outline" className="h-14 px-8 font-semibold">
                       Start Free Trial
                     </Button>
