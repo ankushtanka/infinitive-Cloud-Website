@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -8,15 +8,49 @@ import { StructuredData, createBreadcrumbSchema } from "@/components/StructuredD
 
 const FORM_ENDPOINT = "https://formspree.io/f/xdalvqzp";
 
+function getRandomIntInclusive(min: number, max: number) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 const ContactForm = () => {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Captcha State
+  const [captchaNum1, setCaptchaNum1] = useState<number>(0);
+  const [captchaNum2, setCaptchaNum2] = useState<number>(0);
+  const [captchaAnswer, setCaptchaAnswer] = useState(""); // What user types
+  const [captchaError, setCaptchaError] = useState<string | null>(null);
+
+  // Regenerate captcha when form is reset
+  const regenerateCaptcha = () => {
+    setCaptchaNum1(getRandomIntInclusive(10, 99));
+    setCaptchaNum2(getRandomIntInclusive(1, 9));
+    setCaptchaAnswer("");
+    setCaptchaError(null);
+  };
+
+  useEffect(() => {
+    regenerateCaptcha();
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitting(true);
     setError(null);
+    setCaptchaError(null);
+
+    const correct = Number(captchaAnswer.trim()) === captchaNum1 + captchaNum2;
+    if (!correct) {
+      setCaptchaError("Incorrect answer to the captcha. Please try again.");
+      // Prevent submission
+      regenerateCaptcha();
+      return;
+    }
+
+    setSubmitting(true);
 
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -34,6 +68,7 @@ const ContactForm = () => {
       if (response.ok) {
         setSubmitted(true);
         form.reset();
+        regenerateCaptcha();
       } else {
         setError(
           (data && data.errors && data.errors[0] && data.errors[0].message) ||
@@ -56,7 +91,10 @@ const ContactForm = () => {
         </p>
         <button
           className="mt-4 px-6 py-2 rounded bg-gradient-to-r from-primary to-accent text-white font-semibold hover:opacity-90 transition"
-          onClick={() => setSubmitted(false)}
+          onClick={() => {
+            setSubmitted(false);
+            regenerateCaptcha();
+          }}
         >
           Send Another Message
         </button>
@@ -194,6 +232,27 @@ const ContactForm = () => {
           rows={6}
           disabled={submitting}
         />
+      </div>
+      {/* Custom Captcha */}
+      <div className="space-y-2">
+        <label htmlFor="captcha" className="text-sm font-medium">
+          Are you human? <span className="font-normal">What is {captchaNum1} + {captchaNum2}?</span> *
+        </label>
+        <input
+          id="captcha"
+          name="captcha"
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          autoComplete="off"
+          required
+          className="w-full rounded border px-3 py-2"
+          placeholder="Enter the sum"
+          value={captchaAnswer}
+          disabled={submitting}
+          onChange={e => setCaptchaAnswer(e.target.value.replace(/[^0-9]/g, ""))}
+        />
+        {captchaError && <div className="text-red-600 text-sm">{captchaError}</div>}
       </div>
       {error && (
         <div className="text-red-600 text-sm">{error}</div>
