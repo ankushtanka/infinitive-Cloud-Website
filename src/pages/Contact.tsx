@@ -1,191 +1,299 @@
+import React, { useState } from "react";
 import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Mail, Phone, MapPin, Clock } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
+import { FileText, Zap, Shield, TrendingUp } from "lucide-react";
 import { StructuredData, createBreadcrumbSchema } from "@/components/StructuredData";
+
+const FORM_ENDPOINT = "https://formspree.io/f/xdalvqzp";
+
+const ContactForm = () => {
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError(null);
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch(FORM_ENDPOINT, {
+        method: "POST",
+        headers: {
+          Accept: "application/json"
+        },
+        body: formData
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setSubmitted(true);
+        form.reset();
+      } else {
+        setError(
+          (data && data.errors && data.errors[0] && data.errors[0].message) ||
+          "Sorry, there was a problem submitting your request. Please try again."
+        );
+      }
+    } catch (err) {
+      setError("Sorry, there was a network error. Please try again later.");
+    }
+    setSubmitting(false);
+  };
+
+  if (submitted) {
+    return (
+      <div className="py-10 text-center">
+        <h2 className="text-2xl font-semibold mb-3">Thank you!</h2>
+        <p className="text-lg text-muted-foreground mb-4">
+          We've received your request and will get back to you within 24 hours.<br />
+          If you don't get a reply, please check your Spam folder.
+        </p>
+        <button
+          className="mt-4 px-6 py-2 rounded bg-gradient-to-r from-primary to-accent text-white font-semibold hover:opacity-90 transition"
+          onClick={() => setSubmitted(false)}
+        >
+          Send Another Message
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+      <div className="grid md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <label htmlFor="name" className="text-sm font-medium">Full Name *</label>
+          <input
+            id="name"
+            type="text"
+            name="name"
+            required
+            className="w-full rounded border px-3 py-2"
+            placeholder="John Doe"
+            autoComplete="name"
+            disabled={submitting}
+          />
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="email" className="text-sm font-medium">Email Address *</label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            required
+            className="w-full rounded border px-3 py-2"
+            placeholder="john@company.com"
+            autoComplete="email"
+            disabled={submitting}
+          />
+        </div>
+      </div>
+      <div className="grid md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <label htmlFor="company" className="text-sm font-medium">Company Name</label>
+          <input
+            id="company"
+            type="text"
+            name="company"
+            className="w-full rounded border px-3 py-2"
+            placeholder="Your Company"
+            autoComplete="organization"
+            disabled={submitting}
+          />
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="phone" className="text-sm font-medium">Phone Number *</label>
+          <input
+            id="phone"
+            type="tel"
+            name="phone"
+            required
+            className="w-full rounded border px-3 py-2"
+            placeholder="+91 7737393087"
+            autoComplete="tel"
+            disabled={submitting}
+          />
+        </div>
+      </div>
+      <div className="space-y-2">
+        <label htmlFor="website" className="text-sm font-medium">Website URL</label>
+        <input
+          id="website"
+          type="url"
+          name="website"
+          className="w-full rounded border px-3 py-2"
+          placeholder="https://yourwebsite.com"
+          autoComplete="url"
+          disabled={submitting}
+        />
+      </div>
+      <div className="space-y-2">
+        <label htmlFor="service" className="text-sm font-medium">Service Interest *</label>
+        <select
+          id="service"
+          name="service"
+          required
+          className="w-full rounded border px-3 py-2 bg-background"
+          defaultValue=""
+          disabled={submitting}
+        >
+          <option value="" disabled>Select a service</option>
+          {/* Hosting */}
+          <optgroup label="Hosting">
+            <option value="web-hosting">Web Hosting</option>
+            <option value="cloud-hosting">Cloud Hosting</option>
+            <option value="reseller-hosting">Reseller Hosting</option>
+            <option value="wordpress-hosting">Managed WordPress Hosting</option>
+            <option value="woocommerce-hosting">Managed WooCommerce Hosting</option>
+            <option value="nodejs-hosting">Node.js Web App Hosting</option>
+          </optgroup>
+          {/* Servers */}
+          <optgroup label="Servers">
+            <option value="vps-server">VPS Server</option>
+            <option value="dedicated-server">Dedicated Server</option>
+            <option value="gpu-server">GPU Server</option>
+            <option value="server-management">Server Management</option>
+          </optgroup>
+          {/* Domains */}
+          <optgroup label="Domains">
+            <option value="domain-registration">Domain Registration</option>
+            <option value="domain-search">Domain Name Search</option>
+            <option value="domain-transfer">Domain Transfer</option>
+          </optgroup>
+          {/* Email & Security */}
+          <optgroup label="Email & Security">
+            <option value="zoho-email">Zoho Email Services</option>
+            <option value="office365">Microsoft Office 365</option>
+            <option value="google-workspace">Google Workspace</option>
+            <option value="ssl-certificates">SSL Certificates</option>
+          </optgroup>
+          {/* Solutions */}
+          <optgroup label="Solutions">
+            <option value="cloud">Cloud Solutions</option>
+            <option value="domain">Domain Services</option>
+            <option value="multiple">Multiple Services</option>
+            <option value="development">Development Services</option>
+            <option value="ai">AI Solutions (CodinAI)</option>
+          </optgroup>
+        </select>
+      </div>
+      <div className="space-y-2">
+        <label htmlFor="message" className="text-sm font-medium">Project Details *</label>
+        <textarea
+          id="message"
+          name="message"
+          required
+          className="w-full rounded border px-3 py-2"
+          placeholder="Tell us about your project requirements, expected features, and any specific needs..."
+          rows={6}
+          disabled={submitting}
+        />
+      </div>
+      {error && (
+        <div className="text-red-600 text-sm">{error}</div>
+      )}
+      <button
+        type="submit"
+        className="w-full py-3 rounded bg-gradient-to-r from-primary to-accent text-white font-semibold hover:opacity-90 transition"
+        disabled={submitting}
+      >
+        {submitting ? "Submitting..." : "Submit Contact Request"}
+      </button>
+    </form>
+  );
+};
 
 const Contact = () => {
   const breadcrumbSchema = createBreadcrumbSchema([
     { name: "Home", url: "https://infinitivecloud.com/" },
     { name: "Contact", url: "https://infinitivecloud.com/contact" }
   ]);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    company: "",
-    phone: "",
-    message: "",
-  });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    toast.success("Thank you! We'll get back to you within 24 hours.");
-    setFormData({ name: "", email: "", company: "", phone: "", message: "" });
-  };
-
-  const contactInfo = [
+  const benefits = [
     {
-      icon: Mail,
-      title: "Email Us",
-      value: "info@infinitivecloud.com",
-      description: "We respond within 2-4 hours",
+      icon: FileText,
+      title: "Detailed Response",
+      description: "Get a comprehensive response with pricing breakdown",
     },
     {
-      icon: Phone,
-      title: "Call Us",
-      value: "+91 7737393087",
-      description: "24×7 support available",
+      icon: Zap,
+      title: "Fast Response",
+      description: "Receive your reply within 24 hours",
     },
     {
-      icon: MapPin,
-      title: "Global Presence",
-      value: "Multi-Region Infrastructure",
-      description: "Data centers worldwide",
+      icon: Shield,
+      title: "No Commitment",
+      description: "Free consultation with zero obligations",
     },
     {
-      icon: Clock,
-      title: "Business Hours",
-      value: "24×7 Operations",
-      description: "Always here to help",
+      icon: TrendingUp,
+      title: "Best Value",
+      description: "Competitive pricing with premium features",
     },
   ];
 
   return (
     <div className="min-h-screen">
       <Helmet>
-        <title>Contact Infinitive Cloud - Get 24/7 IT Support & Consultation India</title>
-        <meta name="description" content="Contact Infinitive Cloud for cloud hosting, web development, and AI solutions. 24/7 expert support, fast response within 2-4 hours. Call +91 7737393087 or email us." />
-        <meta name="keywords" content="contact Infinitive Cloud, IT support India, cloud hosting support, web development inquiry, AI solutions consultation" />
+        <title>Contact Us - Cloud, Hosting & Development Services | Infinitive Cloud</title>
+        <meta name="description" content="Contact us for inquiries about cloud hosting, web development, mobile apps, or AI solutions. Free consultation, detailed responses within 24 hours, no commitment required." />
+        <meta name="keywords" content="IT services contact India, cloud hosting contact, web development inquiry, mobile app contact, AI solutions contact" />
         <link rel="canonical" href="https://infinitivecloud.com/contact" />
-        <meta property="og:title" content="Contact Infinitive Cloud - 24/7 IT Support" />
-        <meta property="og:description" content="Get in touch for cloud, hosting, development, and AI solutions. 24/7 support available." />
+        <meta property="og:title" content="Contact Us - Infinitive Cloud" />
+        <meta property="og:description" content="Send your inquiry for cloud, hosting, development, or AI services." />
         <meta property="og:url" content="https://infinitivecloud.com/contact" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Contact Infinitive Cloud" />
-        <meta name="twitter:description" content="24/7 expert support for cloud, hosting, and development needs." />
+        <meta name="twitter:title" content="Contact - Infinitive Cloud" />
+        <meta name="twitter:description" content="Free consultation and response within 24 hours." />
         <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
-      
+
       <StructuredData data={breadcrumbSchema} />
-      
+
       <Navigation />
       <main className="pt-24 pb-20">
         {/* Hero */}
         <section className="section-container mb-20">
           <div className="max-w-4xl mx-auto text-center animate-fade-in">
             <h1 className="mb-6">
-              Let's Build Something <span className="gradient-text">Extraordinary</span>
+              <span className="gradient-text">Contact Us</span>
             </h1>
             <p className="text-xl text-muted-foreground">
-              Whether you need cloud infrastructure, hosting solutions, or custom development—we're here to help.
+              Tell us about your project or inquiry and we'll provide a tailored response with transparent pricing.
             </p>
           </div>
         </section>
-
         <div className="section-container">
           <div className="grid lg:grid-cols-3 gap-8">
-            {/* Contact Form */}
+            {/* Contact Request Form */}
             <div className="lg:col-span-2">
               <Card className="animate-fade-in-up">
                 <CardHeader>
-                  <CardTitle className="text-2xl">Send Us a Message</CardTitle>
+                  <CardTitle className="text-2xl">Contact Our Team</CardTitle>
                   <CardDescription>
-                    Fill out the form below and our team will get back to you within 24 hours.
+                    Fill out the details below and receive a personalized response within 24 hours.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <label htmlFor="name" className="text-sm font-medium">
-                          Full Name *
-                        </label>
-                        <Input
-                          id="name"
-                          required
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          placeholder="John Doe"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label htmlFor="email" className="text-sm font-medium">
-                          Email Address *
-                        </label>
-                        <Input
-                          id="email"
-                          type="email"
-                          required
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          placeholder="john@company.com"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <label htmlFor="company" className="text-sm font-medium">
-                          Company Name
-                        </label>
-                        <Input
-                          id="company"
-                          value={formData.company}
-                          onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                          placeholder="Your Company"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label htmlFor="phone" className="text-sm font-medium">
-                          Phone Number
-                        </label>
-                        <Input
-                          id="phone"
-                          type="tel"
-                          value={formData.phone}
-                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          placeholder="+1 (555) 000-0000"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <label htmlFor="message" className="text-sm font-medium">
-                        How can we help? *
-                      </label>
-                      <Textarea
-                        id="message"
-                        required
-                        value={formData.message}
-                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        placeholder="Tell us about your project or requirements..."
-                        rows={6}
-                      />
-                    </div>
-
-                    <Button type="submit" size="lg" className="w-full bg-gradient-to-r from-primary to-accent hover:opacity-90">
-                      Send Message
-                    </Button>
-                  </form>
+                  <ContactForm />
                 </CardContent>
               </Card>
             </div>
-
-            {/* Contact Info */}
+            {/* Benefits */}
             <div className="space-y-6">
-              {contactInfo.map((info, index) => {
-                const Icon = info.icon;
+              {benefits.map((benefit, index) => {
+                const Icon = benefit.icon;
                 return (
-                  <Card 
-                    key={info.title} 
+                  <Card
+                    key={benefit.title}
                     className="card-hover animate-fade-in-up"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
@@ -195,9 +303,8 @@ const Contact = () => {
                           <Icon className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                          <h3 className="font-semibold mb-1">{info.title}</h3>
-                          <p className="text-sm font-medium text-primary mb-1">{info.value}</p>
-                          <p className="text-xs text-muted-foreground">{info.description}</p>
+                          <h3 className="font-semibold mb-1">{benefit.title}</h3>
+                          <p className="text-sm text-muted-foreground">{benefit.description}</p>
                         </div>
                       </div>
                     </CardContent>
@@ -209,6 +316,14 @@ const Contact = () => {
         </div>
       </main>
       <Footer />
+      <style>
+        {`
+          .custom-scroll-lock {
+            overscroll-behavior: contain;
+            touch-action: pan-y;
+          }
+        `}
+      </style>
     </div>
   );
 };
