@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Shield, Headphones, Server, Cloud, Percent } from "lucide-react";
-import { Link } from "react-router-dom";
 import { useParallax } from "@/hooks/use-parallax";
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-// Only two items for alternating marquee
+// Internal Contact Page Route
+const CONTACT_ROUTE = "/contact";
+
+// Only two items for alternating marquee, links simply redirect to contact page
 const MARQUEE_ITEMS = [
   {
     icon: <Percent className="inline w-5 h-5 mr-2 text-primary" />,
@@ -13,7 +15,6 @@ const MARQUEE_ITEMS = [
         <b>Get 50% OFF</b> on first 3 months – Use Code: <span className="font-mono px-2 rounded bg-accent text-background">WELCOME50</span>
       </>
     ),
-    to: "/pricing",
   },
   {
     icon: <ArrowRight className="inline w-5 h-5 mr-2 text-primary" />,
@@ -22,7 +23,6 @@ const MARQUEE_ITEMS = [
         <b>Start your 7-day Free Trial</b> – No credit card required
       </>
     ),
-    to: "/free-trial",
   },
 ];
 
@@ -39,6 +39,23 @@ const HeroSection = () => {
     }, 4200);
     return () => clearInterval(timer);
   }, []);
+
+  // Handler for redirect to contact page
+  const handleRedirect = () => {
+    window.location.href = CONTACT_ROUTE;
+  };
+
+  // Marquee redirect handler for accessibility/keyboard
+  const handleMarqueeClick = (e: React.MouseEvent<HTMLSpanElement> | React.KeyboardEvent<HTMLSpanElement>) => {
+    if (
+      (e as React.MouseEvent).type === 'click' ||
+      (e as React.KeyboardEvent).key === 'Enter' ||
+      (e as React.KeyboardEvent).key === ' '
+    ) {
+      e.preventDefault();
+      window.location.href = CONTACT_ROUTE;
+    }
+  };
 
   return (
     <section className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-background pt-24 md:pt-32">
@@ -63,25 +80,23 @@ const HeroSection = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center w-full mb-16">
-            <Link to="/quote">
-              <Button
-                size="lg"
-                className="btn-gradient glow-effect text-lg md:text-xl px-12 h-16 rounded-2xl group font-bold shadow-lg hover:shadow-xl transition-all"
-                style={{ boxShadow: "var(--shadow-medium)" }}
-              >
-                Get Started
-                <ArrowRight className="ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
-            <Link to="/free-trial">
-              <Button
-                size="lg"
-                variant="outline"
-                className="text-lg md:text-xl px-12 h-16 rounded-2xl border-2 border-foreground/20 hover:border-primary hover:bg-primary/10 transition-all font-semibold"
-              >
-                Start Free Trial
-              </Button>
-            </Link>
+            <Button
+              size="lg"
+              className="btn-gradient glow-effect text-lg md:text-xl px-12 h-16 rounded-2xl group font-bold shadow-lg hover:shadow-xl transition-all"
+              style={{ boxShadow: "var(--shadow-medium)" }}
+              onClick={handleRedirect}
+            >
+              Get Started
+              <ArrowRight className="ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform" />
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="text-lg md:text-xl px-12 h-16 rounded-2xl border-2 border-foreground/20 hover:border-primary hover:bg-primary/10 transition-all font-semibold"
+              onClick={handleRedirect}
+            >
+              Start Free Trial
+            </Button>
           </div>
 
           {/* Trust badges */}
@@ -131,18 +146,22 @@ const HeroSection = () => {
               {/* spacer for size stabilization */}
             </div>
             <div key={activeIdx} className="absolute w-full left-0 top-0 h-full flex items-center justify-center marquee-animate">
-              <Link
-                to={MARQUEE_ITEMS[activeIdx].to}
-                className="flex items-center gap-3 text-lg md:text-xl font-semibold px-16 py-2 transition hover:text-primary focus:outline-none focus-visible:ring whitespace-nowrap"
+              {/* Use span with role=link to simulate a link; click/keyboard will redirect */}
+              <span
                 tabIndex={0}
+                role="link"
+                className="flex items-center gap-3 text-lg md:text-xl font-semibold px-16 py-2 transition hover:text-primary focus:outline-none focus-visible:ring whitespace-nowrap cursor-pointer"
                 style={{
                   opacity: 0.92,
                   transition: "background .35s",
                 }}
+                onClick={handleMarqueeClick}
+                onKeyDown={handleMarqueeClick}
+                aria-label="Go to Contact page"
               >
                 {MARQUEE_ITEMS[activeIdx].icon}
                 <span className="whitespace-nowrap">{MARQUEE_ITEMS[activeIdx].text}</span>
-              </Link>
+              </span>
             </div>
           </div>
         </div>
