@@ -70,7 +70,7 @@ const HeroSection = () => {
         <div className="max-w-5xl w-full flex flex-col items-center text-center animate-fade-in">
           <h1 className="mb-6 font-extrabold leading-tight text-3xl md:text-5xl lg:text-6xl tracking-tight drop-shadow-xl">
             Premium <span className="gradient-text">Cloud & Web Hosting</span>{" "}
-            <span className="block mt-2 text-primary">Solutions in India</span>
+            <span className="block mt-2 text-primary">Solutions</span>
           </h1>
           <p className="text-2xl md:text-3xl font-semibold text-muted-foreground mb-8 max-w-3xl mx-auto leading-snug drop-shadow">
             Limitless solutions for cloud and web hostings
