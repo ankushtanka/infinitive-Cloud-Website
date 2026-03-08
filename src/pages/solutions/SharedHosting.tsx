@@ -67,7 +67,7 @@ const SharedHosting = () => {
               <h1 className="mb-6">
                 <span className="gradient-text">Shared Hosting</span> Plans India
               </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                 Affordable, reliable, and blazing-fast shared hosting powered by NVMe SSD and LiteSpeed technology. Perfect for personal websites, blogs, small businesses, and WordPress sites.
               </p>
               <div className="flex flex-wrap gap-4 justify-center mt-6 text-sm font-semibold text-primary">
