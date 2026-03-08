@@ -63,6 +63,7 @@ const Index = () => {
         <HostingSolutionsSection />
         <WhyTrustUsSection />
         <HomePricingSection />
+        <ArchitectureSection />
         <InfrastructureSection />
         <TestimonialsSection />
         <CTASection />
