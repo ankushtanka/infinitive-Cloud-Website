@@ -1,63 +1,64 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Star } from "lucide-react";
 
+const testimonials = [
+  {
+    name: "Rajesh Kumar",
+    company: "TechStart Solutions",
+    role: "CTO",
+    content: "Infinitive Cloud transformed our infrastructure. The migration was seamless with zero downtime, and their 24/7 support team is exceptional.",
+    rating: 5,
+  },
+  {
+    name: "Priya Sharma",
+    company: "E-Shop India",
+    role: "CEO",
+    content: "We switched to Infinitive Cloud and saw a 40% improvement in site speed. Their hosting has been a game-changer for our e-commerce business.",
+    rating: 5,
+  },
+  {
+    name: "Amit Patel",
+    company: "Digital Agency Pro",
+    role: "Founder",
+    content: "Outstanding infrastructure and support. Our clients love the instant page loads, and the server management takes a huge burden off our team.",
+    rating: 5,
+  },
+];
+
 const TestimonialsSection = () => {
-  const testimonials = [
-    {
-      name: "Rajesh Kumar",
-      company: "TechStart Solutions",
-      role: "CTO",
-      content: "Infinitive Cloud transformed our infrastructure. The migration was seamless with zero downtime, and their 24/7 support team is exceptional. Highly recommended for growing startups.",
-      rating: 5,
-    },
-    {
-      name: "Priya Sharma",
-      company: "E-Shop India",
-      role: "CEO",
-      content: "We switched to Infinitive Cloud's hosting and saw a 40% improvement in site speed. Their profession-optimized hosting for e-commerce has been a game-changer for our business.",
-      rating: 5,
-    },
-    {
-      name: "Amit Patel",
-      company: "Digital Agency Pro",
-      role: "Founder",
-      content: "The AI solutions from CodinAI automated our customer support completely. We've saved countless hours and our clients love the instant responses. Outstanding service!",
-      rating: 5,
-    },
-  ];
-
   return (
-    <section className="section-container py-20 bg-muted/30">
-      <div className="text-center mb-12">
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-          Trusted by <span className="gradient-text">Industry Leaders</span>
-        </h2>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          See what our clients say about their experience with Infinitive Cloud
-        </p>
-      </div>
+    <section className="py-20 bg-muted/40">
+      <div className="section-container">
+        <div className="text-center mb-14">
+          <p className="section-label">Testimonials</p>
+          <h2 className="font-bold mb-3">What Our Customers Say</h2>
+          <p className="text-muted-foreground max-w-xl mx-auto">
+            See what businesses say about their experience with Infinitive Cloud.
+          </p>
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {testimonials.map((testimonial, index) => (
-          <Card
-            key={index}
-            className="card-hover bg-card/50"
-          >
-            <CardContent className="pt-6">
-              <div className="flex gap-1 mb-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-accent text-accent" />
-                ))}
-              </div>
-              <p className="text-muted-foreground mb-6 italic">"{testimonial.content}"</p>
-              <div>
-                <p className="font-semibold text-foreground">{testimonial.name}</p>
-                <p className="text-sm text-primary">{testimonial.role}</p>
-                <p className="text-sm text-muted-foreground">{testimonial.company}</p>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {testimonials.map((t, index) => (
+            <Card
+              key={index}
+              className="border-border hover:border-primary/20 transition-all duration-300"
+              style={{ boxShadow: "var(--shadow-soft)", borderRadius: "12px" }}
+            >
+              <CardContent className="p-7">
+                <div className="flex gap-0.5 mb-4">
+                  {[...Array(t.rating)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-primary text-primary" />
+                  ))}
+                </div>
+                <p className="text-foreground/80 mb-6 text-sm leading-relaxed">"{t.content}"</p>
+                <div>
+                  <p className="font-semibold text-sm">{t.name}</p>
+                  <p className="text-xs text-muted-foreground">{t.role}, {t.company}</p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     </section>
   );

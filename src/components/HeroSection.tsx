@@ -1,237 +1,97 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Shield, Headphones, Server, Cloud, Percent } from "lucide-react";
-import { useParallax } from "@/hooks/use-parallax";
-import { useEffect, useState } from "react";
-
-// Internal Contact Page Route
-const CONTACT_ROUTE = "/contact";
-
-// Only two items for alternating marquee, links simply redirect to contact page
-const MARQUEE_ITEMS = [
-  {
-    icon: <Percent className="inline w-5 h-5 mr-2 text-primary" />,
-    text: (
-      <>
-        <b>Get 50% OFF</b> on first 3 months – Use Code: <span className="font-mono px-2 rounded bg-accent text-background">WELCOME50</span>
-      </>
-    ),
-  },
-  {
-    icon: <ArrowRight className="inline w-5 h-5 mr-2 text-primary" />,
-    text: (
-      <>
-        <b>Start your 7-day Free Trial</b> – No credit card required
-      </>
-    ),
-  },
-];
+import { ArrowRight, Shield, Zap, Headphones, Server, Cloud, Database } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
-  const parallaxRef = useParallax(0.3);
-
-  // Marquee index to alternate items
-  const [activeIdx, setActiveIdx] = useState(0);
-
-  useEffect(() => {
-    // Auto-advance every 4200ms
-    const timer = setInterval(() => {
-      setActiveIdx((prev) => (prev + 1) % MARQUEE_ITEMS.length);
-    }, 4200);
-    return () => clearInterval(timer);
-  }, []);
-
-  // Handler for redirect to contact page
-  const handleRedirect = () => {
-    window.location.href = CONTACT_ROUTE;
-  };
-
-  // Marquee redirect handler for accessibility/keyboard
-  const handleMarqueeClick = (e: React.MouseEvent<HTMLSpanElement> | React.KeyboardEvent<HTMLSpanElement>) => {
-    if (
-      (e as React.MouseEvent).type === 'click' ||
-      (e as React.KeyboardEvent).key === 'Enter' ||
-      (e as React.KeyboardEvent).key === ' '
-    ) {
-      e.preventDefault();
-      window.location.href = CONTACT_ROUTE;
-    }
-  };
-
   return (
-    <section className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-background pt-20 md:pt-28 xl:pt-32">
-      {/* Responsive utility: desktop (lg+) restores normal gap; tablet & below tightens spacing */}
-      <style>
-        {`
-        /* Desktop (lg and up): Use normal vertical gaps */
-        @media (min-width: 1024px) {
-          .hero-h1 {
-            margin-bottom: 1.5rem !important; /* mb-6 */
-            line-height: 1.15 !important;
-          }
-          .hero-p-main {
-            margin-bottom: 2rem !important;
-            line-height: 1.2 !important;
-          }
-          .hero-p-support {
-            margin-bottom: 3.5rem !important;
-            line-height: 1.3 !important;
-          }
-          .hero-btns {
-            gap: 1.25rem !important;
-            margin-bottom: 1.75rem !important;
-          }
-          .hero-badges {
-            margin-top: 1.5rem !important;
-            gap: 1.25rem !important;
-          }
-          .hero-marquee {
-            margin-top: 1.5rem !important;
-          }
-        }
-        /* Tablet and down: tighter spacing */
-        @media (max-width: 1023px) {
-          .hero-h1 {
-            margin-bottom: 1.25rem !important;
-            line-height: 1.05 !important;
-          }
-          .hero-p-main {
-            margin-bottom: 1.25rem !important;
-            line-height: 1.1 !important;
-          }
-          .hero-p-support {
-            margin-bottom: 2.5rem !important;
-            line-height: 1.2 !important;
-          }
-          .hero-btns {
-            gap: 0.75rem !important;
-            margin-bottom: 1.25rem !important;
-          }
-          .hero-badges {
-            margin-top: 1rem !important;
-            gap: 1rem !important;
-          }
-          .hero-marquee {
-            margin-top: 1rem !important;
-          }
-        }
-        /* Set base for any other case */
-        .hero-btns {
-          gap: 1.25rem;
-          margin-bottom: 1.75rem;
-        }
-        .hero-badges {
-          margin-top: 1.5rem;
-          gap: 1.25rem;
-        }
-        .hero-marquee {
-          margin-top: 1.5rem;
-        }
-        `}
-      </style>
+    <section className="relative min-h-[90vh] w-full flex items-center overflow-hidden pt-16" style={{ background: "var(--gradient-hero)" }}>
+      {/* Subtle grid pattern */}
       <div
-        ref={parallaxRef}
-        className="absolute inset-0 bg-gradient-to-br from-background via-muted/30 to-background will-change-transform"
-      >
-        <div className="absolute inset-0" style={{ background: "var(--gradient-glow)" }} />
-      </div>
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        }}
+      />
+      {/* Gradient orb */}
+      <div className="absolute top-1/4 right-1/4 w-[600px] h-[600px] rounded-full opacity-20 blur-[120px]" style={{ background: "hsl(228 100% 52% / 0.3)" }} />
 
-      <div className="section-container w-full relative z-10 flex flex-col items-center justify-center">
-        <div className="max-w-5xl w-full flex flex-col items-center text-center animate-fade-in">
-          <h1 className="hero-h1 mb-6 font-extrabold leading-tight text-3xl md:text-5xl lg:text-6xl tracking-tight drop-shadow-xl">
-            Premium <span className="gradient-text">Cloud & Web Hosting</span>{" "}
-            <span className="block mt-2 text-primary">Solutions</span>
-          </h1>
-          <p className="hero-p-main text-2xl md:text-3xl font-semibold text-muted-foreground mb-8 max-w-3xl mx-auto leading-snug drop-shadow">
-            Limitless solutions for cloud and web hostings
-          </p>
-          <p className="hero-p-support text-lg md:text-2xl text-foreground/70 mb-14 max-w-2xl mx-auto font-medium leading-relaxed">
-            Managed VPS, dedicated servers, shared hosting, and enterprise infrastructure &mdash; built for speed, security, and scale.
-          </p>
+      <div className="section-container w-full relative z-10">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          {/* Left: Content */}
+          <div className="max-w-2xl">
+            <div className="section-label" style={{ background: "hsl(228 100% 52% / 0.15)", color: "hsl(0 0% 100% / 0.9)" }}>
+              <Zap className="w-4 h-4" />
+              Enterprise-Grade Infrastructure
+            </div>
 
-          {/* Button group with CSS gaps controlled by media query above */}
-          <div className="hero-btns flex flex-col sm:flex-row justify-center w-full mb-5">
-            <Button
-              size="lg"
-              className="btn-gradient glow-effect text-lg md:text-xl px-12 h-16 rounded-2xl group font-bold shadow-lg hover:shadow-xl transition-all"
-              style={{ boxShadow: "var(--shadow-medium)" }}
-              onClick={handleRedirect}
-            >
-              Get Started
-              <ArrowRight className="ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="text-lg md:text-xl px-12 h-16 rounded-2xl border-2 border-foreground/20 hover:border-primary hover:bg-primary/10 transition-all font-semibold"
-              onClick={handleRedirect}
-            >
-              Start Free Trial
-            </Button>
+            <h1 className="text-primary-foreground mb-6 font-extrabold" style={{ fontSize: "clamp(32px, 5vw, 52px)" }}>
+              Enterprise-Grade Cloud & Web Hosting Infrastructure
+            </h1>
+
+            <p className="text-lg text-primary-foreground/70 mb-8 leading-relaxed max-w-xl">
+              Deploy websites, applications and servers on high-performance cloud infrastructure with scalable resources and 24×7 expert support.
+            </p>
+
+            {/* Benefit highlights */}
+            <div className="flex flex-wrap gap-x-6 gap-y-3 mb-10">
+              {[
+                { icon: Shield, label: "99.99% Uptime Infrastructure" },
+                { icon: Zap, label: "Instant Server Deployment" },
+                { icon: Headphones, label: "24×7 Expert Support" },
+              ].map((item) => (
+                <div key={item.label} className="flex items-center gap-2 text-sm text-primary-foreground/80">
+                  <item.icon className="w-4 h-4 text-primary" />
+                  <span className="font-medium">{item.label}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link to="/pricing">
+                <Button size="lg" className="btn-primary h-12 px-8 text-base rounded-xl group">
+                  View Hosting Plans
+                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                </Button>
+              </Link>
+              <Link to="/contact">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="h-12 px-8 text-base rounded-xl border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 hover:border-primary-foreground/30"
+                >
+                  Talk to an Expert
+                </Button>
+              </Link>
+            </div>
           </div>
 
-          {/* Trust badges */}
-          <div className="hero-badges flex flex-wrap items-center justify-center text-sm md:text-base text-muted-foreground">
-            <div className="flex items-center gap-2 sm:gap-3">
-              <Shield className="w-4 h-4 md:w-5 md:h-5 text-primary" />
-              <span className="font-medium">99.99% Uptime SLA</span>
-            </div>
-            <div className="flex items-center gap-2 sm:gap-3">
-              <Headphones className="w-4 h-4 md:w-5 md:h-5 text-primary" />
-              <span className="font-medium">24/7 Expert Support</span>
-            </div>
-            <div className="flex items-center gap-2 sm:gap-3">
-              <Server className="w-4 h-4 md:w-5 md:h-5 text-primary" />
-              <span className="font-medium">Free Migration</span>
-            </div>
-            <div className="flex items-center gap-2 sm:gap-3">
-              <Cloud className="w-4 h-4 md:w-5 md:h-5 text-primary" />
-              <span className="font-medium">cPanel & WHM</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Animated (marquee type) bar with single visible item at a time */}
-        <div className="hero-marquee relative w-full max-w-3xl">
-          <style>{`
-            @keyframes marquee-in {
-              0% { transform: translateY(50%); opacity: 0; }
-              15% { transform: translateY(0); opacity: 1; }
-              85% { transform: translateY(0); opacity: 1; }
-              100% { transform: translateY(-50%); opacity: 0; }
-            }
-            .marquee-animate {
-              animation: marquee-in 4.2s cubic-bezier(0.33, 1, 0.68, 1) both;
-              will-change: opacity,transform;
-            }
-          `}</style>
-          <div
-            className="overflow-hidden rounded-xl bg-gradient-to-l from-background/80 via-accent/5 to-background/80 border border-accent/20 shadow-md relative h-16 flex items-center justify-center"
-            style={{
-              maskImage: "linear-gradient(to right, transparent 0%, black 13%, black 87%, transparent 100%)",
-              WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 13%, black 87%, transparent 100%)",
-              minHeight: "4rem",
-            }}
-          >
-            <div className="absolute inset-0 flex items-center justify-center w-full h-full pointer-events-none select-none" aria-hidden="true">
-              {/* spacer for size stabilization */}
-            </div>
-            <div key={activeIdx} className="absolute w-full left-0 top-0 h-full flex items-center justify-center marquee-animate">
-              {/* Use span with role=link to simulate a link; click/keyboard will redirect */}
-              <span
-                tabIndex={0}
-                role="link"
-                className="flex items-center gap-3 text-lg md:text-xl font-semibold px-16 py-2 transition hover:text-primary focus:outline-none focus-visible:ring whitespace-nowrap cursor-pointer"
-                style={{
-                  opacity: 0.92,
-                  transition: "background .35s",
-                }}
-                onClick={handleMarqueeClick}
-                onKeyDown={handleMarqueeClick}
-                aria-label="Go to Contact page"
-              >
-                {MARQUEE_ITEMS[activeIdx].icon}
-                <span className="whitespace-nowrap">{MARQUEE_ITEMS[activeIdx].text}</span>
-              </span>
+          {/* Right: Infrastructure illustration */}
+          <div className="hidden lg:flex items-center justify-center">
+            <div className="relative w-full max-w-md">
+              {/* Central server icon */}
+              <div className="relative mx-auto w-40 h-40 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center" style={{ boxShadow: "var(--shadow-glow)" }}>
+                <Server className="w-16 h-16 text-primary" />
+              </div>
+              {/* Orbiting icons */}
+              {[
+                { Icon: Cloud, top: "-10%", left: "10%", delay: "0s" },
+                { Icon: Database, top: "10%", right: "-5%", delay: "1s" },
+                { Icon: Shield, bottom: "-5%", left: "5%", delay: "2s" },
+                { Icon: Zap, bottom: "15%", right: "0%", delay: "0.5s" },
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  className="absolute w-14 h-14 rounded-xl bg-secondary/80 border border-primary/20 flex items-center justify-center animate-float"
+                  style={{
+                    ...item,
+                    animationDelay: item.delay,
+                    boxShadow: "var(--shadow-medium)",
+                  } as React.CSSProperties}
+                >
+                  <item.Icon className="w-6 h-6 text-primary/80" />
+                </div>
+              ))}
             </div>
           </div>
         </div>
