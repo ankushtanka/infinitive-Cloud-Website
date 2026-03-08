@@ -132,7 +132,7 @@ const Navigation = () => {
                     key={link.path}
                     to={link.path}
                     onClick={handleCloseMenus}
-                    className="relative px-4 py-2 text-foreground/70 hover:text-foreground transition-all font-bold text-[15px] group"
+                    className="relative px-4 py-2 text-foreground hover:text-primary transition-all font-bold text-[15px] group"
                   >
                     {link.label}
                     <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary to-accent scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
