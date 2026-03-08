@@ -162,7 +162,7 @@ const HeroSection = () => {
             <Button
               size="lg"
               variant="outline"
-              className="text-lg md:text-xl px-12 h-16 rounded-2xl border-2 border-foreground/20 hover:border-primary hover:bg-primary/10 transition-all font-semibold"
+              className="text-base md:text-lg px-10 h-14 rounded-2xl border-2 border-foreground/20 hover:border-primary hover:bg-primary/10 transition-all font-semibold"
               onClick={handleRedirect}
             >
               Start Free Trial
