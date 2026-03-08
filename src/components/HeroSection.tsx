@@ -137,14 +137,14 @@ const HeroSection = () => {
 
       <div className="section-container w-full relative z-10 flex flex-col items-center justify-center">
         <div className="max-w-5xl w-full flex flex-col items-center text-center animate-fade-in">
-          <h1 className="hero-h1 mb-6 font-extrabold leading-tight text-3xl md:text-5xl lg:text-6xl tracking-tight drop-shadow-xl">
+          <h1 className="hero-h1 mb-6 font-extrabold leading-tight text-3xl md:text-4xl lg:text-5xl tracking-tight drop-shadow-xl">
             Premium <span className="gradient-text">Cloud & Web Hosting</span>{" "}
             <span className="block mt-2 text-primary">Solutions</span>
           </h1>
-          <p className="hero-p-main text-2xl md:text-3xl font-semibold text-muted-foreground mb-8 max-w-3xl mx-auto leading-snug drop-shadow">
+          <p className="hero-p-main text-xl md:text-2xl font-semibold text-muted-foreground mb-8 max-w-3xl mx-auto leading-snug drop-shadow">
             Limitless solutions for cloud and web hostings
           </p>
-          <p className="hero-p-support text-lg md:text-2xl text-foreground/70 mb-14 max-w-2xl mx-auto font-medium leading-relaxed">
+          <p className="hero-p-support text-base md:text-lg text-foreground/70 mb-14 max-w-2xl mx-auto font-medium leading-relaxed">
             Managed VPS, dedicated servers, shared hosting, and enterprise infrastructure &mdash; built for speed, security, and scale.
           </p>
 
