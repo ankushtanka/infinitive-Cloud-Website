@@ -143,7 +143,7 @@ const SharedHosting = () => {
                       <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-4">
                         <Icon className="w-6 h-6 text-white" />
                       </div>
-                      <h3 className="text-xl font-bold mb-2">{f.title}</h3>
+                      <h3 className="text-lg font-bold mb-2">{f.title}</h3>
                       <p className="text-muted-foreground">{f.description}</p>
                     </CardContent>
                   </Card>
