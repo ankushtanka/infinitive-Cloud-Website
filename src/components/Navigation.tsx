@@ -51,6 +51,21 @@ const Navigation = () => {
   const [servicesOpen, setServicesOpen] = useState(false);
   const [mobileServiceOpen, setMobileServiceOpen] = useState(false);
   const [mobileSubDropdown, setMobileSubDropdown] = useState<string | null>(null);
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleServicesEnter = useCallback(() => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    setServicesOpen(true);
+  }, []);
+
+  const handleServicesLeave = useCallback(() => {
+    closeTimeoutRef.current = setTimeout(() => {
+      setServicesOpen(false);
+    }, 150);
+  }, []);
 
   const navLinks = [
     { label: "Home", path: "/" },
