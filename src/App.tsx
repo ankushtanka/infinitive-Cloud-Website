@@ -12,7 +12,6 @@ import Pricing from "./pages/Pricing";
 import Careers from "./pages/Careers";
 import Blog from "./pages/Blog";
 import Contact from "./pages/Contact";
-import Login from "./pages/Login";
 
 import NotFound from "./pages/NotFound";
 import Privacy from "./pages/Privacy";
