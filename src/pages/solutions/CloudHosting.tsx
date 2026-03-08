@@ -224,7 +224,7 @@ const CloudHosting = () => {
                   <CardContent className="pt-8">
                     <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
                     <div className="mb-6">
-                      <span className="text-4xl font-black gradient-text">{plan.price}</span>
+                      <span className="text-3xl font-black gradient-text">{plan.price}</span>
                       <span className="text-foreground/70">/month</span>
                     </div>
                     <ul className="space-y-3 mb-6">

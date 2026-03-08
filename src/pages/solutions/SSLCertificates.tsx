@@ -91,7 +91,7 @@ const SSLCertificates = () => {
                     <h3 className="text-lg font-bold mb-1">{plan.name}</h3>
                     <div className="mb-6">
                       <div className="flex items-baseline gap-1">
-                        <span className="text-4xl font-black gradient-text">{plan.price}</span>
+                        <span className="text-3xl font-black gradient-text">{plan.price}</span>
                         <span className="text-base text-muted-foreground">{plan.period}</span>
                       </div>
                     </div>
