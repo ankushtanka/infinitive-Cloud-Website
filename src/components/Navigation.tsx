@@ -161,7 +161,7 @@ const Navigation = () => {
 
       {/* Desktop Mega Menu */}
       {servicesOpen && (
-        <ServicesMegaMenu onClose={() => setServicesOpen(false)} />
+        <ServicesMegaMenu onClose={() => setServicesOpen(false)} onMouseEnter={handleServicesEnter} onMouseLeave={handleServicesLeave} />
       )}
 
       {/* Mobile Navigation */}
