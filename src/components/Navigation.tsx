@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, Globe, User } from "lucide-react";
 import logo from "@/assets/logo-icon.png";
 import ServicesMegaMenu from "@/components/ServicesMegaMenu";
 
@@ -139,10 +139,35 @@ const Navigation = () => {
                   </Link>
                 );
               })}
-              <Link to="/contact" className="ml-4" onClick={handleCloseMenus}>
+              {/* Vertical separator */}
+              <div className="h-6 w-px bg-border/50 mx-3" />
+
+              <Link to="/contact" onClick={handleCloseMenus}>
                 <Button className="btn-gradient glow-effect shadow-medium">
                   Start Free Trial
                 </Button>
+              </Link>
+
+              {/* Vertical separator */}
+              <div className="h-6 w-px bg-border/50 mx-2" />
+
+              {/* Utility icons like spaceship.com */}
+              <button
+                className="p-2 text-foreground/70 hover:text-primary rounded-lg transition-colors"
+                aria-label="Currency & Language"
+                title="Currency & Language"
+              >
+                <Globe className="w-5 h-5" />
+              </button>
+
+              <Link
+                to="/login"
+                onClick={handleCloseMenus}
+                className="p-2 text-foreground/70 hover:text-primary rounded-lg transition-colors"
+                aria-label="Login"
+                title="Login"
+              >
+                <User className="w-5 h-5" />
               </Link>
             </div>
 
@@ -226,6 +251,10 @@ const Navigation = () => {
                   {link.label}
                 </Link>
               ))}
+            <Link to="/login" onClick={handleCloseMenus} className="text-foreground hover:text-primary hover:bg-muted transition-colors font-bold py-4 px-4 rounded-lg text-lg flex items-center gap-3">
+              <User className="w-5 h-5" />
+              Login
+            </Link>
             <Link to="/contact" onClick={handleCloseMenus} className="mt-4">
               <Button className="btn-gradient glow-effect w-full h-14 text-lg">
                 Start Free Trial
