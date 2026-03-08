@@ -6,9 +6,14 @@ import TrustSection from "@/components/TrustSection";
 import HostingSolutionsSection from "@/components/HostingSolutionsSection";
 import WhyTrustUsSection from "@/components/WhyTrustUsSection";
 import HomePricingSection from "@/components/HomePricingSection";
+import DeployStepsSection from "@/components/DeployStepsSection";
+import ServerCalculatorSection from "@/components/ServerCalculatorSection";
+import CloudInfrastructureSection from "@/components/CloudInfrastructureSection";
+import MigrationSection from "@/components/MigrationSection";
+import SuccessStoriesSection from "@/components/SuccessStoriesSection";
 import InfrastructureSection from "@/components/InfrastructureSection";
-import ArchitectureSection from "@/components/ArchitectureSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import BlogResourcesSection from "@/components/BlogResourcesSection";
 import CTASection from "@/components/CTASection";
 import SEOContentSection from "@/components/SEOContentSection";
 import FAQSection from "@/components/FAQSection";
@@ -61,11 +66,16 @@ const Index = () => {
         <HeroSection />
         <TrustSection />
         <HostingSolutionsSection />
+        <DeployStepsSection />
         <WhyTrustUsSection />
         <HomePricingSection />
-        <ArchitectureSection />
+        <ServerCalculatorSection />
+        <CloudInfrastructureSection />
         <InfrastructureSection />
+        <MigrationSection />
+        <SuccessStoriesSection />
         <TestimonialsSection />
+        <BlogResourcesSection />
         <CTASection />
         <SEOContentSection />
         <FAQSection />
