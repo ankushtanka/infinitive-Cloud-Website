@@ -76,7 +76,7 @@ const Navigation = () => {
   useEffect(() => {
     handleCloseMenus();
     // eslint-disable-next-line
-  }, [location.pathname]);
+  }, [location.pathname, location.hash]);
 
   return (
     <>
