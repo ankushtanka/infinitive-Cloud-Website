@@ -44,7 +44,7 @@ const SEOContentSection = () => {
 
           {/* Shared Hosting */}
           <div>
-            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
+            <h2 className="text-xl md:text-2xl font-bold mb-4 text-foreground">
               Affordable Web Hosting for Small Business
             </h2>
             <p className="leading-relaxed mb-4">
