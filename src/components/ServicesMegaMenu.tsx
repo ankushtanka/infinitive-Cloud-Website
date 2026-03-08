@@ -91,115 +91,109 @@ const ServicesMegaMenu = ({ onClose, onMouseEnter, onMouseLeave }: ServicesMegaM
   const activeData = serviceCategories.find(c => c.heading === activeCategory);
 
   return (
-    <>
-      {/* Fixed backdrop overlay */}
-      <div 
-        className="fixed inset-0 z-[60] bg-foreground/40 backdrop-blur-sm"
-        onClick={(e) => { e.stopPropagation(); onClose(); }}
-      />
+    <div 
+      className="fixed inset-x-0 top-20 z-50 animate-fade-in"
+      style={{ animationDuration: "0.2s" }}
+    >
+      {/* Backdrop */}
+      <div className="absolute inset-0 h-screen bg-foreground/40 backdrop-blur-sm" onClick={onClose} />
       
-      {/* Fixed menu container */}
-      <div 
-        className="fixed inset-x-0 top-20 z-[70] animate-fade-in"
-        style={{ animationDuration: "0.2s" }}
-        onClick={(e) => e.stopPropagation()}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-      >
-        <div className="mx-auto max-w-[1400px] px-4">
-          <div className="bg-background rounded-2xl border border-border shadow-[var(--shadow-strong)] overflow-hidden">
-            <div className="flex min-h-[420px]">
-              {/* Left sidebar - Categories */}
-              <div className="w-[280px] bg-muted/50 border-r border-border p-4 flex flex-col gap-1">
-                <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground px-3 py-2 mb-1">
-                  Our Services
-                </p>
-                {serviceCategories.map((category) => (
-                  <button
-                    key={category.heading}
-                    onMouseEnter={() => setActiveCategory(category.heading)}
-                    onClick={() => setActiveCategory(category.heading)}
-                    className={`group flex items-center gap-3 px-3 py-3 rounded-xl text-left transition-all duration-200 ${
-                      activeCategory === category.heading
-                        ? "bg-background shadow-[var(--shadow-medium)] text-foreground"
-                        : "text-foreground/70 hover:bg-background/60 hover:text-foreground"
-                    }`}
-                  >
-                    <div className={`flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-300 ${
-                      activeCategory === category.heading
-                        ? "bg-gradient-to-br from-primary to-secondary text-primary-foreground shadow-[var(--shadow-soft)]"
-                        : "bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
-                    }`}>
-                      {category.icon}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <span className="font-bold text-[15px] block">{category.heading}</span>
-                      <span className="text-xs text-muted-foreground truncate block">{category.description}</span>
-                    </div>
-                    <ArrowRight className={`w-4 h-4 transition-all duration-200 ${
-                      activeCategory === category.heading
-                        ? "opacity-100 translate-x-0 text-primary"
-                        : "opacity-0 -translate-x-2"
-                    }`} />
-                  </button>
-                ))}
-              </div>
-
-              {/* Right content - Service links */}
-              <div className="flex-1 p-6">
-                {activeData && (
-                  <div key={activeData.heading} className="animate-fade-in" style={{ animationDuration: "0.15s" }}>
-                    <div className="flex items-center gap-3 mb-5 pb-4 border-b border-border">
-                      <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary text-primary-foreground">
-                        {activeData.icon}
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-black text-foreground">{activeData.heading}</h3>
-                        <p className="text-sm text-muted-foreground">{activeData.description}</p>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2">
-                      {activeData.links.map((link) => (
-                        <Link
-                          key={link.path}
-                          to={link.path}
-                          onClick={onClose}
-                          className="group flex items-start gap-3 p-3 rounded-xl transition-all duration-200 hover:bg-muted/80 hover:shadow-[var(--shadow-soft)]"
-                        >
-                          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-muted text-muted-foreground transition-all duration-300 group-hover:bg-gradient-to-br group-hover:from-primary group-hover:to-secondary group-hover:text-primary-foreground group-hover:shadow-[var(--shadow-soft)] group-hover:scale-110">
-                            {link.icon}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <span className="font-bold text-[15px] text-foreground group-hover:text-primary transition-colors duration-200 flex items-center gap-1">
-                              {link.label}
-                              <ArrowRight className="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
-                            </span>
-                            <span className="text-xs text-muted-foreground leading-relaxed block mt-0.5">{link.description}</span>
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
+      {/* Menu Container */}
+      <div className="relative mx-auto max-w-[1400px] px-4" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+        <div className="bg-background rounded-2xl border border-border shadow-[var(--shadow-strong)] overflow-hidden">
+          <div className="flex min-h-[420px]">
+            {/* Left sidebar - Categories */}
+            <div className="w-[280px] bg-muted/50 border-r border-border p-4 flex flex-col gap-1">
+              <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground px-3 py-2 mb-1">
+                Our Services
+              </p>
+              {serviceCategories.map((category) => (
+                <button
+                  key={category.heading}
+                  onMouseEnter={() => setActiveCategory(category.heading)}
+                  onClick={() => setActiveCategory(category.heading)}
+                  className={`group flex items-center gap-3 px-3 py-3 rounded-xl text-left transition-all duration-200 ${
+                    activeCategory === category.heading
+                      ? "bg-background shadow-[var(--shadow-medium)] text-foreground"
+                      : "text-foreground/70 hover:bg-background/60 hover:text-foreground"
+                  }`}
+                >
+                  <div className={`flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-300 ${
+                    activeCategory === category.heading
+                      ? "bg-gradient-to-br from-primary to-secondary text-primary-foreground shadow-[var(--shadow-soft)]"
+                      : "bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
+                  }`}>
+                    {category.icon}
                   </div>
-                )}
-              </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="font-bold text-[15px] block">{category.heading}</span>
+                    <span className="text-xs text-muted-foreground truncate block">{category.description}</span>
+                  </div>
+                  <ArrowRight className={`w-4 h-4 transition-all duration-200 ${
+                    activeCategory === category.heading
+                      ? "opacity-100 translate-x-0 text-primary"
+                      : "opacity-0 -translate-x-2"
+                  }`} />
+                </button>
+              ))}
             </div>
 
-            {/* Bottom bar */}
-            <div className="border-t border-border bg-muted/30 px-6 py-3 flex items-center justify-between">
-              <p className="text-sm text-muted-foreground">
-                Need help choosing? <Link to="/contact" onClick={onClose} className="font-bold text-primary hover:underline">Talk to an expert →</Link>
-              </p>
-              <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                <span className="flex items-center gap-1.5"><Zap className="w-3.5 h-3.5 text-primary" /> 99.9% Uptime</span>
-                <span className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary" /> Free SSL</span>
-                <span className="flex items-center gap-1.5"><Globe className="w-3.5 h-3.5 text-primary" /> 24/7 Support</span>
-              </div>
+            {/* Right content - Service links */}
+            <div className="flex-1 p-6">
+              {activeData && (
+                <div key={activeData.heading} className="animate-fade-in" style={{ animationDuration: "0.15s" }}>
+                  {/* Category header */}
+                  <div className="flex items-center gap-3 mb-5 pb-4 border-b border-border">
+                    <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary text-primary-foreground">
+                      {activeData.icon}
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-black text-foreground">{activeData.heading}</h3>
+                      <p className="text-sm text-muted-foreground">{activeData.description}</p>
+                    </div>
+                  </div>
+
+                  {/* Links grid */}
+                  <div className="grid grid-cols-2 gap-2">
+                    {activeData.links.map((link) => (
+                      <Link
+                        key={link.path}
+                        to={link.path}
+                        onClick={onClose}
+                        className="group flex items-start gap-3 p-3 rounded-xl transition-all duration-200 hover:bg-muted/80 hover:shadow-[var(--shadow-soft)]"
+                      >
+                        <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-muted text-muted-foreground transition-all duration-300 group-hover:bg-gradient-to-br group-hover:from-primary group-hover:to-secondary group-hover:text-primary-foreground group-hover:shadow-[var(--shadow-soft)] group-hover:scale-110">
+                          {link.icon}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <span className="font-bold text-[15px] text-foreground group-hover:text-primary transition-colors duration-200 flex items-center gap-1">
+                            {link.label}
+                            <ArrowRight className="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
+                          </span>
+                          <span className="text-xs text-muted-foreground leading-relaxed block mt-0.5">{link.description}</span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Bottom bar */}
+          <div className="border-t border-border bg-muted/30 px-6 py-3 flex items-center justify-between">
+            <p className="text-sm text-muted-foreground">
+              Need help choosing? <Link to="/contact" onClick={onClose} className="font-bold text-primary hover:underline">Talk to an expert →</Link>
+            </p>
+            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1.5"><Zap className="w-3.5 h-3.5 text-primary" /> 99.9% Uptime</span>
+              <span className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary" /> Free SSL</span>
+              <span className="flex items-center gap-1.5"><Globe className="w-3.5 h-3.5 text-primary" /> 24/7 Support</span>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
