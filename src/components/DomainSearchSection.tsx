@@ -244,7 +244,7 @@ const DomainSearchSection = () => {
 
                 <CardContent className="p-6 pt-7 text-center">
                   {/* Extension name with gradient underline */}
-                  <span className="text-3xl font-black text-foreground block tracking-tight">{tld.ext}</span>
+                  <span className="text-2xl font-black text-foreground block tracking-tight">{tld.ext}</span>
                   <div className={`w-8 h-0.5 mx-auto mt-2 mb-4 rounded-full bg-gradient-to-r ${tld.color} opacity-60`} />
 
                   {/* Pricing */}
