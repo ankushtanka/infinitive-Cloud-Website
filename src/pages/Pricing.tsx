@@ -557,7 +557,7 @@ const Pricing = () => {
           <Card className="bg-gradient-to-br from-primary/10 via-accent/10 to-background border-2 border-primary/20">
             <CardContent className="pt-12 pb-12 text-center">
               <h2 className="mb-4">Need a Custom Solution?</h2>
-              <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
                 Every business is unique. Get a tailored hosting plan with custom resources, managed services, and dedicated support.
               </p>
               <Link to="/contact">

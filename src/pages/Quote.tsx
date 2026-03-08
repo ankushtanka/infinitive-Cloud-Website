@@ -109,7 +109,7 @@ const Quote = () => {
             <h1 className="mb-6">
               Request a <span className="gradient-text">Custom Quote</span>
             </h1>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-lg text-muted-foreground">
               Tell us about your project and we'll provide a tailored solution with transparent pricing.
             </p>
           </div>
