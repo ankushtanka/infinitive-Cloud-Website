@@ -152,7 +152,7 @@ const HeroSection = () => {
           <div className="hero-btns flex flex-col sm:flex-row justify-center w-full mb-5">
             <Button
               size="lg"
-              className="btn-gradient glow-effect text-lg md:text-xl px-12 h-16 rounded-2xl group font-bold shadow-lg hover:shadow-xl transition-all"
+              className="btn-gradient glow-effect text-base md:text-lg px-10 h-14 rounded-2xl group font-bold shadow-lg hover:shadow-xl transition-all"
               style={{ boxShadow: "var(--shadow-medium)" }}
               onClick={handleRedirect}
             >
