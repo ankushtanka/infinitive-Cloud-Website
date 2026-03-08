@@ -1,74 +1,43 @@
-import { Shield, Clock, TrendingUp, Server, Headphones, Eye } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Zap, Server, Globe, Shield, Settings, Headphones } from "lucide-react";
+
+const features = [
+  { icon: Zap, title: "High Performance Infrastructure", desc: "Enterprise-grade hardware with NVMe SSD storage and high-speed network." },
+  { icon: Server, title: "Instant Server Deployment", desc: "Deploy your server in minutes with automated provisioning." },
+  { icon: Globe, title: "Dedicated IP Availability", desc: "Get a dedicated IP address for better performance and security." },
+  { icon: Shield, title: "Advanced Security Protection", desc: "DDoS protection, firewalls, and real-time threat monitoring." },
+  { icon: Settings, title: "Fully Managed Servers", desc: "24/7 monitoring, updates, and proactive issue resolution." },
+  { icon: Headphones, title: "24×7 Expert Support", desc: "Certified engineers available around the clock for any issue." },
+];
 
 const WhyTrustUsSection = () => {
-  const reasons = [
-    {
-      icon: Shield,
-      title: "Reliability & 99.99% Uptime",
-      description: "Our infrastructure is built for zero downtime. Enterprise-grade hardware with automatic failover ensures your site is always online.",
-    },
-    {
-      icon: Headphones,
-      title: "Customer-First Support",
-      description: "Average response time under 15 minutes. When something breaks at 2 AM, our team of certified engineers is there to fix it.",
-    },
-    {
-      icon: TrendingUp,
-      title: "Scalable Infrastructure",
-      description: "Start small and grow big. Upgrade resources instantly without migration or downtime — your hosting grows with your business.",
-    },
-    {
-      icon: Eye,
-      title: "Proactive Monitoring",
-      description: "24/7 server monitoring with automated alerts. We detect and resolve issues before they affect your website visitors.",
-    },
-    {
-      icon: Clock,
-      title: "Transparent Pricing",
-      description: "No hidden fees, no surprise charges. What you see is what you pay. Cancel anytime with our hassle-free refund policy.",
-    },
-    {
-      icon: Server,
-      title: "Green Hosting Infrastructure",
-      description: "Our data centres are powered by energy-efficient hardware. Sustainable hosting without compromising on performance.",
-    },
-  ];
-
   return (
-    <section className="py-24 bg-gradient-to-b from-background to-muted/20 relative overflow-hidden">
-      <div className="section-container relative z-10">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-            Why Choose <span className="gradient-text">Infinitive Cloud</span>
+    <section className="py-20 bg-background">
+      <div className="section-container">
+        <div className="text-center mb-14">
+          <p className="section-label">Why Infinitive Cloud</p>
+          <h2 className="font-bold mb-3">
+            Why Businesses Choose Infinitive Cloud
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Trusted by 1,000+ businesses across India. Here's why companies choose us for their hosting needs.
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Trusted by 1,000+ businesses across India for reliable, high-performance cloud infrastructure.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {reasons.map((item, index) => {
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {features.map((item) => {
             const Icon = item.icon;
             return (
-              <Card
+              <div
                 key={item.title}
-                className="card-premium group hover:border-primary/30"
+                className="p-6 rounded-xl border border-border bg-card hover:border-primary/20 transition-all duration-300 group"
+                style={{ boxShadow: "var(--shadow-soft)" }}
               >
-                <CardContent className="p-8 text-center">
-                  <div className="relative inline-flex mb-5">
-                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center" style={{ boxShadow: 'var(--shadow-medium)' }}>
-                      <Icon className="w-8 h-8 text-white" />
-                    </div>
-                  </div>
-                  <h3 className="text-lg font-bold mb-3 group-hover:text-primary transition-colors">
-                    {item.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    {item.description}
-                  </p>
-                </CardContent>
-              </Card>
+                <div className="w-10 h-10 rounded-lg bg-primary/8 flex items-center justify-center mb-4 group-hover:bg-primary/15 transition-colors">
+                  <Icon className="w-5 h-5 text-primary" />
+                </div>
+                <h3 className="text-base font-semibold mb-2 font-heading">{item.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+              </div>
             );
           })}
         </div>
