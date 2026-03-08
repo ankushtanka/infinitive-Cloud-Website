@@ -92,7 +92,7 @@ const Blog = () => {
             <h1 className="mb-6">
               Resources & <span className="gradient-text">Knowledge Hub</span>
             </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Expert insights, guides, and best practices for cloud, hosting, development, and AI solutions.
             </p>
           </div>
