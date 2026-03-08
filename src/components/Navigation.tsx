@@ -119,7 +119,7 @@ const Navigation = () => {
                       className="relative px-4 py-2 text-foreground/70 hover:text-foreground font-bold text-[15px] flex items-center gap-1 group transition-all duration-200"
                       onMouseEnter={handleServicesEnter}
                       onMouseLeave={handleServicesLeave}
-                      onClick={() => setServicesOpen(prev => !prev)}
+                      onClick={() => setServicesOpen(true)}
                     >
                       Services
                       <ChevronDown className={`w-4 h-4 ml-0.5 transition-transform duration-200 ${servicesOpen ? "rotate-180" : ""}`} />
