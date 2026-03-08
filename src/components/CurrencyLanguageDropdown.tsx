@@ -64,10 +64,14 @@ const CurrencyLanguageDropdown = () => {
   return (
     <div className="relative" ref={dropdownRef}>
       <button
-        onClick={() => setOpen(!open)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpen(!open);
+        }}
         className="flex items-center gap-1.5 p-2 text-foreground/70 hover:text-primary rounded-lg transition-colors"
         aria-label="Currency & Language"
         title="Currency & Language"
+        type="button"
       >
         <Globe className="w-5 h-5" />
         <span className="text-xs font-bold hidden xl:inline">{currency.code}</span>
@@ -75,63 +79,74 @@ const CurrencyLanguageDropdown = () => {
       </button>
 
       {open && (
-        <div
-          className="absolute right-0 top-full mt-2 w-72 bg-background border border-border rounded-xl shadow-[var(--shadow-strong)] z-[70] animate-fade-in overflow-hidden"
-          style={{ animationDuration: "0.15s" }}
-        >
-          {/* Currency Section */}
-          <div className="p-3 border-b border-border">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2 px-1">
-              Currency
-            </p>
-            <div className="grid grid-cols-1 gap-0.5">
-              {currencies.map((c) => (
-                <button
-                  key={c.code}
-                  onClick={() => handleCurrencyChange(c)}
-                  className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-150 ${
-                    currency.code === c.code
-                      ? "bg-primary/10 text-primary font-semibold"
-                      : "text-foreground/80 hover:bg-muted hover:text-foreground"
-                  }`}
-                >
-                  <span className="text-base">{c.flag}</span>
-                  <span className="flex-1 text-left">
-                    <span className="font-semibold">{c.code}</span>
-                    <span className="text-muted-foreground ml-1.5 text-xs">{c.symbol} · {c.label}</span>
-                  </span>
-                  {currency.code === c.code && <Check className="w-4 h-4 text-primary" />}
-                </button>
-              ))}
+        <>
+          {/* Invisible overlay to close on outside click */}
+          <div className="fixed inset-0 z-[60]" onClick={() => setOpen(false)} />
+          
+          <div
+            className="fixed right-4 top-16 w-72 bg-background border border-border rounded-xl z-[70] overflow-hidden"
+            style={{ 
+              boxShadow: "var(--shadow-strong)",
+              animationDuration: "0.15s" 
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Currency Section */}
+            <div className="p-3 border-b border-border">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2 px-1">
+                Currency
+              </p>
+              <div className="grid grid-cols-1 gap-0.5">
+                {currencies.map((c) => (
+                  <button
+                    key={c.code}
+                    type="button"
+                    onClick={() => handleCurrencyChange(c)}
+                    className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-150 ${
+                      currency.code === c.code
+                        ? "bg-primary/10 text-primary font-semibold"
+                        : "text-foreground/80 hover:bg-muted hover:text-foreground"
+                    }`}
+                  >
+                    <span className="text-base">{c.flag}</span>
+                    <span className="flex-1 text-left">
+                      <span className="font-semibold">{c.code}</span>
+                      <span className="text-muted-foreground ml-1.5 text-xs">{c.symbol} · {c.label}</span>
+                    </span>
+                    {currency.code === c.code && <Check className="w-4 h-4 text-primary" />}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Language Section */}
-          <div className="p-3">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2 px-1">
-              Language
-            </p>
-            <div className="grid grid-cols-1 gap-0.5">
-              {languages.map((l) => (
-                <button
-                  key={l.code}
-                  onClick={() => handleLanguageChange(l)}
-                  className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-150 ${
-                    language.code === l.code
-                      ? "bg-primary/10 text-primary font-semibold"
-                      : "text-foreground/80 hover:bg-muted hover:text-foreground"
-                  }`}
-                >
-                  <span className="flex-1 text-left">
-                    <span className="font-semibold">{l.label}</span>
-                    <span className="text-muted-foreground ml-1.5 text-xs">{l.native}</span>
-                  </span>
-                  {language.code === l.code && <Check className="w-4 h-4 text-primary" />}
-                </button>
-              ))}
+            {/* Language Section */}
+            <div className="p-3">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2 px-1">
+                Language
+              </p>
+              <div className="grid grid-cols-1 gap-0.5">
+                {languages.map((l) => (
+                  <button
+                    key={l.code}
+                    type="button"
+                    onClick={() => handleLanguageChange(l)}
+                    className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-150 ${
+                      language.code === l.code
+                        ? "bg-primary/10 text-primary font-semibold"
+                        : "text-foreground/80 hover:bg-muted hover:text-foreground"
+                    }`}
+                  >
+                    <span className="flex-1 text-left">
+                      <span className="font-semibold">{l.label}</span>
+                      <span className="text-muted-foreground ml-1.5 text-xs">{l.native}</span>
+                    </span>
+                    {language.code === l.code && <Check className="w-4 h-4 text-primary" />}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
