@@ -31,7 +31,7 @@ const OdooSolutions = () => {
               <h1 className="mb-6">
                 <span className="gradient-text">Odoo</span> Solutions
               </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                 Customized Odoo ERP implementations that streamline your entire business — from sales and inventory to accounting and HR. One platform, every department connected.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">

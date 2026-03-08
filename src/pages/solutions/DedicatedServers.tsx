@@ -61,7 +61,7 @@ const DedicatedServers = () => {
               <h1 className="mb-6">
                 <span className="gradient-text">Dedicated Servers</span> for Maximum Performance
               </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                 Enterprise-grade bare metal servers with full root access, NVMe SSD storage, and 99.99% uptime SLA. Built for high-traffic websites, applications, and compute-intensive workloads.
               </p>
             </div>
