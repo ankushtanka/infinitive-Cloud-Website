@@ -80,7 +80,7 @@ const Solutions = () => {
               <h1 className="mb-6">
                 Complete <span className="gradient-text">Hosting Solutions</span>
               </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                 Everything you need to launch, grow, and scale your online presence. From shared hosting to enterprise dedicated servers — all backed by 99.99% uptime and 24/7 expert support.
               </p>
             </div>
