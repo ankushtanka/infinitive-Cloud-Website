@@ -139,10 +139,35 @@ const Navigation = () => {
                   </Link>
                 );
               })}
-              <Link to="/contact" className="ml-4" onClick={handleCloseMenus}>
+              {/* Vertical separator */}
+              <div className="h-6 w-px bg-border/50 mx-3" />
+
+              <Link to="/contact" onClick={handleCloseMenus}>
                 <Button className="btn-gradient glow-effect shadow-medium">
                   Start Free Trial
                 </Button>
+              </Link>
+
+              {/* Vertical separator */}
+              <div className="h-6 w-px bg-border/50 mx-2" />
+
+              {/* Utility icons like spaceship.com */}
+              <button
+                className="p-2 text-foreground/70 hover:text-primary rounded-lg transition-colors"
+                aria-label="Currency & Language"
+                title="Currency & Language"
+              >
+                <Globe className="w-5 h-5" />
+              </button>
+
+              <Link
+                to="/login"
+                onClick={handleCloseMenus}
+                className="p-2 text-foreground/70 hover:text-primary rounded-lg transition-colors"
+                aria-label="Login"
+                title="Login"
+              >
+                <User className="w-5 h-5" />
               </Link>
             </div>
 
