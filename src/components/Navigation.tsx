@@ -1,9 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, Globe, User } from "lucide-react";
+import { Menu, X, ChevronDown, User } from "lucide-react";
 import logo from "@/assets/logo-icon.png";
 import ServicesMegaMenu from "@/components/ServicesMegaMenu";
+import CurrencyLanguageDropdown from "@/components/CurrencyLanguageDropdown";
+
+const WHMCS_LOGIN = "https://billing.infinitivecloud.com/clientarea.php";
 
 const serviceLinks = [
   {
@@ -152,23 +155,18 @@ const Navigation = () => {
               <div className="h-6 w-px bg-border/50 mx-2" />
 
               {/* Utility icons like spaceship.com */}
-              <button
-                className="p-2 text-foreground/70 hover:text-primary rounded-lg transition-colors"
-                aria-label="Currency & Language"
-                title="Currency & Language"
-              >
-                <Globe className="w-5 h-5" />
-              </button>
+              <CurrencyLanguageDropdown />
 
-              <Link
-                to="/login"
-                onClick={handleCloseMenus}
+              <a
+                href={WHMCS_LOGIN}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="p-2 text-foreground/70 hover:text-primary rounded-lg transition-colors"
                 aria-label="Login"
-                title="Login"
+                title="Login to Client Area"
               >
                 <User className="w-5 h-5" />
-              </Link>
+              </a>
             </div>
 
             {/* Mobile Menu Icon */}
@@ -251,10 +249,10 @@ const Navigation = () => {
                   {link.label}
                 </Link>
               ))}
-            <Link to="/login" onClick={handleCloseMenus} className="text-foreground hover:text-primary hover:bg-muted transition-colors font-bold py-4 px-4 rounded-lg text-lg flex items-center gap-3">
+            <a href={WHMCS_LOGIN} target="_blank" rel="noopener noreferrer" onClick={handleCloseMenus} className="text-foreground hover:text-primary hover:bg-muted transition-colors font-bold py-4 px-4 rounded-lg text-lg flex items-center gap-3">
               <User className="w-5 h-5" />
               Login
-            </Link>
+            </a>
             <Link to="/contact" onClick={handleCloseMenus} className="mt-4">
               <Button className="btn-gradient glow-effect w-full h-14 text-lg">
                 Start Free Trial

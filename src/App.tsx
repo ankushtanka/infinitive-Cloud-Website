@@ -12,7 +12,6 @@ import Pricing from "./pages/Pricing";
 import Careers from "./pages/Careers";
 import Blog from "./pages/Blog";
 import Contact from "./pages/Contact";
-import Login from "./pages/Login";
 
 import NotFound from "./pages/NotFound";
 import Privacy from "./pages/Privacy";
@@ -78,7 +77,6 @@ const App = () => {
             <Route path="/refund" element={<Refund />} />
             <Route path="/solutions" element={<Solutions />} />
             <Route path="/knowledgebase" element={<Knowledgebase />} />
-            <Route path="/login" element={<Login />} />
 
             {/* Solution pages */}
             <Route path="/solutions/shared-hosting" element={<SharedHosting />} />
