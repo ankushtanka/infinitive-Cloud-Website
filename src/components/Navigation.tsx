@@ -155,23 +155,18 @@ const Navigation = () => {
               <div className="h-6 w-px bg-border/50 mx-2" />
 
               {/* Utility icons like spaceship.com */}
-              <button
-                className="p-2 text-foreground/70 hover:text-primary rounded-lg transition-colors"
-                aria-label="Currency & Language"
-                title="Currency & Language"
-              >
-                <Globe className="w-5 h-5" />
-              </button>
+              <CurrencyLanguageDropdown />
 
-              <Link
-                to="/login"
-                onClick={handleCloseMenus}
+              <a
+                href={WHMCS_LOGIN}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="p-2 text-foreground/70 hover:text-primary rounded-lg transition-colors"
                 aria-label="Login"
-                title="Login"
+                title="Login to Client Area"
               >
                 <User className="w-5 h-5" />
-              </Link>
+              </a>
             </div>
 
             {/* Mobile Menu Icon */}
