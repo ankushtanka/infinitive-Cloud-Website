@@ -93,7 +93,7 @@ const ServicesMegaMenu = ({ onClose, onMouseEnter, onMouseLeave }: ServicesMegaM
 
   return (
     <div 
-      className="fixed inset-x-0 top-20 z-50"
+      className="fixed inset-x-0 top-[72px] z-50"
       style={{ animation: "fade-in 0.25s ease-out" }}
     >
       {/* Backdrop */}
