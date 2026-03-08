@@ -89,7 +89,7 @@ const HomePricingSection = () => {
                   <category.icon className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-xl md:text-2xl font-bold">{category.title}</h3>
+                  <h3 className="text-lg md:text-xl font-bold">{category.title}</h3>
                   <p className="text-sm text-muted-foreground">{category.description}</p>
                 </div>
               </div>
