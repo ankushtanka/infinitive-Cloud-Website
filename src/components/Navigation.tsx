@@ -249,10 +249,10 @@ const Navigation = () => {
                   {link.label}
                 </Link>
               ))}
-            <Link to="/login" onClick={handleCloseMenus} className="text-foreground hover:text-primary hover:bg-muted transition-colors font-bold py-4 px-4 rounded-lg text-lg flex items-center gap-3">
+            <a href={WHMCS_LOGIN} target="_blank" rel="noopener noreferrer" onClick={handleCloseMenus} className="text-foreground hover:text-primary hover:bg-muted transition-colors font-bold py-4 px-4 rounded-lg text-lg flex items-center gap-3">
               <User className="w-5 h-5" />
               Login
-            </Link>
+            </a>
             <Link to="/contact" onClick={handleCloseMenus} className="mt-4">
               <Button className="btn-gradient glow-effect w-full h-14 text-lg">
                 Start Free Trial
