@@ -47,7 +47,7 @@ const About = () => {
             <h1 className="mb-6">
               About <span className="gradient-text">Infinitive Cloud</span>
             </h1>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-lg text-muted-foreground">
               A global cloud, hosting, development, and AI solutions company delivering high-performance,
               scalable, secure, and future-ready digital infrastructure for businesses of all sizes.
             </p>

@@ -157,7 +157,7 @@ const SharedHosting = () => {
             <Card className="bg-gradient-to-br from-primary/10 via-accent/10 to-background border-2 border-primary/20">
               <CardContent className="py-12 text-center">
                 <h2 className="mb-4">Ready to Get Started?</h2>
-                <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
+                <p className="text-base text-muted-foreground mb-8 max-w-xl mx-auto">
                   Try any shared hosting plan free for 15 days. No credit card required.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">

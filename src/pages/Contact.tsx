@@ -325,7 +325,7 @@ const Contact = () => {
             <h1 className="mb-6">
               <span className="gradient-text">Contact Us</span>
             </h1>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-lg text-muted-foreground">
               Tell us about your project or inquiry and we'll provide a tailored response with transparent pricing.
             </p>
           </div>

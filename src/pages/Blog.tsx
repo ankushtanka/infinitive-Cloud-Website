@@ -163,7 +163,7 @@ const Blog = () => {
           <Card className="bg-gradient-to-br from-primary/10 via-accent/10 to-background border-2 border-primary/20">
             <CardContent className="pt-12 pb-12 text-center">
               <h2 className="mb-4">Stay Updated</h2>
-              <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
                 Subscribe to our newsletter for the latest insights, tips, and updates on cloud technology.
               </p>
               <Link to="/contact">
