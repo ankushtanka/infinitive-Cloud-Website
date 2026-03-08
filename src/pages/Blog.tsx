@@ -137,7 +137,7 @@ const Blog = () => {
                       {article.category}
                     </span>
                   </div>
-                  <CardTitle className="text-xl">{article.title}</CardTitle>
+                  <CardTitle className="text-lg">{article.title}</CardTitle>
                   <CardDescription>{article.excerpt}</CardDescription>
                 </CardHeader>
                 <CardContent>
