@@ -220,7 +220,7 @@ const HeroSection = () => {
               <span
                 tabIndex={0}
                 role="link"
-                className="flex items-center gap-3 text-lg md:text-xl font-semibold px-16 py-2 transition hover:text-primary focus:outline-none focus-visible:ring whitespace-nowrap cursor-pointer"
+                className="flex items-center gap-3 text-base md:text-lg font-semibold px-16 py-2 transition hover:text-primary focus:outline-none focus-visible:ring whitespace-nowrap cursor-pointer"
                 style={{
                   opacity: 0.92,
                   transition: "background .35s",
