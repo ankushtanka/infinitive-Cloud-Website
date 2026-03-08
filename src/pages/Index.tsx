@@ -7,6 +7,7 @@ import HostingSolutionsSection from "@/components/HostingSolutionsSection";
 import WhyTrustUsSection from "@/components/WhyTrustUsSection";
 import HomePricingSection from "@/components/HomePricingSection";
 import InfrastructureSection from "@/components/InfrastructureSection";
+import ArchitectureSection from "@/components/ArchitectureSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import CTASection from "@/components/CTASection";
 import SEOContentSection from "@/components/SEOContentSection";
