@@ -19,7 +19,7 @@ const IndustriesSection = () => {
         <h2 className="mb-4">
           Industries <span className="gradient-text">We Serve</span>
         </h2>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+        <p className="text-base text-muted-foreground max-w-2xl mx-auto">
           Tailored cloud and hosting solutions optimized for your industry's unique needs
         </p>
       </div>

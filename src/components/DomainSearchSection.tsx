@@ -109,10 +109,10 @@ const DomainSearchSection = () => {
             <Globe className="w-4 h-4" />
             Domain Registration Starting at {renderPrice("₹99")}/yr
           </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+          <h2 className="font-bold mb-4">
             Find Your Perfect <span className="gradient-text">Domain Name</span>
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-base text-muted-foreground max-w-2xl mx-auto">
 
           </p>
         </div>
@@ -190,7 +190,7 @@ const DomainSearchSection = () => {
 
                   <CardContent className="p-6 pt-7 text-center">
                     {/* Extension name with gradient underline */}
-                    <span className="text-3xl font-black text-foreground block tracking-tight">
+                    <span className="text-2xl font-black text-foreground block tracking-tight">
                       {baseName}{tld.ext}
                     </span>
                     <div className={`w-8 h-0.5 mx-auto mt-2 mb-4 rounded-full bg-gradient-to-r ${tld.color} opacity-60`} />
@@ -198,7 +198,7 @@ const DomainSearchSection = () => {
                     {/* Pricing */}
                     <div>
                       <span className="text-sm text-muted-foreground line-through block">{renderPrice(tld.original)}/yr</span>
-                      <span className="text-3xl md:text-4xl font-black gradient-text">{renderPrice(tld.price)}</span>
+                      <span className="text-2xl md:text-3xl font-black gradient-text">{renderPrice(tld.price)}</span>
                       <span className="text-base text-muted-foreground">/yr</span>
                     </div>
 
@@ -244,13 +244,13 @@ const DomainSearchSection = () => {
 
                 <CardContent className="p-6 pt-7 text-center">
                   {/* Extension name with gradient underline */}
-                  <span className="text-3xl font-black text-foreground block tracking-tight">{tld.ext}</span>
+                  <span className="text-2xl font-black text-foreground block tracking-tight">{tld.ext}</span>
                   <div className={`w-8 h-0.5 mx-auto mt-2 mb-4 rounded-full bg-gradient-to-r ${tld.color} opacity-60`} />
 
                   {/* Pricing */}
                   <div>
                     <span className="text-sm text-muted-foreground line-through block">{renderPrice(tld.original)}/yr</span>
-                    <span className="text-3xl md:text-4xl font-black gradient-text">{renderPrice(tld.price)}</span>
+                    <span className="text-2xl md:text-3xl font-black gradient-text">{renderPrice(tld.price)}</span>
                     <span className="text-base text-muted-foreground">/yr</span>
                   </div>
 

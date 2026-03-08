@@ -31,7 +31,7 @@ const GPUDedicatedServer = () => {
               <h1 className="mb-6">
                 <span className="gradient-text">GPU Dedicated</span> Servers
               </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                 High-performance GPU servers built for AI training, 3D rendering, video processing, and any workload that demands raw computing power. No shared resources — the entire server is yours.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">

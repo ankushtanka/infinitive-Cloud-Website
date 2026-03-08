@@ -61,7 +61,7 @@ const Knowledgebase = () => {
               <h1 className="mb-6">
                 <span className="gradient-text">Knowledgebase</span>
               </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
                 Find answers, tutorials, and step-by-step guides to help you get the most out of your hosting.
               </p>
               <div className="max-w-lg mx-auto flex gap-3">

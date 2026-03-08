@@ -67,7 +67,7 @@ const SharedHosting = () => {
               <h1 className="mb-6">
                 <span className="gradient-text">Shared Hosting</span> Plans India
               </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                 Affordable, reliable, and blazing-fast shared hosting powered by NVMe SSD and LiteSpeed technology. Perfect for personal websites, blogs, small businesses, and WordPress sites.
               </p>
               <div className="flex flex-wrap gap-4 justify-center mt-6 text-sm font-semibold text-primary">
@@ -104,7 +104,7 @@ const SharedHosting = () => {
                     <div className="mb-6">
                       <span className="text-sm text-muted-foreground line-through">{plan.originalPrice}</span>
                       <div className="flex items-baseline gap-1">
-                        <span className="text-4xl font-black gradient-text">{plan.price}</span>
+                        <span className="text-3xl font-black gradient-text">{plan.price}</span>
                         <span className="text-base text-muted-foreground">{plan.period}</span>
                       </div>
                       <p className="text-xs text-primary font-medium mt-1">15 Days Free Trial</p>
@@ -143,7 +143,7 @@ const SharedHosting = () => {
                       <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-4">
                         <Icon className="w-6 h-6 text-white" />
                       </div>
-                      <h3 className="text-xl font-bold mb-2">{f.title}</h3>
+                      <h3 className="text-lg font-bold mb-2">{f.title}</h3>
                       <p className="text-muted-foreground">{f.description}</p>
                     </CardContent>
                   </Card>
@@ -157,7 +157,7 @@ const SharedHosting = () => {
             <Card className="bg-gradient-to-br from-primary/10 via-accent/10 to-background border-2 border-primary/20">
               <CardContent className="py-12 text-center">
                 <h2 className="mb-4">Ready to Get Started?</h2>
-                <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
+                <p className="text-base text-muted-foreground mb-8 max-w-xl mx-auto">
                   Try any shared hosting plan free for 15 days. No credit card required.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">

@@ -428,7 +428,7 @@ const Pricing = () => {
             <h1 className="mb-6">
               Simple, <span className="gradient-text">Transparent Pricing</span>
             </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Enterprise-grade hosting at India's most competitive prices. All plans include free SSL, 24/7 support & 99.9% uptime guarantee.
             </p>
           </div>
@@ -457,7 +457,7 @@ const Pricing = () => {
         {/* Plans Grid */}
         <section className="section-container mb-20">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold mb-2">{currentCategory.title}</h2>
+            <h2 className="text-2xl font-bold mb-2">{currentCategory.title}</h2>
             <p className="text-muted-foreground">{currentCategory.description}</p>
           </div>
 
@@ -493,7 +493,7 @@ const Pricing = () => {
                   <div className="mb-4">
                     <span className="text-sm text-muted-foreground line-through">{plan.originalPrice}/mo</span>
                     <div className="flex items-baseline gap-1 mt-1">
-                      <span className="text-4xl font-black gradient-text">{plan.price}</span>
+                      <span className="text-3xl font-black gradient-text">{plan.price}</span>
                       <span className="text-muted-foreground">{plan.period}</span>
                     </div>
                     <span className="inline-block mt-1 text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
@@ -557,7 +557,7 @@ const Pricing = () => {
           <Card className="bg-gradient-to-br from-primary/10 via-accent/10 to-background border-2 border-primary/20">
             <CardContent className="pt-12 pb-12 text-center">
               <h2 className="mb-4">Need a Custom Solution?</h2>
-              <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
                 Every business is unique. Get a tailored hosting plan with custom resources, managed services, and dedicated support.
               </p>
               <Link to="/contact">
