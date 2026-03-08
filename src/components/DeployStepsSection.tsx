@@ -1,10 +1,10 @@
-import { Server, SlidersHorizontal, Rocket } from "lucide-react";
+import { Server, SlidersHorizontal, Rocket, ArrowRight } from "lucide-react";
 
 const steps = [
   {
     step: "01",
     icon: Server,
-    title: "Choose Infrastructure",
+    title: "Choose Server Type",
     desc: "Select from shared hosting, VPS, dedicated or cloud servers based on your requirements.",
   },
   {
@@ -16,8 +16,8 @@ const steps = [
   {
     step: "03",
     icon: Rocket,
-    title: "Launch Server",
-    desc: "Deploy your server instantly and start hosting your website or application.",
+    title: "Launch Instantly",
+    desc: "Deploy your server in minutes and start hosting your website or application.",
   },
 ];
 
@@ -27,21 +27,31 @@ const DeployStepsSection = () => {
       <div className="section-container">
         <div className="text-center mb-14">
           <p className="section-label">How It Works</p>
-          <h2 className="font-bold mb-3">Deploy Your Server in 3 Simple Steps</h2>
+          <h2 className="font-bold mb-3">Deploy Your Server in Minutes</h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            Get your infrastructure up and running in minutes — no complex setup required.
+            Get your infrastructure up and running — no complex setup required.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {steps.map((item, i) => {
+        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto relative">
+          {/* Connector arrows (desktop) */}
+          <div className="hidden md:block absolute top-10 left-[33%] w-[10%]">
+            <div className="flex items-center justify-center">
+              <div className="w-full h-px bg-primary/20" />
+              <ArrowRight className="w-4 h-4 text-primary/40 -ml-1 flex-shrink-0" />
+            </div>
+          </div>
+          <div className="hidden md:block absolute top-10 left-[63%] w-[10%]">
+            <div className="flex items-center justify-center">
+              <div className="w-full h-px bg-primary/20" />
+              <ArrowRight className="w-4 h-4 text-primary/40 -ml-1 flex-shrink-0" />
+            </div>
+          </div>
+
+          {steps.map((item) => {
             const Icon = item.icon;
             return (
               <div key={item.step} className="relative text-center group">
-                {/* Connector line */}
-                {i < steps.length - 1 && (
-                  <div className="hidden md:block absolute top-10 left-[60%] w-[80%] h-px bg-border" />
-                )}
                 <div className="relative z-10">
                   <div className="w-20 h-20 rounded-2xl bg-card border border-border flex items-center justify-center mx-auto mb-5 group-hover:border-primary/30 group-hover:-translate-y-1 transition-all duration-300" style={{ boxShadow: "var(--shadow-soft)" }}>
                     <Icon className="w-8 h-8 text-primary" />

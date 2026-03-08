@@ -4,14 +4,16 @@ import Footer from "@/components/Footer";
 import HeroSection from "@/components/HeroSection";
 import TrustSection from "@/components/TrustSection";
 import HostingSolutionsSection from "@/components/HostingSolutionsSection";
+import DeployStepsSection from "@/components/DeployStepsSection";
 import WhyTrustUsSection from "@/components/WhyTrustUsSection";
 import HomePricingSection from "@/components/HomePricingSection";
-import DeployStepsSection from "@/components/DeployStepsSection";
 import ServerCalculatorSection from "@/components/ServerCalculatorSection";
 import CloudInfrastructureSection from "@/components/CloudInfrastructureSection";
-import MigrationSection from "@/components/MigrationSection";
-import SuccessStoriesSection from "@/components/SuccessStoriesSection";
+import SecuritySection from "@/components/SecuritySection";
 import InfrastructureSection from "@/components/InfrastructureSection";
+import MigrationSection from "@/components/MigrationSection";
+import SpeedSection from "@/components/SpeedSection";
+import SuccessStoriesSection from "@/components/SuccessStoriesSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import BlogResourcesSection from "@/components/BlogResourcesSection";
 import CTASection from "@/components/CTASection";
@@ -54,10 +56,7 @@ const Index = () => {
       <StructuredData data={breadcrumbSchema} />
       <StructuredData data={faqSchema} />
 
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md"
-      >
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md">
         Skip to main content
       </a>
 
@@ -71,8 +70,10 @@ const Index = () => {
         <HomePricingSection />
         <ServerCalculatorSection />
         <CloudInfrastructureSection />
+        <SecuritySection />
         <InfrastructureSection />
         <MigrationSection />
+        <SpeedSection />
         <SuccessStoriesSection />
         <TestimonialsSection />
         <BlogResourcesSection />

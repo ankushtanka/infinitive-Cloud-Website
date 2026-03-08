@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Check, ArrowRight } from "lucide-react";
+import { Check, ArrowRight, Cpu, MemoryStick, HardDrive, Wifi } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const plans = [
@@ -10,7 +9,8 @@ const plans = [
     price: "₹79",
     period: "/mo",
     popular: false,
-    features: ["1 vCPU Core", "1 GB RAM", "20 GB NVMe Storage", "1 TB Bandwidth", "Free SSL Certificate", "99.99% Uptime SLA"],
+    specs: { cpu: "1 vCPU", ram: "1 GB", storage: "20 GB NVMe", bandwidth: "1 TB" },
+    features: ["Free SSL Certificate", "99.99% Uptime SLA", "Email Support"],
   },
   {
     name: "Business",
@@ -18,7 +18,8 @@ const plans = [
     price: "₹399",
     period: "/mo",
     popular: true,
-    features: ["2 vCPU Cores", "4 GB RAM", "80 GB NVMe Storage", "4 TB Bandwidth", "Free SSL & CDN", "Priority Support"],
+    specs: { cpu: "2 vCPU", ram: "4 GB", storage: "80 GB NVMe", bandwidth: "4 TB" },
+    features: ["Free SSL & CDN", "Priority Support", "Free Migration"],
   },
   {
     name: "Enterprise",
@@ -26,9 +27,17 @@ const plans = [
     price: "₹1,199",
     period: "/mo",
     popular: false,
-    features: ["4 vCPU Cores", "8 GB RAM", "200 GB NVMe Storage", "Unlimited Bandwidth", "Dedicated IP", "24/7 Priority Support"],
+    specs: { cpu: "4 vCPU", ram: "8 GB", storage: "200 GB NVMe", bandwidth: "Unlimited" },
+    features: ["Dedicated IP", "24/7 Priority Support", "Custom Configuration"],
   },
 ];
+
+const specIcons = [
+  { key: "cpu", icon: Cpu, label: "CPU" },
+  { key: "ram", icon: MemoryStick, label: "RAM" },
+  { key: "storage", icon: HardDrive, label: "Storage" },
+  { key: "bandwidth", icon: Wifi, label: "Bandwidth" },
+] as const;
 
 const HomePricingSection = () => {
   return (
@@ -44,34 +53,47 @@ const HomePricingSection = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto items-start">
           {plans.map((plan) => (
-            <Card
+            <div
               key={plan.name}
-              className={`relative overflow-hidden transition-all duration-300 hover:-translate-y-1 ${
+              className={`relative overflow-hidden rounded-xl border bg-card transition-all duration-300 hover:-translate-y-1 ${
                 plan.popular
-                  ? "border-primary ring-1 ring-primary/20"
+                  ? "border-primary ring-2 ring-primary/10 scale-[1.02]"
                   : "border-border"
               }`}
-              style={{ boxShadow: plan.popular ? "var(--shadow-medium)" : "var(--shadow-soft)", borderRadius: "12px" }}
+              style={{ boxShadow: plan.popular ? "var(--shadow-strong)" : "var(--shadow-soft)" }}
             >
               {plan.popular && (
-                <div className="absolute top-0 left-0 right-0 h-0.5 bg-primary" />
+                <div className="bg-primary text-primary-foreground text-center text-xs font-bold py-1.5 tracking-wider uppercase">
+                  Most Popular
+                </div>
               )}
-              <CardContent className="p-7">
-                {plan.popular && (
-                  <span className="inline-block text-xs font-semibold bg-primary text-primary-foreground px-3 py-1 rounded-full mb-4">
-                    Most Popular
-                  </span>
-                )}
+
+              <div className="p-7">
                 <h3 className="text-xl font-bold font-heading">{plan.name}</h3>
-                <p className="text-sm text-muted-foreground mb-4">{plan.tagline}</p>
+                <p className="text-sm text-muted-foreground mb-5">{plan.tagline}</p>
+
                 <div className="flex items-baseline gap-1 mb-6">
                   <span className="text-4xl font-extrabold text-foreground font-heading">{plan.price}</span>
                   <span className="text-muted-foreground text-sm">{plan.period}</span>
                 </div>
 
-                <ul className="space-y-3 mb-7">
+                {/* Specs table */}
+                <div className="space-y-2.5 mb-6 p-4 rounded-lg bg-muted/60 border border-border/50">
+                  {specIcons.map(({ key, icon: Icon, label }) => (
+                    <div key={key} className="flex items-center justify-between text-sm">
+                      <span className="flex items-center gap-2 text-muted-foreground">
+                        <Icon className="w-3.5 h-3.5 text-primary/60" />
+                        {label}
+                      </span>
+                      <span className="font-semibold text-foreground">{plan.specs[key]}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Features */}
+                <ul className="space-y-2.5 mb-7">
                   {plan.features.map((feature) => (
                     <li key={feature} className="flex items-center gap-2.5 text-sm">
                       <div className="w-4 h-4 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
@@ -84,16 +106,17 @@ const HomePricingSection = () => {
 
                 <Link to="/contact">
                   <Button
-                    className={`w-full h-10 text-sm rounded-lg ${
+                    className={`w-full h-11 text-sm rounded-lg font-semibold ${
                       plan.popular ? "btn-primary" : ""
                     }`}
                     variant={plan.popular ? "default" : "outline"}
                   >
-                    Deploy Now
+                    Deploy Server
+                    <ArrowRight className="ml-1.5 w-3.5 h-3.5" />
                   </Button>
                 </Link>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
 
