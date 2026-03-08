@@ -119,7 +119,7 @@ const HomePricingSection = () => {
                       <div className="mb-6">
                         <span className="text-sm text-muted-foreground line-through">{plan.originalPrice}</span>
                         <div className="flex items-baseline gap-1">
-                          <span className="text-4xl md:text-5xl font-black gradient-text">{plan.price}</span>
+                          <span className="text-3xl md:text-4xl font-black gradient-text">{plan.price}</span>
                           <span className="text-base text-muted-foreground">{plan.period}</span>
                         </div>
                         <p className="text-xs text-primary font-medium mt-1">15 Days Free Trial</p>

@@ -36,7 +36,7 @@ const FreeTrialSection = () => {
           <Link to="/contact">
             <Button
               size="lg"
-              className="btn-gradient glow-effect text-lg px-12 h-16 rounded-xl group font-bold"
+              className="btn-gradient glow-effect text-base px-10 h-14 rounded-xl group font-bold"
               style={{ boxShadow: 'var(--shadow-medium)' }}
             >
               Start Free Trial Now

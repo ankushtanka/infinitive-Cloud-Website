@@ -250,7 +250,7 @@ const DomainSearchSection = () => {
                   {/* Pricing */}
                   <div>
                     <span className="text-sm text-muted-foreground line-through block">{renderPrice(tld.original)}/yr</span>
-                    <span className="text-3xl md:text-4xl font-black gradient-text">{renderPrice(tld.price)}</span>
+                    <span className="text-2xl md:text-3xl font-black gradient-text">{renderPrice(tld.price)}</span>
                     <span className="text-base text-muted-foreground">/yr</span>
                   </div>
 
