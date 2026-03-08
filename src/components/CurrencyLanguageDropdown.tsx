@@ -1,0 +1,140 @@
+import { useState, useRef, useEffect } from "react";
+import { Globe, ChevronDown, Check } from "lucide-react";
+
+const WHMCS_BASE = "https://billing.infinitivecloud.com";
+
+const currencies = [
+  { code: "INR", symbol: "₹", label: "Indian Rupee", flag: "🇮🇳" },
+  { code: "USD", symbol: "$", label: "US Dollar", flag: "🇺🇸" },
+  { code: "EUR", symbol: "€", label: "Euro", flag: "🇪🇺" },
+  { code: "GBP", symbol: "£", label: "British Pound", flag: "🇬🇧" },
+  { code: "AED", symbol: "د.إ", label: "UAE Dirham", flag: "🇦🇪" },
+];
+
+const languages = [
+  { code: "en", label: "English", native: "English" },
+  { code: "hi", label: "Hindi", native: "हिन्दी" },
+  { code: "ta", label: "Tamil", native: "தமிழ்" },
+  { code: "te", label: "Telugu", native: "తెలుగు" },
+];
+
+const CurrencyLanguageDropdown = () => {
+  const [open, setOpen] = useState(false);
+  const [currency, setCurrency] = useState(currencies[0]);
+  const [language, setLanguage] = useState(languages[0]);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Load saved preferences
+    const savedCurrency = localStorage.getItem("ic_currency");
+    const savedLanguage = localStorage.getItem("ic_language");
+    if (savedCurrency) {
+      const found = currencies.find((c) => c.code === savedCurrency);
+      if (found) setCurrency(found);
+    }
+    if (savedLanguage) {
+      const found = languages.find((l) => l.code === savedLanguage);
+      if (found) setLanguage(found);
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleCurrencyChange = (c: typeof currencies[0]) => {
+    setCurrency(c);
+    localStorage.setItem("ic_currency", c.code);
+    // WHMCS currency change can be triggered via URL param
+    // e.g. billing.infinitivecloud.com/cart.php?currency=1
+  };
+
+  const handleLanguageChange = (l: typeof languages[0]) => {
+    setLanguage(l);
+    localStorage.setItem("ic_language", l.code);
+    // Future: integrate with i18n or WHMCS language param
+  };
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-1.5 p-2 text-foreground/70 hover:text-primary rounded-lg transition-colors"
+        aria-label="Currency & Language"
+        title="Currency & Language"
+      >
+        <Globe className="w-5 h-5" />
+        <span className="text-xs font-bold hidden xl:inline">{currency.code}</span>
+        <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+      </button>
+
+      {open && (
+        <div
+          className="absolute right-0 top-full mt-2 w-72 bg-background border border-border rounded-xl shadow-[var(--shadow-strong)] z-[70] animate-fade-in overflow-hidden"
+          style={{ animationDuration: "0.15s" }}
+        >
+          {/* Currency Section */}
+          <div className="p-3 border-b border-border">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2 px-1">
+              Currency
+            </p>
+            <div className="grid grid-cols-1 gap-0.5">
+              {currencies.map((c) => (
+                <button
+                  key={c.code}
+                  onClick={() => handleCurrencyChange(c)}
+                  className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-150 ${
+                    currency.code === c.code
+                      ? "bg-primary/10 text-primary font-semibold"
+                      : "text-foreground/80 hover:bg-muted hover:text-foreground"
+                  }`}
+                >
+                  <span className="text-base">{c.flag}</span>
+                  <span className="flex-1 text-left">
+                    <span className="font-semibold">{c.code}</span>
+                    <span className="text-muted-foreground ml-1.5 text-xs">{c.symbol} · {c.label}</span>
+                  </span>
+                  {currency.code === c.code && <Check className="w-4 h-4 text-primary" />}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Language Section */}
+          <div className="p-3">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2 px-1">
+              Language
+            </p>
+            <div className="grid grid-cols-1 gap-0.5">
+              {languages.map((l) => (
+                <button
+                  key={l.code}
+                  onClick={() => handleLanguageChange(l)}
+                  className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-150 ${
+                    language.code === l.code
+                      ? "bg-primary/10 text-primary font-semibold"
+                      : "text-foreground/80 hover:bg-muted hover:text-foreground"
+                  }`}
+                >
+                  <span className="flex-1 text-left">
+                    <span className="font-semibold">{l.label}</span>
+                    <span className="text-muted-foreground ml-1.5 text-xs">{l.native}</span>
+                  </span>
+                  {language.code === l.code && <Check className="w-4 h-4 text-primary" />}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default CurrencyLanguageDropdown;
