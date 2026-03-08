@@ -3,8 +3,7 @@ import {
   Globe, Server, Cloud, ShieldCheck, Mail, 
   HardDrive, Cpu, Settings, Search, ArrowRightLeft,
   Monitor, Smartphone, Code, Brain, ShoppingCart,
-  Layers, Zap, Lock, ArrowRight, Sparkles, 
-  Rocket, CircleDot
+  Layers, Zap, Lock, ArrowRight
 } from "lucide-react";
 import { useState } from "react";
 
@@ -13,71 +12,70 @@ interface ServiceLink {
   path: string;
   description: string;
   icon: React.ReactNode;
-  badge?: string;
 }
 
 interface ServiceCategory {
   heading: string;
   icon: React.ReactNode;
-  color: string;
+  description: string;
   links: ServiceLink[];
 }
 
 const serviceCategories: ServiceCategory[] = [
   {
     heading: "Hosting",
-    icon: <Globe className="w-5 h-5" />,
-    color: "from-[hsl(186,100%,53%)] to-[hsl(199,89%,48%)]",
+    icon: <Globe className="w-6 h-6" />,
+    description: "Fast, reliable hosting for every need",
     links: [
-      { label: "Web Hosting", path: "/solutions/shared-hosting", description: "Fast & reliable shared hosting", icon: <Globe className="w-5 h-5" />, badge: "Popular" },
-      { label: "Cloud Hosting", path: "/solutions/cloud-hosting", description: "Auto-scaling cloud infrastructure", icon: <Cloud className="w-5 h-5" /> },
-      { label: "Reseller Hosting", path: "/solutions/reseller-hosting", description: "Start your hosting business", icon: <Layers className="w-5 h-5" /> },
-      { label: "WordPress Hosting", path: "/solutions/wordpress-hosting", description: "Managed WordPress platform", icon: <Monitor className="w-5 h-5" /> },
-      { label: "WooCommerce", path: "/solutions/wordpress-hosting", description: "Optimized eCommerce hosting", icon: <ShoppingCart className="w-5 h-5" /> },
-      { label: "Streaming Servers", path: "/solutions/streaming-servers", description: "Media streaming infrastructure", icon: <Rocket className="w-5 h-5" /> },
+      { label: "Web Hosting", path: "/solutions/shared-hosting", description: "Perfect for small websites & blogs", icon: <Globe className="w-5 h-5" /> },
+      { label: "Cloud Hosting", path: "/solutions/cloud-hosting", description: "Scalable cloud infrastructure", icon: <Cloud className="w-5 h-5" /> },
+      { label: "Reseller Hosting", path: "/solutions/reseller-hosting", description: "Start your own hosting business", icon: <Layers className="w-5 h-5" /> },
+      { label: "WordPress Hosting", path: "/solutions/wordpress-hosting", description: "Optimized for WordPress sites", icon: <Monitor className="w-5 h-5" /> },
+      { label: "WooCommerce Hosting", path: "/solutions/woocommerce-hosting", description: "Powerful eCommerce hosting", icon: <ShoppingCart className="w-5 h-5" /> },
+      { label: "Node.js Hosting", path: "/solutions/nodejs-hosting", description: "Deploy Node.js apps easily", icon: <Code className="w-5 h-5" /> },
     ],
   },
   {
     heading: "Servers",
-    icon: <Server className="w-5 h-5" />,
-    color: "from-[hsl(217,91%,60%)] to-[hsl(250,80%,60%)]",
+    icon: <Server className="w-6 h-6" />,
+    description: "Enterprise-grade server solutions",
     links: [
-      { label: "VPS Hosting", path: "/solutions/vps-hosting", description: "Full root access VPS", icon: <HardDrive className="w-5 h-5" />, badge: "Best Value" },
-      { label: "Dedicated Servers", path: "/solutions/dedicated-servers", description: "Bare metal performance", icon: <Server className="w-5 h-5" /> },
-      { label: "GPU Servers", path: "/solutions/gpu-dedicated-server", description: "AI & ML workloads", icon: <Cpu className="w-5 h-5" /> },
-      { label: "Server Management", path: "/solutions/server-management", description: "24/7 expert management", icon: <Settings className="w-5 h-5" /> },
+      { label: "VPS Server", path: "/solutions/vps-server", description: "Virtual private servers with full root access", icon: <HardDrive className="w-5 h-5" /> },
+      { label: "Dedicated Server", path: "/solutions/dedicated-servers", description: "Bare metal performance & control", icon: <Server className="w-5 h-5" /> },
+      { label: "GPU Server", path: "/solutions/gpu-dedicated-server", description: "High-performance GPU computing", icon: <Cpu className="w-5 h-5" /> },
+      { label: "Server Management", path: "/solutions/server-management", description: "Expert managed server support", icon: <Settings className="w-5 h-5" /> },
     ],
   },
   {
     heading: "Domains",
-    icon: <Search className="w-5 h-5" />,
-    color: "from-[hsl(160,84%,39%)] to-[hsl(186,100%,53%)]",
+    icon: <Search className="w-6 h-6" />,
+    description: "Find & manage your perfect domain",
     links: [
-      { label: "Domain Registration", path: "/solutions/domains", description: "Register your perfect domain", icon: <Globe className="w-5 h-5" /> },
-      { label: "Domain Search", path: "/solutions/domains#search", description: "Find available domains", icon: <Search className="w-5 h-5" /> },
-      { label: "Domain Transfer", path: "/solutions/domains#transfer", description: "Seamless domain transfers", icon: <ArrowRightLeft className="w-5 h-5" /> },
+      { label: "Domain Registration", path: "/solutions/domains", description: "Register your domain name", icon: <Globe className="w-5 h-5" /> },
+      { label: "Domain Search", path: "/solutions/domains#search", description: "Find available domain names", icon: <Search className="w-5 h-5" /> },
+      { label: "Domain Transfer", path: "/solutions/domains#transfer", description: "Transfer domains seamlessly", icon: <ArrowRightLeft className="w-5 h-5" /> },
     ],
   },
   {
-    heading: "Security",
-    icon: <ShieldCheck className="w-5 h-5" />,
-    color: "from-[hsl(45,93%,47%)] to-[hsl(25,95%,53%)]",
+    heading: "Email & Security",
+    icon: <ShieldCheck className="w-6 h-6" />,
+    description: "Secure email & SSL solutions",
     links: [
-      { label: "SSL Certificates", path: "/solutions/ssl-certificates", description: "Encrypt & protect your site", icon: <Lock className="w-5 h-5" /> },
-      { label: "Zoho Email", path: "/solutions/ssl-certificates", description: "Professional business email", icon: <Mail className="w-5 h-5" /> },
-      { label: "Microsoft 365", path: "/solutions/ssl-certificates", description: "Full productivity suite", icon: <Monitor className="w-5 h-5" /> },
-      { label: "Google Workspace", path: "/solutions/ssl-certificates", description: "Collaborate with Google", icon: <Zap className="w-5 h-5" /> },
+      { label: "Zoho Email", path: "/solutions/email-security#zoho", description: "Professional email by Zoho", icon: <Mail className="w-5 h-5" /> },
+      { label: "Microsoft 365", path: "/solutions/email-security#office365", description: "Productivity suite by Microsoft", icon: <Monitor className="w-5 h-5" /> },
+      { label: "Google Workspace", path: "/solutions/email-security#workspace", description: "Business tools by Google", icon: <Zap className="w-5 h-5" /> },
+      { label: "SSL Certificates", path: "/solutions/email-security#ssl", description: "Encrypt & secure your site", icon: <Lock className="w-5 h-5" /> },
     ],
   },
   {
     heading: "Solutions",
-    icon: <Brain className="w-5 h-5" />,
-    color: "from-[hsl(280,80%,55%)] to-[hsl(320,80%,55%)]",
+    icon: <Brain className="w-6 h-6" />,
+    description: "Custom development & AI",
     links: [
-      { label: "Web Development", path: "/solutions/web-development", description: "Custom websites & apps", icon: <Code className="w-5 h-5" /> },
-      { label: "Mobile Apps", path: "/solutions/mobile-apps", description: "iOS & Android apps", icon: <Smartphone className="w-5 h-5" /> },
-      { label: "AI Solutions", path: "/solutions/ai-solutions", description: "Intelligent automation", icon: <Brain className="w-5 h-5" />, badge: "New" },
-      { label: "Odoo ERP", path: "/solutions/odoo-solutions", description: "Business process automation", icon: <Layers className="w-5 h-5" /> },
+      { label: "Web Development", path: "/solutions/web-development", description: "Custom website development", icon: <Code className="w-5 h-5" /> },
+      { label: "Mobile Apps", path: "/solutions/mobile-apps", description: "iOS & Android development", icon: <Smartphone className="w-5 h-5" /> },
+      { label: "AI Solutions", path: "/solutions/ai-solutions", description: "Intelligent AI integrations", icon: <Brain className="w-5 h-5" /> },
+      { label: "Odoo Solutions", path: "/solutions/odoo-solutions", description: "ERP & business automation", icon: <Layers className="w-5 h-5" /> },
     ],
   },
 ];
@@ -89,124 +87,108 @@ interface ServicesMegaMenuProps {
 }
 
 const ServicesMegaMenu = ({ onClose, onMouseEnter, onMouseLeave }: ServicesMegaMenuProps) => {
-  const [hoveredLink, setHoveredLink] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string>(serviceCategories[0].heading);
+  const activeData = serviceCategories.find(c => c.heading === activeCategory);
 
   return (
     <div 
-      className="fixed inset-x-0 top-[72px] z-50"
-      style={{ animation: "fade-in 0.25s ease-out" }}
+      className="fixed inset-x-0 top-20 z-50 animate-fade-in"
+      style={{ animationDuration: "0.2s" }}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0 h-screen bg-foreground/50 backdrop-blur-[2px]" onClick={onClose} />
+      <div className="absolute inset-0 h-screen bg-foreground/40 backdrop-blur-sm" onClick={onClose} />
       
-      {/* Menu Container - Full width dark design */}
-      <div 
-        className="relative w-full bg-[hsl(222,47%,8%)] border-b border-[hsl(220,30%,18%)] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)]"
-        onMouseEnter={onMouseEnter} 
-        onMouseLeave={onMouseLeave}
-      >
-        {/* Subtle gradient accent line at top */}
-        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[hsl(186,100%,53%)] to-transparent opacity-60" />
-        
-        <div className="max-w-[1400px] 2xl:max-w-[1536px] mx-auto px-6 2xl:px-12 py-8">
-          {/* Categories Grid */}
-          <div className="grid grid-cols-5 gap-8">
-            {serviceCategories.map((category) => (
-              <div key={category.heading} className="flex flex-col">
-                {/* Category Header */}
-                <div className="flex items-center gap-2.5 mb-4 pb-3 border-b border-[hsl(220,30%,15%)]">
-                  <div className={`flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br ${category.color} text-white shadow-lg`}>
+      {/* Menu Container */}
+      <div className="relative mx-auto max-w-[1400px] px-4" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+        <div className="bg-background rounded-2xl border border-border shadow-[var(--shadow-strong)] overflow-hidden">
+          <div className="flex min-h-[420px]">
+            {/* Left sidebar - Categories */}
+            <div className="w-[280px] bg-muted/50 border-r border-border p-4 flex flex-col gap-1">
+              <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground px-3 py-2 mb-1">
+                Our Services
+              </p>
+              {serviceCategories.map((category) => (
+                <button
+                  key={category.heading}
+                  onMouseEnter={() => setActiveCategory(category.heading)}
+                  onClick={() => setActiveCategory(category.heading)}
+                  className={`group flex items-center gap-3 px-3 py-3 rounded-xl text-left transition-all duration-200 ${
+                    activeCategory === category.heading
+                      ? "bg-background shadow-[var(--shadow-medium)] text-foreground"
+                      : "text-foreground/70 hover:bg-background/60 hover:text-foreground"
+                  }`}
+                >
+                  <div className={`flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-300 ${
+                    activeCategory === category.heading
+                      ? "bg-gradient-to-br from-primary to-secondary text-primary-foreground shadow-[var(--shadow-soft)]"
+                      : "bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
+                  }`}>
                     {category.icon}
                   </div>
-                  <h3 className="text-[15px] font-black text-white tracking-tight">{category.heading}</h3>
-                </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="font-bold text-[15px] block">{category.heading}</span>
+                    <span className="text-xs text-muted-foreground truncate block">{category.description}</span>
+                  </div>
+                  <ArrowRight className={`w-4 h-4 transition-all duration-200 ${
+                    activeCategory === category.heading
+                      ? "opacity-100 translate-x-0 text-primary"
+                      : "opacity-0 -translate-x-2"
+                  }`} />
+                </button>
+              ))}
+            </div>
 
-                {/* Links */}
-                <div className="flex flex-col gap-0.5">
-                  {category.links.map((link) => (
-                    <Link
-                      key={link.path + link.label}
-                      to={link.path}
-                      onClick={onClose}
-                      onMouseEnter={() => setHoveredLink(link.label)}
-                      onMouseLeave={() => setHoveredLink(null)}
-                      className="group relative flex items-center gap-2.5 px-2.5 py-2.5 rounded-lg transition-all duration-200 hover:bg-[hsl(220,30%,13%)]"
-                    >
-                      {/* Hover glow effect */}
-                      {hoveredLink === link.label && (
-                        <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-[hsl(186,100%,53%,0.05)] to-transparent pointer-events-none" />
-                      )}
-                      
-                      <div className={`relative flex items-center justify-center w-8 h-8 rounded-md transition-all duration-300 ${
-                        hoveredLink === link.label 
-                          ? `bg-gradient-to-br ${category.color} text-white shadow-md scale-105` 
-                          : "bg-[hsl(220,30%,15%)] text-[hsl(220,20%,55%)] group-hover:text-white"
-                      }`}>
-                        {link.icon}
-                      </div>
+            {/* Right content - Service links */}
+            <div className="flex-1 p-6">
+              {activeData && (
+                <div key={activeData.heading} className="animate-fade-in" style={{ animationDuration: "0.15s" }}>
+                  {/* Category header */}
+                  <div className="flex items-center gap-3 mb-5 pb-4 border-b border-border">
+                    <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary text-primary-foreground">
+                      {activeData.icon}
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-black text-foreground">{activeData.heading}</h3>
+                      <p className="text-sm text-muted-foreground">{activeData.description}</p>
+                    </div>
+                  </div>
 
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          <span className={`text-sm font-semibold transition-colors duration-200 ${
-                            hoveredLink === link.label ? "text-[hsl(186,100%,70%)]" : "text-[hsl(220,20%,80%)] group-hover:text-white"
-                          }`}>
-                            {link.label}
-                          </span>
-                          {link.badge && (
-                            <span className={`text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full ${
-                              link.badge === "New" 
-                                ? "bg-[hsl(280,80%,55%,0.2)] text-[hsl(280,80%,70%)]"
-                                : link.badge === "Popular"
-                                ? "bg-[hsl(186,100%,53%,0.15)] text-[hsl(186,100%,65%)]"
-                                : "bg-[hsl(217,91%,60%,0.15)] text-[hsl(217,91%,70%)]"
-                            }`}>
-                              {link.badge}
-                            </span>
-                          )}
+                  {/* Links grid */}
+                  <div className="grid grid-cols-2 gap-2">
+                    {activeData.links.map((link) => (
+                      <Link
+                        key={link.path}
+                        to={link.path}
+                        onClick={onClose}
+                        className="group flex items-start gap-3 p-3 rounded-xl transition-all duration-200 hover:bg-muted/80 hover:shadow-[var(--shadow-soft)]"
+                      >
+                        <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-muted text-muted-foreground transition-all duration-300 group-hover:bg-gradient-to-br group-hover:from-primary group-hover:to-secondary group-hover:text-primary-foreground group-hover:shadow-[var(--shadow-soft)] group-hover:scale-110">
+                          {link.icon}
                         </div>
-                        <span className="text-[11px] text-[hsl(220,15%,45%)] leading-tight block mt-0.5 group-hover:text-[hsl(220,15%,55%)] transition-colors">
-                          {link.description}
-                        </span>
-                      </div>
-
-                      <ArrowRight className={`w-3.5 h-3.5 transition-all duration-200 ${
-                        hoveredLink === link.label 
-                          ? "opacity-100 translate-x-0 text-[hsl(186,100%,65%)]" 
-                          : "opacity-0 -translate-x-1"
-                      }`} />
-                    </Link>
-                  ))}
+                        <div className="flex-1 min-w-0">
+                          <span className="font-bold text-[15px] text-foreground group-hover:text-primary transition-colors duration-200 flex items-center gap-1">
+                            {link.label}
+                            <ArrowRight className="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
+                          </span>
+                          <span className="text-xs text-muted-foreground leading-relaxed block mt-0.5">{link.description}</span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              )}
+            </div>
           </div>
 
-          {/* Bottom Section */}
-          <div className="mt-6 pt-5 border-t border-[hsl(220,30%,13%)] flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[hsl(186,100%,53%)]" />
-              <span className="text-sm text-[hsl(220,20%,60%)]">
-                Need help choosing?{" "}
-                <Link to="/contact" onClick={onClose} className="font-bold text-[hsl(186,100%,60%)] hover:text-[hsl(186,100%,70%)] transition-colors">
-                  Talk to an expert
-                  <ArrowRight className="w-3.5 h-3.5 inline ml-1" />
-                </Link>
-              </span>
-            </div>
-            <div className="flex items-center gap-6 text-xs">
-              <span className="flex items-center gap-1.5 text-[hsl(220,20%,55%)]">
-                <CircleDot className="w-3.5 h-3.5 text-[hsl(150,80%,50%)]" />
-                <span className="text-[hsl(150,80%,60%)] font-semibold">99.9%</span> Uptime
-              </span>
-              <span className="flex items-center gap-1.5 text-[hsl(220,20%,55%)]">
-                <ShieldCheck className="w-3.5 h-3.5 text-[hsl(186,100%,53%)]" /> Free SSL
-              </span>
-              <span className="flex items-center gap-1.5 text-[hsl(220,20%,55%)]">
-                <Zap className="w-3.5 h-3.5 text-[hsl(45,93%,55%)]" /> NVMe SSD
-              </span>
-              <span className="flex items-center gap-1.5 text-[hsl(220,20%,55%)]">
-                <Globe className="w-3.5 h-3.5 text-[hsl(186,100%,53%)]" /> 24/7 Support
-              </span>
+          {/* Bottom bar */}
+          <div className="border-t border-border bg-muted/30 px-6 py-3 flex items-center justify-between">
+            <p className="text-sm text-muted-foreground">
+              Need help choosing? <Link to="/contact" onClick={onClose} className="font-bold text-primary hover:underline">Talk to an expert →</Link>
+            </p>
+            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1.5"><Zap className="w-3.5 h-3.5 text-primary" /> 99.9% Uptime</span>
+              <span className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary" /> Free SSL</span>
+              <span className="flex items-center gap-1.5"><Globe className="w-3.5 h-3.5 text-primary" /> 24/7 Support</span>
             </div>
           </div>
         </div>
