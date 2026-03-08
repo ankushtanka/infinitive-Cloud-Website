@@ -109,10 +109,10 @@ const DomainSearchSection = () => {
             <Globe className="w-4 h-4" />
             Domain Registration Starting at {renderPrice("₹99")}/yr
           </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+          <h2 className="font-bold mb-4">
             Find Your Perfect <span className="gradient-text">Domain Name</span>
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-base text-muted-foreground max-w-2xl mx-auto">
 
           </p>
         </div>
