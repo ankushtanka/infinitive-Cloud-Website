@@ -428,7 +428,7 @@ const Pricing = () => {
             <h1 className="mb-6">
               Simple, <span className="gradient-text">Transparent Pricing</span>
             </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Enterprise-grade hosting at India's most competitive prices. All plans include free SSL, 24/7 support & 99.9% uptime guarantee.
             </p>
           </div>
