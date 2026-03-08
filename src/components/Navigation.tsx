@@ -116,7 +116,7 @@ const Navigation = () => {
                   return (
                     <button
                       key="services-trigger"
-                      className="relative px-4 py-2 text-foreground/70 hover:text-foreground font-bold text-[15px] flex items-center gap-1 group transition-all duration-200"
+                      className="relative px-4 py-2 text-foreground hover:text-primary font-bold text-[15px] flex items-center gap-1 group transition-all duration-200"
                       onMouseEnter={handleServicesEnter}
                       onMouseLeave={handleServicesLeave}
                       onClick={() => setServicesOpen(prev => !prev)}
