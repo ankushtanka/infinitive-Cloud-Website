@@ -62,7 +62,7 @@ const Careers = () => {
             <h1 className="mb-6">
               Join <span className="gradient-text">Team Infinitive Cloud</span>
             </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Be part of a team that's building the future of cloud infrastructure, hosting, and AI solutions.
             </p>
           </div>
