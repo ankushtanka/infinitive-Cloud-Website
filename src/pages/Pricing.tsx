@@ -457,7 +457,7 @@ const Pricing = () => {
         {/* Plans Grid */}
         <section className="section-container mb-20">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold mb-2">{currentCategory.title}</h2>
+            <h2 className="text-2xl font-bold mb-2">{currentCategory.title}</h2>
             <p className="text-muted-foreground">{currentCategory.description}</p>
           </div>
 
