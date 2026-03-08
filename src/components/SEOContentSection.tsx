@@ -5,7 +5,7 @@ const SEOContentSection = () => {
         <div className="max-w-4xl mx-auto space-y-12 text-foreground/80">
           {/* Best Cloud Hosting India */}
           <div>
-            <h2 className="text-xl md:text-2xl font-bold mb-4 text-foreground">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
               Best Cloud Hosting Provider in India
             </h2>
             <p className="leading-relaxed mb-4">
@@ -18,7 +18,7 @@ const SEOContentSection = () => {
 
           {/* VPS Hosting India */}
           <div>
-            <h2 className="text-xl md:text-2xl font-bold mb-4 text-foreground">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
               Affordable VPS Hosting India — Full Root Access
             </h2>
             <p className="leading-relaxed mb-4">
@@ -31,7 +31,7 @@ const SEOContentSection = () => {
 
           {/* Dedicated Servers */}
           <div>
-            <h2 className="text-xl md:text-2xl font-bold mb-4 text-foreground">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
               Dedicated Server Hosting in India — Maximum Performance
             </h2>
             <p className="leading-relaxed mb-4">
@@ -44,7 +44,7 @@ const SEOContentSection = () => {
 
           {/* Shared Hosting */}
           <div>
-            <h2 className="text-xl md:text-2xl font-bold mb-4 text-foreground">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
               Affordable Web Hosting for Small Business
             </h2>
             <p className="leading-relaxed mb-4">
@@ -57,7 +57,7 @@ const SEOContentSection = () => {
 
           {/* Enterprise & Security */}
           <div>
-            <h2 className="text-xl md:text-2xl font-bold mb-4 text-foreground">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
               Enterprise Hosting Solutions — Secure & Scalable
             </h2>
             <p className="leading-relaxed mb-4">

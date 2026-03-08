@@ -46,7 +46,7 @@ const DivisionsSection = () => {
           <h2 className="mb-4">
             <span className="gradient-text">One Ecosystem</span>, Four Powerhouse Divisions
           </h2>
-          <p className="text-base text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             From infrastructure to innovation, we deliver complete digital transformation under one unified brand.
           </p>
         </div>

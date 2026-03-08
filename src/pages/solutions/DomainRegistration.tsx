@@ -76,7 +76,7 @@ const DomainRegistration = () => {
               <h1 className="mb-6">
                 Register Your <span className="gradient-text">Dream Domain</span> Starting at ₹99/yr
               </h1>
-              <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
                 Secure your brand online with instant domain registration. Choose from 500+ extensions with free WHOIS privacy, DNS management, and expert support.
               </p>
 

@@ -65,10 +65,10 @@ const WhatWeDoSection = () => {
     <section className="py-20 bg-muted/30">
       <div className="section-container">
         <div className="text-center mb-16">
-          <h2 className="font-bold mb-4">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
             Our <span className="gradient-text">Services</span>
           </h2>
-          <p className="text-base text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Everything you need to launch, grow, and scale your online presence — all backed by 99.99% uptime and 24/7 expert support.
           </p>
         </div>
@@ -85,7 +85,7 @@ const WhatWeDoSection = () => {
                   <Link to={service.link} className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-3 group-hover:scale-110 transition-transform cursor-pointer">
                     <Icon className="w-6 h-6 text-white" />
                   </Link>
-                  <CardTitle className="text-lg">{service.title}</CardTitle>
+                  <CardTitle className="text-xl">{service.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <CardDescription className="mb-4">{service.description}</CardDescription>

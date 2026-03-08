@@ -39,10 +39,10 @@ const WhyTrustUsSection = () => {
     <section className="py-24 bg-gradient-to-b from-background to-muted/20 relative overflow-hidden">
       <div className="section-container relative z-10">
         <div className="text-center mb-16">
-          <h2 className="font-bold mb-4">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
             Why Choose <span className="gradient-text">Infinitive Cloud</span>
           </h2>
-          <p className="text-base text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Trusted by 1,000+ businesses across India. Here's why companies choose us for their hosting needs.
           </p>
         </div>

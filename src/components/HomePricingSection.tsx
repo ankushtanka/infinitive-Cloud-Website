@@ -73,10 +73,10 @@ const HomePricingSection = () => {
     <section className="py-20 bg-muted/30" id="pricing">
       <div className="section-container">
         <div className="text-center mb-16">
-          <h2 className="font-bold mb-4">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
             Hosting Plans That <span className="gradient-text">Scale With You</span>
           </h2>
-          <p className="text-base text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Enterprise-grade infrastructure at India's most competitive prices. All plans include free SSL, 24/7 support, 99.99% uptime SLA, and a 15-day free trial.
           </p>
         </div>
@@ -89,7 +89,7 @@ const HomePricingSection = () => {
                   <category.icon className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-lg md:text-xl font-bold">{category.title}</h3>
+                  <h3 className="text-xl md:text-2xl font-bold">{category.title}</h3>
                   <p className="text-sm text-muted-foreground">{category.description}</p>
                 </div>
               </div>
@@ -119,7 +119,7 @@ const HomePricingSection = () => {
                       <div className="mb-6">
                         <span className="text-sm text-muted-foreground line-through">{plan.originalPrice}</span>
                         <div className="flex items-baseline gap-1">
-                          <span className="text-3xl md:text-4xl font-black gradient-text">{plan.price}</span>
+                          <span className="text-4xl md:text-5xl font-black gradient-text">{plan.price}</span>
                           <span className="text-base text-muted-foreground">{plan.period}</span>
                         </div>
                         <p className="text-xs text-primary font-medium mt-1">15 Days Free Trial</p>

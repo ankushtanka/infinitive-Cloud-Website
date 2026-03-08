@@ -31,7 +31,7 @@ const ResellerHosting = () => {
               <h1 className="mb-6">
                 <span className="gradient-text">Reseller</span> Hosting
               </h1>
-              <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                 Start and scale your own hosting business with white-label infrastructure. Sell hosting under your brand with enterprise-grade hardware, easy management, and dedicated support.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">

@@ -38,7 +38,7 @@ const CloudMigration = () => {
               <h1 className="mb-6">
                 Free <span className="gradient-text">Cloud Migration</span>
               </h1>
-              <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                 Moving to Infinitive Cloud? We handle everything — from files and databases to DNS configuration. Zero downtime, zero hassle, completely free.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">

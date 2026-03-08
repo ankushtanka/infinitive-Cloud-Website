@@ -37,7 +37,7 @@ const WordPressHosting = () => {
               <h1 className="mb-6">
                 Managed <span className="gradient-text">WordPress Hosting</span>
               </h1>
-              <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                 WordPress hosting optimized for speed, security, and hassle-free management. Focus on your content — we handle everything else.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">

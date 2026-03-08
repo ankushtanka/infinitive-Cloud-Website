@@ -17,10 +17,10 @@ const FreeTrialSection = () => {
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/5 to-secondary/10" />
       <div className="section-container relative z-10">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="font-bold mb-4">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
             Try Before You Buy — <span className="gradient-text">15 Days Free</span>
           </h2>
-          <p className="text-base text-muted-foreground mb-10 max-w-xl mx-auto">
+          <p className="text-lg text-muted-foreground mb-10 max-w-xl mx-auto">
             Experience premium cloud hosting risk-free. No credit card, no commitments, no catch.
           </p>
 
@@ -36,7 +36,7 @@ const FreeTrialSection = () => {
           <Link to="/contact">
             <Button
               size="lg"
-              className="btn-gradient glow-effect text-base px-10 h-14 rounded-xl group font-bold"
+              className="btn-gradient glow-effect text-lg px-12 h-16 rounded-xl group font-bold"
               style={{ boxShadow: 'var(--shadow-medium)' }}
             >
               Start Free Trial Now

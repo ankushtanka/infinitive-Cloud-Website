@@ -31,7 +31,7 @@ const StreamingServers = () => {
               <h1 className="mb-6">
                 <span className="gradient-text">Streaming</span> Servers
               </h1>
-              <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                 Unlimited streaming servers built for flawless live broadcasts and on-demand video delivery. No buffering, no limits — just seamless playback for your audience worldwide.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">

@@ -31,7 +31,7 @@ const ServerManagement = () => {
               <h1 className="mb-6">
                 <span className="gradient-text">Managed Server</span> Services
               </h1>
-              <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                 Let our expert team handle your server infrastructure so you can focus on growing your business. From setup to security to 24/7 monitoring — we've got you covered.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">

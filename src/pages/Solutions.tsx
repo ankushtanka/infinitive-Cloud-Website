@@ -80,7 +80,7 @@ const Solutions = () => {
               <h1 className="mb-6">
                 Complete <span className="gradient-text">Hosting Solutions</span>
               </h1>
-              <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                 Everything you need to launch, grow, and scale your online presence. From shared hosting to enterprise dedicated servers — all backed by 99.99% uptime and 24/7 expert support.
               </p>
             </div>
@@ -121,7 +121,7 @@ const Solutions = () => {
             <Card className="bg-gradient-to-br from-primary/10 via-accent/10 to-background border-2 border-primary/20">
               <CardContent className="pt-12 pb-12 text-center">
                 <h2 className="mb-4">Not Sure Which Solution Is Right for You?</h2>
-                <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+                <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
                   Our hosting experts will recommend the perfect plan based on your needs and budget.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">

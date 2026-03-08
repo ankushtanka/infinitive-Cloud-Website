@@ -62,7 +62,7 @@ const SSLCertificates = () => {
               <h1 className="mb-6">
                 <span className="gradient-text">SSL Certificates</span> for Complete Security
               </h1>
-              <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                 Protect your website and build customer trust with industry-standard SSL certificates. Free SSL included with all hosting plans, plus premium options for businesses that need more.
               </p>
             </div>
@@ -91,7 +91,7 @@ const SSLCertificates = () => {
                     <h3 className="text-lg font-bold mb-1">{plan.name}</h3>
                     <div className="mb-6">
                       <div className="flex items-baseline gap-1">
-                        <span className="text-3xl font-black gradient-text">{plan.price}</span>
+                        <span className="text-4xl font-black gradient-text">{plan.price}</span>
                         <span className="text-base text-muted-foreground">{plan.period}</span>
                       </div>
                     </div>
