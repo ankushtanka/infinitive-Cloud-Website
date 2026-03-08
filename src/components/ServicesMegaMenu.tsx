@@ -82,9 +82,11 @@ const serviceCategories: ServiceCategory[] = [
 
 interface ServicesMegaMenuProps {
   onClose: () => void;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }
 
-const ServicesMegaMenu = ({ onClose }: ServicesMegaMenuProps) => {
+const ServicesMegaMenu = ({ onClose, onMouseEnter, onMouseLeave }: ServicesMegaMenuProps) => {
   const [activeCategory, setActiveCategory] = useState<string>(serviceCategories[0].heading);
   const activeData = serviceCategories.find(c => c.heading === activeCategory);
 
@@ -97,7 +99,7 @@ const ServicesMegaMenu = ({ onClose }: ServicesMegaMenuProps) => {
       <div className="absolute inset-0 h-screen bg-foreground/40 backdrop-blur-sm" onClick={onClose} />
       
       {/* Menu Container */}
-      <div className="relative mx-auto max-w-[1400px] px-4">
+      <div className="relative mx-auto max-w-[1400px] px-4" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
         <div className="bg-background rounded-2xl border border-border shadow-[var(--shadow-strong)] overflow-hidden">
           <div className="flex min-h-[420px]">
             {/* Left sidebar - Categories */}

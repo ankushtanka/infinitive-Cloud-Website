@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown } from "lucide-react";
@@ -51,6 +51,21 @@ const Navigation = () => {
   const [servicesOpen, setServicesOpen] = useState(false);
   const [mobileServiceOpen, setMobileServiceOpen] = useState(false);
   const [mobileSubDropdown, setMobileSubDropdown] = useState<string | null>(null);
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleServicesEnter = useCallback(() => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    setServicesOpen(true);
+  }, []);
+
+  const handleServicesLeave = useCallback(() => {
+    closeTimeoutRef.current = setTimeout(() => {
+      setServicesOpen(false);
+    }, 150);
+  }, []);
 
   const navLinks = [
     { label: "Home", path: "/" },
@@ -102,7 +117,8 @@ const Navigation = () => {
                     <button
                       key="services-trigger"
                       className="relative px-4 py-2 text-foreground/70 hover:text-foreground font-bold text-[15px] flex items-center gap-1 group transition-all duration-200"
-                      onMouseEnter={() => setServicesOpen(true)}
+                      onMouseEnter={handleServicesEnter}
+                      onMouseLeave={handleServicesLeave}
                       onClick={() => setServicesOpen(prev => !prev)}
                     >
                       Services
@@ -145,7 +161,7 @@ const Navigation = () => {
 
       {/* Desktop Mega Menu */}
       {servicesOpen && (
-        <ServicesMegaMenu onClose={() => setServicesOpen(false)} />
+        <ServicesMegaMenu onClose={() => setServicesOpen(false)} onMouseEnter={handleServicesEnter} onMouseLeave={handleServicesLeave} />
       )}
 
       {/* Mobile Navigation */}
