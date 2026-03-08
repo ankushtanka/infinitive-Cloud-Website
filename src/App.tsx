@@ -78,6 +78,7 @@ const App = () => {
             <Route path="/refund" element={<Refund />} />
             <Route path="/solutions" element={<Solutions />} />
             <Route path="/knowledgebase" element={<Knowledgebase />} />
+            <Route path="/login" element={<Login />} />
 
             {/* Solution pages */}
             <Route path="/solutions/shared-hosting" element={<SharedHosting />} />
