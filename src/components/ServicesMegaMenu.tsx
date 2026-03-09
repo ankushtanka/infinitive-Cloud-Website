@@ -5,7 +5,7 @@ import {
   Monitor, Smartphone, Code, Brain, ShoppingCart,
   Layers, Zap, Lock, ArrowRight, Star, TrendingUp, Flame, Crown, Sparkles
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
 interface ServiceLink {
