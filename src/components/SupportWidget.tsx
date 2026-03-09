@@ -60,6 +60,7 @@ const PHONE_NUMBER = "+918690393087";
 
 const SupportWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [hoveredLabel, setHoveredLabel] = useState<string | null>(null);
 
   const openTawk = () => {
     if (typeof window !== "undefined" && (window as any).Tawk_API) {
