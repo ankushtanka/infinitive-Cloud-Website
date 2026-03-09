@@ -78,7 +78,6 @@ const SupportWidget = () => {
             </button>
           );
         })}
-        })}
       </div>
 
       {/* Main toggle button */}
