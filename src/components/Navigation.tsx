@@ -130,7 +130,7 @@ const Navigation = () => {
                 href={WHMCS_LOGIN}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-3 py-1 text-xs font-semibold text-foreground/80 hover:text-primary rounded-md transition-colors"
+                className="flex items-center gap-1.5 px-4 py-1 text-xs font-bold text-primary-foreground bg-primary hover:bg-primary/90 rounded-md transition-colors"
                 title="Login to Client Area"
               >
                 <User className="w-3.5 h-3.5" />
