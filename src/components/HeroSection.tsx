@@ -51,7 +51,7 @@ const HeroSection = () => {
   const stat1 = useCountUp(10000, 2500, "+");
   const stat2 = useCountUp(99, 2000, ".99%");
   const stat3 = useCountUp(24, 1500, "/7");
-  const stat4 = useCountUp(15, 1500, "-Day");
+  const stat4 = useCountUp(30, 1500, "-Day");
 
   return (
     <section className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-background pt-20">
