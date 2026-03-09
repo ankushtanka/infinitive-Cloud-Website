@@ -118,7 +118,7 @@ const Navigation = () => {
       <div className="hidden lg:block fixed top-0 left-0 right-0 z-50 bg-muted/80 backdrop-blur-md border-b border-border/30">
         <div className="section-container">
           <div className="flex items-center justify-between h-9">
-            <div className="flex items-center gap-4 text-xs text-foreground/80">
+            <div className="flex items-center gap-4 text-xs text-foreground font-medium">
               <span className="flex items-center gap-1.5"><Phone className="w-3 h-3 text-primary" /> +91 8690393087</span>
               <span className="flex items-center gap-1.5"><Mail className="w-3 h-3 text-primary" /> support@infinitivecloud.com</span>
             </div>
