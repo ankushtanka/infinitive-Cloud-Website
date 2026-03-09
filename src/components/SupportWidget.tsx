@@ -29,14 +29,16 @@ const ActionButton = ({
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
     >
-      <AnimatePresence>
+      <AnimatePresence mode="popLayout">
         {hovered && (
           <motion.span
+            key={label}
+            layout
             className="text-sm font-semibold whitespace-nowrap bg-foreground/90 text-background px-3 py-1.5 rounded-lg shadow-md"
-            initial={{ opacity: 0, x: 12, scale: 0.9 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: 12, scale: 0.9 }}
-            transition={{ type: "spring", stiffness: 500, damping: 28 }}
+            initial={{ opacity: 0, x: 8 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 8, transition: { duration: 0.1 } }}
+            transition={{ type: "spring", stiffness: 600, damping: 30 }}
           >
             {label}
           </motion.span>
