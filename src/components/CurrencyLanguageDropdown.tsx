@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Globe, ChevronDown, Check } from "lucide-react";
-
-const WHMCS_BASE = "https://billing.infinitivecloud.com";
 
 const currencies = [
   { code: "INR", symbol: "₹", label: "Indian Rupee", flag: "🇮🇳" },
@@ -22,10 +21,10 @@ const CurrencyLanguageDropdown = () => {
   const [open, setOpen] = useState(false);
   const [currency, setCurrency] = useState(currencies[0]);
   const [language, setLanguage] = useState(languages[0]);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const [panelPos, setPanelPos] = useState({ top: 0, right: 0 });
 
   useEffect(() => {
-    // Load saved preferences
     const savedCurrency = localStorage.getItem("ic_currency");
     const savedLanguage = localStorage.getItem("ic_language");
     if (savedCurrency) {
@@ -39,55 +38,35 @@ const CurrencyLanguageDropdown = () => {
   }, []);
 
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    if (open && triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
+      setPanelPos({
+        top: rect.bottom + 8,
+        right: window.innerWidth - rect.right,
+      });
+    }
+  }, [open]);
 
   const handleCurrencyChange = (c: typeof currencies[0]) => {
     setCurrency(c);
     localStorage.setItem("ic_currency", c.code);
-    // WHMCS currency change can be triggered via URL param
-    // e.g. billing.infinitivecloud.com/cart.php?currency=1
   };
 
   const handleLanguageChange = (l: typeof languages[0]) => {
     setLanguage(l);
     localStorage.setItem("ic_language", l.code);
-    // Future: integrate with i18n or WHMCS language param
   };
 
-  return (
-    <div className="relative" ref={dropdownRef}>
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          setOpen(!open);
-        }}
-        className="flex items-center gap-1.5 p-2 text-foreground/70 hover:text-primary rounded-lg transition-colors"
-        aria-label="Currency & Language"
-        title="Currency & Language"
-        type="button"
-      >
-        <Globe className="w-5 h-5" />
-        <span className="text-xs font-bold hidden xl:inline">{currency.code}</span>
-        <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
-      </button>
-
-      {open && (
+  const dropdown = open
+    ? createPortal(
         <>
-          {/* Invisible overlay to close on outside click */}
-          <div className="fixed inset-0 z-[60]" onClick={() => setOpen(false)} />
-          
+          <div className="fixed inset-0 z-[9998]" onClick={() => setOpen(false)} />
           <div
-            className="fixed right-4 top-16 w-72 bg-background border border-border rounded-xl z-[70] overflow-hidden"
-            style={{ 
+            className="fixed w-72 bg-background border border-border rounded-xl z-[9999] overflow-hidden"
+            style={{
+              top: panelPos.top,
+              right: panelPos.right,
               boxShadow: "var(--shadow-strong)",
-              animationDuration: "0.15s" 
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -146,9 +125,30 @@ const CurrencyLanguageDropdown = () => {
               </div>
             </div>
           </div>
-        </>
-      )}
-    </div>
+        </>,
+        document.body
+      )
+    : null;
+
+  return (
+    <>
+      <button
+        ref={triggerRef}
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpen(!open);
+        }}
+        className="flex items-center gap-1.5 p-2 text-foreground/70 hover:text-primary rounded-lg transition-colors"
+        aria-label="Currency & Language"
+        title="Currency & Language"
+        type="button"
+      >
+        <Globe className="w-5 h-5" />
+        <span className="text-xs font-bold hidden xl:inline">{currency.code}</span>
+        <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+      </button>
+      {dropdown}
+    </>
   );
 };
 
