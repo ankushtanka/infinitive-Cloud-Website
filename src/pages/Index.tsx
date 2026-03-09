@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
+import DomainPriceComparison from "@/components/DomainPriceComparison";
 import Footer from "@/components/Footer";
 import HeroSection from "@/components/HeroSection";
 import TechLogosSection from "@/components/TechLogosSection";
@@ -65,6 +66,7 @@ const Index = () => {
         <WhatWeDoSection />
         <HowItWorksSection />
         <DomainSearchSection />
+        <DomainPriceComparison />
         <WhyTrustUsSection />
         <ComparisonSection />
         <TestimonialsSection />
