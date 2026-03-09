@@ -236,7 +236,7 @@ const Navigation = () => {
 
       {/* Mobile Navigation */}
       {isOpen && (
-        <div className="lg:hidden fixed inset-0 top-20 bg-background z-[60] overflow-y-auto">
+        <div className="lg:hidden fixed inset-0 top-16 bg-background z-[60] overflow-y-auto">
           <div className="flex flex-col gap-2 px-6 py-6">
             {/* Services Accordion */}
             <div className="flex flex-col">
