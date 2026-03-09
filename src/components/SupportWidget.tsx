@@ -116,7 +116,13 @@ const SupportWidget = () => {
 
               const handleClick = () => {
                 if (action.href) {
-                  window.open(action.href, "_blank", "noopener,noreferrer");
+                  const a = document.createElement("a");
+                  a.href = action.href;
+                  a.target = "_blank";
+                  a.rel = "noopener noreferrer";
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
                 } else if (action.onClick) {
                   action.onClick();
                 }
