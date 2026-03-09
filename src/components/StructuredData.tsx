@@ -23,7 +23,7 @@ export const organizationSchema = {
   "logo": "https://infinitivecloud.com/og-image.png",
   "description": "Premium cloud hosting, VPS, dedicated servers, and domain services in India. 99.99% uptime SLA, 24×7 support, and 15-day free trial.",
   "email": "info@infinitivecloud.com",
-  "telephone": "+91-7737393087",
+  "telephone": "+91-8690393087",
   "address": {
     "@type": "PostalAddress",
     "addressLocality": "Ahmedabad",
