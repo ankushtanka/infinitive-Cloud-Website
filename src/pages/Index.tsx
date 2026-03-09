@@ -2,14 +2,18 @@ import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import HeroSection from "@/components/HeroSection";
+import TechLogosSection from "@/components/TechLogosSection";
 import DomainSearchSection from "@/components/DomainSearchSection";
 import HomePricingSection from "@/components/HomePricingSection";
 import WhatWeDoSection from "@/components/WhatWeDoSection";
+import HowItWorksSection from "@/components/HowItWorksSection";
 import WhyTrustUsSection from "@/components/WhyTrustUsSection";
+import ComparisonSection from "@/components/ComparisonSection";
 import FreeTrialSection from "@/components/FreeTrialSection";
 import SEOContentSection from "@/components/SEOContentSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import FAQSection from "@/components/FAQSection";
+import LiveOfferBanner from "@/components/LiveOfferBanner";
 import { StructuredData, organizationSchema, websiteSchema, createBreadcrumbSchema, createFAQSchema } from "@/components/StructuredData";
 
 const Index = () => {
@@ -56,16 +60,20 @@ const Index = () => {
       <Navigation />
       <main id="main-content">
         <HeroSection />
-        <DomainSearchSection />
+        <TechLogosSection />
         <HomePricingSection />
         <WhatWeDoSection />
+        <HowItWorksSection />
+        <DomainSearchSection />
         <WhyTrustUsSection />
-        <FreeTrialSection />
+        <ComparisonSection />
         <TestimonialsSection />
+        <FreeTrialSection />
         <SEOContentSection />
         <FAQSection />
       </main>
       <Footer />
+      <LiveOfferBanner />
     </div>
   );
 };

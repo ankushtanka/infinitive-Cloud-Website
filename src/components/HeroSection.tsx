@@ -1,240 +1,210 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Shield, Headphones, Server, Cloud, Percent } from "lucide-react";
-import { useParallax } from "@/hooks/use-parallax";
-import { useEffect, useState } from "react";
+import { ArrowRight, Shield, Headphones, Server, Cloud, Zap, CheckCircle2 } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
-// Internal Contact Page Route
-const CONTACT_ROUTE = "/contact";
-
-// Only two items for alternating marquee, links simply redirect to contact page
-const MARQUEE_ITEMS = [
-  {
-    icon: <Percent className="inline w-5 h-5 mr-2 text-primary" />,
-    text: (
-      <>
-        <b>Get 50% OFF</b> on first 3 months – Use Code: <span className="font-mono px-2 rounded bg-accent text-background">WELCOME50</span>
-      </>
-    ),
-  },
-  {
-    icon: <ArrowRight className="inline w-5 h-5 mr-2 text-primary" />,
-    text: (
-      <>
-        <b>Start your 7-day Free Trial</b> – No credit card required
-      </>
-    ),
-  },
-];
-
-const HeroSection = () => {
-  const parallaxRef = useParallax(0.3);
-
-  // Marquee index to alternate items
-  const [activeIdx, setActiveIdx] = useState(0);
+const useCountUp = (end: number, duration: number = 2000, suffix: string = "") => {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const started = useRef(false);
 
   useEffect(() => {
-    // Auto-advance every 4200ms
-    const timer = setInterval(() => {
-      setActiveIdx((prev) => (prev + 1) % MARQUEE_ITEMS.length);
-    }, 4200);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !started.current) {
+          started.current = true;
+          const startTime = performance.now();
+          const animate = (now: number) => {
+            const elapsed = now - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            setCount(Math.floor(eased * end));
+            if (progress < 1) requestAnimationFrame(animate);
+          };
+          requestAnimationFrame(animate);
+        }
+      },
+      { threshold: 0.3 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [end, duration]);
+
+  return { ref, value: count, suffix };
+};
+
+const HeroSection = () => {
+  const [activeOffer, setActiveOffer] = useState(0);
+
+  const offers = [
+    { text: "🔥 Limited Time: Get 50% OFF on first 3 months", code: "WELCOME50" },
+    { text: "🚀 Start your 7-day Free Trial — No credit card required", code: null },
+    { text: "⚡ Hosting starting at just ₹79/mo — Launch today!", code: null },
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => setActiveOffer((p) => (p + 1) % offers.length), 3500);
     return () => clearInterval(timer);
   }, []);
 
-  // Handler for redirect to contact page
-  const handleRedirect = () => {
-    window.location.href = CONTACT_ROUTE;
-  };
-
-  // Marquee redirect handler for accessibility/keyboard
-  const handleMarqueeClick = (e: React.MouseEvent<HTMLSpanElement> | React.KeyboardEvent<HTMLSpanElement>) => {
-    if (
-      (e as React.MouseEvent).type === 'click' ||
-      (e as React.KeyboardEvent).key === 'Enter' ||
-      (e as React.KeyboardEvent).key === ' '
-    ) {
-      e.preventDefault();
-      window.location.href = CONTACT_ROUTE;
-    }
-  };
+  const stat1 = useCountUp(10000, 2500, "+");
+  const stat2 = useCountUp(99, 2000, ".99%");
+  const stat3 = useCountUp(24, 1500, "/7");
+  const stat4 = useCountUp(15, 1500, "-Day");
 
   return (
-    <section className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-background pt-20 md:pt-28 xl:pt-32">
-      {/* Responsive utility: desktop (lg+) restores normal gap; tablet & below tightens spacing */}
-      <style>
-        {`
-        /* Desktop (lg and up): Use normal vertical gaps */
-        @media (min-width: 1024px) {
-          .hero-h1 {
-            margin-bottom: 1.5rem !important; /* mb-6 */
-            line-height: 1.15 !important;
-          }
-          .hero-p-main {
-            margin-bottom: 2rem !important;
-            line-height: 1.2 !important;
-          }
-          .hero-p-support {
-            margin-bottom: 3.5rem !important;
-            line-height: 1.3 !important;
-          }
-          .hero-btns {
-            gap: 1.25rem !important;
-            margin-bottom: 1.75rem !important;
-          }
-          .hero-badges {
-            margin-top: 1.5rem !important;
-            gap: 1.25rem !important;
-          }
-          .hero-marquee {
-            margin-top: 1.5rem !important;
-          }
-        }
-        /* Tablet and down: tighter spacing */
-        @media (max-width: 1023px) {
-          .hero-h1 {
-            margin-bottom: 1.25rem !important;
-            line-height: 1.05 !important;
-          }
-          .hero-p-main {
-            margin-bottom: 1.25rem !important;
-            line-height: 1.1 !important;
-          }
-          .hero-p-support {
-            margin-bottom: 2.5rem !important;
-            line-height: 1.2 !important;
-          }
-          .hero-btns {
-            gap: 0.75rem !important;
-            margin-bottom: 1.25rem !important;
-          }
-          .hero-badges {
-            margin-top: 1rem !important;
-            gap: 1rem !important;
-          }
-          .hero-marquee {
-            margin-top: 1rem !important;
-          }
-        }
-        /* Set base for any other case */
-        .hero-btns {
-          gap: 1.25rem;
-          margin-bottom: 1.75rem;
-        }
-        .hero-badges {
-          margin-top: 1.5rem;
-          gap: 1.25rem;
-        }
-        .hero-marquee {
-          margin-top: 1.5rem;
-        }
-        `}
-      </style>
-      <div
-        ref={parallaxRef}
-        className="absolute inset-0 bg-gradient-to-br from-background via-muted/30 to-background will-change-transform"
-      >
+    <section className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-background pt-20">
+      {/* Animated gradient background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-muted/30 to-background" />
         <div className="absolute inset-0" style={{ background: "var(--gradient-glow)" }} />
+        {/* Floating orbs for depth */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-secondary/5 rounded-full blur-3xl animate-float" style={{ animationDelay: "3s" }} />
       </div>
 
-      <div className="section-container w-full relative z-10 flex flex-col items-center justify-center">
-        <div className="max-w-5xl w-full flex flex-col items-center text-center animate-fade-in">
-          <h1 className="hero-h1 mb-6 font-extrabold leading-tight text-3xl md:text-5xl lg:text-6xl tracking-tight drop-shadow-xl">
-            Premium <span className="gradient-text">Cloud & Web Hosting</span>{" "}
-            <span className="block mt-2 text-primary">Solutions</span>
+      {/* Top offer ticker */}
+      <div className="relative z-10 w-full max-w-4xl mx-auto px-4 mt-4 mb-8">
+        <Link to="/contact" className="block">
+          <div className="overflow-hidden rounded-full bg-primary/10 border border-primary/20 hover:border-primary/40 transition-all cursor-pointer">
+            <div className="flex items-center justify-center h-12 px-6">
+              <motion.div
+                key={activeOffer}
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -20, opacity: 0 }}
+                transition={{ duration: 0.4 }}
+                className="flex items-center gap-3 text-sm md:text-base font-semibold"
+              >
+                <span>{offers[activeOffer].text}</span>
+                {offers[activeOffer].code && (
+                  <span className="font-mono px-3 py-0.5 rounded-full bg-primary text-primary-foreground text-xs font-bold">
+                    {offers[activeOffer].code}
+                  </span>
+                )}
+                <ArrowRight className="w-4 h-4 text-primary flex-shrink-0" />
+              </motion.div>
+            </div>
+          </div>
+        </Link>
+      </div>
+
+      {/* Main hero content */}
+      <div className="section-container w-full relative z-10 flex flex-col items-center justify-center flex-1">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          className="max-w-5xl w-full flex flex-col items-center text-center"
+        >
+          {/* Badge */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="inline-flex items-center gap-2 bg-primary/10 text-primary font-semibold text-sm px-5 py-2 rounded-full mb-8 border border-primary/20"
+          >
+            <Zap className="w-4 h-4" />
+            India's Fastest Growing Cloud Hosting
+          </motion.div>
+
+          <h1 className="mb-6 font-extrabold leading-[1.1] text-3xl md:text-5xl lg:text-6xl xl:text-7xl tracking-tight">
+            Premium{" "}
+            <span className="gradient-text">Cloud & Web Hosting</span>
+            <br />
+            <span className="text-primary">Built for Speed & Scale</span>
           </h1>
-          <p className="hero-p-main text-2xl md:text-3xl font-semibold text-muted-foreground mb-8 max-w-3xl mx-auto leading-snug drop-shadow">
-            Limitless solutions for cloud and web hostings
-          </p>
-          <p className="hero-p-support text-lg md:text-2xl text-foreground/70 mb-14 max-w-2xl mx-auto font-medium leading-relaxed">
-            Managed VPS, dedicated servers, shared hosting, and enterprise infrastructure &mdash; built for speed, security, and scale.
+
+          <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground mb-6 max-w-3xl mx-auto leading-relaxed">
+            Managed VPS, dedicated servers, shared hosting & enterprise infrastructure — powered by NVMe SSD, LiteSpeed, and 24/7 expert support.
           </p>
 
-          {/* Button group with CSS gaps controlled by media query above */}
-          <div className="hero-btns flex flex-col sm:flex-row justify-center w-full mb-5">
-            <Button
-              size="lg"
-              className="btn-gradient glow-effect text-lg md:text-xl px-12 h-16 rounded-2xl group font-bold shadow-lg hover:shadow-xl transition-all"
-              style={{ boxShadow: "var(--shadow-medium)" }}
-              onClick={handleRedirect}
-            >
-              Get Started
-              <ArrowRight className="ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="text-lg md:text-xl px-12 h-16 rounded-2xl border-2 border-foreground/20 hover:border-primary hover:bg-primary/10 transition-all font-semibold"
-              onClick={handleRedirect}
-            >
-              Start Free Trial
-            </Button>
+          {/* Feature pills */}
+          <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
+            {[
+              "NVMe SSD Storage",
+              "Free SSL & CDN",
+              "cPanel Included",
+              "Free Migration",
+            ].map((feature) => (
+              <div key={feature} className="flex items-center gap-1.5 text-sm font-medium text-foreground/80 bg-muted/50 px-3 py-1.5 rounded-full border border-border/50">
+                <CheckCircle2 className="w-3.5 h-3.5 text-primary" />
+                {feature}
+              </div>
+            ))}
           </div>
 
-          {/* Trust badges */}
-          <div className="hero-badges flex flex-wrap items-center justify-center text-sm md:text-base text-muted-foreground">
-            <div className="flex items-center gap-2 sm:gap-3">
-              <Shield className="w-4 h-4 md:w-5 md:h-5 text-primary" />
+          {/* CTA buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center w-full mb-10">
+            <Link to="/contact">
+              <Button
+                size="lg"
+                className="btn-gradient glow-effect text-lg md:text-xl px-12 h-16 rounded-2xl group font-bold shadow-lg hover:shadow-xl transition-all w-full sm:w-auto"
+                style={{ boxShadow: "var(--shadow-medium)" }}
+              >
+                Start Free Trial
+                <ArrowRight className="ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+            <Link to="/pricing">
+              <Button
+                size="lg"
+                variant="outline"
+                className="text-lg md:text-xl px-12 h-16 rounded-2xl border-2 border-foreground/20 hover:border-primary hover:bg-primary/10 transition-all font-semibold w-full sm:w-auto"
+              >
+                View Plans — From ₹79/mo
+              </Button>
+            </Link>
+          </div>
+
+          {/* Trust badges row */}
+          <div className="flex flex-wrap items-center justify-center gap-6 text-sm md:text-base text-muted-foreground mb-10">
+            <div className="flex items-center gap-2">
+              <Shield className="w-5 h-5 text-primary" />
               <span className="font-medium">99.99% Uptime SLA</span>
             </div>
-            <div className="flex items-center gap-2 sm:gap-3">
-              <Headphones className="w-4 h-4 md:w-5 md:h-5 text-primary" />
+            <div className="flex items-center gap-2">
+              <Headphones className="w-5 h-5 text-primary" />
               <span className="font-medium">24/7 Expert Support</span>
             </div>
-            <div className="flex items-center gap-2 sm:gap-3">
-              <Server className="w-4 h-4 md:w-5 md:h-5 text-primary" />
+            <div className="flex items-center gap-2">
+              <Server className="w-5 h-5 text-primary" />
               <span className="font-medium">Free Migration</span>
             </div>
-            <div className="flex items-center gap-2 sm:gap-3">
-              <Cloud className="w-4 h-4 md:w-5 md:h-5 text-primary" />
-              <span className="font-medium">cPanel & WHM</span>
+            <div className="flex items-center gap-2">
+              <Cloud className="w-5 h-5 text-primary" />
+              <span className="font-medium">15-Day Free Trial</span>
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Animated (marquee type) bar with single visible item at a time */}
-        <div className="hero-marquee relative w-full max-w-3xl">
-          <style>{`
-            @keyframes marquee-in {
-              0% { transform: translateY(50%); opacity: 0; }
-              15% { transform: translateY(0); opacity: 1; }
-              85% { transform: translateY(0); opacity: 1; }
-              100% { transform: translateY(-50%); opacity: 0; }
-            }
-            .marquee-animate {
-              animation: marquee-in 4.2s cubic-bezier(0.33, 1, 0.68, 1) both;
-              will-change: opacity,transform;
-            }
-          `}</style>
-          <div
-            className="overflow-hidden rounded-xl bg-gradient-to-l from-background/80 via-accent/5 to-background/80 border border-accent/20 shadow-md relative h-16 flex items-center justify-center"
-            style={{
-              maskImage: "linear-gradient(to right, transparent 0%, black 13%, black 87%, transparent 100%)",
-              WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 13%, black 87%, transparent 100%)",
-              minHeight: "4rem",
-            }}
-          >
-            <div className="absolute inset-0 flex items-center justify-center w-full h-full pointer-events-none select-none" aria-hidden="true">
-              {/* spacer for size stabilization */}
+        {/* Animated stats counter */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.7 }}
+          className="w-full max-w-4xl grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-8"
+        >
+          {[
+            { ...stat1, label: "Websites Hosted", icon: "🌐" },
+            { ...stat2, label: "Uptime Guaranteed", icon: "🛡️" },
+            { ...stat3, label: "Support Available", icon: "🎧" },
+            { ...stat4, label: "Free Trial", icon: "🚀" },
+          ].map((stat, i) => (
+            <div
+              key={i}
+              ref={stat.ref}
+              className="relative group bg-card/80 backdrop-blur-sm border border-border/50 rounded-2xl p-5 md:p-6 text-center hover:border-primary/30 transition-all hover:shadow-lg"
+            >
+              <div className="text-2xl mb-2">{stat.icon}</div>
+              <div className="text-3xl md:text-4xl font-black gradient-text tabular-nums">
+                {stat.value}{stat.suffix}
+              </div>
+              <div className="text-sm text-muted-foreground font-medium mt-1">{stat.label}</div>
             </div>
-            <div key={activeIdx} className="absolute w-full left-0 top-0 h-full flex items-center justify-center marquee-animate">
-              {/* Use span with role=link to simulate a link; click/keyboard will redirect */}
-              <span
-                tabIndex={0}
-                role="link"
-                className="flex items-center gap-3 text-lg md:text-xl font-semibold px-16 py-2 transition hover:text-primary focus:outline-none focus-visible:ring whitespace-nowrap cursor-pointer"
-                style={{
-                  opacity: 0.92,
-                  transition: "background .35s",
-                }}
-                onClick={handleMarqueeClick}
-                onKeyDown={handleMarqueeClick}
-                aria-label="Go to Contact page"
-              >
-                {MARQUEE_ITEMS[activeIdx].icon}
-                <span className="whitespace-nowrap">{MARQUEE_ITEMS[activeIdx].text}</span>
-              </span>
-            </div>
-          </div>
-        </div>
+          ))}
+        </motion.div>
       </div>
     </section>
   );
