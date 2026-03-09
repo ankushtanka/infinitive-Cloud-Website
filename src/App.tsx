@@ -1,9 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import Lenis from "lenis";
 import SupportWidget from "@/components/SupportWidget";
@@ -38,25 +38,44 @@ import CloudMigration from "./pages/solutions/CloudMigration";
 
 const queryClient = new QueryClient();
 
-const App = () => {
+const LenisProvider = ({ children }: { children: React.ReactNode }) => {
+  const lenisRef = useRef<Lenis | null>(null);
+  const location = useLocation();
+
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.8,
-      easing: (t) => 1 - Math.pow(1 - t, 4),
+      duration: 1.4,
+      easing: (t) => 1 - Math.pow(1 - t, 3),
       smoothWheel: true,
-      wheelMultiplier: 0.8,
-      touchMultiplier: 1.5,
+      wheelMultiplier: 1,
+      touchMultiplier: 2,
       infinite: false,
     });
 
+    lenisRef.current = lenis;
+
+    let rafId: number;
     function raf(time: number) {
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      rafId = requestAnimationFrame(raf);
     }
-    requestAnimationFrame(raf);
+    rafId = requestAnimationFrame(raf);
 
-    return () => lenis.destroy();
+    return () => {
+      cancelAnimationFrame(rafId);
+      lenis.destroy();
+    };
   }, []);
+
+  // Reset Lenis scroll position on route change
+  useEffect(() => {
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(0, { immediate: true });
+    }
+  }, [location.pathname]);
+
+  return <>{children}</>;
+};
 
   return (
   <QueryClientProvider client={queryClient}>
