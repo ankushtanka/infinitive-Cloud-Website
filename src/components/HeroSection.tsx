@@ -51,7 +51,7 @@ const HeroSection = () => {
   const stat1 = useCountUp(10000, 2500, "+");
   const stat2 = useCountUp(99, 2000, ".99%");
   const stat3 = useCountUp(24, 1500, "/7");
-  const stat4 = useCountUp(15, 1500, "-Day");
+  const stat4 = useCountUp(30, 1500, "-Day");
 
   return (
     <section className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-background pt-20">
@@ -176,6 +176,10 @@ const HeroSection = () => {
               <Cloud className="w-5 h-5 text-primary" />
               <span className="font-medium">15-Day Free Trial</span>
             </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-primary" />
+              <span className="font-medium">30-Day Money-Back</span>
+            </div>
           </div>
         </motion.div>
 
@@ -190,7 +194,7 @@ const HeroSection = () => {
             { ...stat1, label: "Websites Hosted", icon: "🌐" },
             { ...stat2, label: "Uptime Guaranteed", icon: "🛡️" },
             { ...stat3, label: "Support Available", icon: "🎧" },
-            { ...stat4, label: "Free Trial", icon: "🚀" },
+            { ...stat4, label: "Money-Back Guarantee", icon: "💰" },
           ].map((stat, i) => (
             <div
               key={i}
