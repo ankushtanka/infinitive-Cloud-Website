@@ -2,11 +2,30 @@ import { useState } from "react";
 import { MessageCircle, X, Phone, Headset } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+const TooltipContent = ({ label, isHovered }: { label: string; isHovered: boolean }) => (
+  <AnimatePresence mode="popLayout">
+    {isHovered && (
+      <motion.span
+        key={label}
+        layout
+        className="text-sm font-semibold whitespace-nowrap bg-foreground/90 text-background px-3 py-1.5 rounded-lg shadow-md"
+        initial={{ opacity: 0, x: 8 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: 8, transition: { duration: 0.08 } }}
+        transition={{ type: "spring", stiffness: 800, damping: 35 }}
+      >
+        {label}
+      </motion.span>
+    )}
+  </AnimatePresence>
+);
+
 const ActionButton = ({
   label,
   icon,
   className,
   onClick,
+  href,
   variants,
   isHovered,
   onHover,
@@ -15,42 +34,37 @@ const ActionButton = ({
   label: string;
   icon: React.ReactNode;
   className: string;
-  onClick: () => void;
+  onClick?: () => void;
+  href?: string;
   variants: any;
   isHovered: boolean;
   onHover: () => void;
   onLeave: () => void;
 }) => {
+  const sharedProps = {
+    className,
+    "aria-label": label,
+    variants,
+    transition: { type: "spring" as const, stiffness: 400, damping: 24 },
+    whileHover: { scale: 1.08 },
+    whileTap: { scale: 0.95 },
+    onHoverStart: onHover,
+    onHoverEnd: onLeave,
+  };
+
+  if (href) {
+    return (
+      <motion.a href={href} target="_blank" rel="noopener noreferrer" {...sharedProps}>
+        <TooltipContent label={label} isHovered={isHovered} />
+        <span className="flex items-center justify-center w-12 h-12 rounded-full">{icon}</span>
+      </motion.a>
+    );
+  }
+
   return (
-    <motion.button
-      onClick={onClick}
-      className={className}
-      aria-label={label}
-      variants={variants}
-      transition={{ type: "spring", stiffness: 400, damping: 24 }}
-      whileHover={{ scale: 1.08 }}
-      whileTap={{ scale: 0.95 }}
-      onHoverStart={onHover}
-      onHoverEnd={onLeave}
-    >
-      <AnimatePresence mode="popLayout">
-        {isHovered && (
-          <motion.span
-            key={label}
-            layout
-            className="text-sm font-semibold whitespace-nowrap bg-foreground/90 text-background px-3 py-1.5 rounded-lg shadow-md"
-            initial={{ opacity: 0, x: 8 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 8, transition: { duration: 0.08 } }}
-            transition={{ type: "spring", stiffness: 800, damping: 35 }}
-          >
-            {label}
-          </motion.span>
-        )}
-      </AnimatePresence>
-      <span className="flex items-center justify-center w-12 h-12 rounded-full">
-        {icon}
-      </span>
+    <motion.button onClick={onClick} {...sharedProps}>
+      <TooltipContent label={label} isHovered={isHovered} />
+      <span className="flex items-center justify-center w-12 h-12 rounded-full">{icon}</span>
     </motion.button>
   );
 };
