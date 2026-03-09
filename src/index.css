@@ -38,8 +38,8 @@ All colors MUST be HSL.
     --secondary: 217 91% 60%;
     --secondary-foreground: 0 0% 100%;
 
-    /* Accent - Cyan-Blue blend */
-    --accent: 199 89% 48%;
+    /* Accent - Cyan-Blue blend - darkened */
+    --accent: 199 89% 40%;
     --accent-foreground: 0 0% 100%;
 
     /* Muted backgrounds */
