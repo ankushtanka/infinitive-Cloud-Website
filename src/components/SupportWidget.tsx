@@ -129,6 +129,9 @@ const SupportWidget = () => {
                   icon={action.icon}
                   className={classes}
                   onClick={handleClick}
+                  isHovered={hoveredLabel === action.label}
+                  onHover={() => setHoveredLabel(action.label)}
+                  onLeave={() => setHoveredLabel(null)}
                   variants={{
                     open: { opacity: 1, y: 0, scale: 1 },
                     closed: { opacity: 0, y: 20, scale: 0.8 },
