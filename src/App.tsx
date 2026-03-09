@@ -77,48 +77,51 @@ const LenisProvider = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+const App = () => {
   return (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-          <ScrollToTop />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/careers" element={<Careers />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/sla" element={<SLA />} />
-            <Route path="/refund" element={<Refund />} />
-            <Route path="/solutions" element={<Solutions />} />
-            <Route path="/knowledgebase" element={<Knowledgebase />} />
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <LenisProvider>
+            <ScrollToTop />
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/pricing" element={<Pricing />} />
+              <Route path="/careers" element={<Careers />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/sla" element={<SLA />} />
+              <Route path="/refund" element={<Refund />} />
+              <Route path="/solutions" element={<Solutions />} />
+              <Route path="/knowledgebase" element={<Knowledgebase />} />
 
-            {/* Solution pages */}
-            <Route path="/solutions/shared-hosting" element={<SharedHosting />} />
-            <Route path="/solutions/vps-hosting" element={<VPSHosting />} />
-            <Route path="/solutions/cloud-hosting" element={<CloudHosting />} />
-            <Route path="/solutions/dedicated-servers" element={<DedicatedServers />} />
-            <Route path="/solutions/reseller-hosting" element={<ResellerHosting />} />
-            <Route path="/solutions/wordpress-hosting" element={<WordPressHosting />} />
-            <Route path="/solutions/gpu-dedicated-server" element={<GPUDedicatedServer />} />
-            <Route path="/solutions/streaming-servers" element={<StreamingServers />} />
-            <Route path="/solutions/ssl-certificates" element={<SSLCertificates />} />
-            <Route path="/solutions/domains" element={<DomainRegistration />} />
-            <Route path="/solutions/server-management" element={<ServerManagement />} />
-            <Route path="/solutions/cloud-migration" element={<CloudMigration />} />
+              {/* Solution pages */}
+              <Route path="/solutions/shared-hosting" element={<SharedHosting />} />
+              <Route path="/solutions/vps-hosting" element={<VPSHosting />} />
+              <Route path="/solutions/cloud-hosting" element={<CloudHosting />} />
+              <Route path="/solutions/dedicated-servers" element={<DedicatedServers />} />
+              <Route path="/solutions/reseller-hosting" element={<ResellerHosting />} />
+              <Route path="/solutions/wordpress-hosting" element={<WordPressHosting />} />
+              <Route path="/solutions/gpu-dedicated-server" element={<GPUDedicatedServer />} />
+              <Route path="/solutions/streaming-servers" element={<StreamingServers />} />
+              <Route path="/solutions/ssl-certificates" element={<SSLCertificates />} />
+              <Route path="/solutions/domains" element={<DomainRegistration />} />
+              <Route path="/solutions/server-management" element={<ServerManagement />} />
+              <Route path="/solutions/cloud-migration" element={<CloudMigration />} />
 
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <SupportWidget />
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <SupportWidget />
+          </LenisProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
   );
 };
 
