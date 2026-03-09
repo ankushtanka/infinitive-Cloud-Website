@@ -255,6 +255,10 @@ const Navigation = () => {
               <User className="w-5 h-5" />
               Login
             </a>
+            <div className="flex items-center justify-between py-4 px-4">
+              <span className="text-foreground font-bold text-lg">Dark Mode</span>
+              <ThemeToggle />
+            </div>
             <Link to="/contact" onClick={handleCloseMenus} className="mt-4">
               <Button className="btn-gradient glow-effect w-full h-14 text-lg">
                 Start Free Trial
