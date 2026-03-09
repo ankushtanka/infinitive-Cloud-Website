@@ -121,7 +121,7 @@ All colors MUST be HSL.
 
     --border: 217 33% 20%;
     --input: 217 33% 20%;
-    --ring: 186 100% 53%;
+    --ring: 186 100% 47%;
 
     --gradient-primary: linear-gradient(135deg, hsl(186 100% 53%), hsl(217 91% 60%));
     --gradient-secondary: linear-gradient(135deg, hsl(199 89% 48%), hsl(186 100% 53%));
