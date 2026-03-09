@@ -7,7 +7,7 @@ import ServicesMegaMenu from "@/components/ServicesMegaMenu";
 import CurrencyLanguageDropdown from "@/components/CurrencyLanguageDropdown";
 import ThemeToggle from "@/components/ThemeToggle";
 
-const WHMCS_LOGIN = "https://panel.infinitivecloud.com";
+const WHMCS_LOGIN = "https://billing.infinitivecloud.com";
 
 const serviceLinks = [
   {
