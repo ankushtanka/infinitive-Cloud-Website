@@ -116,27 +116,17 @@ const SupportWidget = () => {
               };
 
               return (
-                <motion.button
+                <ActionButton
                   key={action.label}
-                  onClick={handleClick}
+                  label={action.label}
+                  icon={action.icon}
                   className={classes}
-                  aria-label={action.label}
+                  onClick={handleClick}
                   variants={{
                     open: { opacity: 1, y: 0, scale: 1 },
                     closed: { opacity: 0, y: 20, scale: 0.8 },
                   }}
-                  transition={{ type: "spring", stiffness: 400, damping: 24 }}
-                >
-                  <ActionButton
-                    label={action.label}
-                    icon={action.icon}
-                    className={classes}
-                    onClick={handleClick}
-                    variants={{
-                      open: { opacity: 1, y: 0, scale: 1 },
-                      closed: { opacity: 0, y: 20, scale: 0.8 },
-                    }}
-                  />
+                />
               );
             })}
           </motion.div>
