@@ -157,6 +157,7 @@ const Navigation = () => {
 
               {/* Utility icons like spaceship.com */}
               <CurrencyLanguageDropdown />
+              <ThemeToggle />
 
               <a
                 href={WHMCS_LOGIN}
