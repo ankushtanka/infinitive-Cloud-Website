@@ -77,7 +77,7 @@ const HomePricingSection = () => {
             Hosting Plans That <span className="gradient-text">Scale With You</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Enterprise-grade infrastructure at India's most competitive prices. All plans include free SSL, 24/7 support, 99.99% uptime SLA, and a 15-day free trial.
+            Enterprise-grade infrastructure at India's most competitive prices. All plans include free SSL, 24/7 support, 99.99% uptime SLA, a 15-day free trial, and a 30-day money-back guarantee.
           </p>
         </div>
 
