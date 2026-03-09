@@ -62,10 +62,10 @@ const Index = () => {
       <main id="main-content">
         <HeroSection />
         <TechLogosSection />
+        <DomainSearchSection />
         <HomePricingSection />
         <WhatWeDoSection />
         <HowItWorksSection />
-        <DomainSearchSection />
         <DomainPriceComparison />
         <WhyTrustUsSection />
         <ComparisonSection />
