@@ -5,6 +5,7 @@ import { Menu, X, ChevronDown, User } from "lucide-react";
 import logo from "@/assets/logo-icon.png";
 import ServicesMegaMenu from "@/components/ServicesMegaMenu";
 import CurrencyLanguageDropdown from "@/components/CurrencyLanguageDropdown";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const WHMCS_LOGIN = "https://billing.infinitivecloud.com/clientarea.php";
 
@@ -156,6 +157,7 @@ const Navigation = () => {
 
               {/* Utility icons like spaceship.com */}
               <CurrencyLanguageDropdown />
+              <ThemeToggle />
 
               <a
                 href={WHMCS_LOGIN}
