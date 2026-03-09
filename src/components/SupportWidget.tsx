@@ -2,6 +2,53 @@ import { useState } from "react";
 import { MessageCircle, X, Phone, Headset } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+const ActionButton = ({
+  label,
+  icon,
+  className,
+  onClick,
+  variants,
+}: {
+  label: string;
+  icon: React.ReactNode;
+  className: string;
+  onClick: () => void;
+  variants: any;
+}) => {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <motion.button
+      onClick={onClick}
+      className={className}
+      aria-label={label}
+      variants={variants}
+      transition={{ type: "spring", stiffness: 400, damping: 24 }}
+      whileHover={{ scale: 1.08 }}
+      whileTap={{ scale: 0.95 }}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+    >
+      <AnimatePresence>
+        {hovered && (
+          <motion.span
+            className="text-sm font-semibold whitespace-nowrap bg-foreground/90 text-background px-3 py-1.5 rounded-lg shadow-md"
+            initial={{ opacity: 0, x: 12, scale: 0.9 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: 12, scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 500, damping: 28 }}
+          >
+            {label}
+          </motion.span>
+        )}
+      </AnimatePresence>
+      <span className="flex items-center justify-center w-12 h-12 rounded-full">
+        {icon}
+      </span>
+    </motion.button>
+  );
+};
+
 const WHATSAPP_NUMBER = "918690393087";
 const PHONE_NUMBER = "+918690393087";
 
