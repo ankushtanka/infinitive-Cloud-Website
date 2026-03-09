@@ -190,7 +190,7 @@ const HeroSection = () => {
             { ...stat1, label: "Websites Hosted", icon: "🌐" },
             { ...stat2, label: "Uptime Guaranteed", icon: "🛡️" },
             { ...stat3, label: "Support Available", icon: "🎧" },
-            { ...stat4, label: "Free Trial", icon: "🚀" },
+            { ...stat4, label: "Money-Back Guarantee", icon: "💰" },
           ].map((stat, i) => (
             <div
               key={i}
