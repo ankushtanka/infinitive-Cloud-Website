@@ -75,7 +75,7 @@ export const createServiceSchema = (
     "@type": "Organization",
     "name": "Infinitive Cloud",
     "url": "https://infinitivecloud.com",
-    "telephone": "+91-7737393087",
+    "telephone": "+91-8690393087",
     "email": "info@infinitivecloud.com"
   },
   "url": url,

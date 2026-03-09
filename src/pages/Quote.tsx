@@ -178,7 +178,7 @@ const Quote = () => {
                           required
                           value={formData.phone}
                           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          placeholder="+91 7737393087"
+                          placeholder="+91 8690393087"
                         />
                       </div>
                     </div>
