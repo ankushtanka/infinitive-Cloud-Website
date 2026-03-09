@@ -52,44 +52,32 @@ const SupportWidget = () => {
         }`}
       >
         {actions.map((action) => {
-          const classes = `group flex items-center gap-3 ${action.bg} ${action.hover} text-white rounded-full shadow-lg transition-all duration-200 active:scale-95`;
+          const classes = `group flex items-center gap-3 ${action.bg} ${action.hover} text-white rounded-full shadow-lg transition-all duration-200 active:scale-95 cursor-pointer`;
 
-          const inner = (
-            <>
+          const handleClick = () => {
+            if (action.href) {
+              window.open(action.href, "_blank", "noopener,noreferrer");
+            } else if (action.onClick) {
+              action.onClick();
+            }
+          };
+
+          return (
+            <button
+              key={action.label}
+              onClick={handleClick}
+              className={classes}
+              aria-label={action.label}
+            >
               <span className="hidden group-hover:inline-block text-sm font-semibold whitespace-nowrap bg-foreground/90 text-background px-3 py-1.5 rounded-lg shadow-md">
                 {action.label}
               </span>
               <span className="flex items-center justify-center w-12 h-12 rounded-full">
                 {action.icon}
               </span>
-            </>
-          );
-
-          if (action.href) {
-            return (
-              <a
-                key={action.label}
-                href={action.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={classes}
-                aria-label={action.label}
-              >
-                {inner}
-              </a>
-            );
-          }
-
-          return (
-            <button
-              key={action.label}
-              onClick={action.onClick}
-              className={classes}
-              aria-label={action.label}
-            >
-              {inner}
             </button>
           );
+        })}
         })}
       </div>
 
