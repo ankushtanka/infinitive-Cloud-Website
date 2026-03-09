@@ -54,7 +54,7 @@ const HeroSection = () => {
   const stat4 = useCountUp(30, 1500, "-Day");
 
   return (
-    <section className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-background pt-20">
+    <section className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-background pt-16 lg:pt-24">
       {/* Animated gradient background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-background via-muted/30 to-background" />
