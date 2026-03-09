@@ -227,27 +227,24 @@ const ServicesMegaMenu = ({ onClose, onMouseEnter, onMouseLeave, initialCategory
                     ))}
                   </div>
 
-                  {/* Featured highlight for the category */}
-                  <div className="mt-5 pt-4 border-t border-border/50">
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <Star className="w-3.5 h-3.5 text-primary" />
-                        <span>15-Day Free Trial</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <ShieldCheck className="w-3.5 h-3.5 text-primary" />
-                        <span>30-Day Money-Back</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <Crown className="w-3.5 h-3.5 text-primary" />
-                        <span>Free Migration</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <Sparkles className="w-3.5 h-3.5 text-primary" />
-                        <span>Free SSL & CDN</span>
+                  {/* Featured highlight - only for Hosting & Servers */}
+                  {(activeData.heading === "Hosting" || activeData.heading === "Servers") && (
+                    <div className="mt-5 pt-4 border-t border-border/50">
+                      <div className="flex items-center gap-3 flex-wrap">
+                        {[
+                          { icon: <Star className="w-3.5 h-3.5" />, text: "15-Day Free Trial" },
+                          { icon: <ShieldCheck className="w-3.5 h-3.5" />, text: "30-Day Money-Back" },
+                          { icon: <Crown className="w-3.5 h-3.5" />, text: "Free Migration" },
+                          { icon: <Sparkles className="w-3.5 h-3.5" />, text: "Free SSL & CDN" },
+                        ].map((item) => (
+                          <div key={item.text} className="flex items-center gap-1.5 bg-primary/10 text-primary text-xs font-bold px-3 py-1.5 rounded-full border border-primary/20">
+                            {item.icon}
+                            <span>{item.text}</span>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               )}
             </div>
