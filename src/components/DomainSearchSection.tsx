@@ -113,7 +113,7 @@ const DomainSearchSection = () => {
             Find Your Perfect <span className="gradient-text">Domain Name</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-
+            Register your domain at India's lowest prices — cheaper than GoDaddy, Hostinger & Namecheap. Free WHOIS privacy included.
           </p>
         </div>
 
