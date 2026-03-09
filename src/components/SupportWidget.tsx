@@ -8,15 +8,19 @@ const ActionButton = ({
   className,
   onClick,
   variants,
+  isHovered,
+  onHover,
+  onLeave,
 }: {
   label: string;
   icon: React.ReactNode;
   className: string;
   onClick: () => void;
   variants: any;
+  isHovered: boolean;
+  onHover: () => void;
+  onLeave: () => void;
 }) => {
-  const [hovered, setHovered] = useState(false);
-
   return (
     <motion.button
       onClick={onClick}
@@ -26,19 +30,19 @@ const ActionButton = ({
       transition={{ type: "spring", stiffness: 400, damping: 24 }}
       whileHover={{ scale: 1.08 }}
       whileTap={{ scale: 0.95 }}
-      onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
+      onHoverStart={onHover}
+      onHoverEnd={onLeave}
     >
       <AnimatePresence mode="popLayout">
-        {hovered && (
+        {isHovered && (
           <motion.span
             key={label}
             layout
             className="text-sm font-semibold whitespace-nowrap bg-foreground/90 text-background px-3 py-1.5 rounded-lg shadow-md"
             initial={{ opacity: 0, x: 8 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 8, transition: { duration: 0.1 } }}
-            transition={{ type: "spring", stiffness: 600, damping: 30 }}
+            exit={{ opacity: 0, x: 8, transition: { duration: 0.08 } }}
+            transition={{ type: "spring", stiffness: 800, damping: 35 }}
           >
             {label}
           </motion.span>
@@ -56,6 +60,7 @@ const PHONE_NUMBER = "+918690393087";
 
 const SupportWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [hoveredLabel, setHoveredLabel] = useState<string | null>(null);
 
   const openTawk = () => {
     if (typeof window !== "undefined" && (window as any).Tawk_API) {
@@ -124,6 +129,9 @@ const SupportWidget = () => {
                   icon={action.icon}
                   className={classes}
                   onClick={handleClick}
+                  isHovered={hoveredLabel === action.label}
+                  onHover={() => setHoveredLabel(action.label)}
+                  onLeave={() => setHoveredLabel(null)}
                   variants={{
                     open: { opacity: 1, y: 0, scale: 1 },
                     closed: { opacity: 0, y: 20, scale: 0.8 },
