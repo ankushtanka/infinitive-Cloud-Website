@@ -39,7 +39,7 @@ const HeroSection = () => {
 
   const offers = [
     { text: "🔥 Limited Time: Get 50% OFF on first 3 months", code: "WELCOME50" },
-    { text: "🚀 Start your 7-day Free Trial — No credit card required", code: null },
+    { text: "🚀 Start your 15-day Free Trial — No credit card required", code: null },
     { text: "⚡ Hosting starting at just ₹79/mo — Launch today!", code: null },
   ];
 
