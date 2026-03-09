@@ -28,18 +28,18 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
-    /* Primary brand - Cyan (matching logo) */
-    --primary: 186 100% 53%;
+    /* Primary brand - Cyan (matching logo) - darkened for readability */
+    --primary: 186 100% 40%;
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 186 100% 45%;
-    --primary-glow: 186 100% 60%;
+    --primary-hover: 186 100% 35%;
+    --primary-glow: 186 100% 50%;
 
     /* Secondary - Blue (matching logo) */
     --secondary: 217 91% 60%;
     --secondary-foreground: 0 0% 100%;
 
-    /* Accent - Cyan-Blue blend */
-    --accent: 199 89% 48%;
+    /* Accent - Cyan-Blue blend - darkened */
+    --accent: 199 89% 40%;
     --accent-foreground: 0 0% 100%;
 
     /* Muted backgrounds */
@@ -53,14 +53,14 @@ All colors MUST be HSL.
     /* Borders and inputs */
     --border: 214 32% 91%;
     --input: 214 32% 91%;
-    --ring: 186 100% 53%;
+    --ring: 186 100% 40%;
 
     /* Gradients - Premium Cyan to Blue */
-    --gradient-primary: linear-gradient(135deg, hsl(186 100% 53%), hsl(217 91% 60%));
-    --gradient-secondary: linear-gradient(135deg, hsl(199 89% 48%), hsl(186 100% 53%));
+    --gradient-primary: linear-gradient(135deg, hsl(186 100% 40%), hsl(217 91% 60%));
+    --gradient-secondary: linear-gradient(135deg, hsl(199 89% 40%), hsl(186 100% 40%));
     --gradient-hero: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(210 40% 98%) 100%);
     --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 40% 98%) 100%);
-    --gradient-glow: radial-gradient(circle at 50% 50%, hsl(186 100% 53% / 0.15), transparent 70%);
+    --gradient-glow: radial-gradient(circle at 50% 50%, hsl(186 100% 40% / 0.15), transparent 70%);
 
     /* Shadows - Premium with cyan glow */
     --shadow-soft: 0 2px 8px -2px hsl(186 100% 53% / 0.08);
@@ -102,10 +102,10 @@ All colors MUST be HSL.
     --popover: 222 47% 13%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 186 100% 53%;
+    --primary: 186 100% 47%;
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 186 100% 60%;
-    --primary-glow: 186 100% 60%;
+    --primary-hover: 186 100% 55%;
+    --primary-glow: 186 100% 55%;
 
     --secondary: 217 91% 60%;
     --secondary-foreground: 0 0% 100%;
@@ -121,7 +121,7 @@ All colors MUST be HSL.
 
     --border: 217 33% 20%;
     --input: 217 33% 20%;
-    --ring: 186 100% 53%;
+    --ring: 186 100% 47%;
 
     --gradient-primary: linear-gradient(135deg, hsl(186 100% 53%), hsl(217 91% 60%));
     --gradient-secondary: linear-gradient(135deg, hsl(199 89% 48%), hsl(186 100% 53%));
