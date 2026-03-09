@@ -102,10 +102,10 @@ All colors MUST be HSL.
     --popover: 222 47% 13%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 186 100% 53%;
+    --primary: 186 100% 47%;
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 186 100% 60%;
-    --primary-glow: 186 100% 60%;
+    --primary-hover: 186 100% 55%;
+    --primary-glow: 186 100% 55%;
 
     --secondary: 217 91% 60%;
     --secondary-foreground: 0 0% 100%;
