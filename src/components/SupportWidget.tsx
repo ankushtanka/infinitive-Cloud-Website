@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { MessageCircle, X, Phone, Headset } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const WHATSAPP_NUMBER = "918690393087";
 const PHONE_NUMBER = "+918690393087";
@@ -44,54 +45,72 @@ const SupportWidget = () => {
   return (
     <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-end gap-3">
       {/* Action buttons */}
-      <div
-        className={`flex flex-col items-end gap-2.5 transition-all duration-300 ${
-          isOpen
-            ? "opacity-100 translate-y-0 pointer-events-auto"
-            : "opacity-0 translate-y-4 pointer-events-none"
-        }`}
-      >
-        {actions.map((action) => {
-          const classes = `group flex items-center gap-3 ${action.bg} ${action.hover} text-white rounded-full shadow-lg transition-all duration-200 active:scale-95 cursor-pointer`;
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            className="flex flex-col items-end gap-2.5"
+            initial="closed"
+            animate="open"
+            exit="closed"
+            variants={{
+              open: { transition: { staggerChildren: 0.07, delayChildren: 0.05 } },
+              closed: { transition: { staggerChildren: 0.04, staggerDirection: -1 } },
+            }}
+          >
+            {actions.map((action) => {
+              const classes = `group flex items-center gap-3 ${action.bg} ${action.hover} text-white rounded-full shadow-lg cursor-pointer`;
 
-          const handleClick = () => {
-            if (action.href) {
-              window.open(action.href, "_blank", "noopener,noreferrer");
-            } else if (action.onClick) {
-              action.onClick();
-            }
-          };
+              const handleClick = () => {
+                if (action.href) {
+                  window.open(action.href, "_blank", "noopener,noreferrer");
+                } else if (action.onClick) {
+                  action.onClick();
+                }
+              };
 
-          return (
-            <button
-              key={action.label}
-              onClick={handleClick}
-              className={classes}
-              aria-label={action.label}
-            >
-              <span className="hidden group-hover:inline-block text-sm font-semibold whitespace-nowrap bg-foreground/90 text-background px-3 py-1.5 rounded-lg shadow-md">
-                {action.label}
-              </span>
-              <span className="flex items-center justify-center w-12 h-12 rounded-full">
-                {action.icon}
-              </span>
-            </button>
-          );
-        })}
-      </div>
+              return (
+                <motion.button
+                  key={action.label}
+                  onClick={handleClick}
+                  className={classes}
+                  aria-label={action.label}
+                  variants={{
+                    open: { opacity: 1, y: 0, scale: 1 },
+                    closed: { opacity: 0, y: 20, scale: 0.8 },
+                  }}
+                  transition={{ type: "spring", stiffness: 400, damping: 24 }}
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <span className="hidden group-hover:inline-block text-sm font-semibold whitespace-nowrap bg-foreground/90 text-background px-3 py-1.5 rounded-lg shadow-md">
+                    {action.label}
+                  </span>
+                  <span className="flex items-center justify-center w-12 h-12 rounded-full">
+                    {action.icon}
+                  </span>
+                </motion.button>
+              );
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Main toggle button */}
-      <button
+      <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center justify-center w-14 h-14 rounded-full shadow-xl transition-all duration-300 active:scale-90 ${
+        className={`flex items-center justify-center w-14 h-14 rounded-full shadow-xl ${
           isOpen
-            ? "bg-foreground text-background rotate-0"
+            ? "bg-foreground text-background"
             : "bg-primary text-primary-foreground animate-pulse-glow"
         }`}
         aria-label={isOpen ? "Close support menu" : "Open support menu"}
+        animate={{ rotate: isOpen ? 180 : 0 }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
       >
         {isOpen ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
-      </button>
+      </motion.button>
     </div>
   );
 };
