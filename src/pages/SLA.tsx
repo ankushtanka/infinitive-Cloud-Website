@@ -153,7 +153,7 @@ const SLA = () => {
               </p>
               <ul className="space-y-2">
                 <li><strong>Technical Support:</strong> <a href="mailto:support@infinitivecloud.com" className="text-primary hover:underline">support@infinitivecloud.com</a></li>
-                <li><strong>Phone:</strong> <a href="tel:+917737393087" className="text-primary hover:underline">+91 7737393087</a></li>
+                <li><strong>Phone:</strong> <a href="tel:+918690393087" className="text-primary hover:underline">+91 8690393087</a></li>
                 <li><strong>Address:</strong> Navrangpura, Ahmedabad, India</li>
               </ul>
             </section>

@@ -153,7 +153,7 @@ const ContactForm = () => {
             name="phone"
             required
             className="w-full rounded border px-3 py-2"
-            placeholder="+91 7737393087"
+            placeholder="+91 8690393087"
             autoComplete="tel"
             disabled={submitting}
           />

@@ -126,7 +126,7 @@ const Terms = () => {
               </p>
               <ul className="space-y-2">
                 <li><strong>Email:</strong> <a href="mailto:info@infinitivecloud.com" className="text-primary hover:underline">info@infinitivecloud.com</a></li>
-                <li><strong>Phone:</strong> <a href="tel:+917737393087" className="text-primary hover:underline">+91 7737393087</a></li>
+                <li><strong>Phone:</strong> <a href="tel:+918690393087" className="text-primary hover:underline">+91 8690393087</a></li>
                 <li><strong>Address:</strong> Navrangpura, Ahmedabad, India</li>
               </ul>
             </section>
