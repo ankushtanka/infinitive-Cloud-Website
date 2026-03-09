@@ -54,25 +54,25 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 mb-8">
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-3 mb-4 group">
-              <div className="relative bg-muted p-2 rounded-lg">
+              <div className="relative bg-background p-2 rounded-lg">
                 <img src={logo} alt="Infinitive Cloud Logo" className="h-10 w-auto" />
               </div>
               <div className="flex flex-col">
-                <span className="text-lg font-bold text-foreground">INFINITIVE CLOUD</span>
-                <span className="text-xs font-medium text-muted-foreground">PRIVATE LIMITED</span>
+                <span className="text-lg font-black text-foreground">INFINITIVE <span className="text-primary">CLOUD</span></span>
+                <span className="text-xs font-semibold text-foreground/60 tracking-wide">PRIVATE LIMITED</span>
               </div>
             </Link>
-            <p className="text-muted-foreground mb-4 max-w-sm text-sm">
+            <p className="text-foreground/70 mb-4 max-w-sm text-sm leading-relaxed">
               Premium cloud & web hosting solutions built for speed, security, and scale. Trusted by 1,000+ businesses across India.
             </p>
-            <div className="space-y-1 text-xs text-muted-foreground mb-3">
-              <p><span className="font-medium">GSTIN:</span> 08AAICI5380A1ZP</p>
-              <p><span className="font-medium">CIN:</span> U62020RJ2025PTC109151</p>
+            <div className="space-y-1 text-xs text-foreground/60 mb-4">
+              <p><span className="font-semibold text-foreground/80">GSTIN:</span> 08AAICI5380A1ZP</p>
+              <p><span className="font-semibold text-foreground/80">CIN:</span> U62020RJ2025PTC109151</p>
             </div>
-            <div className="space-y-2 text-sm text-muted-foreground">
+            <div className="space-y-2.5 text-sm text-foreground/75">
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-primary" />
-                <a href="tel:+918690393087" className="hover:text-primary transition-colors">+91 8690393087</a>
+                <a href="tel:+918690393087" className="hover:text-primary transition-colors font-medium">+91 8690393087</a>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-primary" />
@@ -91,11 +91,11 @@ const Footer = () => {
 
           {footerSections.map(section => (
             <div key={section.title}>
-              <h4 className="font-semibold mb-4">{section.title}</h4>
-              <ul className="space-y-2">
+              <h4 className="font-bold text-foreground mb-4">{section.title}</h4>
+              <ul className="space-y-2.5">
                 {section.links.map(link => (
                   <li key={link.label}>
-                    <Link to={link.path} className="text-muted-foreground hover:text-foreground transition-colors text-sm">
+                    <Link to={link.path} className="text-foreground/70 hover:text-primary transition-colors text-sm">
                       {link.label}
                     </Link>
                   </li>
@@ -106,13 +106,13 @@ const Footer = () => {
         </div>
 
         <div className="pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-foreground/60">
             © {currentYear} Infinitive Cloud Private Limited. All rights reserved.
           </p>
-          <div className="flex gap-6 text-sm text-muted-foreground">
-            <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
-            <Link to="/terms" className="hover:text-foreground transition-colors">Terms of Service</Link>
-            <Link to="/sla" className="hover:text-foreground transition-colors">SLA</Link>
+          <div className="flex gap-6 text-sm text-foreground/60">
+            <Link to="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>
+            <Link to="/terms" className="hover:text-primary transition-colors">Terms of Service</Link>
+            <Link to="/sla" className="hover:text-primary transition-colors">SLA</Link>
           </div>
         </div>
       </div>
