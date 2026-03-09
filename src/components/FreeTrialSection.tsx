@@ -11,11 +11,11 @@ const FreeTrialSection = () => {
 
   const benefits = [
     "15 Days Free Cloud Hosting",
+    "30-Day Money-Back Guarantee",
     "No Setup Fees or Hidden Charges",
     "No Credit Card Required",
     "Full Feature Access",
     "Free Migration Included",
-    "Cancel Anytime — No Risk",
   ];
 
   return (
