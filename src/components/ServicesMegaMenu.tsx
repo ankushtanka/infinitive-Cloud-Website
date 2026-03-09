@@ -262,6 +262,23 @@ const ServicesMegaMenu = ({ onClose, onMouseEnter, onMouseLeave, initialCategory
                       </div>
                     </div>
                   )}
+                  {activeData.heading === "Solutions" && (
+                    <div className="mt-5 pt-4 border-t border-border/50">
+                      <div className="flex items-center gap-3 flex-wrap">
+                        {[
+                          { icon: <Code className="w-3.5 h-3.5" />, text: "Agile Development" },
+                          { icon: <ShieldCheck className="w-3.5 h-3.5" />, text: "Source Code Ownership" },
+                          { icon: <Star className="w-3.5 h-3.5" />, text: "Post-Launch Support" },
+                          { icon: <Sparkles className="w-3.5 h-3.5" />, text: "NDA Protected" },
+                        ].map((item) => (
+                          <div key={item.text} className="flex items-center gap-1.5 bg-primary/10 text-primary text-xs font-bold px-3 py-1.5 rounded-full border border-primary/20">
+                            {item.icon}
+                            <span>{item.text}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
