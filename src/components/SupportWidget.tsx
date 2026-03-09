@@ -126,16 +126,17 @@ const SupportWidget = () => {
                     closed: { opacity: 0, y: 20, scale: 0.8 },
                   }}
                   transition={{ type: "spring", stiffness: 400, damping: 24 }}
-                  whileHover={{ scale: 1.08 }}
-                  whileTap={{ scale: 0.95 }}
                 >
-                  <span className="hidden group-hover:inline-block text-sm font-semibold whitespace-nowrap bg-foreground/90 text-background px-3 py-1.5 rounded-lg shadow-md">
-                    {action.label}
-                  </span>
-                  <span className="flex items-center justify-center w-12 h-12 rounded-full">
-                    {action.icon}
-                  </span>
-                </motion.button>
+                  <ActionButton
+                    label={action.label}
+                    icon={action.icon}
+                    className={classes}
+                    onClick={handleClick}
+                    variants={{
+                      open: { opacity: 1, y: 0, scale: 1 },
+                      closed: { opacity: 0, y: 20, scale: 0.8 },
+                    }}
+                  />
               );
             })}
           </motion.div>
