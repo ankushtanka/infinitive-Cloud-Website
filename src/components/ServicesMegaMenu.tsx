@@ -92,6 +92,14 @@ interface ServicesMegaMenuProps {
 
 const ServicesMegaMenu = ({ onClose, onMouseEnter, onMouseLeave, initialCategory }: ServicesMegaMenuProps) => {
   const [activeCategory, setActiveCategory] = useState<string>(initialCategory || serviceCategories[0].heading);
+  
+  // Sync with parent when initialCategory changes (e.g., hovering different nav links)
+  useEffect(() => {
+    if (initialCategory) {
+      setActiveCategory(initialCategory);
+    }
+  }, [initialCategory]);
+
   const activeData = serviceCategories.find(c => c.heading === activeCategory);
 
   return (
