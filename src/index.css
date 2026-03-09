@@ -150,9 +150,21 @@ All colors MUST be HSL.
   }
 
   html {
-    /* Lenis handles smooth scrolling */
     scroll-padding-top: 5rem;
     overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  html.lenis, html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
   }
 
   body {
@@ -160,6 +172,7 @@ All colors MUST be HSL.
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   /* Smooth momentum scrolling on iOS */

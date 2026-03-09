@@ -1,9 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import Lenis from "lenis";
 import SupportWidget from "@/components/SupportWidget";
@@ -38,68 +38,90 @@ import CloudMigration from "./pages/solutions/CloudMigration";
 
 const queryClient = new QueryClient();
 
-const App = () => {
+const LenisProvider = ({ children }: { children: React.ReactNode }) => {
+  const lenisRef = useRef<Lenis | null>(null);
+  const location = useLocation();
+
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.8,
-      easing: (t) => 1 - Math.pow(1 - t, 4),
+      duration: 1.4,
+      easing: (t) => 1 - Math.pow(1 - t, 3),
       smoothWheel: true,
-      wheelMultiplier: 0.8,
-      touchMultiplier: 1.5,
+      wheelMultiplier: 1,
+      touchMultiplier: 2,
       infinite: false,
     });
 
+    lenisRef.current = lenis;
+
+    let rafId: number;
     function raf(time: number) {
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      rafId = requestAnimationFrame(raf);
     }
-    requestAnimationFrame(raf);
+    rafId = requestAnimationFrame(raf);
 
-    return () => lenis.destroy();
+    return () => {
+      cancelAnimationFrame(rafId);
+      lenis.destroy();
+    };
   }, []);
 
+  // Reset Lenis scroll position on route change
+  useEffect(() => {
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(0, { immediate: true });
+    }
+  }, [location.pathname]);
+
+  return <>{children}</>;
+};
+
+const App = () => {
   return (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-          <ScrollToTop />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/careers" element={<Careers />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/sla" element={<SLA />} />
-            <Route path="/refund" element={<Refund />} />
-            <Route path="/solutions" element={<Solutions />} />
-            <Route path="/knowledgebase" element={<Knowledgebase />} />
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <LenisProvider>
+            <ScrollToTop />
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/pricing" element={<Pricing />} />
+              <Route path="/careers" element={<Careers />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/sla" element={<SLA />} />
+              <Route path="/refund" element={<Refund />} />
+              <Route path="/solutions" element={<Solutions />} />
+              <Route path="/knowledgebase" element={<Knowledgebase />} />
 
-            {/* Solution pages */}
-            <Route path="/solutions/shared-hosting" element={<SharedHosting />} />
-            <Route path="/solutions/vps-hosting" element={<VPSHosting />} />
-            <Route path="/solutions/cloud-hosting" element={<CloudHosting />} />
-            <Route path="/solutions/dedicated-servers" element={<DedicatedServers />} />
-            <Route path="/solutions/reseller-hosting" element={<ResellerHosting />} />
-            <Route path="/solutions/wordpress-hosting" element={<WordPressHosting />} />
-            <Route path="/solutions/gpu-dedicated-server" element={<GPUDedicatedServer />} />
-            <Route path="/solutions/streaming-servers" element={<StreamingServers />} />
-            <Route path="/solutions/ssl-certificates" element={<SSLCertificates />} />
-            <Route path="/solutions/domains" element={<DomainRegistration />} />
-            <Route path="/solutions/server-management" element={<ServerManagement />} />
-            <Route path="/solutions/cloud-migration" element={<CloudMigration />} />
+              {/* Solution pages */}
+              <Route path="/solutions/shared-hosting" element={<SharedHosting />} />
+              <Route path="/solutions/vps-hosting" element={<VPSHosting />} />
+              <Route path="/solutions/cloud-hosting" element={<CloudHosting />} />
+              <Route path="/solutions/dedicated-servers" element={<DedicatedServers />} />
+              <Route path="/solutions/reseller-hosting" element={<ResellerHosting />} />
+              <Route path="/solutions/wordpress-hosting" element={<WordPressHosting />} />
+              <Route path="/solutions/gpu-dedicated-server" element={<GPUDedicatedServer />} />
+              <Route path="/solutions/streaming-servers" element={<StreamingServers />} />
+              <Route path="/solutions/ssl-certificates" element={<SSLCertificates />} />
+              <Route path="/solutions/domains" element={<DomainRegistration />} />
+              <Route path="/solutions/server-management" element={<ServerManagement />} />
+              <Route path="/solutions/cloud-migration" element={<CloudMigration />} />
 
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <SupportWidget />
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <SupportWidget />
+          </LenisProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
   );
 };
 
