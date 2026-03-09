@@ -139,11 +139,25 @@ const SupportWidget = () => {
         className={`flex items-center justify-center w-14 h-14 rounded-full shadow-xl ${
           isOpen
             ? "bg-foreground text-background"
-            : "bg-primary text-primary-foreground animate-pulse-glow"
+            : "bg-primary text-primary-foreground"
         }`}
         aria-label={isOpen ? "Close support menu" : "Open support menu"}
-        animate={{ rotate: isOpen ? 180 : 0 }}
-        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        animate={
+          isOpen
+            ? { rotate: 180, y: 0 }
+            : {
+                rotate: 0,
+                y: [0, -6, 0, -3, 0],
+              }
+        }
+        transition={
+          isOpen
+            ? { type: "spring", stiffness: 300, damping: 20 }
+            : {
+                y: { duration: 1.8, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" },
+                rotate: { type: "spring", stiffness: 300, damping: 20 },
+              }
+        }
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >
