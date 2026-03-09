@@ -1,61 +1,49 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, User, ArrowRight } from "lucide-react";
+import { Menu, X, ChevronDown, User } from "lucide-react";
 import logo from "@/assets/logo-icon.png";
+import ServicesMegaMenu from "@/components/ServicesMegaMenu";
 import CurrencyLanguageDropdown from "@/components/CurrencyLanguageDropdown";
 
 const WHMCS_LOGIN = "https://billing.infinitivecloud.com/clientarea.php";
 
-interface DropdownItem {
-  label: string;
-  path: string;
-}
-
-interface NavDropdown {
-  label: string;
-  items: DropdownItem[];
-}
-
-const dropdowns: NavDropdown[] = [
+const serviceLinks = [
   {
-    label: "Hosting",
-    items: [
-      { label: "Shared Hosting", path: "/solutions/shared-hosting" },
-      { label: "WordPress Hosting", path: "/solutions/wordpress-hosting" },
+    heading: "Hosting",
+    links: [
+      { label: "Web Hosting", path: "/solutions/shared-hosting" },
       { label: "Cloud Hosting", path: "/solutions/cloud-hosting" },
+      { label: "Reseller Hosting", path: "/solutions/reseller-hosting" },
+      { label: "WordPress Hosting", path: "/solutions/wordpress-hosting" },
+      { label: "WooCommerce Hosting", path: "/solutions/woocommerce-hosting" },
+      { label: "Node.js Hosting", path: "/solutions/nodejs-hosting" },
     ],
   },
   {
-    label: "Servers",
-    items: [
-      { label: "VPS Servers", path: "/solutions/vps-hosting" },
-      { label: "Dedicated Servers", path: "/solutions/dedicated-servers" },
-      { label: "GPU Servers", path: "/solutions/gpu-dedicated-server" },
-    ],
-  },
-  {
-    label: "Solutions",
-    items: [
-      { label: "Cloud Deployment", path: "/solutions/cloud-hosting" },
+    heading: "Servers",
+    links: [
+      { label: "VPS Server", path: "/solutions/vps-server" },
+      { label: "Dedicated Server", path: "/solutions/dedicated-servers" },
+      { label: "GPU Server", path: "/solutions/gpu-dedicated-server" },
       { label: "Server Management", path: "/solutions/server-management" },
-      { label: "Website Migration", path: "/solutions/cloud-migration" },
     ],
   },
   {
-    label: "Company",
-    items: [
-      { label: "About Us", path: "/about" },
-      { label: "Careers", path: "/careers" },
-      { label: "Contact", path: "/contact" },
+    heading: "Domains",
+    links: [
+      { label: "Domain Registration", path: "/solutions/domains" },
+      { label: "Domain Search", path: "/solutions/domains#search" },
+      { label: "Domain Transfer", path: "/solutions/domains#transfer" },
     ],
   },
   {
-    label: "Resources",
-    items: [
-      { label: "Blog", path: "/blog" },
-      { label: "Knowledgebase", path: "/knowledgebase" },
-      { label: "SLA", path: "/sla" },
+    heading: "Email & Security",
+    links: [
+      { label: "Zoho Email", path: "/solutions/email-security#zoho" },
+      { label: "Microsoft 365", path: "/solutions/email-security#office365" },
+      { label: "Google Workspace", path: "/solutions/email-security#workspace" },
+      { label: "SSL Certificates", path: "/solutions/email-security#ssl" },
     ],
   },
 ];
@@ -63,217 +51,213 @@ const dropdowns: NavDropdown[] = [
 const Navigation = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [mobileDropdown, setMobileDropdown] = useState<string | null>(null);
-  const [scrolled, setScrolled] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const [mobileServiceOpen, setMobileServiceOpen] = useState(false);
+  const [mobileSubDropdown, setMobileSubDropdown] = useState<string | null>(null);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const handleEnter = useCallback((label: string) => {
+  const handleServicesEnter = useCallback(() => {
     if (closeTimeoutRef.current) {
       clearTimeout(closeTimeoutRef.current);
       closeTimeoutRef.current = null;
     }
-    setActiveDropdown(label);
+    setServicesOpen(true);
   }, []);
 
-  const handleLeave = useCallback(() => {
+  const handleServicesLeave = useCallback(() => {
     closeTimeoutRef.current = setTimeout(() => {
-      setActiveDropdown(null);
-    }, 120);
+      setServicesOpen(false);
+    }, 150);
   }, []);
 
-  const handleCloseAll = () => {
+  const navLinks = [
+    { label: "Home", path: "/" },
+    { label: "Pricing", path: "/pricing" },
+    { label: "About", path: "/about" },
+    { label: "Blog", path: "/blog" },
+    { label: "Contact", path: "/contact" },
+  ];
+
+  const isHome = location.pathname === "/";
+
+  const desktopLinks = isHome
+    ? [{ label: "__SERVICES__", path: "" }, ...navLinks.filter(l => l.label !== "Home")]
+    : [navLinks[0], { label: "__SERVICES__", path: "" }, ...navLinks.slice(1)];
+
+  const handleCloseMenus = () => {
     setIsOpen(false);
-    setActiveDropdown(null);
-    setMobileDropdown(null);
+    setServicesOpen(false);
+    setMobileServiceOpen(false);
+    setMobileSubDropdown(null);
   };
 
   useEffect(() => {
-    handleCloseAll();
-  }, [location.pathname]);
+    handleCloseMenus();
+    // eslint-disable-next-line
+  }, [location.pathname, location.hash]);
 
   return (
     <>
-      <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? "bg-background/95 backdrop-blur-md border-b border-border"
-            : "bg-background/80 backdrop-blur-sm"
-        }`}
-        style={{ boxShadow: scrolled ? "var(--shadow-soft)" : "none" }}
-      >
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50 shadow-soft">
         <div className="section-container">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-2.5 group" onClick={handleCloseAll}>
-              <img
-                src={logo}
-                alt="Infinitive Cloud Logo"
-                className="h-9 w-auto group-hover:scale-105 transition-transform duration-200"
-              />
+          <div className="flex items-center justify-between h-20">
+            <Link to="/" className="flex items-center gap-3 group" onClick={handleCloseMenus}>
+              <div className="relative">
+                <div className="absolute inset-0 bg-background rounded-xl" />
+                <img src={logo} alt="Infinitive Cloud Logo" className="h-12 w-auto relative z-10 group-hover:scale-105 transition-transform duration-300" />
+              </div>
               <div className="flex flex-col">
-                <span className="text-base font-bold text-foreground tracking-tight font-heading">
-                  INFINITIVE CLOUD
-                </span>
-                <span className="text-[9px] font-medium text-muted-foreground tracking-wider">
-                  PRIVATE LIMITED
-                </span>
+                <span className="text-xl font-black text-foreground tracking-tight">INFINITIVE CLOUD</span>
+                <span className="text-[10px] font-medium text-muted-foreground tracking-wide">PRIVATE LIMITED</span>
               </div>
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-1">
-              <Link
-                to="/"
-                onClick={handleCloseAll}
-                className="px-3 py-2 text-sm font-medium text-foreground/80 hover:text-foreground transition-colors rounded-md hover:bg-muted"
-              >
-                Home
-              </Link>
-              {dropdowns.map((dropdown) => (
-                <div
-                  key={dropdown.label}
-                  className="relative"
-                  onMouseEnter={() => handleEnter(dropdown.label)}
-                  onMouseLeave={handleLeave}
-                >
-                  <button
-                    className={`flex items-center gap-1 px-3 py-2 text-sm font-medium transition-colors rounded-md ${
-                      activeDropdown === dropdown.label
-                        ? "text-foreground bg-muted"
-                        : "text-foreground/80 hover:text-foreground hover:bg-muted"
-                    }`}
-                  >
-                    {dropdown.label}
-                    <ChevronDown
-                      className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                        activeDropdown === dropdown.label ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
-
-                  {activeDropdown === dropdown.label && (
-                    <div
-                      className="absolute top-full left-0 mt-1 w-56 bg-background border border-border rounded-xl overflow-hidden animate-fade-in"
-                      style={{ boxShadow: "var(--shadow-strong)", animationDuration: "0.15s" }}
-                      onMouseEnter={() => handleEnter(dropdown.label)}
-                      onMouseLeave={handleLeave}
+            <div className="hidden lg:flex flex-1 justify-center items-center gap-1 relative">
+              {desktopLinks.map((link) => {
+                if (link.label === "__SERVICES__") {
+                  return (
+                    <button
+                      key="services-trigger"
+                      className="relative px-4 py-2 text-foreground hover:text-primary font-bold text-[15px] flex items-center gap-1 group transition-all duration-200"
+                      onMouseEnter={handleServicesEnter}
+                      onMouseLeave={handleServicesLeave}
+                      onClick={() => setServicesOpen(prev => !prev)}
                     >
-                      <div className="py-1.5">
-                        {dropdown.items.map((item) => (
-                          <Link
-                            key={item.path}
-                            to={item.path}
-                            onClick={handleCloseAll}
-                            className="flex items-center justify-between px-4 py-2.5 text-sm text-foreground/80 hover:text-foreground hover:bg-muted transition-colors group"
-                          >
-                            {item.label}
-                            <ArrowRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-150" />
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
+                      Services
+                      <ChevronDown className={`w-4 h-4 ml-0.5 transition-transform duration-200 ${servicesOpen ? "rotate-180" : ""}`} />
+                      <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary to-accent scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+                    </button>
+                  );
+                }
+                return (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    onClick={handleCloseMenus}
+                    className="relative px-4 py-2 text-foreground hover:text-primary transition-all font-bold text-[15px] group"
+                  >
+                    {link.label}
+                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary to-accent scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+                  </Link>
+                );
+              })}
+              {/* Vertical separator */}
+              <div className="h-6 w-px bg-border/50 mx-3" />
 
-            {/* Desktop Right */}
-            <div className="hidden lg:flex items-center gap-3">
+              <Link to="/contact" onClick={handleCloseMenus}>
+                <Button className="btn-gradient glow-effect shadow-medium">
+                  Start Free Trial
+                </Button>
+              </Link>
+
+              {/* Vertical separator */}
+              <div className="h-6 w-px bg-border/50 mx-2" />
+
+              {/* Utility icons like spaceship.com */}
               <CurrencyLanguageDropdown />
+
               <a
                 href={WHMCS_LOGIN}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 text-foreground/60 hover:text-foreground rounded-md transition-colors"
+                className="p-2 text-foreground/70 hover:text-primary rounded-lg transition-colors"
                 aria-label="Login"
                 title="Login to Client Area"
               >
-                <User className="w-4.5 h-4.5" />
+                <User className="w-5 h-5" />
               </a>
-              <div className="h-5 w-px bg-border" />
-              <Link to="/contact" onClick={handleCloseAll}>
-                <Button size="sm" className="btn-primary rounded-lg text-sm px-5 h-9">
-                  Get Started
-                </Button>
-              </Link>
             </div>
 
-            {/* Mobile Toggle */}
+            {/* Mobile Menu Icon */}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="lg:hidden p-2 text-foreground hover:bg-muted rounded-lg transition-colors"
+              className="lg:hidden p-3 text-foreground hover:bg-muted rounded-lg transition-colors"
               aria-label={isOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isOpen}
             >
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
             </button>
           </div>
         </div>
       </nav>
 
+      {/* Desktop Mega Menu */}
+      {servicesOpen && (
+        <ServicesMegaMenu onClose={() => setServicesOpen(false)} onMouseEnter={handleServicesEnter} onMouseLeave={handleServicesLeave} />
+      )}
+
       {/* Mobile Navigation */}
       {isOpen && (
-        <div className="lg:hidden fixed inset-0 top-16 bg-background z-[60] overflow-y-auto animate-fade-in" style={{ animationDuration: "0.2s" }}>
-          <div className="flex flex-col px-5 py-4 gap-1">
-            <Link
-              to="/"
-              onClick={handleCloseAll}
-              className="text-foreground font-medium py-3 px-4 rounded-lg hover:bg-muted transition-colors"
-            >
-              Home
-            </Link>
-            {dropdowns.map((dropdown) => (
-              <div key={dropdown.label}>
-                <button
-                  onClick={() =>
-                    setMobileDropdown(mobileDropdown === dropdown.label ? null : dropdown.label)
-                  }
-                  className="flex items-center justify-between w-full text-foreground font-medium py-3 px-4 rounded-lg hover:bg-muted transition-colors"
-                >
-                  {dropdown.label}
-                  <ChevronDown
-                    className={`w-4 h-4 transition-transform duration-200 ${
-                      mobileDropdown === dropdown.label ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
-                {mobileDropdown === dropdown.label && (
-                  <div className="ml-4 flex flex-col gap-0.5 mt-1 mb-2">
-                    {dropdown.items.map((item) => (
-                      <Link
-                        key={item.path}
-                        to={item.path}
-                        onClick={handleCloseAll}
-                        className="text-foreground/70 hover:text-foreground py-2.5 px-4 text-sm rounded-lg hover:bg-muted transition-colors"
-                      >
-                        {item.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-            <div className="border-t border-border mt-3 pt-3">
-              <a
-                href={WHMCS_LOGIN}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={handleCloseAll}
-                className="flex items-center gap-2 text-foreground font-medium py-3 px-4 rounded-lg hover:bg-muted transition-colors"
+        <div className="lg:hidden fixed inset-0 top-20 bg-background z-[60] overflow-y-auto">
+          <div className="flex flex-col gap-2 px-6 py-6">
+            {/* Services Accordion */}
+            <div className="flex flex-col">
+              <button
+                className="flex items-center justify-between text-foreground font-bold py-4 px-4 rounded-lg text-lg hover:text-primary transition-colors"
+                onClick={() => setMobileServiceOpen(!mobileServiceOpen)}
+                aria-expanded={mobileServiceOpen}
+                type="button"
               >
-                <User className="w-4 h-4" />
-                Login
-              </a>
-              <Link to="/contact" onClick={handleCloseAll} className="mt-2 block">
-                <Button className="btn-primary w-full h-11">Get Started</Button>
-              </Link>
+                <span>Services</span>
+                <ChevronDown className={`w-5 h-5 ml-1 transition-transform duration-200 ${mobileServiceOpen ? "rotate-180" : ""}`} />
+              </button>
+              {mobileServiceOpen && (
+                <div className="flex flex-col px-2 py-1 ml-2">
+                  {serviceLinks.map((service) => (
+                    <div key={service.heading} className="flex flex-col">
+                      <button
+                        className="flex items-center justify-between py-2 px-4 rounded-lg font-medium text-base text-foreground/80 hover:text-primary hover:bg-muted transition-colors"
+                        onClick={() =>
+                          mobileSubDropdown === service.heading
+                            ? setMobileSubDropdown(null)
+                            : setMobileSubDropdown(service.heading)
+                        }
+                        type="button"
+                      >
+                        {service.heading}
+                        <ChevronDown className={`w-4 h-4 ml-1 transition-transform duration-200 ${mobileSubDropdown === service.heading ? "rotate-180" : ""}`} />
+                      </button>
+                      {mobileSubDropdown === service.heading && (
+                        <div className="flex flex-col ml-6 mt-1">
+                          {service.links.map((link) => (
+                            <Link
+                              key={link.path}
+                              to={link.path}
+                              onClick={handleCloseMenus}
+                              className="py-2 px-4 text-foreground/80 hover:text-primary hover:bg-muted font-normal text-base rounded-lg transition-colors"
+                            >
+                              {link.label}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
+            {desktopLinks
+              .filter(link => link.label !== "__SERVICES__")
+              .map(link => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  onClick={handleCloseMenus}
+                  className="text-foreground hover:text-primary hover:bg-muted transition-colors font-bold py-4 px-4 rounded-lg text-lg"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            <a href={WHMCS_LOGIN} target="_blank" rel="noopener noreferrer" onClick={handleCloseMenus} className="text-foreground hover:text-primary hover:bg-muted transition-colors font-bold py-4 px-4 rounded-lg text-lg flex items-center gap-3">
+              <User className="w-5 h-5" />
+              Login
+            </a>
+            <Link to="/contact" onClick={handleCloseMenus} className="mt-4">
+              <Button className="btn-gradient glow-effect w-full h-14 text-lg">
+                Start Free Trial
+              </Button>
+            </Link>
           </div>
         </div>
       )}
