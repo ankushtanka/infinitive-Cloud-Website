@@ -71,7 +71,7 @@ const FreeTrialSection = () => {
             </Link>
 
             <p className="text-xs text-muted-foreground mt-4">
-              Join 1,000+ businesses already hosted on Infinitive Cloud
+              15-day free trial + 30-day money-back guarantee · Join 1,000+ businesses on Infinitive Cloud
             </p>
           </div>
         </motion.div>

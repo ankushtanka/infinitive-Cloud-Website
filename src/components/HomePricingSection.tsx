@@ -122,7 +122,7 @@ const HomePricingSection = () => {
                           <span className="text-4xl md:text-5xl font-black gradient-text">{plan.price}</span>
                           <span className="text-base text-muted-foreground">{plan.period}</span>
                         </div>
-                        <p className="text-xs text-primary font-medium mt-1">15 Days Free Trial</p>
+                        <p className="text-xs text-primary font-medium mt-1">15-Day Free Trial · 30-Day Money-Back</p>
                       </div>
                       <ul className="space-y-3 mb-8">
                         {plan.features.map((feature, i) => (

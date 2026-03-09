@@ -12,7 +12,11 @@ const faqs = [
   },
   {
     question: "Do you offer a free trial?",
-    answer: "Yes! We offer a 15-day free trial on all cloud and VPS hosting plans. No credit card required, no setup fees, and no hidden charges. You get full access to all features during the trial period.",
+    answer: "Yes! We offer a 15-day free trial on all cloud and VPS hosting plans. No credit card required, no setup fees, and no hidden charges. You get full access to all features during the trial period. Plus, all plans come with a 30-day money-back guarantee — so even after you subscribe, you can get a full refund if you're not satisfied.",
+  },
+  {
+    question: "What is your refund policy?",
+    answer: "We offer a 30-day money-back guarantee on all hosting plans. If you're not completely satisfied within the first 30 days, simply contact our support team and we'll process a full refund — no questions asked.",
   },
   {
     question: "What is your uptime guarantee?",
