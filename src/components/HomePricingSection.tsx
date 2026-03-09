@@ -77,7 +77,7 @@ const HomePricingSection = () => {
             Hosting Plans That <span className="gradient-text">Scale With You</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Enterprise-grade infrastructure at India's most competitive prices. All plans include free SSL, 24/7 support, 99.99% uptime SLA, and a 15-day free trial.
+            Enterprise-grade infrastructure at India's most competitive prices. All plans include free SSL, 24/7 support, 99.99% uptime SLA, a 15-day free trial, and a 30-day money-back guarantee.
           </p>
         </div>
 
@@ -122,7 +122,7 @@ const HomePricingSection = () => {
                           <span className="text-4xl md:text-5xl font-black gradient-text">{plan.price}</span>
                           <span className="text-base text-muted-foreground">{plan.period}</span>
                         </div>
-                        <p className="text-xs text-primary font-medium mt-1">15 Days Free Trial</p>
+                        <p className="text-xs text-primary font-medium mt-1">15-Day Free Trial · 30-Day Money-Back</p>
                       </div>
                       <ul className="space-y-3 mb-8">
                         {plan.features.map((feature, i) => (
