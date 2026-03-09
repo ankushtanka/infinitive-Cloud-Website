@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, User } from "lucide-react";
+import { Menu, X, ChevronDown, User, Globe, Server, ShieldCheck, Search } from "lucide-react";
 import logo from "@/assets/logo-icon.png";
 import ServicesMegaMenu from "@/components/ServicesMegaMenu";
 import CurrencyLanguageDropdown from "@/components/CurrencyLanguageDropdown";
@@ -49,10 +49,19 @@ const serviceLinks = [
   },
 ];
 
+// Quick product links shown directly in the nav bar
+const productQuickLinks = [
+  { label: "Hosting", icon: Globe, category: "Hosting" },
+  { label: "Servers", icon: Server, category: "Servers" },
+  { label: "Domains", icon: Search, category: "Domains" },
+  { label: "Security", icon: ShieldCheck, category: "Email & Security" },
+];
+
 const Navigation = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
+  const [megaMenuCategory, setMegaMenuCategory] = useState<string | undefined>();
   const [mobileServiceOpen, setMobileServiceOpen] = useState(false);
   const [mobileSubDropdown, setMobileSubDropdown] = useState<string | null>(null);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -68,26 +77,32 @@ const Navigation = () => {
   const handleServicesLeave = useCallback(() => {
     closeTimeoutRef.current = setTimeout(() => {
       setServicesOpen(false);
+      setMegaMenuCategory(undefined);
     }, 150);
+  }, []);
+
+  const handleProductHover = useCallback((category: string) => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    setMegaMenuCategory(category);
+    setServicesOpen(true);
   }, []);
 
   const navLinks = [
     { label: "Home", path: "/" },
     { label: "Pricing", path: "/pricing" },
     { label: "About", path: "/about" },
-    { label: "Blog", path: "/blog" },
     { label: "Contact", path: "/contact" },
   ];
 
   const isHome = location.pathname === "/";
 
-  const desktopLinks = isHome
-    ? [{ label: "__SERVICES__", path: "" }, ...navLinks.filter(l => l.label !== "Home")]
-    : [navLinks[0], { label: "__SERVICES__", path: "" }, ...navLinks.slice(1)];
-
   const handleCloseMenus = () => {
     setIsOpen(false);
     setServicesOpen(false);
+    setMegaMenuCategory(undefined);
     setMobileServiceOpen(false);
     setMobileSubDropdown(null);
   };
@@ -114,48 +129,68 @@ const Navigation = () => {
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex flex-1 justify-center items-center gap-1 relative">
-              {desktopLinks.map((link) => {
-                if (link.label === "__SERVICES__") {
-                  return (
-                    <button
-                      key="services-trigger"
-                      className="relative px-4 py-2 text-foreground hover:text-primary font-bold text-[15px] flex items-center gap-1 group transition-all duration-200"
-                      onMouseEnter={handleServicesEnter}
-                      onMouseLeave={handleServicesLeave}
-                      onClick={() => setServicesOpen(prev => !prev)}
-                    >
-                      Services
-                      <ChevronDown className={`w-4 h-4 ml-0.5 transition-transform duration-200 ${servicesOpen ? "rotate-180" : ""}`} />
-                      <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary to-accent scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-                    </button>
-                  );
-                }
+            <div className="hidden lg:flex flex-1 justify-center items-center gap-0.5 relative">
+              {!isHome && (
+                <Link
+                  to="/"
+                  onClick={handleCloseMenus}
+                  className="relative px-3 py-2 text-foreground hover:text-primary transition-all font-bold text-[15px] group"
+                >
+                  Home
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary to-accent scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+                </Link>
+              )}
+
+              {/* Product quick links with icons */}
+              {productQuickLinks.map((product) => {
+                const Icon = product.icon;
                 return (
-                  <Link
-                    key={link.path}
-                    to={link.path}
-                    onClick={handleCloseMenus}
-                    className="relative px-4 py-2 text-foreground hover:text-primary transition-all font-bold text-[15px] group"
+                  <button
+                    key={product.label}
+                    className={`relative px-3 py-2 text-foreground hover:text-primary font-bold text-[15px] flex items-center gap-1.5 group transition-all duration-200 ${
+                      servicesOpen && megaMenuCategory === product.category ? "text-primary" : ""
+                    }`}
+                    onMouseEnter={() => handleProductHover(product.category)}
+                    onMouseLeave={handleServicesLeave}
+                    onClick={() => {
+                      setMegaMenuCategory(product.category);
+                      setServicesOpen(prev => !prev);
+                    }}
                   >
-                    {link.label}
+                    <Icon className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" />
+                    {product.label}
+                    <ChevronDown className={`w-3.5 h-3.5 ml-0.5 transition-transform duration-200 ${servicesOpen && megaMenuCategory === product.category ? "rotate-180" : ""}`} />
                     <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary to-accent scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-                  </Link>
+                  </button>
                 );
               })}
-              {/* Vertical separator */}
-              <div className="h-6 w-px bg-border/50 mx-3" />
+
+              {/* Separator */}
+              <div className="h-5 w-px bg-border/50 mx-1.5" />
+
+              {navLinks.filter(l => l.label !== "Home").map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  onClick={handleCloseMenus}
+                  className="relative px-3 py-2 text-foreground hover:text-primary transition-all font-bold text-[15px] group"
+                >
+                  {link.label}
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary to-accent scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+                </Link>
+              ))}
+
+              {/* Separator */}
+              <div className="h-5 w-px bg-border/50 mx-1.5" />
 
               <Link to="/contact" onClick={handleCloseMenus}>
-                <Button className="btn-gradient glow-effect shadow-medium">
+                <Button className="btn-gradient glow-effect shadow-medium text-sm px-5 h-9">
                   Start Free Trial
                 </Button>
               </Link>
 
-              {/* Vertical separator */}
-              <div className="h-6 w-px bg-border/50 mx-2" />
-
-              {/* Utility icons like spaceship.com */}
+              {/* Utility icons */}
+              <div className="h-5 w-px bg-border/50 mx-1.5" />
               <CurrencyLanguageDropdown />
               <ThemeToggle />
 
@@ -186,7 +221,12 @@ const Navigation = () => {
 
       {/* Desktop Mega Menu */}
       {servicesOpen && (
-        <ServicesMegaMenu onClose={() => setServicesOpen(false)} onMouseEnter={handleServicesEnter} onMouseLeave={handleServicesLeave} />
+        <ServicesMegaMenu
+          onClose={() => { setServicesOpen(false); setMegaMenuCategory(undefined); }}
+          onMouseEnter={handleServicesEnter}
+          onMouseLeave={handleServicesLeave}
+          initialCategory={megaMenuCategory}
+        />
       )}
 
       {/* Mobile Navigation */}
@@ -201,7 +241,10 @@ const Navigation = () => {
                 aria-expanded={mobileServiceOpen}
                 type="button"
               >
-                <span>Services</span>
+                <span className="flex items-center gap-2">
+                  <Globe className="w-5 h-5 text-primary" />
+                  Products & Services
+                </span>
                 <ChevronDown className={`w-5 h-5 ml-1 transition-transform duration-200 ${mobileServiceOpen ? "rotate-180" : ""}`} />
               </button>
               {mobileServiceOpen && (
@@ -209,7 +252,7 @@ const Navigation = () => {
                   {serviceLinks.map((service) => (
                     <div key={service.heading} className="flex flex-col">
                       <button
-                        className="flex items-center justify-between py-2 px-4 rounded-lg font-medium text-base text-foreground/80 hover:text-primary hover:bg-muted transition-colors"
+                        className="flex items-center justify-between py-2.5 px-4 rounded-lg font-semibold text-base text-foreground/80 hover:text-primary hover:bg-muted transition-colors"
                         onClick={() =>
                           mobileSubDropdown === service.heading
                             ? setMobileSubDropdown(null)
@@ -239,18 +282,16 @@ const Navigation = () => {
                 </div>
               )}
             </div>
-            {desktopLinks
-              .filter(link => link.label !== "__SERVICES__")
-              .map(link => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  onClick={handleCloseMenus}
-                  className="text-foreground hover:text-primary hover:bg-muted transition-colors font-bold py-4 px-4 rounded-lg text-lg"
-                >
-                  {link.label}
-                </Link>
-              ))}
+            {navLinks.map(link => (
+              <Link
+                key={link.path}
+                to={link.path}
+                onClick={handleCloseMenus}
+                className="text-foreground hover:text-primary hover:bg-muted transition-colors font-bold py-4 px-4 rounded-lg text-lg"
+              >
+                {link.label}
+              </Link>
+            ))}
             <a href={WHMCS_LOGIN} target="_blank" rel="noopener noreferrer" onClick={handleCloseMenus} className="text-foreground hover:text-primary hover:bg-muted transition-colors font-bold py-4 px-4 rounded-lg text-lg flex items-center gap-3">
               <User className="w-5 h-5" />
               Login
