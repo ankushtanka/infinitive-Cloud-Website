@@ -176,6 +176,10 @@ const HeroSection = () => {
               <Cloud className="w-5 h-5 text-primary" />
               <span className="font-medium">15-Day Free Trial</span>
             </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-primary" />
+              <span className="font-medium">30-Day Money-Back</span>
+            </div>
           </div>
         </motion.div>
 
