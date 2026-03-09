@@ -128,27 +128,14 @@ const SupportWidget = () => {
             {actions.map((action) => {
               const classes = `group flex items-center gap-3 ${action.bg} ${action.hover} text-white rounded-full shadow-lg cursor-pointer`;
 
-              const handleClick = () => {
-                if (action.href) {
-                  const a = document.createElement("a");
-                  a.href = action.href;
-                  a.target = "_blank";
-                  a.rel = "noopener noreferrer";
-                  document.body.appendChild(a);
-                  a.click();
-                  document.body.removeChild(a);
-                } else if (action.onClick) {
-                  action.onClick();
-                }
-              };
-
               return (
                 <ActionButton
                   key={action.label}
                   label={action.label}
                   icon={action.icon}
                   className={classes}
-                  onClick={handleClick}
+                  href={action.href}
+                  onClick={action.onClick}
                   isHovered={hoveredLabel === action.label}
                   onHover={() => setHoveredLabel(action.label)}
                   onLeave={() => setHoveredLabel(null)}
