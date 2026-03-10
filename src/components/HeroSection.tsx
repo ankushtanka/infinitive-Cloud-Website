@@ -189,7 +189,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.7 }}
-          className="w-full max-w-4xl grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-8"
+          className="w-full max-w-4xl grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-8 px-2 sm:px-0"
         >
           {[
             { ...stat1, label: "Websites Hosted", icon: "🌐" },
@@ -200,13 +200,13 @@ const HeroSection = () => {
             <div
               key={i}
               ref={stat.ref}
-              className="relative group bg-card/80 backdrop-blur-sm border border-border/50 rounded-2xl p-5 md:p-6 text-center hover:border-primary/30 transition-all hover:shadow-lg"
+              className="relative group bg-card/80 backdrop-blur-sm border border-border/50 rounded-xl sm:rounded-2xl p-3 sm:p-5 md:p-6 text-center hover:border-primary/30 transition-all hover:shadow-lg"
             >
-              <div className="text-2xl mb-2">{stat.icon}</div>
-              <div className="text-3xl md:text-4xl font-black gradient-text tabular-nums">
+              <div className="text-lg sm:text-2xl mb-1 sm:mb-2">{stat.icon}</div>
+              <div className="text-xl sm:text-3xl md:text-4xl font-black gradient-text tabular-nums leading-tight">
                 {stat.value}{stat.suffix}
               </div>
-              <div className="text-sm text-muted-foreground font-medium mt-1">{stat.label}</div>
+              <div className="text-[10px] sm:text-sm text-muted-foreground font-medium mt-0.5 sm:mt-1 leading-tight">{stat.label}</div>
             </div>
           ))}
         </motion.div>
