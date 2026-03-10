@@ -79,12 +79,22 @@ const SupportWidget = () => {
   const openTawk = () => {
     if (typeof window !== "undefined" && (window as any).Tawk_API) {
       const api = (window as any).Tawk_API;
-      api.showWidget();
-      api.maximize();
+      try {
+        api.showWidget();
+        api.maximize();
+      } catch (e) {
+        // Tawk not ready yet
+      }
       // Hide the default bubble again when user minimizes or closes the chat
-      const hide = () => api.hideWidget();
-      api.onChatMinimized = hide;
-      api.onChatHidden = hide;
+      api.onChatMinimized = () => {
+        try { api.hideWidget(); } catch (e) {}
+      };
+      api.onChatHidden = () => {
+        try { api.hideWidget(); } catch (e) {}
+      };
+      api.onChatMaximized = () => {
+        // Ensure our widget stays below Tawk's chat window
+      };
     }
   };
 
