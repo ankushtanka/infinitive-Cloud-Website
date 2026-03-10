@@ -75,6 +75,23 @@ const PHONE_NUMBER = "+918690393087";
 const SupportWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredLabel, setHoveredLabel] = useState<string | null>(null);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    const checkTawk = setInterval(() => {
+      if (typeof window !== "undefined" && (window as any).Tawk_API) {
+        const api = (window as any).Tawk_API;
+        api.onChatMessageAgent = () => {
+          setUnreadCount((prev) => prev + 1);
+        };
+        api.onChatMessageSystem = () => {
+          setUnreadCount((prev) => prev + 1);
+        };
+        clearInterval(checkTawk);
+      }
+    }, 1000);
+    return () => clearInterval(checkTawk);
+  }, []);
 
   const openTawk = () => {
     if (typeof window !== "undefined" && (window as any).Tawk_API) {
