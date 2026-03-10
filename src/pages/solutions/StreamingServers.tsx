@@ -21,7 +21,17 @@ const StreamingServers = () => {
       <Helmet>
         <title>Streaming Servers | Live & VOD Hosting - Infinitive Cloud</title>
         <meta name="description" content="High-performance streaming servers for live broadcasts and on-demand video. Ultra-low latency, global CDN, unlimited bandwidth, and DRM protection." />
+        <meta name="keywords" content="streaming server India, live streaming hosting, VOD server, media server, IPTV server" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/streaming-servers" />
+        <meta property="og:title" content="Streaming Servers | Live & VOD Hosting" />
+        <meta property="og:description" content="Streaming servers with ultra-low latency, global CDN, unlimited bandwidth, and DRM." />
+        <meta property="og:url" content="https://infinitivecloud.com/solutions/streaming-servers" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Streaming Servers | Live & VOD Hosting" />
+        <meta name="twitter:description" content="Streaming servers with ultra-low latency, global CDN, unlimited bandwidth, and DRM." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       <div className="min-h-screen">
         <Navigation />

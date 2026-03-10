@@ -28,6 +28,18 @@ const CloudMigration = () => {
       <Helmet>
         <title>Free Website Migration | Zero Downtime Cloud Migration - Infinitive Cloud</title>
         <meta name="description" content="Free website migration to Infinitive Cloud with zero downtime. We handle the entire process — files, databases, emails, DNS. Migrate from any hosting provider." />
+        <meta name="keywords" content="free website migration, zero downtime migration, cloud migration India, hosting migration" />
+        <link rel="canonical" href="https://infinitivecloud.com/solutions/cloud-migration" />
+        <meta property="og:title" content="Free Website Migration | Zero Downtime" />
+        <meta property="og:description" content="Free zero-downtime website migration. Files, databases, emails, DNS — we handle everything." />
+        <meta property="og:url" content="https://infinitivecloud.com/solutions/cloud-migration" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Free Website Migration | Zero Downtime" />
+        <meta name="twitter:description" content="Free zero-downtime website migration. Files, databases, emails, DNS — we handle everything." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
+      </Helmet>
         <link rel="canonical" href="https://infinitivecloud.com/solutions/cloud-migration" />
       </Helmet>
       <div className="min-h-screen">

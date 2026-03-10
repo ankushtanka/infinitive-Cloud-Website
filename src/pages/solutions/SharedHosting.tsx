@@ -56,7 +56,17 @@ const SharedHosting = () => {
       <Helmet>
         <title>Shared Hosting India | Affordable cPanel Hosting from ₹49/mo - Infinitive Cloud</title>
         <meta name="description" content="Best shared hosting plans in India starting at ₹49/mo. NVMe SSD, free SSL, LiteSpeed servers, cPanel, and 99.99% uptime. Perfect for WordPress, blogs, and business websites." />
+        <meta name="keywords" content="shared hosting India, cheap web hosting, cPanel hosting, NVMe hosting, LiteSpeed hosting, WordPress hosting India, affordable hosting" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/shared-hosting" />
+        <meta property="og:title" content="Shared Hosting India | cPanel Hosting from ₹49/mo" />
+        <meta property="og:description" content="Best shared hosting in India. NVMe SSD, free SSL, LiteSpeed, cPanel, 99.99% uptime." />
+        <meta property="og:url" content="https://infinitivecloud.com/solutions/shared-hosting" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Shared Hosting India | cPanel Hosting from ₹49/mo" />
+        <meta name="twitter:description" content="Best shared hosting in India. NVMe SSD, free SSL, LiteSpeed, cPanel, 99.99% uptime." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       <div className="min-h-screen">
         <Navigation />

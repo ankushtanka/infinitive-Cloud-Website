@@ -27,7 +27,18 @@ const WordPressHosting = () => {
       <Helmet>
         <title>Managed WordPress Hosting | Fast & Secure - Infinitive Cloud</title>
         <meta name="description" content="Managed WordPress hosting with NVMe storage, automatic updates, daily backups, free SSL, and 24/7 expert support. Plans starting from 5 to 100 websites." />
+        <meta name="keywords" content="managed WordPress hosting India, fast WordPress hosting, secure WordPress hosting" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/wordpress-hosting" />
+        <meta property="og:title" content="Managed WordPress Hosting | Fast & Secure" />
+        <meta property="og:description" content="Managed WordPress hosting with NVMe, auto updates, daily backups, free SSL." />
+        <meta property="og:url" content="https://infinitivecloud.com/solutions/wordpress-hosting" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Managed WordPress Hosting | Fast & Secure" />
+        <meta name="twitter:description" content="Managed WordPress hosting with NVMe, auto updates, daily backups, free SSL." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
+      </Helmet>
       </Helmet>
       <div className="min-h-screen">
         <Navigation />
