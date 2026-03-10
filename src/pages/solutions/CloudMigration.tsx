@@ -40,8 +40,6 @@ const CloudMigration = () => {
         <meta name="twitter:description" content="Free zero-downtime website migration. Files, databases, emails, DNS — we handle everything." />
         <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
-        <link rel="canonical" href="https://infinitivecloud.com/solutions/cloud-migration" />
-      </Helmet>
       <div className="min-h-screen">
         <Navigation />
         <main className="pt-24 pb-20">

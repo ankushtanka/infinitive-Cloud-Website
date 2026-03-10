@@ -39,7 +39,6 @@ const WordPressHosting = () => {
         <meta name="twitter:description" content="Managed WordPress hosting with NVMe, auto updates, daily backups, free SSL." />
         <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
-      </Helmet>
       <div className="min-h-screen">
         <Navigation />
         <main className="pt-24 pb-20">
