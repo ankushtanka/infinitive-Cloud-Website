@@ -55,7 +55,7 @@ const ActionButton = ({
 
   if (href) {
     return (
-      <motion.a href={href} target="_blank" rel="noopener noreferrer" {...sharedProps}>
+      <motion.a href={href} target="_blank" rel="noopener noreferrer" onClick={onClick} {...sharedProps}>
         <TooltipContent label={label} isHovered={isHovered} />
         <span className="flex items-center justify-center w-12 h-12 rounded-full">{icon}</span>
       </motion.a>
