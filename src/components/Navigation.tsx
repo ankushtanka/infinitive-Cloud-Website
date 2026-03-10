@@ -121,6 +121,8 @@ const Navigation = () => {
     setMegaMenuCategory(undefined);
     setMobileServiceOpen(false);
     setMobileSubDropdown(null);
+    setPagesDropdownOpen(false);
+    setMobilePagesOpen(false);
   };
 
   useEffect(() => {
