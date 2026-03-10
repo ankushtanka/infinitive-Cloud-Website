@@ -103,6 +103,10 @@ const SupportWidget = () => {
         const onNewMessage = () => {
           setUnreadCount((prev) => prev + 1);
           playNotificationSound();
+          toast({
+            title: "New message",
+            description: "You have a new message from support.",
+          });
         };
         api.onChatMessageAgent = onNewMessage;
         api.onChatMessageSystem = onNewMessage;
