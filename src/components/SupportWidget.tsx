@@ -173,6 +173,7 @@ const SupportWidget = () => {
       label: "Call Us",
       icon: <Phone className="w-5 h-5" />,
       href: `tel:${PHONE_NUMBER}`,
+      onClick: () => setIsOpen(false),
       bg: "bg-secondary",
       hover: "hover:bg-[hsl(217,91%,50%)]",
     },
