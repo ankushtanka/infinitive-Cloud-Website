@@ -78,6 +78,7 @@ const SupportWidget = () => {
 
   const openTawk = () => {
     if (typeof window !== "undefined" && (window as any).Tawk_API) {
+      (window as any).Tawk_API.showWidget();
       (window as any).Tawk_API.maximize();
     }
   };
