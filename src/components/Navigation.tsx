@@ -90,10 +90,26 @@ const Navigation = () => {
     setServicesOpen(true);
   }, []);
 
+  const [pagesDropdownOpen, setPagesDropdownOpen] = useState(false);
+  const [mobilePagesOpen, setMobilePagesOpen] = useState(false);
+  const pagesTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const pagesLinks = [
+    { label: "About Us", path: "/about" },
+    { label: "Pricing", path: "/pricing" },
+    { label: "Blog", path: "/blog" },
+    { label: "Knowledgebase", path: "/knowledgebase" },
+    { label: "Careers", path: "/careers" },
+    { label: "Contact Us", path: "/contact" },
+    { label: "Get a Quote", path: "/quote" },
+    { label: "SLA", path: "/sla" },
+    { label: "Privacy Policy", path: "/privacy" },
+    { label: "Terms of Service", path: "/terms" },
+    { label: "Refund Policy", path: "/refund" },
+  ];
+
   const navLinks = [
     { label: "Home", path: "/" },
-    { label: "Pricing", path: "/pricing" },
-    { label: "About", path: "/about" },
     { label: "Contact", path: "/contact" },
   ];
 
