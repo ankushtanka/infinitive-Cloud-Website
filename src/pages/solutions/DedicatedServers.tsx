@@ -51,7 +51,17 @@ const DedicatedServers = () => {
       <Helmet>
         <title>Dedicated Servers India | Bare Metal from ₹3,999/mo - Infinitive Cloud</title>
         <meta name="description" content="Enterprise-grade dedicated servers in India starting at ₹3,999/mo. Intel Xeon processors, NVMe SSD, DDoS protection, 99.99% uptime SLA, and 24/7 managed support." />
+        <meta name="keywords" content="dedicated server India, bare metal server, Intel Xeon server, managed dedicated server, NVMe server India" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/dedicated-servers" />
+        <meta property="og:title" content="Dedicated Servers India | Bare Metal from ₹3,999/mo" />
+        <meta property="og:description" content="Enterprise dedicated servers with Intel Xeon, NVMe SSD, DDoS protection, 99.99% uptime." />
+        <meta property="og:url" content="https://infinitivecloud.com/solutions/dedicated-servers" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Dedicated Servers India | Bare Metal from ₹3,999/mo" />
+        <meta name="twitter:description" content="Enterprise dedicated servers with Intel Xeon, NVMe SSD, DDoS protection, 99.99% uptime." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       <div className="min-h-screen">
         <Navigation />

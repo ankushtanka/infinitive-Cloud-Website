@@ -21,7 +21,17 @@ const GPUDedicatedServer = () => {
       <Helmet>
         <title>GPU Dedicated Server | High-Performance Computing - Infinitive Cloud</title>
         <meta name="description" content="High-performance GPU dedicated servers with 99.9% uptime, DDoS protection, up to 96 GB RAM and 100 TB bandwidth. Ideal for AI, rendering, and compute-heavy workloads." />
+        <meta name="keywords" content="GPU server India, GPU dedicated server, AI server, machine learning server, NVIDIA GPU server" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/gpu-dedicated-server" />
+        <meta property="og:title" content="GPU Dedicated Server | AI & High-Performance Computing" />
+        <meta property="og:description" content="GPU dedicated servers for AI, rendering, and compute-heavy workloads. NVIDIA GPUs, 99.9% uptime." />
+        <meta property="og:url" content="https://infinitivecloud.com/solutions/gpu-dedicated-server" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="GPU Dedicated Server | AI & High-Performance Computing" />
+        <meta name="twitter:description" content="GPU dedicated servers for AI, rendering, and compute-heavy workloads. NVIDIA GPUs, 99.9% uptime." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       <div className="min-h-screen">
         <Navigation />

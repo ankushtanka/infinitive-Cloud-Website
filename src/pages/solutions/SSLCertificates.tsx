@@ -52,7 +52,17 @@ const SSLCertificates = () => {
       <Helmet>
         <title>SSL Certificates India | Free & Premium SSL from ₹2,999/yr - Infinitive Cloud</title>
         <meta name="description" content="Secure your website with SSL certificates. Free DV SSL with all hosting plans. Premium OV, EV, and Wildcard SSL certificates with 256-bit encryption and warranty protection." />
+        <meta name="keywords" content="SSL certificate India, free SSL, EV SSL, OV SSL, wildcard SSL, website security" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/ssl-certificates" />
+        <meta property="og:title" content="SSL Certificates India | Free & Premium SSL" />
+        <meta property="og:description" content="Free DV SSL with hosting. Premium OV, EV, Wildcard SSL with 256-bit encryption." />
+        <meta property="og:url" content="https://infinitivecloud.com/solutions/ssl-certificates" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="SSL Certificates India | Free & Premium SSL" />
+        <meta name="twitter:description" content="Free DV SSL with hosting. Premium OV, EV, Wildcard SSL with 256-bit encryption." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       <div className="min-h-screen">
         <Navigation />

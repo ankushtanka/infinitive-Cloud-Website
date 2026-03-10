@@ -61,7 +61,17 @@ const DomainRegistration = () => {
       <Helmet>
         <title>Domain Registration India | Register .com .in Domains from ₹99/yr - Infinitive Cloud</title>
         <meta name="description" content="Register your domain name in India starting at ₹99/yr. 500+ extensions available with free WHOIS privacy, instant activation, and DNS management. Trusted by 1000+ businesses." />
+        <meta name="keywords" content="domain registration India, buy domain, .com domain, .in domain, cheap domain India" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/domains" />
+        <meta property="og:title" content="Domain Registration India | .com .in from ₹99/yr" />
+        <meta property="og:description" content="Register domains from ₹99/yr. 500+ extensions, free WHOIS privacy, instant activation." />
+        <meta property="og:url" content="https://infinitivecloud.com/solutions/domains" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Domain Registration India | .com .in from ₹99/yr" />
+        <meta name="twitter:description" content="Register domains from ₹99/yr. 500+ extensions, free WHOIS privacy, instant activation." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       <div className="min-h-screen">
         <Navigation />

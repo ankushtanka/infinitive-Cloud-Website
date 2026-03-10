@@ -21,7 +21,17 @@ const ResellerHosting = () => {
       <Helmet>
         <title>Reseller Hosting | Start Your Hosting Business - Infinitive Cloud</title>
         <meta name="description" content="White-label reseller hosting with SSD NVMe, WHM/cPanel, free SSL, and priority support. Start your own hosting business with reliable infrastructure." />
+        <meta name="keywords" content="reseller hosting India, white-label hosting, WHM hosting, start hosting business" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/reseller-hosting" />
+        <meta property="og:title" content="Reseller Hosting | Start Your Hosting Business" />
+        <meta property="og:description" content="White-label reseller hosting with WHM/cPanel, free SSL, and priority support." />
+        <meta property="og:url" content="https://infinitivecloud.com/solutions/reseller-hosting" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Reseller Hosting | Start Your Hosting Business" />
+        <meta name="twitter:description" content="White-label reseller hosting with WHM/cPanel, free SSL, and priority support." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       <div className="min-h-screen">
         <Navigation />

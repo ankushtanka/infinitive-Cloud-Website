@@ -21,7 +21,17 @@ const ServerManagement = () => {
       <Helmet>
         <title>Managed Server Services India | 24/7 Server Management - Infinitive Cloud</title>
         <meta name="description" content="Expert managed server services in India. 24/7 monitoring, security patching, performance optimization, backups, and dedicated support for VPS and dedicated servers." />
+        <meta name="keywords" content="managed server India, server management, 24/7 server monitoring, server security, server optimization" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/server-management" />
+        <meta property="og:title" content="Managed Server Services India | 24/7 Management" />
+        <meta property="og:description" content="Expert managed server services. 24/7 monitoring, security patching, performance optimization." />
+        <meta property="og:url" content="https://infinitivecloud.com/solutions/server-management" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Managed Server Services India | 24/7 Management" />
+        <meta name="twitter:description" content="Expert managed server services. 24/7 monitoring, security patching, performance optimization." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       <div className="min-h-screen">
         <Navigation />

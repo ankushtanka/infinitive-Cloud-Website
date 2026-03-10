@@ -21,7 +21,17 @@ const OdooSolutions = () => {
       <Helmet>
         <title>Odoo ERP Solutions | Custom Implementation - Infinitive Cloud</title>
         <meta name="description" content="Customized Odoo ERP solutions including implementation, e-commerce, accounting, HR, managed hosting, and training. Streamline your entire business operation." />
+        <meta name="keywords" content="Odoo ERP India, Odoo implementation, Odoo hosting, ERP solutions, Odoo customization" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/odoo-solutions" />
+        <meta property="og:title" content="Odoo ERP Solutions | Custom Implementation" />
+        <meta property="og:description" content="Customized Odoo ERP — implementation, e-commerce, accounting, HR, hosting & training." />
+        <meta property="og:url" content="https://infinitivecloud.com/solutions/odoo-solutions" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Odoo ERP Solutions | Custom Implementation" />
+        <meta name="twitter:description" content="Customized Odoo ERP — implementation, e-commerce, accounting, HR, hosting & training." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       <div className="min-h-screen">
         <Navigation />
