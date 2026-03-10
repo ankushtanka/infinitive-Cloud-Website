@@ -55,7 +55,7 @@ const ActionButton = ({
 
   if (href) {
     return (
-      <motion.a href={href} target="_blank" rel="noopener noreferrer" {...sharedProps}>
+      <motion.a href={href} target="_blank" rel="noopener noreferrer" onClick={onClick} {...sharedProps}>
         <TooltipContent label={label} isHovered={isHovered} />
         <span className="flex items-center justify-center w-12 h-12 rounded-full">{icon}</span>
       </motion.a>
@@ -165,6 +165,7 @@ const SupportWidget = () => {
         </svg>
       ),
       href: `https://wa.me/${WHATSAPP_NUMBER}?text=Hi%2C%20I%20need%20help%20with%20Infinitive%20Cloud%20services.`,
+      onClick: () => setIsOpen(false),
       bg: "bg-[hsl(142,70%,45%)]",
       hover: "hover:bg-[hsl(142,70%,38%)]",
     },
@@ -172,6 +173,7 @@ const SupportWidget = () => {
       label: "Call Us",
       icon: <Phone className="w-5 h-5" />,
       href: `tel:${PHONE_NUMBER}`,
+      onClick: () => setIsOpen(false),
       bg: "bg-secondary",
       hover: "hover:bg-[hsl(217,91%,50%)]",
     },
