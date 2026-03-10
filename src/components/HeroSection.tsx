@@ -67,15 +67,15 @@ const HeroSection = () => {
       {/* Top offer ticker */}
       <div className="relative z-10 w-full max-w-4xl mx-auto px-4 mt-4 mb-8">
         <Link to="/contact" className="block">
-          <div className="overflow-hidden rounded-full bg-primary/10 border border-primary/20 hover:border-primary/40 transition-all cursor-pointer">
-            <div className="flex items-center justify-center h-12 px-6">
+      <div className="overflow-hidden rounded-2xl md:rounded-full bg-primary/10 border border-primary/20 hover:border-primary/40 transition-all cursor-pointer">
+            <div className="flex items-center justify-center min-h-[48px] md:h-12 px-4 md:px-6 py-2 md:py-0">
               <motion.div
                 key={activeOffer}
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -20, opacity: 0 }}
                 transition={{ duration: 0.4 }}
-                className="flex items-center gap-3 text-sm md:text-base font-semibold"
+                className="flex items-center gap-2 md:gap-3 text-xs md:text-base font-semibold text-center"
               >
                 <span>{offers[activeOffer].text}</span>
                 {offers[activeOffer].code && (
