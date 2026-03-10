@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MessageCircle, X, Phone, Headset } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -75,8 +75,26 @@ const PHONE_NUMBER = "+918690393087";
 const SupportWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredLabel, setHoveredLabel] = useState<string | null>(null);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    const checkTawk = setInterval(() => {
+      if (typeof window !== "undefined" && (window as any).Tawk_API) {
+        const api = (window as any).Tawk_API;
+        api.onChatMessageAgent = () => {
+          setUnreadCount((prev) => prev + 1);
+        };
+        api.onChatMessageSystem = () => {
+          setUnreadCount((prev) => prev + 1);
+        };
+        clearInterval(checkTawk);
+      }
+    }, 1000);
+    return () => clearInterval(checkTawk);
+  }, []);
 
   const openTawk = () => {
+    setUnreadCount(0);
     if (typeof window !== "undefined" && (window as any).Tawk_API) {
       const api = (window as any).Tawk_API;
       try {
@@ -101,7 +119,16 @@ const SupportWidget = () => {
   const actions = [
     {
       label: "Live Chat",
-      icon: <Headset className="w-5 h-5" />,
+      icon: (
+        <span className="relative">
+          <Headset className="w-5 h-5" />
+          {unreadCount > 0 && (
+            <span className="absolute -top-2 -right-2 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold bg-destructive text-destructive-foreground rounded-full animate-pulse">
+              {unreadCount > 9 ? "9+" : unreadCount}
+            </span>
+          )}
+        </span>
+      ),
       onClick: openTawk,
       bg: "bg-primary",
       hover: "hover:bg-primary-hover",
