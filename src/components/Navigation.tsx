@@ -148,7 +148,7 @@ const Navigation = () => {
             {/* Logo - prominent and clear */}
             <Link to="/" className="flex items-center gap-3 group flex-shrink-0" onClick={handleCloseMenus}>
               <div className="relative">
-                <img src={logo} alt="Infinitive Cloud Logo" className="h-10 lg:h-11 w-auto relative z-10 group-hover:scale-105 transition-transform duration-300" />
+                <img src={logo} alt="Infinitive Cloud Logo" className="h-12 lg:h-14 w-auto relative z-10 group-hover:scale-105 transition-transform duration-300" />
               </div>
               <div className="flex flex-col leading-none">
                 <span className="text-lg lg:text-xl font-black text-foreground tracking-tight">
