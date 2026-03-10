@@ -94,6 +94,7 @@ const SupportWidget = () => {
   }, []);
 
   const openTawk = () => {
+    setUnreadCount(0);
     if (typeof window !== "undefined" && (window as any).Tawk_API) {
       const api = (window as any).Tawk_API;
       try {
