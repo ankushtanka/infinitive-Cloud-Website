@@ -165,6 +165,7 @@ const SupportWidget = () => {
         </svg>
       ),
       href: `https://wa.me/${WHATSAPP_NUMBER}?text=Hi%2C%20I%20need%20help%20with%20Infinitive%20Cloud%20services.`,
+      onClick: () => setIsOpen(false),
       bg: "bg-[hsl(142,70%,45%)]",
       hover: "hover:bg-[hsl(142,70%,38%)]",
     },
