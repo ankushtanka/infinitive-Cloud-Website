@@ -211,6 +211,13 @@ const ContactForm = () => {
             <option value="google-workspace">Google Workspace</option>
             <option value="ssl-certificates">SSL Certificates</option>
           </optgroup>
+          {/* Free Trial */}
+          <optgroup label="Free Trial">
+            <option value="free-trial-shared">Free Trial – Shared Hosting</option>
+            <option value="free-trial-cloud">Free Trial – Cloud Hosting</option>
+            <option value="free-trial-vps">Free Trial – VPS Server</option>
+            <option value="free-trial-wordpress">Free Trial – WordPress Hosting</option>
+          </optgroup>
           {/* Solutions */}
           <optgroup label="Solutions">
             <option value="cloud">Cloud Solutions</option>
