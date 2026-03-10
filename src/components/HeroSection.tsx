@@ -65,25 +65,26 @@ const HeroSection = () => {
       </div>
 
       {/* Top offer ticker */}
-      <div className="relative z-10 w-full max-w-4xl mx-auto px-4 mt-4 mb-8">
+      {/* Top offer ticker */}
+      <div className="relative z-10 w-full max-w-4xl mx-auto px-3 sm:px-4 mt-4 mb-8">
         <Link to="/contact" className="block">
-      <div className="overflow-hidden rounded-2xl md:rounded-full bg-primary/10 border border-primary/20 hover:border-primary/40 transition-all cursor-pointer">
-            <div className="flex items-center justify-center min-h-[48px] md:h-12 px-4 md:px-6 py-2 md:py-0">
+          <div className="overflow-hidden rounded-xl sm:rounded-2xl md:rounded-full bg-primary/10 border border-primary/20 hover:border-primary/40 transition-all cursor-pointer">
+            <div className="flex items-center justify-center min-h-[44px] sm:min-h-[48px] md:h-12 px-3 sm:px-5 md:px-6 py-2 md:py-0">
               <motion.div
                 key={activeOffer}
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -20, opacity: 0 }}
                 transition={{ duration: 0.4 }}
-                className="flex items-center gap-2 md:gap-3 text-xs md:text-base font-semibold text-center"
+                className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 md:gap-3 text-[11px] sm:text-xs md:text-base font-semibold text-center leading-snug"
               >
-                <span>{offers[activeOffer].text}</span>
+                <span className="text-foreground">{offers[activeOffer].text}</span>
                 {offers[activeOffer].code && (
-                  <span className="font-mono px-3 py-0.5 rounded-full bg-primary text-primary-foreground text-xs font-bold">
+                  <span className="font-mono px-2 sm:px-3 py-0.5 rounded-full bg-primary text-primary-foreground text-[10px] sm:text-xs font-bold whitespace-nowrap">
                     {offers[activeOffer].code}
                   </span>
                 )}
-                <ArrowRight className="w-4 h-4 text-primary flex-shrink-0" />
+                <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary flex-shrink-0" />
               </motion.div>
             </div>
           </div>
