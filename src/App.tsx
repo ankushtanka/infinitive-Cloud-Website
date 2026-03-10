@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,33 +8,35 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 import Lenis from "lenis";
 import SupportWidget from "@/components/SupportWidget";
 import Index from "./pages/Index";
-import About from "./pages/About";
-import Pricing from "./pages/Pricing";
-import Careers from "./pages/Careers";
-import Blog from "./pages/Blog";
-import Contact from "./pages/Contact";
 
-import NotFound from "./pages/NotFound";
-import Privacy from "./pages/Privacy";
-import Terms from "./pages/Terms";
-import SLA from "./pages/SLA";
-import Refund from "./pages/Refund";
-import Solutions from "./pages/Solutions";
-import Knowledgebase from "./pages/Knowledgebase";
+// Lazy load non-critical pages
+const About = lazy(() => import("./pages/About"));
+const Pricing = lazy(() => import("./pages/Pricing"));
+const Careers = lazy(() => import("./pages/Careers"));
+const Blog = lazy(() => import("./pages/Blog"));
+const Contact = lazy(() => import("./pages/Contact"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const Privacy = lazy(() => import("./pages/Privacy"));
+const Terms = lazy(() => import("./pages/Terms"));
+const SLA = lazy(() => import("./pages/SLA"));
+const Refund = lazy(() => import("./pages/Refund"));
+const Solutions = lazy(() => import("./pages/Solutions"));
+const Knowledgebase = lazy(() => import("./pages/Knowledgebase"));
+const Quote = lazy(() => import("./pages/Quote"));
 
 // Solution pages
-import SharedHosting from "./pages/solutions/SharedHosting";
-import VPSHosting from "./pages/solutions/VPSHosting";
-import CloudHosting from "./pages/solutions/CloudHosting";
-import DedicatedServers from "./pages/solutions/DedicatedServers";
-import ResellerHosting from "./pages/solutions/ResellerHosting";
-import WordPressHosting from "./pages/solutions/WordPressHosting";
-import GPUDedicatedServer from "./pages/solutions/GPUDedicatedServer";
-import StreamingServers from "./pages/solutions/StreamingServers";
-import SSLCertificates from "./pages/solutions/SSLCertificates";
-import DomainRegistration from "./pages/solutions/DomainRegistration";
-import ServerManagement from "./pages/solutions/ServerManagement";
-import CloudMigration from "./pages/solutions/CloudMigration";
+const SharedHosting = lazy(() => import("./pages/solutions/SharedHosting"));
+const VPSHosting = lazy(() => import("./pages/solutions/VPSHosting"));
+const CloudHosting = lazy(() => import("./pages/solutions/CloudHosting"));
+const DedicatedServers = lazy(() => import("./pages/solutions/DedicatedServers"));
+const ResellerHosting = lazy(() => import("./pages/solutions/ResellerHosting"));
+const WordPressHosting = lazy(() => import("./pages/solutions/WordPressHosting"));
+const GPUDedicatedServer = lazy(() => import("./pages/solutions/GPUDedicatedServer"));
+const StreamingServers = lazy(() => import("./pages/solutions/StreamingServers"));
+const SSLCertificates = lazy(() => import("./pages/solutions/SSLCertificates"));
+const DomainRegistration = lazy(() => import("./pages/solutions/DomainRegistration"));
+const ServerManagement = lazy(() => import("./pages/solutions/ServerManagement"));
+const CloudMigration = lazy(() => import("./pages/solutions/CloudMigration"));
 
 const queryClient = new QueryClient();
 
@@ -86,37 +88,40 @@ const App = () => {
         <BrowserRouter>
           <LenisProvider>
             <ScrollToTop />
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/pricing" element={<Pricing />} />
-              <Route path="/careers" element={<Careers />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/sla" element={<SLA />} />
-              <Route path="/refund" element={<Refund />} />
-              <Route path="/solutions" element={<Solutions />} />
-              <Route path="/knowledgebase" element={<Knowledgebase />} />
+            <Suspense fallback={<div className="min-h-screen" />}>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/pricing" element={<Pricing />} />
+                <Route path="/careers" element={<Careers />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/quote" element={<Quote />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/sla" element={<SLA />} />
+                <Route path="/refund" element={<Refund />} />
+                <Route path="/solutions" element={<Solutions />} />
+                <Route path="/knowledgebase" element={<Knowledgebase />} />
 
-              {/* Solution pages */}
-              <Route path="/solutions/shared-hosting" element={<SharedHosting />} />
-              <Route path="/solutions/vps-hosting" element={<VPSHosting />} />
-              <Route path="/solutions/cloud-hosting" element={<CloudHosting />} />
-              <Route path="/solutions/dedicated-servers" element={<DedicatedServers />} />
-              <Route path="/solutions/reseller-hosting" element={<ResellerHosting />} />
-              <Route path="/solutions/wordpress-hosting" element={<WordPressHosting />} />
-              <Route path="/solutions/gpu-dedicated-server" element={<GPUDedicatedServer />} />
-              <Route path="/solutions/streaming-servers" element={<StreamingServers />} />
-              <Route path="/solutions/ssl-certificates" element={<SSLCertificates />} />
-              <Route path="/solutions/domains" element={<DomainRegistration />} />
-              <Route path="/solutions/server-management" element={<ServerManagement />} />
-              <Route path="/solutions/cloud-migration" element={<CloudMigration />} />
+                {/* Solution pages */}
+                <Route path="/solutions/shared-hosting" element={<SharedHosting />} />
+                <Route path="/solutions/vps-hosting" element={<VPSHosting />} />
+                <Route path="/solutions/cloud-hosting" element={<CloudHosting />} />
+                <Route path="/solutions/dedicated-servers" element={<DedicatedServers />} />
+                <Route path="/solutions/reseller-hosting" element={<ResellerHosting />} />
+                <Route path="/solutions/wordpress-hosting" element={<WordPressHosting />} />
+                <Route path="/solutions/gpu-dedicated-server" element={<GPUDedicatedServer />} />
+                <Route path="/solutions/streaming-servers" element={<StreamingServers />} />
+                <Route path="/solutions/ssl-certificates" element={<SSLCertificates />} />
+                <Route path="/solutions/domains" element={<DomainRegistration />} />
+                <Route path="/solutions/server-management" element={<ServerManagement />} />
+                <Route path="/solutions/cloud-migration" element={<CloudMigration />} />
 
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
             <SupportWidget />
           </LenisProvider>
         </BrowserRouter>
