@@ -344,6 +344,37 @@ const Navigation = () => {
                 </div>
               )}
             </div>
+
+            {/* Pages Accordion */}
+            <div className="flex flex-col">
+              <button
+                className="flex items-center justify-between text-foreground font-bold py-4 px-4 rounded-lg text-lg hover:text-primary transition-colors"
+                onClick={() => setMobilePagesOpen(!mobilePagesOpen)}
+                aria-expanded={mobilePagesOpen}
+                type="button"
+              >
+                <span className="flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-primary" />
+                  Pages
+                </span>
+                <ChevronDown className={`w-5 h-5 ml-1 transition-transform duration-200 ${mobilePagesOpen ? "rotate-180" : ""}`} />
+              </button>
+              {mobilePagesOpen && (
+                <div className="flex flex-col px-2 py-1 ml-2">
+                  {pagesLinks.map((link) => (
+                    <Link
+                      key={link.path}
+                      to={link.path}
+                      onClick={handleCloseMenus}
+                      className="py-2.5 px-4 text-foreground/80 hover:text-primary hover:bg-muted font-semibold text-base rounded-lg transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
             {navLinks.map(link => (
               <Link
                 key={link.path}
