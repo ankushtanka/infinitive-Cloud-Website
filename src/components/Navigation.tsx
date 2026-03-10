@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, User, Globe, Server, ShieldCheck, Search, Phone, Mail } from "lucide-react";
+import { Menu, X, ChevronDown, User, Globe, Server, ShieldCheck, Search, Phone, Mail, FileText } from "lucide-react";
 import logo from "@/assets/logo-icon.png";
 import ServicesMegaMenu from "@/components/ServicesMegaMenu";
 import CurrencyLanguageDropdown from "@/components/CurrencyLanguageDropdown";
@@ -90,10 +90,26 @@ const Navigation = () => {
     setServicesOpen(true);
   }, []);
 
+  const [pagesDropdownOpen, setPagesDropdownOpen] = useState(false);
+  const [mobilePagesOpen, setMobilePagesOpen] = useState(false);
+  const pagesTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const pagesLinks = [
+    { label: "About Us", path: "/about" },
+    { label: "Pricing", path: "/pricing" },
+    { label: "Blog", path: "/blog" },
+    { label: "Knowledgebase", path: "/knowledgebase" },
+    { label: "Careers", path: "/careers" },
+    { label: "Contact Us", path: "/contact" },
+    { label: "Get a Quote", path: "/quote" },
+    { label: "SLA", path: "/sla" },
+    { label: "Privacy Policy", path: "/privacy" },
+    { label: "Terms of Service", path: "/terms" },
+    { label: "Refund Policy", path: "/refund" },
+  ];
+
   const navLinks = [
     { label: "Home", path: "/" },
-    { label: "Pricing", path: "/pricing" },
-    { label: "About", path: "/about" },
     { label: "Contact", path: "/contact" },
   ];
 
@@ -105,6 +121,8 @@ const Navigation = () => {
     setMegaMenuCategory(undefined);
     setMobileServiceOpen(false);
     setMobileSubDropdown(null);
+    setPagesDropdownOpen(false);
+    setMobilePagesOpen(false);
   };
 
   useEffect(() => {
@@ -186,6 +204,45 @@ const Navigation = () => {
               })}
 
               <div className="h-5 w-px bg-border/40 mx-1" />
+
+              {/* Pages dropdown */}
+              <div
+                className="relative"
+                onMouseEnter={() => {
+                  if (pagesTimeoutRef.current) clearTimeout(pagesTimeoutRef.current);
+                  setPagesDropdownOpen(true);
+                }}
+                onMouseLeave={() => {
+                  pagesTimeoutRef.current = setTimeout(() => setPagesDropdownOpen(false), 150);
+                }}
+              >
+                <button
+                  className={`relative px-3 py-2 font-bold text-sm flex items-center gap-1.5 transition-all duration-200 rounded-lg ${
+                    pagesDropdownOpen
+                      ? "text-primary bg-primary/10"
+                      : "text-foreground hover:text-primary hover:bg-muted/50"
+                  }`}
+                  onClick={() => setPagesDropdownOpen(prev => !prev)}
+                >
+                  <FileText className="w-4 h-4" />
+                  Pages
+                  <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${pagesDropdownOpen ? "rotate-180" : ""}`} />
+                </button>
+                {pagesDropdownOpen && (
+                  <div className="absolute top-full left-0 mt-1 w-52 bg-background border border-border rounded-xl shadow-xl py-2 z-50">
+                    {pagesLinks.map((link) => (
+                      <Link
+                        key={link.path}
+                        to={link.path}
+                        onClick={handleCloseMenus}
+                        className="block px-4 py-2 text-sm font-medium text-foreground hover:text-primary hover:bg-muted/50 transition-colors"
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
 
               {navLinks.filter(l => l.label !== "Home").map((link) => (
                 <Link
@@ -287,6 +344,37 @@ const Navigation = () => {
                 </div>
               )}
             </div>
+
+            {/* Pages Accordion */}
+            <div className="flex flex-col">
+              <button
+                className="flex items-center justify-between text-foreground font-bold py-4 px-4 rounded-lg text-lg hover:text-primary transition-colors"
+                onClick={() => setMobilePagesOpen(!mobilePagesOpen)}
+                aria-expanded={mobilePagesOpen}
+                type="button"
+              >
+                <span className="flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-primary" />
+                  Pages
+                </span>
+                <ChevronDown className={`w-5 h-5 ml-1 transition-transform duration-200 ${mobilePagesOpen ? "rotate-180" : ""}`} />
+              </button>
+              {mobilePagesOpen && (
+                <div className="flex flex-col px-2 py-1 ml-2">
+                  {pagesLinks.map((link) => (
+                    <Link
+                      key={link.path}
+                      to={link.path}
+                      onClick={handleCloseMenus}
+                      className="py-2.5 px-4 text-foreground/80 hover:text-primary hover:bg-muted font-semibold text-base rounded-lg transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
             {navLinks.map(link => (
               <Link
                 key={link.path}
