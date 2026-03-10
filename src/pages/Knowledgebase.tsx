@@ -51,7 +51,17 @@ const Knowledgebase = () => {
       <Helmet>
         <title>Knowledgebase | Hosting Help & Tutorials - Infinitive Cloud</title>
         <meta name="description" content="Find answers to common hosting questions. Step-by-step tutorials for cPanel, WordPress, domains, SSL, email, and more. Self-service support from Infinitive Cloud." />
+        <meta name="keywords" content="hosting help, cPanel tutorial, WordPress guide, domain help, SSL setup guide" />
         <link rel="canonical" href="https://infinitivecloud.com/knowledgebase" />
+        <meta property="og:title" content="Knowledgebase | Hosting Help & Tutorials" />
+        <meta property="og:description" content="Tutorials and guides for cPanel, WordPress, domains, SSL, email, and more." />
+        <meta property="og:url" content="https://infinitivecloud.com/knowledgebase" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Knowledgebase | Hosting Help & Tutorials" />
+        <meta name="twitter:description" content="Tutorials and guides for cPanel, WordPress, domains, SSL, email, and more." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       <div className="min-h-screen">
         <Navigation />

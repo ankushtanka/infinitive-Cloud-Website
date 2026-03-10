@@ -69,7 +69,17 @@ const Solutions = () => {
       <Helmet>
         <title>Hosting Solutions | Cloud, VPS, Dedicated & Shared Hosting - Infinitive Cloud</title>
         <meta name="description" content="Complete hosting solutions including shared hosting, VPS, cloud hosting, dedicated servers, domain registration, SSL certificates, and managed services. Enterprise-grade infrastructure in India." />
+        <meta name="keywords" content="hosting solutions India, cloud hosting, VPS hosting, dedicated servers, shared hosting, SSL certificates" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions" />
+        <meta property="og:title" content="Hosting Solutions | Cloud, VPS, Dedicated & Shared" />
+        <meta property="og:description" content="Complete hosting solutions — shared, VPS, cloud, dedicated, domains, SSL. Enterprise-grade infrastructure in India." />
+        <meta property="og:url" content="https://infinitivecloud.com/solutions" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Hosting Solutions | Cloud, VPS, Dedicated & Shared" />
+        <meta name="twitter:description" content="Complete hosting solutions — shared, VPS, cloud, dedicated, domains, SSL. Enterprise-grade infrastructure in India." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       
       <div className="min-h-screen">
