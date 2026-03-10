@@ -48,10 +48,10 @@ const HeroSection = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const stat1 = useCountUp(10000, 2500, "+");
-  const stat2 = useCountUp(99, 2000, ".99%");
-  const stat3 = useCountUp(24, 1500, "/7");
-  const stat4 = useCountUp(30, 1500, "-Day");
+  const stat1 = useCountUp(50, 2500, "+");
+  const stat2 = useCountUp(99, 2000, ".9%");
+  const stat3 = useCountUp(5, 1500, "x");
+  const stat4 = useCountUp(100, 1500, "%");
 
   return (
     <section className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-background pt-16 lg:pt-24">
@@ -192,10 +192,10 @@ const HeroSection = () => {
           className="w-full max-w-4xl grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-8 px-2 sm:px-0"
         >
           {[
-            { ...stat1, label: "Websites Hosted", icon: "🌐" },
-            { ...stat2, label: "Uptime Guaranteed", icon: "🛡️" },
-            { ...stat3, label: "Support Available", icon: "🎧" },
-            { ...stat4, label: "Money-Back Guarantee", icon: "💰" },
+            { ...stat1, label: "Global Data Centers", icon: "🌍" },
+            { ...stat2, label: "Client Satisfaction", icon: "⭐" },
+            { ...stat3, label: "Faster Load Speeds", icon: "⚡" },
+            { ...stat4, label: "Free SSL & Security", icon: "🔒" },
           ].map((stat, i) => (
             <div
               key={i}
