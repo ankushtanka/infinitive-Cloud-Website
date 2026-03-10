@@ -192,10 +192,10 @@ const HeroSection = () => {
           className="w-full max-w-4xl grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-8 px-2 sm:px-0"
         >
           {[
-            { ...stat1, label: "Websites Hosted", icon: "🌐" },
-            { ...stat2, label: "Uptime Guaranteed", icon: "🛡️" },
-            { ...stat3, label: "Support Available", icon: "🎧" },
-            { ...stat4, label: "Money-Back Guarantee", icon: "💰" },
+            { ...stat1, label: "Global Data Centers", icon: "🌍" },
+            { ...stat2, label: "Client Satisfaction", icon: "⭐" },
+            { ...stat3, label: "Faster Load Speeds", icon: "⚡" },
+            { ...stat4, label: "Free SSL & Security", icon: "🔒" },
           ].map((stat, i) => (
             <div
               key={i}
