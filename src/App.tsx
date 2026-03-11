@@ -7,6 +7,8 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import Lenis from "lenis";
 import SupportWidget from "@/components/SupportWidget";
+import { LanguageProvider } from "@/contexts/LanguageContext";
+import PageTranslator from "@/components/PageTranslator";
 import Index from "./pages/Index";
 
 // Lazy load non-critical pages
