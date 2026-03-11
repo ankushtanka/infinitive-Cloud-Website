@@ -126,9 +126,11 @@ const App = () => {
               </Routes>
             </Suspense>
             <SupportWidget />
+            <PageTranslator />
           </LenisProvider>
         </BrowserRouter>
       </TooltipProvider>
+      </LanguageProvider>
     </QueryClientProvider>
   );
 };
