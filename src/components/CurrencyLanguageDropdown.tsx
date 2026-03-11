@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Globe, ChevronDown, Check } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const currencies = [
   { code: "INR", symbol: "₹", label: "Indian Rupee", flag: "🇮🇳" },
