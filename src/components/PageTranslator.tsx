@@ -99,6 +99,7 @@ async function translateBatch(texts: string[], lang: string): Promise<string[]> 
 
 const PageTranslator = () => {
   const { language } = useLanguage();
+  const location = useLocation();
   const originalTextsMap = useRef<Map<Node, string>>(new Map());
   const originalAttrsMap = useRef<Map<Element, Record<string, string>>>(new Map());
   const isTranslating = useRef(false);
