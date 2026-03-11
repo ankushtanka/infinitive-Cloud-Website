@@ -284,22 +284,16 @@ const PageTranslator = () => {
     return () => clearTimeout(timer);
   }, [language, restoreOriginals, translatePage, startObserver]);
 
-  // Also re-translate on route changes
+  // Re-translate on route changes
   useEffect(() => {
-    const handleRouteChange = () => {
-      const lang = localStorage.getItem("ic_language") || "en";
-      if (lang !== "en") {
-        setTimeout(() => {
-          originalTextsMap.current.clear();
-          originalAttrsMap.current.clear();
-          translatePage(lang);
-        }, 800);
-      }
-    };
-
-    window.addEventListener("popstate", handleRouteChange);
-    return () => window.removeEventListener("popstate", handleRouteChange);
-  }, [translatePage]);
+    if (language === "en") return;
+    const timer = setTimeout(() => {
+      originalTextsMap.current.clear();
+      originalAttrsMap.current.clear();
+      translatePage(language);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [location.pathname, language, translatePage]);
 
   return null;
 };
