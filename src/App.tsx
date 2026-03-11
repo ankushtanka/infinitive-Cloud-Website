@@ -84,6 +84,7 @@ const LenisProvider = ({ children }: { children: React.ReactNode }) => {
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
+      <LanguageProvider>
       <TooltipProvider>
         <Toaster />
         <Sonner />
