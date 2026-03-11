@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Globe, ChevronDown, Check } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const currencies = [
   { code: "INR", symbol: "₹", label: "Indian Rupee", flag: "🇮🇳" },
@@ -20,9 +21,10 @@ const languages = [
 const CurrencyLanguageDropdown = () => {
   const [open, setOpen] = useState(false);
   const [currency, setCurrency] = useState(currencies[0]);
-  const [language, setLanguage] = useState(languages[0]);
+  const [selectedLanguage, setSelectedLanguage] = useState(languages[0]);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const [panelPos, setPanelPos] = useState({ top: 0, right: 0 });
+  const { setLanguage: setGlobalLanguage } = useLanguage();
 
   useEffect(() => {
     const savedCurrency = localStorage.getItem("ic_currency");
@@ -33,7 +35,7 @@ const CurrencyLanguageDropdown = () => {
     }
     if (savedLanguage) {
       const found = languages.find((l) => l.code === savedLanguage);
-      if (found) setLanguage(found);
+      if (found) setSelectedLanguage(found);
     }
   }, []);
 
@@ -53,8 +55,8 @@ const CurrencyLanguageDropdown = () => {
   };
 
   const handleLanguageChange = (l: typeof languages[0]) => {
-    setLanguage(l);
-    localStorage.setItem("ic_language", l.code);
+    setSelectedLanguage(l);
+    setGlobalLanguage(l.code);
   };
 
   const dropdown = open
@@ -110,7 +112,7 @@ const CurrencyLanguageDropdown = () => {
                     type="button"
                     onClick={() => handleLanguageChange(l)}
                     className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-150 ${
-                      language.code === l.code
+                      selectedLanguage.code === l.code
                         ? "bg-primary/10 text-primary font-semibold"
                         : "text-foreground/80 hover:bg-muted hover:text-foreground"
                     }`}
@@ -119,7 +121,7 @@ const CurrencyLanguageDropdown = () => {
                       <span className="font-semibold">{l.label}</span>
                       <span className="text-muted-foreground ml-1.5 text-xs">{l.native}</span>
                     </span>
-                    {language.code === l.code && <Check className="w-4 h-4 text-primary" />}
+                    {selectedLanguage.code === l.code && <Check className="w-4 h-4 text-primary" />}
                   </button>
                 ))}
               </div>
