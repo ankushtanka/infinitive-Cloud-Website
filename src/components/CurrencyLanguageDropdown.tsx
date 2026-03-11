@@ -121,7 +121,7 @@ const CurrencyLanguageDropdown = () => {
                       <span className="font-semibold">{l.label}</span>
                       <span className="text-muted-foreground ml-1.5 text-xs">{l.native}</span>
                     </span>
-                    {language.code === l.code && <Check className="w-4 h-4 text-primary" />}
+                    {selectedLanguage.code === l.code && <Check className="w-4 h-4 text-primary" />}
                   </button>
                 ))}
               </div>
