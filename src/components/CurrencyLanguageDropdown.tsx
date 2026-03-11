@@ -21,9 +21,10 @@ const languages = [
 const CurrencyLanguageDropdown = () => {
   const [open, setOpen] = useState(false);
   const [currency, setCurrency] = useState(currencies[0]);
-  const [language, setLanguage] = useState(languages[0]);
+  const [selectedLanguage, setSelectedLanguage] = useState(languages[0]);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const [panelPos, setPanelPos] = useState({ top: 0, right: 0 });
+  const { setLanguage: setGlobalLanguage } = useLanguage();
 
   useEffect(() => {
     const savedCurrency = localStorage.getItem("ic_currency");
