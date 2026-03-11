@@ -112,7 +112,7 @@ const CurrencyLanguageDropdown = () => {
                     type="button"
                     onClick={() => handleLanguageChange(l)}
                     className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-150 ${
-                      language.code === l.code
+                      selectedLanguage.code === l.code
                         ? "bg-primary/10 text-primary font-semibold"
                         : "text-foreground/80 hover:bg-muted hover:text-foreground"
                     }`}
