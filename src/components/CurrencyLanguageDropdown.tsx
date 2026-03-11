@@ -55,8 +55,8 @@ const CurrencyLanguageDropdown = () => {
   };
 
   const handleLanguageChange = (l: typeof languages[0]) => {
-    setLanguage(l);
-    localStorage.setItem("ic_language", l.code);
+    setSelectedLanguage(l);
+    setGlobalLanguage(l.code);
   };
 
   const dropdown = open
