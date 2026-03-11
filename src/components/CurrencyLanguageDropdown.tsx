@@ -35,7 +35,7 @@ const CurrencyLanguageDropdown = () => {
     }
     if (savedLanguage) {
       const found = languages.find((l) => l.code === savedLanguage);
-      if (found) setLanguage(found);
+      if (found) setSelectedLanguage(found);
     }
   }, []);
 
