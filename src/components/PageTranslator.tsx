@@ -1,4 +1,5 @@
 import { useEffect, useRef, useCallback } from "react";
+import { useLocation } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 
