@@ -137,15 +137,13 @@ const Navigation = () => {
         <div className="section-container">
           <div className="flex items-center justify-between h-16 lg:h-14">
             {/* Logo - prominent and clear */}
-            <Link to="/" className="flex items-center gap-3 group flex-shrink-0" onClick={handleCloseMenus}>
-              <div className="relative">
-                <img src={logo} alt="Infinitive Cloud Logo" className="h-12 lg:h-14 w-auto relative z-10 group-hover:scale-105 transition-transform duration-300" />
-              </div>
+            <Link to="/" className="flex items-center gap-2.5 group flex-shrink-0" onClick={handleCloseMenus}>
+              <img src={logo} alt="Infinitive Cloud Logo" className="h-9 lg:h-10 w-auto group-hover:scale-105 transition-transform duration-300" />
               <div className="flex flex-col leading-none">
-                <span className="text-lg lg:text-xl font-black text-foreground tracking-tight">
+                <span className="text-base lg:text-lg font-black text-foreground tracking-tight">
                   INFINITIVE <span className="text-primary">CLOUD</span>
                 </span>
-                <span className="text-[9px] lg:text-[10px] font-semibold text-muted-foreground tracking-[0.15em] mt-0.5">PRIVATE LIMITED</span>
+                <span className="text-[8px] lg:text-[9px] font-semibold text-muted-foreground tracking-[0.2em]">PRIVATE LIMITED</span>
               </div>
             </Link>
 
