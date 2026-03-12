@@ -54,9 +54,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 mb-8">
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-3 mb-4 group">
-              <div className="relative bg-background p-2 rounded-lg">
-                <img src={logo} alt="Infinitive Cloud Logo" className="h-14 w-auto" />
-              </div>
+              <img src={logo} alt="Infinitive Cloud Logo" className="h-14 w-auto" />
               <div className="flex flex-col">
                 <span className="text-lg font-black text-foreground">INFINITIVE <span className="text-primary">CLOUD</span></span>
                 <span className="text-xs font-semibold text-foreground/60 tracking-wide">PRIVATE LIMITED</span>
