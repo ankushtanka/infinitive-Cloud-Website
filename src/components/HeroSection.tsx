@@ -177,7 +177,7 @@ const HeroSection = () => {
               <span className="font-medium">30-Day Money-Back</span>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Animated stats counter */}
         <motion.div
