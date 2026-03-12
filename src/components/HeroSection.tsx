@@ -93,29 +93,24 @@ const HeroSection = () => {
 
       {/* Main hero content */}
       <div className="section-container w-full relative z-10 flex flex-col items-center justify-center flex-1">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="max-w-5xl w-full flex flex-col items-center text-center"
-        >
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 bg-primary/10 text-primary font-semibold text-sm px-5 py-2 rounded-full mb-8 border border-primary/20"
-          >
-            <Zap className="w-4 h-4" />
-            India's Fastest Growing Cloud Hosting
-          </motion.div>
-
+        <div className="max-w-5xl w-full flex flex-col items-center text-center">
           <h1 className="mb-6 font-extrabold leading-[1.1] text-3xl md:text-5xl lg:text-6xl xl:text-7xl tracking-tight">
             Premium{" "}
             <span className="gradient-text">Cloud & Web Hosting</span>
             <br />
             <span className="text-primary">Built for Speed & Scale</span>
           </h1>
+
+          {/* Badge */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="inline-flex items-center gap-2 bg-primary/10 text-primary font-semibold text-sm px-5 py-2 rounded-full mb-8 border border-primary/20 order-first"
+          >
+            <Zap className="w-4 h-4" />
+            India's Fastest Growing Cloud Hosting
+          </motion.div>
 
           <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground mb-6 max-w-3xl mx-auto leading-relaxed">
             Managed VPS, dedicated servers, shared hosting & enterprise infrastructure — powered by NVMe SSD, LiteSpeed, and 24/7 expert support.
@@ -182,7 +177,7 @@ const HeroSection = () => {
               <span className="font-medium">30-Day Money-Back</span>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Animated stats counter */}
         <motion.div
