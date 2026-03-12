@@ -126,16 +126,7 @@ const Navigation = () => {
               <CurrencyLanguageDropdown />
               <ThemeToggle />
               <div className="h-4 w-px bg-border/50 mx-1" />
-              <a
-                href={WHMCS_LOGIN}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-4 py-1 text-xs font-bold text-primary-foreground bg-primary hover:bg-primary/90 rounded-md transition-colors"
-                title="Login to Client Area"
-              >
-                <User className="w-3.5 h-3.5" />
-                Login
-              </a>
+              {/* Login button hidden until client area is ready */}
             </div>
           </div>
         </div>
@@ -297,10 +288,7 @@ const Navigation = () => {
                 {link.label}
               </Link>
             ))}
-            <a href={WHMCS_LOGIN} target="_blank" rel="noopener noreferrer" onClick={handleCloseMenus} className="text-foreground hover:text-primary hover:bg-muted transition-colors font-bold py-4 px-4 rounded-lg text-lg flex items-center gap-3">
-              <User className="w-5 h-5" />
-              Login
-            </a>
+            {/* Login button hidden until client area is ready */}
             <div className="flex items-center justify-between py-4 px-4">
               <span className="text-foreground font-bold text-lg">Dark Mode</span>
               <ThemeToggle />
