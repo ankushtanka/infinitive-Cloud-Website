@@ -126,16 +126,7 @@ const Navigation = () => {
               <CurrencyLanguageDropdown />
               <ThemeToggle />
               <div className="h-4 w-px bg-border/50 mx-1" />
-              <a
-                href={WHMCS_LOGIN}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-4 py-1 text-xs font-bold text-primary-foreground bg-primary hover:bg-primary/90 rounded-md transition-colors"
-                title="Login to Client Area"
-              >
-                <User className="w-3.5 h-3.5" />
-                Login
-              </a>
+              {/* Login button hidden until client area is ready */}
             </div>
           </div>
         </div>
