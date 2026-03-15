@@ -131,7 +131,7 @@ const DomainPriceComparison = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.25, duration: 0.6 }}
-          className="max-w-5xl mx-auto"
+          className="max-w-6xl mx-auto"
         >
           <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
           <div className="bg-card rounded-2xl border border-border overflow-visible min-w-[600px]" style={{ boxShadow: "var(--shadow-medium)" }}>
