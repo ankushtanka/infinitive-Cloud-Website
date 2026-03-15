@@ -67,9 +67,11 @@ const HeroSection = () => {
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-secondary/5 rounded-full blur-3xl animate-float" style={{ animationDelay: "3s" }} />
       </div>
 
-      {/* Top offer ticker */}
-      {/* Top offer ticker */}
-      <div className="relative z-10 w-full max-w-4xl mx-auto px-3 sm:px-4 mt-4 mb-8">
+      {/* Top offer ticker - hides on scroll */}
+      <motion.div 
+        style={{ opacity: tickerOpacity, height: tickerHeight, overflow: "hidden" }}
+        className="relative z-10 w-full max-w-4xl mx-auto px-3 sm:px-4 mt-4 mb-8"
+      >
         <Link to="/contact" className="block">
           <div className="overflow-hidden rounded-xl sm:rounded-2xl md:rounded-full bg-primary/10 border border-primary/20 hover:border-primary/40 transition-all cursor-pointer">
             <div className="flex items-center justify-center min-h-[44px] sm:min-h-[48px] md:h-12 px-3 sm:px-5 md:px-6 py-2 md:py-0">
