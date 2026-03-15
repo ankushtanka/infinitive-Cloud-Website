@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { MessageCircle, X, Phone, Headset } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const TooltipContent = ({ label, isHovered }: { label: string; isHovered: boolean }) => (
   <AnimatePresence mode="popLayout">
@@ -95,6 +96,7 @@ const SupportWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredLabel, setHoveredLabel] = useState<string | null>(null);
   const [unreadCount, setUnreadCount] = useState(0);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const checkTawk = setInterval(() => {
@@ -119,6 +121,13 @@ const SupportWidget = () => {
   const openTawk = () => {
     setUnreadCount(0);
     setIsOpen(false);
+
+    // On mobile/hamburger screens, open chat in a new page
+    if (isMobile) {
+      window.open("https://tawk.to/chat/68fb0774603401195169c6da/1j8a9a8jf", "_blank");
+      return;
+    }
+
     if (typeof window !== "undefined" && (window as any).Tawk_API) {
       const api = (window as any).Tawk_API;
       try {
@@ -127,15 +136,11 @@ const SupportWidget = () => {
       } catch (e) {
         // Tawk not ready yet
       }
-      // Hide the default bubble again when user minimizes or closes the chat
       api.onChatMinimized = () => {
         try { api.hideWidget(); } catch (e) {}
       };
       api.onChatHidden = () => {
         try { api.hideWidget(); } catch (e) {}
-      };
-      api.onChatMaximized = () => {
-        // Ensure our widget stays below Tawk's chat window
       };
     }
   };
