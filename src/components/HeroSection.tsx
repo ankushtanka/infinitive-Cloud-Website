@@ -109,7 +109,7 @@ const HeroSection = () => {
             India's Fastest Growing Cloud Hosting
           </motion.div>
 
-          <h1 className="mb-4 md:mb-6 font-extrabold leading-[1.1] text-2xl sm:text-3xl md:text-[clamp(2.5rem,4.5vw,4.5rem)] tracking-tight">
+          <h1 className="mb-4 md:mb-6 font-extrabold leading-[1.15] md:leading-[clamp(1.05,1.1vw+0.9,1.15)] text-2xl sm:text-3xl md:text-[clamp(2.5rem,4.5vw,4.5rem)] tracking-tight">
             <span className="whitespace-nowrap">Premium{" "}
             <span className="gradient-text">Cloud & Web Hosting</span></span>
             <br />
