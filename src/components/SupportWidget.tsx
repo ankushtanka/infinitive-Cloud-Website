@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { MessageCircle, X, Phone, Headset, ArrowUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const TooltipContent = ({ label, isHovered }: { label: string; isHovered: boolean }) => (
   <AnimatePresence mode="popLayout">
@@ -78,6 +80,8 @@ const SupportWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredLabel, setHoveredLabel] = useState<string | null>(null);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const isMobile = useIsMobile();
+  const navigate = useNavigate();
 
   useEffect(() => {
     let ticking = false;
@@ -99,7 +103,35 @@ const SupportWidget = () => {
 
   const openTawk = () => {
     setIsOpen(false);
-    window.open(TAWK_CHAT_URL, "_blank");
+    if (isMobile) {
+      navigate("/live-chat");
+    } else {
+      const tawk = (window as any).Tawk_API;
+      if (tawk && tawk.maximize) {
+        tawk.showWidget?.();
+        tawk.maximize();
+      } else {
+        // Load Tawk script if not already loaded
+        const existing = document.querySelector('script[src*="embed.tawk.to"]');
+        if (!existing) {
+          const s = document.createElement("script");
+          s.type = "text/javascript";
+          s.async = true;
+          s.src = `https://embed.tawk.to/68fb0774603401195169c6da/1j8a9a8jf`;
+          s.charset = "UTF-8";
+          s.setAttribute("crossorigin", "*");
+          document.head.appendChild(s);
+        }
+        const interval = setInterval(() => {
+          const t = (window as any).Tawk_API;
+          if (t && t.maximize) {
+            t.maximize();
+            clearInterval(interval);
+          }
+        }, 300);
+        setTimeout(() => clearInterval(interval), 10000);
+      }
+    }
   };
 
   const actions = [
@@ -140,11 +172,11 @@ const SupportWidget = () => {
       <button
         onClick={scrollToTop}
         aria-label="Back to top"
-        className={`p-2.5 rounded-full bg-primary/80 text-primary-foreground shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-primary hover:scale-110 ${
+        className={`flex items-center justify-center w-14 h-14 rounded-full bg-primary/80 text-primary-foreground shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-primary hover:scale-110 ${
           showBackToTop ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
         }`}
       >
-        <ArrowUp className="w-4 h-4" />
+        <ArrowUp className="w-6 h-6" />
       </button>
 
       {/* Action buttons */}
