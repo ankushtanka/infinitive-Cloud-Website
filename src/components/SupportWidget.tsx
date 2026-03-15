@@ -96,6 +96,7 @@ const SupportWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredLabel, setHoveredLabel] = useState<string | null>(null);
   const [unreadCount, setUnreadCount] = useState(0);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const checkTawk = setInterval(() => {
