@@ -40,6 +40,7 @@ const SSLCertificates = lazy(() => import("./pages/solutions/SSLCertificates"));
 const DomainRegistration = lazy(() => import("./pages/solutions/DomainRegistration"));
 const ServerManagement = lazy(() => import("./pages/solutions/ServerManagement"));
 const CloudMigration = lazy(() => import("./pages/solutions/CloudMigration"));
+const ServerLicenses = lazy(() => import("./pages/solutions/ServerLicenses"));
 const LiveChat = lazy(() => import("./pages/LiveChat"));
 
 const queryClient = new QueryClient();
@@ -122,6 +123,7 @@ const App = () => {
                 <Route path="/solutions/domains" element={<DomainRegistration />} />
                 <Route path="/solutions/server-management" element={<ServerManagement />} />
                 <Route path="/solutions/cloud-migration" element={<CloudMigration />} />
+                <Route path="/solutions/server-licenses" element={<ServerLicenses />} />
                 <Route path="/live-chat" element={<LiveChat />} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
