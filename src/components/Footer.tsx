@@ -21,6 +21,7 @@ const Footer = () => {
       links: [
         { label: "SSL Certificates", path: "/solutions/ssl-certificates" },
         { label: "Domain Registration", path: "/solutions/domains" },
+        { label: "Server Licenses", path: "/solutions/server-licenses" },
         { label: "Server Management", path: "/solutions/server-management" },
         { label: "Cloud Migration", path: "/solutions/cloud-migration" },
         { label: "Contact Us", path: "/contact" },
