@@ -170,11 +170,11 @@ const DomainPriceComparison = () => {
                   const competitorPrice = row[c.key];
                   const savings = getSavingsPercent(row.infinitive, competitorPrice);
                   return (
-                    <div key={c.key} className="p-3 md:p-4 text-center">
-                      <span className="text-sm text-muted-foreground line-through font-mono tabular-nums">
+                    <div key={c.key} className="p-3 md:p-5 text-center">
+                      <span className="text-sm md:text-base text-muted-foreground line-through font-mono tabular-nums">
                         {formatPrice(competitorPrice)}
                       </span>
-                      <div className="text-[10px] text-primary font-semibold mt-0.5">
+                      <div className="text-[10px] sm:text-xs text-primary font-semibold mt-0.5">
                         Save {savings}%
                       </div>
                     </div>

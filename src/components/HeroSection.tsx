@@ -94,7 +94,7 @@ const HeroSection = () => {
             </div>
           </div>
         </Link>
-      </div>
+      </motion.div>
 
       {/* Main hero content */}
       <div className="section-container w-full relative z-10 flex flex-col items-center justify-center flex-1">
