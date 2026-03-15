@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { MessageCircle, X, Phone, Headset } from "lucide-react";
+import { useState, useEffect } from "react";
+import { MessageCircle, X, Phone, Headset, ArrowUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const TooltipContent = ({ label, isHovered }: { label: string; isHovered: boolean }) => (
