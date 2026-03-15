@@ -159,12 +159,12 @@ const DomainPriceComparison = () => {
                 key={row.tld}
                 className={`grid grid-cols-6 ${i < domainPrices.length - 1 ? "border-b border-border/50" : ""} hover:bg-muted/30 transition-colors`}
               >
-                <div className="p-3 md:p-4 font-bold text-sm flex items-center">{row.tld}</div>
-                <div className="p-3 md:p-4 text-center">
-                  <span className="font-black text-primary text-sm md:text-base font-mono tabular-nums">
+                <div className="p-3 md:p-5 font-bold text-sm md:text-base flex items-center">{row.tld}</div>
+                <div className="p-3 md:p-5 text-center">
+                  <span className="font-black text-primary text-base md:text-lg font-mono tabular-nums">
                     {formatPrice(row.infinitive)}
                   </span>
-                  <span className="text-xs text-muted-foreground">/yr</span>
+                  <span className="text-xs sm:text-sm text-muted-foreground">/yr</span>
                 </div>
                 {competitors.map((c) => {
                   const competitorPrice = row[c.key];
