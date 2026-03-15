@@ -97,7 +97,7 @@ const DomainPriceComparison = () => {
                 <div className="p-5 text-center relative">
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
                     <span className="bg-primary text-primary-foreground text-xs sm:text-sm font-bold px-4 py-1.5 rounded-full flex items-center gap-1.5 shadow-xl whitespace-nowrap ring-2 ring-primary/30">
-                      <Crown className="w-4 h-4" /> MOST POPULAR
+                      <Crown className="w-4 h-4" /> BEST VALUE
                     </span>
                   </div>
                   <span className="font-bold text-base gradient-text">Infinitive Cloud</span>
