@@ -64,7 +64,14 @@ const Navigation = () => {
   const [megaMenuCategory, setMegaMenuCategory] = useState<string | undefined>();
   const [mobileServiceOpen, setMobileServiceOpen] = useState(false);
   const [mobileSubDropdown, setMobileSubDropdown] = useState<string | null>(null);
+  const [topBarVisible, setTopBarVisible] = useState(true);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    const onScroll = () => setTopBarVisible(window.scrollY < 50);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const handleServicesEnter = useCallback(() => {
     if (closeTimeoutRef.current) {
