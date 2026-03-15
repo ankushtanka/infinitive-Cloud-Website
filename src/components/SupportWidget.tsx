@@ -132,8 +132,21 @@ const SupportWidget = () => {
     },
   ];
 
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
   return (
     <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-end gap-3">
+      {/* Back to top - always above everything */}
+      <button
+        onClick={scrollToTop}
+        aria-label="Back to top"
+        className={`p-2.5 rounded-full bg-primary/80 text-primary-foreground shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-primary hover:scale-110 ${
+          showBackToTop ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
+        }`}
+      >
+        <ArrowUp className="w-4 h-4" />
+      </button>
+
       {/* Action buttons */}
       <AnimatePresence>
         {isOpen && (
