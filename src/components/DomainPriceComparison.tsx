@@ -94,14 +94,14 @@ const DomainPriceComparison = () => {
           transition={{ duration: 0.5 }}
           className="text-center mb-14"
         >
-          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary font-semibold text-sm px-4 py-1.5 rounded-full mb-4">
-            <TrendingDown className="w-4 h-4" />
+          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary font-semibold text-sm sm:text-base px-5 py-2 rounded-full mb-5">
+            <TrendingDown className="w-4 h-4 sm:w-5 sm:h-5" />
             Save up to {avgSavings}% on Domains
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 px-2">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-5 px-2">
             Domains at <span className="gradient-text">Unbeatable Prices</span>
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
             Why pay more? Get the same domains at a fraction of what GoDaddy, Hostinger, and others charge. No hidden renewals, no upsells.
           </p>
         </motion.div>
