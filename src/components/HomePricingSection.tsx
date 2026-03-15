@@ -70,36 +70,37 @@ const categories = [
 
 const HomePricingSection = () => {
   return (
-    <section className="py-20 bg-muted/30" id="pricing">
+    <section className="py-12 md:py-20 bg-muted/30" id="pricing">
       <div className="section-container">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+        <div className="text-center mb-8 md:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
             Hosting Plans That <span className="gradient-text">Scale With You</span>
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Enterprise-grade infrastructure at India's most competitive prices. All plans include free SSL, 24/7 support, 99.99% uptime SLA, a 15-day free trial, and a 30-day money-back guarantee.
+          <p className="text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto">
+            Enterprise-grade infrastructure at India's most competitive prices. All plans include free SSL, 24/7 support & 99.99% uptime SLA.
           </p>
         </div>
 
-        <div className="space-y-16">
+        <div className="space-y-10 md:space-y-16">
           {categories.map((category, catIndex) => (
             <div key={catIndex}>
-              <div className="flex items-center gap-3 mb-8">
-                <div className="p-3 rounded-xl bg-primary/10">
-                  <category.icon className="w-6 h-6 text-primary" />
+              <div className="flex items-center gap-3 mb-5 md:mb-8">
+                <div className="p-2 md:p-3 rounded-xl bg-primary/10">
+                  <category.icon className="w-5 h-5 md:w-6 md:h-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-xl md:text-2xl font-bold">{category.title}</h3>
-                  <p className="text-sm text-muted-foreground">{category.description}</p>
+                  <h3 className="text-lg md:text-2xl font-bold">{category.title}</h3>
+                  <p className="text-xs md:text-sm text-muted-foreground">{category.description}</p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Mobile: only show popular plan, Desktop: show all */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                 {category.plans.map((plan, planIndex) => (
                   <Card
                     key={planIndex}
                     className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 ${
-                      plan.popular ? "border-primary/50 shadow-primary/10 shadow-lg ring-2 ring-primary/20 scale-[1.02]" : ""
+                      plan.popular ? "border-primary/50 shadow-primary/10 shadow-lg ring-2 ring-primary/20 md:scale-[1.02]" : "hidden md:block"
                     }`}
                   >
                     {plan.popular && (
@@ -112,31 +113,32 @@ const HomePricingSection = () => {
                         </span>
                       </div>
                     )}
-                    <CardHeader className="pb-3 pt-8 px-8">
-                      <CardTitle className="text-xl font-bold">{plan.name}</CardTitle>
+                    <CardHeader className="pb-2 md:pb-3 pt-6 md:pt-8 px-5 md:px-8">
+                      <CardTitle className="text-lg md:text-xl font-bold">{plan.name}</CardTitle>
                     </CardHeader>
-                    <CardContent className="px-8 pb-8">
-                      <div className="mb-6">
+                    <CardContent className="px-5 md:px-8 pb-5 md:pb-8">
+                      <div className="mb-4 md:mb-6">
                         <span className="text-sm text-muted-foreground line-through">{plan.originalPrice}</span>
                         <div className="flex items-baseline gap-1">
-                          <span className="text-4xl md:text-5xl font-black gradient-text">{plan.price}</span>
-                          <span className="text-base text-muted-foreground">{plan.period}</span>
+                          <span className="text-3xl md:text-5xl font-black gradient-text">{plan.price}</span>
+                          <span className="text-sm md:text-base text-muted-foreground">{plan.period}</span>
                         </div>
                         <p className="text-xs text-primary font-medium mt-1">15-Day Free Trial · 30-Day Money-Back</p>
                       </div>
-                      <ul className="space-y-3 mb-8">
-                        {plan.features.map((feature, i) => (
-                          <li key={i} className="flex items-center gap-3 bg-muted/50 rounded-lg px-3 py-2">
-                            <div className="w-5 h-5 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0">
-                              <Check className="w-3 h-3 text-primary" />
+                      {/* Show only 4 features on mobile */}
+                      <ul className="space-y-2 md:space-y-3 mb-5 md:mb-8">
+                        {plan.features.slice(0, typeof window !== 'undefined' && window.innerWidth < 768 ? 4 : plan.features.length).map((feature, i) => (
+                          <li key={i} className="flex items-center gap-2 md:gap-3 bg-muted/50 rounded-lg px-2.5 md:px-3 py-1.5 md:py-2">
+                            <div className="w-4 h-4 md:w-5 md:h-5 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0">
+                              <Check className="w-2.5 h-2.5 md:w-3 md:h-3 text-primary" />
                             </div>
-                            <span className="text-sm font-medium text-foreground">{feature}</span>
+                            <span className="text-xs md:text-sm font-medium text-foreground">{feature}</span>
                           </li>
                         ))}
                       </ul>
                       <Link to="/contact">
                         <Button
-                          className={`w-full h-12 text-sm font-bold ${plan.popular ? "btn-gradient" : ""}`}
+                          className={`w-full h-11 md:h-12 text-sm font-bold ${plan.popular ? "btn-gradient" : ""}`}
                           variant={plan.popular ? "default" : "outline"}
                         >
                           Get Started
@@ -150,9 +152,9 @@ const HomePricingSection = () => {
           ))}
         </div>
 
-        <div className="text-center mt-14">
+        <div className="text-center mt-8 md:mt-14">
           <Link to="/pricing">
-            <Button size="lg" variant="outline" className="group text-base">
+            <Button size="lg" variant="outline" className="group text-sm md:text-base">
               View All Plans & Compare
               <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Button>
