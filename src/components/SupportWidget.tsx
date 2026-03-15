@@ -1,8 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { MessageCircle, X, Phone, Headset } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 const TooltipContent = ({ label, isHovered }: { label: string; isHovered: boolean }) => (
   <AnimatePresence mode="popLayout">
