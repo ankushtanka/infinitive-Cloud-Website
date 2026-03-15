@@ -111,7 +111,7 @@ const DomainPriceComparison = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.15, duration: 0.5 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-12"
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-5xl mx-auto mb-14"
         >
           {[
             { value: `${avgSavings}%`, label: "Avg. Savings" },
