@@ -170,7 +170,7 @@ const SupportWidget = () => {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
-    <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-end gap-3">
+    <div className={`fixed right-6 z-[100] flex flex-col items-end gap-3 transition-all duration-300 ${bannerVisible ? "bottom-[4.5rem]" : "bottom-6"}`}>
       {/* Back to top - always above everything */}
       <button
         onClick={scrollToTop}
