@@ -40,6 +40,7 @@ const SSLCertificates = lazy(() => import("./pages/solutions/SSLCertificates"));
 const DomainRegistration = lazy(() => import("./pages/solutions/DomainRegistration"));
 const ServerManagement = lazy(() => import("./pages/solutions/ServerManagement"));
 const CloudMigration = lazy(() => import("./pages/solutions/CloudMigration"));
+const LiveChat = lazy(() => import("./pages/LiveChat"));
 
 const queryClient = new QueryClient();
 
