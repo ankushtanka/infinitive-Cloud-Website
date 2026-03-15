@@ -36,6 +36,9 @@ const useCountUp = (end: number, duration: number = 2000, suffix: string = "") =
 
 const HeroSection = () => {
   const [activeOffer, setActiveOffer] = useState(0);
+  const { scrollY } = useScroll();
+  const tickerOpacity = useTransform(scrollY, [0, 80], [1, 0]);
+  const tickerHeight = useTransform(scrollY, [0, 80], ["auto", "0px"]);
 
   const offers = [
     { text: "🔥 Limited Time: Get 50% OFF on first 3 months", code: "WELCOME50" },
