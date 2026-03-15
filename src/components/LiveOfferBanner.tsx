@@ -7,8 +7,13 @@ const LiveOfferBanner = () => {
   const [visible, setVisible] = useState(true);
   const [timeLeft, setTimeLeft] = useState({ hours: 23, minutes: 59, seconds: 59 });
 
+  // Communicate banner visibility to other components
   useEffect(() => {
-    // Calculate time to end of day
+    document.body.setAttribute("data-offer-banner", visible ? "true" : "false");
+    return () => document.body.removeAttribute("data-offer-banner");
+  }, [visible]);
+
+  useEffect(() => {
     const updateTimer = () => {
       const now = new Date();
       const endOfDay = new Date(now);

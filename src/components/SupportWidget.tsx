@@ -80,25 +80,28 @@ const SupportWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredLabel, setHoveredLabel] = useState<string | null>(null);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [bannerVisible, setBannerVisible] = useState(true);
   const isMobile = useIsMobile();
   const navigate = useNavigate();
 
   useEffect(() => {
     let ticking = false;
-    const checkScroll = () => {
+    const checkState = () => {
       const scrollY = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
       setShowBackToTop(scrollY > 400);
+      setBannerVisible(document.body.getAttribute("data-offer-banner") === "true");
       ticking = false;
     };
     const onScroll = () => {
-      if (!ticking) { requestAnimationFrame(checkScroll); ticking = true; }
+      if (!ticking) { requestAnimationFrame(checkState); ticking = true; }
     };
     window.addEventListener("scroll", onScroll, { passive: true });
-    const interval = setInterval(() => {
-      const scrollY = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
-      setShowBackToTop(scrollY > 400);
-    }, 500);
-    return () => { window.removeEventListener("scroll", onScroll); clearInterval(interval); };
+    const observer = new MutationObserver(() => {
+      setBannerVisible(document.body.getAttribute("data-offer-banner") === "true");
+    });
+    observer.observe(document.body, { attributes: true, attributeFilter: ["data-offer-banner"] });
+    const interval = setInterval(checkState, 500);
+    return () => { window.removeEventListener("scroll", onScroll); observer.disconnect(); clearInterval(interval); };
   }, []);
 
   const openTawk = () => {
@@ -167,7 +170,7 @@ const SupportWidget = () => {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
-    <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-end gap-3">
+    <div className={`fixed right-6 z-[100] flex flex-col items-end gap-3 transition-all duration-300 ${bannerVisible ? "bottom-[4.5rem]" : "bottom-6"}`}>
       {/* Back to top - always above everything */}
       <button
         onClick={scrollToTop}
