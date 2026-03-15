@@ -126,7 +126,7 @@ const App = () => {
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
-            <SupportWidget />
+            
             <BackToTop />
             <PageTranslator />
           </LenisProvider>
