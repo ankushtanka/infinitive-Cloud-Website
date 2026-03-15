@@ -50,8 +50,8 @@ const LenisProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.4,
-      easing: (t) => 1 - Math.pow(1 - t, 3),
+      duration: 0.8,
+      easing: (t) => 1 - Math.pow(1 - t, 2),
       smoothWheel: true,
       wheelMultiplier: 1,
       touchMultiplier: 2,
