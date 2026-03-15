@@ -56,7 +56,7 @@ const Footer = () => {
             <Link to="/" className="flex items-center gap-3 mb-4 group">
               <img src={logo} alt="Infinitive Cloud Logo" className="h-14 w-auto" />
               <div className="flex flex-col">
-                <span className="text-lg font-black text-foreground">INFINITIVE <span className="text-primary">CLOUD</span></span>
+                <span className="text-lg font-black text-foreground">INFINITIVE <span className="text-primary">CLOUD</span><sup className="text-[0.5em] align-super font-bold text-muted-foreground">™</sup></span>
                 <span className="text-xs font-semibold text-foreground/60 tracking-wide">PRIVATE LIMITED</span>
               </div>
             </Link>

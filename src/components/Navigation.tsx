@@ -153,7 +153,7 @@ const Navigation = () => {
               <img src={logo} alt="Infinitive Cloud Logo" className="h-11 lg:h-13 w-auto group-hover:scale-105 transition-transform duration-300" />
               <div className="flex flex-col leading-none">
                 <span className="text-base lg:text-lg font-black text-foreground tracking-tight">
-                  INFINITIVE <span className="text-primary">CLOUD</span>
+                  INFINITIVE <span className="text-primary">CLOUD</span><sup className="text-[0.5em] align-super font-bold text-muted-foreground">™</sup>
                 </span>
                 <span className="text-[8px] lg:text-[9px] font-semibold text-muted-foreground tracking-[0.2em]">PRIVATE LIMITED</span>
               </div>
