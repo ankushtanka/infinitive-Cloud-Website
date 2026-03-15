@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-import { MessageCircle, X, Phone, Headset } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
+import { MessageCircle, X, Phone, Headset, ArrowUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 const TooltipContent = ({ label, isHovered }: { label: string; isHovered: boolean }) => (
   <AnimatePresence mode="popLayout">
@@ -74,90 +72,40 @@ const ActionButton = ({
 const WHATSAPP_NUMBER = "918690393087";
 const PHONE_NUMBER = "+918690393087";
 
-const playNotificationSound = () => {
-  try {
-    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.frequency.setValueAtTime(880, ctx.currentTime);
-    osc.frequency.setValueAtTime(1100, ctx.currentTime + 0.1);
-    gain.gain.setValueAtTime(0.15, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.3);
-  } catch (e) {
-    // Audio not supported
-  }
-};
+const TAWK_CHAT_URL = "https://tawk.to/chat/68fb0774603401195169c6da/1j8a9a8jf";
 
 const SupportWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredLabel, setHoveredLabel] = useState<string | null>(null);
-  const [unreadCount, setUnreadCount] = useState(0);
-  const isMobile = useIsMobile();
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
   useEffect(() => {
-    const checkTawk = setInterval(() => {
-      if (typeof window !== "undefined" && (window as any).Tawk_API) {
-        const api = (window as any).Tawk_API;
-        const onNewMessage = () => {
-          setUnreadCount((prev) => prev + 1);
-          playNotificationSound();
-          toast({
-            title: "New message",
-            description: "You have a new message from support.",
-          });
-        };
-        api.onChatMessageAgent = onNewMessage;
-        api.onChatMessageSystem = onNewMessage;
-        clearInterval(checkTawk);
-      }
-    }, 1000);
-    return () => clearInterval(checkTawk);
+    let ticking = false;
+    const checkScroll = () => {
+      const scrollY = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+      setShowBackToTop(scrollY > 400);
+      ticking = false;
+    };
+    const onScroll = () => {
+      if (!ticking) { requestAnimationFrame(checkScroll); ticking = true; }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    const interval = setInterval(() => {
+      const scrollY = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+      setShowBackToTop(scrollY > 400);
+    }, 500);
+    return () => { window.removeEventListener("scroll", onScroll); clearInterval(interval); };
   }, []);
 
   const openTawk = () => {
-    setUnreadCount(0);
     setIsOpen(false);
-
-    // On mobile/hamburger screens, open chat in a new page
-    if (isMobile) {
-      window.open("https://tawk.to/chat/68fb0774603401195169c6da/1j8a9a8jf", "_blank");
-      return;
-    }
-
-    if (typeof window !== "undefined" && (window as any).Tawk_API) {
-      const api = (window as any).Tawk_API;
-      try {
-        api.showWidget();
-        api.maximize();
-      } catch (e) {
-        // Tawk not ready yet
-      }
-      api.onChatMinimized = () => {
-        try { api.hideWidget(); } catch (e) {}
-      };
-      api.onChatHidden = () => {
-        try { api.hideWidget(); } catch (e) {}
-      };
-    }
+    window.open(TAWK_CHAT_URL, "_blank");
   };
 
   const actions = [
     {
       label: "Live Chat",
-      icon: (
-        <span className="relative">
-          <Headset className="w-5 h-5" />
-          {unreadCount > 0 && (
-            <span className="absolute -top-2 -right-2 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold bg-destructive text-destructive-foreground rounded-full animate-pulse">
-              {unreadCount > 9 ? "9+" : unreadCount}
-            </span>
-          )}
-        </span>
-      ),
+      icon: <Headset className="w-5 h-5" />,
       onClick: openTawk,
       bg: "bg-primary",
       hover: "hover:bg-primary-hover",
@@ -184,8 +132,21 @@ const SupportWidget = () => {
     },
   ];
 
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
   return (
     <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-end gap-3">
+      {/* Back to top - always above everything */}
+      <button
+        onClick={scrollToTop}
+        aria-label="Back to top"
+        className={`p-2.5 rounded-full bg-primary/80 text-primary-foreground shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-primary hover:scale-110 ${
+          showBackToTop ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
+        }`}
+      >
+        <ArrowUp className="w-4 h-4" />
+      </button>
+
       {/* Action buttons */}
       <AnimatePresence>
         {isOpen && (
