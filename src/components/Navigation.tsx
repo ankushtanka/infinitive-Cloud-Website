@@ -144,9 +144,7 @@ const Navigation = () => {
 
       {/* Main navigation */}
       <nav
-        className="fixed left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/50 shadow-soft transition-[top] duration-300"
-        style={{ top: topBarVisible ? undefined : "0" }}
-        {...(!topBarVisible ? {} : {})}
+        className={`fixed left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/50 shadow-soft transition-[top] duration-300 top-0 ${topBarVisible ? "lg:top-9" : "lg:top-0"}`}
       >
         <div className="section-container">
           <div className="flex items-center justify-between h-16 lg:h-14">
