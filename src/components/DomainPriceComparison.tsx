@@ -183,6 +183,7 @@ const DomainPriceComparison = () => {
               </div>
             ))}
           </div>
+          </div>
 
           <p className="text-xs text-muted-foreground text-center mt-4">
             * Prices shown are for new registrations (1st year). All prices include GST. Competitor prices are approximate and may vary.
