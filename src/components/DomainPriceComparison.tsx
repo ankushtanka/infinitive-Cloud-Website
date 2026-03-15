@@ -133,7 +133,8 @@ const DomainPriceComparison = () => {
           transition={{ delay: 0.25, duration: 0.6 }}
           className="max-w-5xl mx-auto"
         >
-          <div className="bg-card rounded-2xl border border-border overflow-visible" style={{ boxShadow: "var(--shadow-medium)" }}>
+          <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
+          <div className="bg-card rounded-2xl border border-border overflow-visible min-w-[600px]" style={{ boxShadow: "var(--shadow-medium)" }}>
             {/* Table header */}
             <div className="grid grid-cols-6 bg-muted/50 border-b border-border rounded-t-2xl">
               <div className="p-3 md:p-4 font-bold text-sm">Domain</div>
