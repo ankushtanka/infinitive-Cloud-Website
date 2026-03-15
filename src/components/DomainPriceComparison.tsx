@@ -98,7 +98,7 @@ const DomainPriceComparison = () => {
             <TrendingDown className="w-4 h-4" />
             Save up to {avgSavings}% on Domains
           </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 px-2">
             Domains at <span className="gradient-text">Unbeatable Prices</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
