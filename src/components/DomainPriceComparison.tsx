@@ -119,9 +119,9 @@ const DomainPriceComparison = () => {
             { value: "Free", label: "WHOIS Privacy" },
             { value: "Free", label: "DNS Management" },
           ].map((stat, i) => (
-            <div key={i} className="bg-card border border-border/50 rounded-xl p-4 text-center">
-              <div className="text-2xl md:text-3xl font-black gradient-text">{stat.value}</div>
-              <div className="text-xs text-muted-foreground font-medium mt-1">{stat.label}</div>
+            <div key={i} className="bg-card border border-border/50 rounded-xl p-5 md:p-6 text-center">
+              <div className="text-2xl sm:text-3xl md:text-4xl font-black gradient-text">{stat.value}</div>
+              <div className="text-xs sm:text-sm text-muted-foreground font-medium mt-1">{stat.label}</div>
             </div>
           ))}
         </motion.div>
