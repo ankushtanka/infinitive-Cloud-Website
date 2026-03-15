@@ -138,13 +138,13 @@ const DomainPriceComparison = () => {
             {/* Table header */}
             <div className="grid grid-cols-6 bg-muted/50 border-b border-border rounded-t-2xl">
               <div className="p-3 md:p-4 font-bold text-sm">Domain</div>
-              <div className="p-3 md:p-4 text-center relative">
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="bg-primary text-primary-foreground text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                    <Crown className="w-3 h-3" /> LOWEST
+              <div className="p-3 md:p-5 text-center relative">
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
+                  <span className="bg-primary text-primary-foreground text-[11px] sm:text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-lg whitespace-nowrap">
+                    <Crown className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> MOST POPULAR
                   </span>
                 </div>
-                <span className="font-bold text-sm gradient-text">Infinitive Cloud</span>
+                <span className="font-bold text-sm md:text-base gradient-text">Infinitive Cloud</span>
               </div>
               {competitors.map((c) => (
                 <div key={c.key} className="p-3 md:p-4 text-center font-medium text-xs md:text-sm text-muted-foreground">
