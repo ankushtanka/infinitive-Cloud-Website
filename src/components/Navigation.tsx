@@ -64,7 +64,14 @@ const Navigation = () => {
   const [megaMenuCategory, setMegaMenuCategory] = useState<string | undefined>();
   const [mobileServiceOpen, setMobileServiceOpen] = useState(false);
   const [mobileSubDropdown, setMobileSubDropdown] = useState<string | null>(null);
+  const [topBarVisible, setTopBarVisible] = useState(true);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    const onScroll = () => setTopBarVisible(window.scrollY < 50);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const handleServicesEnter = useCallback(() => {
     if (closeTimeoutRef.current) {
@@ -114,8 +121,11 @@ const Navigation = () => {
 
   return (
     <>
-      {/* Top utility bar - desktop only */}
-      <div className="hidden lg:block fixed top-0 left-0 right-0 z-50 bg-muted/80 backdrop-blur-md border-b border-border/30">
+      {/* Top utility bar - desktop only, hides on scroll */}
+      <div
+        className="hidden lg:block fixed top-0 left-0 right-0 z-50 bg-muted/80 backdrop-blur-md border-b border-border/30 transition-transform duration-300"
+        style={{ transform: topBarVisible ? "translateY(0)" : "translateY(-100%)" }}
+      >
         <div className="section-container">
           <div className="flex items-center justify-between h-9">
             <div className="flex items-center gap-4 text-xs text-foreground font-medium">
@@ -133,7 +143,9 @@ const Navigation = () => {
       </div>
 
       {/* Main navigation */}
-      <nav className="fixed top-0 lg:top-9 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/50 shadow-soft">
+      <nav
+        className={`fixed left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/50 shadow-soft transition-[top] duration-300 top-0 ${topBarVisible ? "lg:top-9" : "lg:top-0"}`}
+      >
         <div className="section-container">
           <div className="flex items-center justify-between h-16 lg:h-14">
             {/* Logo - prominent and clear */}
