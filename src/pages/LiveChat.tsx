@@ -45,6 +45,7 @@ const LiveChat = () => {
       <PageSEO
         title="Live Chat Support | Infinitive Cloud"
         description="Chat live with our support team for instant help with hosting, servers, and cloud services."
+        canonical="https://infinitivecloud.com/live-chat"
       />
       <div className="min-h-screen bg-background flex flex-col">
         {/* Header */}

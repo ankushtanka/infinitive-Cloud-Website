@@ -122,6 +122,7 @@ const App = () => {
                 <Route path="/solutions/domains" element={<DomainRegistration />} />
                 <Route path="/solutions/server-management" element={<ServerManagement />} />
                 <Route path="/solutions/cloud-migration" element={<CloudMigration />} />
+                <Route path="/live-chat" element={<LiveChat />} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
