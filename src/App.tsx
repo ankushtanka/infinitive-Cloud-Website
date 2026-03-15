@@ -127,7 +127,7 @@ const App = () => {
               </Routes>
             </Suspense>
             <SupportWidget />
-            <BackToTop />
+            
             <PageTranslator />
           </LenisProvider>
         </BrowserRouter>
