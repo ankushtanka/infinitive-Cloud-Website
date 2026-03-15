@@ -1,5 +1,3 @@
-import { motion } from "framer-motion";
-
 const technologies = [
   { name: "cPanel", icon: "🖥️" },
   { name: "WHM", icon: "⚙️" },
@@ -17,9 +15,9 @@ const technologies = [
 
 const TechLogosSection = () => {
   return (
-    <section className="py-12 bg-muted/20 border-y border-border/30">
+    <section className="py-6 md:py-12 bg-muted/20 border-y border-border/30">
       <div className="section-container">
-        <p className="text-center text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-8">
+        <p className="text-center text-xs md:text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4 md:mb-8">
           Powered by Industry-Leading Technologies
         </p>
         <div className="relative overflow-hidden">
@@ -27,10 +25,10 @@ const TechLogosSection = () => {
             {[...technologies, ...technologies].map((tech, i) => (
               <div
                 key={i}
-                className="flex items-center gap-2 px-6 py-3 mx-3 bg-card/50 border border-border/30 rounded-xl flex-shrink-0 hover:border-primary/30 transition-colors"
+                className="flex items-center gap-1.5 md:gap-2 px-3 md:px-6 py-2 md:py-3 mx-1.5 md:mx-3 bg-card/50 border border-border/30 rounded-lg md:rounded-xl flex-shrink-0 hover:border-primary/30 transition-colors"
               >
-                <span className="text-xl">{tech.icon}</span>
-                <span className="text-sm font-semibold text-foreground/80 whitespace-nowrap">{tech.name}</span>
+                <span className="text-base md:text-xl">{tech.icon}</span>
+                <span className="text-xs md:text-sm font-semibold text-foreground/80 whitespace-nowrap">{tech.name}</span>
               </div>
             ))}
           </div>
