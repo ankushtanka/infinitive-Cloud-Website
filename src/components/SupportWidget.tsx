@@ -106,10 +106,10 @@ const SupportWidget = () => {
     if (isMobile) {
       navigate("/live-chat");
     } else {
-      // Desktop: load Tawk.to inline widget
-      if (window.Tawk_API && window.Tawk_API.maximize) {
-        window.Tawk_API.showWidget?.();
-        window.Tawk_API.maximize();
+      const tawk = (window as any).Tawk_API;
+      if (tawk && tawk.maximize) {
+        tawk.showWidget?.();
+        tawk.maximize();
       } else {
         // Load Tawk script if not already loaded
         const existing = document.querySelector('script[src*="embed.tawk.to"]');
@@ -122,10 +122,10 @@ const SupportWidget = () => {
           s.setAttribute("crossorigin", "*");
           document.head.appendChild(s);
         }
-        // Wait for it to load then maximize
         const interval = setInterval(() => {
-          if (window.Tawk_API && window.Tawk_API.maximize) {
-            window.Tawk_API.maximize();
+          const t = (window as any).Tawk_API;
+          if (t && t.maximize) {
+            t.maximize();
             clearInterval(interval);
           }
         }, 300);
