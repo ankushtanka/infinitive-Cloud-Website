@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import Lenis from "lenis";
-import SupportWidget from "@/components/SupportWidget";
+
 import BackToTop from "@/components/BackToTop";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import PageTranslator from "@/components/PageTranslator";
@@ -126,7 +126,7 @@ const App = () => {
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
-            <SupportWidget />
+            
             <BackToTop />
             <PageTranslator />
           </LenisProvider>
