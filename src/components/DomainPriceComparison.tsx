@@ -98,7 +98,7 @@ const DomainPriceComparison = () => {
             <TrendingDown className="w-4 h-4" />
             Save up to {avgSavings}% on Domains
           </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 px-2">
             Domains at <span className="gradient-text">Unbeatable Prices</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -133,7 +133,8 @@ const DomainPriceComparison = () => {
           transition={{ delay: 0.25, duration: 0.6 }}
           className="max-w-5xl mx-auto"
         >
-          <div className="bg-card rounded-2xl border border-border overflow-visible" style={{ boxShadow: "var(--shadow-medium)" }}>
+          <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
+          <div className="bg-card rounded-2xl border border-border overflow-visible min-w-[600px]" style={{ boxShadow: "var(--shadow-medium)" }}>
             {/* Table header */}
             <div className="grid grid-cols-6 bg-muted/50 border-b border-border rounded-t-2xl">
               <div className="p-3 md:p-4 font-bold text-sm">Domain</div>
@@ -181,6 +182,7 @@ const DomainPriceComparison = () => {
                 })}
               </div>
             ))}
+          </div>
           </div>
 
           <p className="text-xs text-muted-foreground text-center mt-4">
