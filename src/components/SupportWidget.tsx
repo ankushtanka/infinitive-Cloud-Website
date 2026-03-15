@@ -103,7 +103,35 @@ const SupportWidget = () => {
 
   const openTawk = () => {
     setIsOpen(false);
-    window.open(TAWK_CHAT_URL, "_blank");
+    if (isMobile) {
+      navigate("/live-chat");
+    } else {
+      // Desktop: load Tawk.to inline widget
+      if (window.Tawk_API && window.Tawk_API.maximize) {
+        window.Tawk_API.showWidget?.();
+        window.Tawk_API.maximize();
+      } else {
+        // Load Tawk script if not already loaded
+        const existing = document.querySelector('script[src*="embed.tawk.to"]');
+        if (!existing) {
+          const s = document.createElement("script");
+          s.type = "text/javascript";
+          s.async = true;
+          s.src = `https://embed.tawk.to/68fb0774603401195169c6da/1j8a9a8jf`;
+          s.charset = "UTF-8";
+          s.setAttribute("crossorigin", "*");
+          document.head.appendChild(s);
+        }
+        // Wait for it to load then maximize
+        const interval = setInterval(() => {
+          if (window.Tawk_API && window.Tawk_API.maximize) {
+            window.Tawk_API.maximize();
+            clearInterval(interval);
+          }
+        }, 300);
+        setTimeout(() => clearInterval(interval), 10000);
+      }
+    }
   };
 
   const actions = [
