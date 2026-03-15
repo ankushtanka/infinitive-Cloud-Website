@@ -147,7 +147,7 @@ const DomainPriceComparison = () => {
                 <span className="font-bold text-sm md:text-base gradient-text">Infinitive Cloud</span>
               </div>
               {competitors.map((c) => (
-                <div key={c.key} className="p-3 md:p-4 text-center font-medium text-xs md:text-sm text-muted-foreground">
+                <div key={c.key} className="p-3 md:p-5 text-center font-medium text-xs md:text-sm text-muted-foreground">
                   {c.name}
                 </div>
               ))}
