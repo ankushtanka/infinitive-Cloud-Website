@@ -77,6 +77,25 @@ const TAWK_CHAT_URL = "https://tawk.to/chat/68fb0774603401195169c6da/1j8a9a8jf";
 const SupportWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredLabel, setHoveredLabel] = useState<string | null>(null);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  useEffect(() => {
+    let ticking = false;
+    const checkScroll = () => {
+      const scrollY = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+      setShowBackToTop(scrollY > 400);
+      ticking = false;
+    };
+    const onScroll = () => {
+      if (!ticking) { requestAnimationFrame(checkScroll); ticking = true; }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    const interval = setInterval(() => {
+      const scrollY = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+      setShowBackToTop(scrollY > 400);
+    }, 500);
+    return () => { window.removeEventListener("scroll", onScroll); clearInterval(interval); };
+  }, []);
 
   const openTawk = () => {
     setIsOpen(false);
