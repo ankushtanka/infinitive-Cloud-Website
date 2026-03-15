@@ -80,6 +80,8 @@ const SupportWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredLabel, setHoveredLabel] = useState<string | null>(null);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const isMobile = useIsMobile();
+  const navigate = useNavigate();
 
   useEffect(() => {
     let ticking = false;
