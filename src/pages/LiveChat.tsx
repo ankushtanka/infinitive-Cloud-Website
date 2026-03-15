@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import PageSEO from "@/components/PageSEO";
@@ -7,39 +6,6 @@ const TAWK_PROPERTY_ID = "68fb0774603401195169c6da";
 const TAWK_WIDGET_ID = "1j8a9a8jf";
 
 const LiveChat = () => {
-  useEffect(() => {
-    // Load Tawk.to script
-    const s = document.createElement("script");
-    s.type = "text/javascript";
-    s.async = true;
-    s.src = `https://embed.tawk.to/${TAWK_PROPERTY_ID}/${TAWK_WIDGET_ID}`;
-    s.charset = "UTF-8";
-    s.setAttribute("crossorigin", "*");
-    document.head.appendChild(s);
-
-    // Maximize the widget once loaded
-    const interval = setInterval(() => {
-      if (window.Tawk_API && window.Tawk_API.maximize) {
-        window.Tawk_API.maximize();
-        clearInterval(interval);
-      }
-    }, 500);
-
-    return () => {
-      clearInterval(interval);
-      // Clean up tawk script
-      s.remove();
-      if (window.Tawk_API) {
-        try {
-          window.Tawk_API.hideWidget?.();
-        } catch {}
-      }
-      // Remove tawk iframe elements
-      document.querySelectorAll('iframe[title*="chat"]').forEach(el => el.remove());
-      document.querySelectorAll('[id^="tawk-"]').forEach(el => el.remove());
-    };
-  }, []);
-
   return (
     <>
       <PageSEO
@@ -62,16 +28,14 @@ const LiveChat = () => {
           </div>
         </div>
 
-        {/* Chat area - Tawk.to will render its widget here */}
-        <div className="flex-1 flex items-center justify-center p-6">
-          <div className="text-center space-y-4">
-            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto animate-pulse">
-              <svg className="w-8 h-8 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-              </svg>
-            </div>
-            <p className="text-muted-foreground font-medium">Loading live chat...</p>
-          </div>
+        {/* Tawk.to embedded via direct chat URL in iframe */}
+        <div className="flex-1 relative">
+          <iframe
+            src={`https://tawk.to/chat/${TAWK_PROPERTY_ID}/${TAWK_WIDGET_ID}`}
+            className="absolute inset-0 w-full h-full border-0"
+            title="Live Chat Support"
+            allow="microphone; camera"
+          />
         </div>
       </div>
     </>
