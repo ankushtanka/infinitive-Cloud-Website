@@ -31,19 +31,20 @@ const HowItWorksSection = () => {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section className="py-24 bg-background relative overflow-hidden" ref={ref}>
+    <section className="py-12 md:py-24 bg-background relative overflow-hidden" ref={ref}>
       <div className="absolute inset-0 bg-gradient-to-b from-muted/10 to-background" />
       <div className="section-container relative z-10">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+        <div className="text-center mb-8 md:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
             Get Started in <span className="gradient-text">3 Simple Steps</span>
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            From signup to launch — we make hosting effortless so you can focus on growing your business.
+          <p className="text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto">
+            From signup to launch — we make hosting effortless.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto mb-12">
+        {/* Mobile: horizontal compact, Desktop: grid */}
+        <div className="grid grid-cols-3 md:gap-8 gap-3 max-w-5xl mx-auto mb-8 md:mb-12">
           {steps.map((step, i) => {
             const Icon = step.icon;
             return (
@@ -54,22 +55,21 @@ const HowItWorksSection = () => {
                 transition={{ delay: i * 0.2, duration: 0.5 }}
                 className="relative text-center group"
               >
-                {/* Connector line */}
                 {i < steps.length - 1 && (
                   <div className="hidden md:block absolute top-16 left-[60%] w-[80%] h-0.5 bg-gradient-to-r from-primary/30 to-transparent" />
                 )}
                 
-                <div className="relative inline-flex mb-6">
-                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style={{ boxShadow: "var(--shadow-medium)" }}>
-                    <Icon className="w-10 h-10 text-primary-foreground" />
+                <div className="relative inline-flex mb-3 md:mb-6">
+                  <div className="w-12 h-12 md:w-20 md:h-20 rounded-xl md:rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style={{ boxShadow: "var(--shadow-medium)" }}>
+                    <Icon className="w-6 h-6 md:w-10 md:h-10 text-primary-foreground" />
                   </div>
-                  <span className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-foreground text-background flex items-center justify-center text-xs font-black">
+                  <span className="absolute -top-1.5 -right-1.5 md:-top-2 md:-right-2 w-6 h-6 md:w-8 md:h-8 rounded-full bg-foreground text-background flex items-center justify-center text-[10px] md:text-xs font-black">
                     {step.number}
                   </span>
                 </div>
 
-                <h3 className="text-xl font-bold mb-3">{step.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed max-w-xs mx-auto">
+                <h3 className="text-xs sm:text-sm md:text-xl font-bold mb-1 md:mb-3">{step.title}</h3>
+                <p className="text-muted-foreground text-[10px] md:text-sm leading-relaxed max-w-xs mx-auto hidden sm:block">
                   {step.description}
                 </p>
               </motion.div>
@@ -79,9 +79,9 @@ const HowItWorksSection = () => {
 
         <div className="text-center">
           <Link to="/contact">
-            <Button size="lg" className="btn-gradient glow-effect text-lg px-10 h-14 rounded-xl group font-bold">
+            <Button size="lg" className="btn-gradient glow-effect text-sm md:text-lg px-8 md:px-10 h-12 md:h-14 rounded-xl group font-bold">
               Start Your Free Trial Today
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="ml-2 w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
         </div>

@@ -1,9 +1,9 @@
 const SEOContentSection = () => {
   return (
-    <section className="py-20 bg-muted/20">
+    <section className="py-12 md:py-20 bg-muted/20">
       <div className="section-container">
-        <div className="max-w-4xl mx-auto space-y-12 text-foreground/80">
-          {/* Best Cloud Hosting India */}
+        {/* Hidden on mobile, visible on desktop for SEO */}
+        <div className="hidden md:block max-w-4xl mx-auto space-y-12 text-foreground/80">
           <div>
             <h2 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
               Best Cloud Hosting Provider in India
@@ -16,7 +16,6 @@ const SEOContentSection = () => {
             </p>
           </div>
 
-          {/* VPS Hosting India */}
           <div>
             <h2 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
               Affordable VPS Hosting India — Full Root Access
@@ -29,7 +28,6 @@ const SEOContentSection = () => {
             </p>
           </div>
 
-          {/* Dedicated Servers */}
           <div>
             <h2 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
               Dedicated Server Hosting in India — Maximum Performance
@@ -42,7 +40,6 @@ const SEOContentSection = () => {
             </p>
           </div>
 
-          {/* Shared Hosting */}
           <div>
             <h2 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
               Affordable Web Hosting for Small Business
@@ -55,7 +52,6 @@ const SEOContentSection = () => {
             </p>
           </div>
 
-          {/* Enterprise & Security */}
           <div>
             <h2 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
               Enterprise Hosting Solutions — Secure & Scalable
@@ -77,6 +73,22 @@ const SEOContentSection = () => {
               Whether you're a startup in Bangalore, an agency in Mumbai, or an enterprise in Delhi — Infinitive Cloud has the hosting infrastructure to power your growth. Get started today with our 15-day free trial and experience the difference that premium hosting makes.
             </p>
           </div>
+        </div>
+
+        {/* Mobile: condensed version */}
+        <div className="md:hidden max-w-4xl mx-auto text-foreground/80">
+          <h2 className="text-xl font-bold mb-3 text-foreground">
+            Best Cloud Hosting in India
+          </h2>
+          <p className="text-sm leading-relaxed mb-4">
+            Infinitive Cloud delivers enterprise-grade hosting — NVMe SSD, 99.99% uptime SLA, free SSL, daily backups, and 24/7 expert support. Plans start at ₹79/mo with a 15-day free trial and 30-day money-back guarantee.
+          </p>
+          <ul className="list-disc list-inside space-y-1.5 text-xs text-foreground/70">
+            <li>Free website migration with zero downtime</li>
+            <li>cPanel / WHM included with all plans</li>
+            <li>DDoS protection & advanced security</li>
+            <li>Transparent pricing — no hidden fees</li>
+          </ul>
         </div>
       </div>
     </section>
