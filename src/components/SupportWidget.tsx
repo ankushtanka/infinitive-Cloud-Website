@@ -72,75 +72,15 @@ const ActionButton = ({
 const WHATSAPP_NUMBER = "918690393087";
 const PHONE_NUMBER = "+918690393087";
 
-const playNotificationSound = () => {
-  try {
-    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.frequency.setValueAtTime(880, ctx.currentTime);
-    osc.frequency.setValueAtTime(1100, ctx.currentTime + 0.1);
-    gain.gain.setValueAtTime(0.15, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.3);
-  } catch (e) {
-    // Audio not supported
-  }
-};
+const TAWK_CHAT_URL = "https://tawk.to/chat/68fb0774603401195169c6da/1j8a9a8jf";
 
 const SupportWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredLabel, setHoveredLabel] = useState<string | null>(null);
-  const [unreadCount, setUnreadCount] = useState(0);
-  const isMobile = useIsMobile();
-
-  useEffect(() => {
-    const checkTawk = setInterval(() => {
-      if (typeof window !== "undefined" && (window as any).Tawk_API) {
-        const api = (window as any).Tawk_API;
-        const onNewMessage = () => {
-          setUnreadCount((prev) => prev + 1);
-          playNotificationSound();
-          toast({
-            title: "New message",
-            description: "You have a new message from support.",
-          });
-        };
-        api.onChatMessageAgent = onNewMessage;
-        api.onChatMessageSystem = onNewMessage;
-        clearInterval(checkTawk);
-      }
-    }, 1000);
-    return () => clearInterval(checkTawk);
-  }, []);
 
   const openTawk = () => {
-    setUnreadCount(0);
     setIsOpen(false);
-
-    // On mobile/hamburger screens, open chat in a new page
-    if (isMobile) {
-      window.open("https://tawk.to/chat/68fb0774603401195169c6da/1j8a9a8jf", "_blank");
-      return;
-    }
-
-    if (typeof window !== "undefined" && (window as any).Tawk_API) {
-      const api = (window as any).Tawk_API;
-      try {
-        api.showWidget();
-        api.maximize();
-      } catch (e) {
-        // Tawk not ready yet
-      }
-      api.onChatMinimized = () => {
-        try { api.hideWidget(); } catch (e) {}
-      };
-      api.onChatHidden = () => {
-        try { api.hideWidget(); } catch (e) {}
-      };
-    }
+    window.open(TAWK_CHAT_URL, "_blank");
   };
 
   const actions = [
