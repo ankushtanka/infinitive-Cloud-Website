@@ -253,7 +253,7 @@ const ContactForm = () => {
           pattern="[0-9]*"
           autoComplete="off"
           required
-          className="w-full rounded border px-3 py-2"
+          className="w-full rounded border border-input bg-background text-foreground px-3 py-2"
           placeholder="Enter the sum"
           value={captchaAnswer}
           disabled={submitting}
