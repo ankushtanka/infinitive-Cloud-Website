@@ -125,7 +125,7 @@ const ContactForm = () => {
             type="email"
             name="email"
             required
-            className="w-full rounded border px-3 py-2"
+            className="w-full rounded border border-input bg-background text-foreground px-3 py-2"
             placeholder="john@company.com"
             autoComplete="email"
             disabled={submitting}
