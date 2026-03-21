@@ -112,7 +112,7 @@ const ContactForm = () => {
             type="text"
             name="name"
             required
-            className="w-full rounded border px-3 py-2"
+            className="w-full rounded border border-input bg-background text-foreground px-3 py-2"
             placeholder="John Doe"
             autoComplete="name"
             disabled={submitting}
