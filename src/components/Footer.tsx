@@ -12,6 +12,7 @@ const Footer = () => {
         { label: "VPS Hosting", path: "/solutions/vps-hosting" },
         { label: "Cloud Hosting", path: "/solutions/cloud-hosting" },
         { label: "Dedicated Servers", path: "/solutions/dedicated-servers" },
+        { label: "GPU Servers", path: "/solutions/gpu-dedicated-server" },
         { label: "Reseller Hosting", path: "/solutions/reseller-hosting" },
         { label: "WordPress Hosting", path: "/solutions/wordpress-hosting" },
       ],
