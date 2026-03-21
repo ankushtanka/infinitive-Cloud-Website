@@ -112,7 +112,7 @@ const ContactForm = () => {
             type="text"
             name="name"
             required
-            className="w-full rounded border px-3 py-2"
+            className="w-full rounded border border-input bg-background text-foreground px-3 py-2"
             placeholder="John Doe"
             autoComplete="name"
             disabled={submitting}
@@ -125,7 +125,7 @@ const ContactForm = () => {
             type="email"
             name="email"
             required
-            className="w-full rounded border px-3 py-2"
+            className="w-full rounded border border-input bg-background text-foreground px-3 py-2"
             placeholder="john@company.com"
             autoComplete="email"
             disabled={submitting}
@@ -139,7 +139,7 @@ const ContactForm = () => {
             id="company"
             type="text"
             name="company"
-            className="w-full rounded border px-3 py-2"
+            className="w-full rounded border border-input bg-background text-foreground px-3 py-2"
             placeholder="Your Company"
             autoComplete="organization"
             disabled={submitting}
@@ -152,7 +152,7 @@ const ContactForm = () => {
             type="tel"
             name="phone"
             required
-            className="w-full rounded border px-3 py-2"
+            className="w-full rounded border border-input bg-background text-foreground px-3 py-2"
             placeholder="+91 8690393087"
             autoComplete="tel"
             disabled={submitting}
@@ -165,7 +165,7 @@ const ContactForm = () => {
           id="website"
           type="url"
           name="website"
-          className="w-full rounded border px-3 py-2"
+          className="w-full rounded border border-input bg-background text-foreground px-3 py-2"
           placeholder="https://yourwebsite.com"
           autoComplete="url"
           disabled={submitting}
@@ -234,7 +234,7 @@ const ContactForm = () => {
           id="message"
           name="message"
           required
-          className="w-full rounded border px-3 py-2"
+          className="w-full rounded border border-input bg-background text-foreground px-3 py-2"
           placeholder="Tell us about your project requirements, expected features, and any specific needs..."
           rows={6}
           disabled={submitting}
@@ -253,7 +253,7 @@ const ContactForm = () => {
           pattern="[0-9]*"
           autoComplete="off"
           required
-          className="w-full rounded border px-3 py-2"
+          className="w-full rounded border border-input bg-background text-foreground px-3 py-2"
           placeholder="Enter the sum"
           value={captchaAnswer}
           disabled={submitting}
