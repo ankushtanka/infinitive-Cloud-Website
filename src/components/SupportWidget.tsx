@@ -84,6 +84,19 @@ const SupportWidget = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
 
+  // Hide Tawk default widget on load
+  useEffect(() => {
+    (window as any).Tawk_API = (window as any).Tawk_API || {};
+    (window as any).Tawk_API.onLoad = function () {
+      (window as any).Tawk_API.hideWidget();
+    };
+    // Also hide if already loaded
+    const t = (window as any).Tawk_API;
+    if (t && t.hideWidget) {
+      t.hideWidget();
+    }
+  }, []);
+
   useEffect(() => {
     let ticking = false;
     const checkState = () => {
