@@ -234,7 +234,7 @@ const ContactForm = () => {
           id="message"
           name="message"
           required
-          className="w-full rounded border px-3 py-2"
+          className="w-full rounded border border-input bg-background text-foreground px-3 py-2"
           placeholder="Tell us about your project requirements, expected features, and any specific needs..."
           rows={6}
           disabled={submitting}
