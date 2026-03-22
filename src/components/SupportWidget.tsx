@@ -86,35 +86,42 @@ const SupportWidget = () => {
 
   // Hide Tawk default widget on load
   useEffect(() => {
-    // Inject CSS to force-hide Tawk widget bubble
+    // Inject CSS to force-hide ALL Tawk widget elements
     if (!document.getElementById("hide-tawk-widget")) {
       const style = document.createElement("style");
       style.id = "hide-tawk-widget";
       style.textContent = `
         #tawk-bubble-container,
         .tawk-min-container,
-        iframe[title="chat widget"] {
+        .tawk-button-circle,
+        .tawk-text-circle,
+        iframe[title="chat widget"],
+        div[class*="tawk"] > div[style*="position: fixed"],
+        .widget-visible {
           display: none !important;
           visibility: hidden !important;
           opacity: 0 !important;
           pointer-events: none !important;
+          width: 0 !important;
+          height: 0 !important;
+          overflow: hidden !important;
         }
       `;
       document.head.appendChild(style);
     }
 
     (window as any).Tawk_API = (window as any).Tawk_API || {};
+    (window as any).Tawk_API.customStyle = { visibility: { bubble: "hidden" } };
     (window as any).Tawk_API.onLoad = function () {
       (window as any).Tawk_API.hideWidget();
     };
-    // Poll to hide if already loaded or loads later
+    // Keep polling — Tawk can re-show itself after route changes
     const interval = setInterval(() => {
       const t = (window as any).Tawk_API;
       if (t && t.hideWidget) {
         t.hideWidget();
-        clearInterval(interval);
       }
-    }, 500);
+    }, 1000);
     return () => clearInterval(interval);
   }, []);
 
