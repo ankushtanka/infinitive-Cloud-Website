@@ -81,6 +81,7 @@ const SupportWidget = () => {
   const [hoveredLabel, setHoveredLabel] = useState<string | null>(null);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [bannerVisible, setBannerVisible] = useState(true);
+  const [unreadCount, setUnreadCount] = useState(0);
   const isMobile = useIsMobile();
   const navigate = useNavigate();
 
