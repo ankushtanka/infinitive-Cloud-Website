@@ -270,35 +270,50 @@ const SupportWidget = () => {
       </AnimatePresence>
 
       {/* Main toggle button */}
-      <motion.button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center justify-center w-14 h-14 rounded-full shadow-xl ${
-          isOpen
-            ? "bg-foreground text-background"
-            : "bg-primary text-primary-foreground"
-        }`}
-        aria-label={isOpen ? "Close support menu" : "Open support menu"}
-        animate={
-          isOpen
-            ? { rotate: 180, y: 0 }
-            : {
-                rotate: 0,
-                y: [0, -6, 0, -3, 0],
-              }
-        }
-        transition={
-          isOpen
-            ? { type: "spring", stiffness: 300, damping: 20 }
-            : {
-                y: { duration: 1.8, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" },
-                rotate: { type: "spring", stiffness: 300, damping: 20 },
-              }
-        }
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-      >
-        {isOpen ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
-      </motion.button>
+      <div className="relative">
+        <AnimatePresence>
+          {unreadCount > 0 && !isOpen && (
+            <motion.span
+              key="badge"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0 }}
+              className="absolute -top-1 -right-1 z-10 flex items-center justify-center min-w-[22px] h-[22px] px-1.5 rounded-full bg-destructive text-destructive-foreground text-xs font-bold shadow-lg"
+            >
+              {unreadCount > 9 ? "9+" : unreadCount}
+            </motion.span>
+          )}
+        </AnimatePresence>
+        <motion.button
+          onClick={() => setIsOpen(!isOpen)}
+          className={`flex items-center justify-center w-14 h-14 rounded-full shadow-xl ${
+            isOpen
+              ? "bg-foreground text-background"
+              : "bg-primary text-primary-foreground"
+          }`}
+          aria-label={isOpen ? "Close support menu" : "Open support menu"}
+          animate={
+            isOpen
+              ? { rotate: 180, y: 0 }
+              : {
+                  rotate: 0,
+                  y: [0, -6, 0, -3, 0],
+                }
+          }
+          transition={
+            isOpen
+              ? { type: "spring", stiffness: 300, damping: 20 }
+              : {
+                  y: { duration: 1.8, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" },
+                  rotate: { type: "spring", stiffness: 300, damping: 20 },
+                }
+          }
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          {isOpen ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
+        </motion.button>
+      </div>
     </div>
   );
 };
