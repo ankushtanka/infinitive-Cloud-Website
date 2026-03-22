@@ -116,6 +116,12 @@ const SupportWidget = () => {
     (window as any).Tawk_API.onLoad = function () {
       (window as any).Tawk_API.hideWidget();
     };
+    (window as any).Tawk_API.onChatMessageAgent = function () {
+      setUnreadCount((c) => c + 1);
+    };
+    (window as any).Tawk_API.onChatMaximized = function () {
+      setUnreadCount(0);
+    };
     // Keep polling — Tawk can re-show itself after route changes
     const interval = setInterval(() => {
       const t = (window as any).Tawk_API;
