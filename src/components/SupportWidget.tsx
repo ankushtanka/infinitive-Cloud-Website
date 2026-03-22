@@ -86,15 +86,36 @@ const SupportWidget = () => {
 
   // Hide Tawk default widget on load
   useEffect(() => {
+    // Inject CSS to force-hide Tawk widget bubble
+    if (!document.getElementById("hide-tawk-widget")) {
+      const style = document.createElement("style");
+      style.id = "hide-tawk-widget";
+      style.textContent = `
+        #tawk-bubble-container,
+        .tawk-min-container,
+        iframe[title="chat widget"] {
+          display: none !important;
+          visibility: hidden !important;
+          opacity: 0 !important;
+          pointer-events: none !important;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
     (window as any).Tawk_API = (window as any).Tawk_API || {};
     (window as any).Tawk_API.onLoad = function () {
       (window as any).Tawk_API.hideWidget();
     };
-    // Also hide if already loaded
-    const t = (window as any).Tawk_API;
-    if (t && t.hideWidget) {
-      t.hideWidget();
-    }
+    // Poll to hide if already loaded or loads later
+    const interval = setInterval(() => {
+      const t = (window as any).Tawk_API;
+      if (t && t.hideWidget) {
+        t.hideWidget();
+        clearInterval(interval);
+      }
+    }, 500);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
