@@ -154,6 +154,7 @@ const SupportWidget = () => {
 
   const openTawk = () => {
     setIsOpen(false);
+    setUnreadCount(0);
     if (isMobile) {
       navigate("/live-chat");
     } else {
