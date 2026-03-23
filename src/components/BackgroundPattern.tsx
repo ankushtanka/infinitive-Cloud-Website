@@ -5,23 +5,23 @@ const BackgroundPattern = () => {
         <defs>
           <pattern id="cloud-grid" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
             {/* Hexagonal dots */}
-            <circle cx="10" cy="10" r="1.5" fill="hsl(var(--primary))" />
-            <circle cx="70" cy="10" r="1.5" fill="hsl(var(--primary))" />
-            <circle cx="40" cy="35" r="1.5" fill="hsl(var(--secondary))" />
-            <circle cx="100" cy="35" r="1.5" fill="hsl(var(--secondary))" />
-            <circle cx="10" cy="60" r="1.5" fill="hsl(var(--primary))" />
-            <circle cx="70" cy="60" r="1.5" fill="hsl(var(--primary))" />
-            <circle cx="40" cy="85" r="1.5" fill="hsl(var(--secondary))" />
-            <circle cx="100" cy="85" r="1.5" fill="hsl(var(--secondary))" />
-            {/* Subtle connecting lines */}
-            <line x1="10" y1="10" x2="40" y2="35" stroke="hsl(var(--primary))" strokeWidth="0.3" />
-            <line x1="40" y1="35" x2="70" y2="10" stroke="hsl(var(--primary))" strokeWidth="0.3" />
-            <line x1="70" y1="10" x2="100" y2="35" stroke="hsl(var(--secondary))" strokeWidth="0.3" />
-            <line x1="10" y1="60" x2="40" y2="85" stroke="hsl(var(--primary))" strokeWidth="0.3" />
-            <line x1="40" y1="85" x2="70" y2="60" stroke="hsl(var(--primary))" strokeWidth="0.3" />
-            <line x1="40" y1="35" x2="40" y2="85" stroke="hsl(var(--secondary))" strokeWidth="0.2" />
-            <line x1="10" y1="10" x2="10" y2="60" stroke="hsl(var(--primary))" strokeWidth="0.2" />
-            <line x1="70" y1="10" x2="70" y2="60" stroke="hsl(var(--primary))" strokeWidth="0.2" />
+            <circle cx="8" cy="8" r="1.5" fill="hsl(var(--primary))" />
+            <circle cx="48" cy="8" r="1.5" fill="hsl(var(--primary))" />
+            <circle cx="28" cy="24" r="1.5" fill="hsl(var(--secondary))" />
+            <circle cx="68" cy="24" r="1.5" fill="hsl(var(--secondary))" />
+            <circle cx="8" cy="40" r="1.5" fill="hsl(var(--primary))" />
+            <circle cx="48" cy="40" r="1.5" fill="hsl(var(--primary))" />
+            <circle cx="28" cy="56" r="1.5" fill="hsl(var(--secondary))" />
+            <circle cx="68" cy="56" r="1.5" fill="hsl(var(--secondary))" />
+            {/* Connecting lines */}
+            <line x1="8" y1="8" x2="28" y2="24" stroke="hsl(var(--primary))" strokeWidth="0.4" />
+            <line x1="28" y1="24" x2="48" y2="8" stroke="hsl(var(--primary))" strokeWidth="0.4" />
+            <line x1="48" y1="8" x2="68" y2="24" stroke="hsl(var(--secondary))" strokeWidth="0.4" />
+            <line x1="8" y1="40" x2="28" y2="56" stroke="hsl(var(--primary))" strokeWidth="0.4" />
+            <line x1="28" y1="56" x2="48" y2="40" stroke="hsl(var(--primary))" strokeWidth="0.4" />
+            <line x1="28" y1="24" x2="28" y2="56" stroke="hsl(var(--secondary))" strokeWidth="0.3" />
+            <line x1="8" y1="8" x2="8" y2="40" stroke="hsl(var(--primary))" strokeWidth="0.3" />
+            <line x1="48" y1="8" x2="48" y2="40" stroke="hsl(var(--primary))" strokeWidth="0.3" />
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#cloud-grid)" />
