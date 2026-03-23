@@ -86,6 +86,7 @@ const LenisProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 const App = () => {
+  useThemeFavicon();
   return (
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
