@@ -1,6 +1,6 @@
 const BackgroundPattern = () => {
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-[0.12] dark:opacity-[0.18]">
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-[0.25] dark:opacity-[0.30]">
       {/* Blob 1 - primary */}
       <div
         className="absolute w-[600px] h-[600px] rounded-full blur-[120px] bg-primary/40 animate-drift"
