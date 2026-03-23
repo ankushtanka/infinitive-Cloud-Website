@@ -128,6 +128,23 @@ export default {
             transform: "scale(1)",
           },
         },
+        "drift": {
+          "0%": {
+            transform: "translate(0, 0)",
+          },
+          "25%": {
+            transform: "translate(20px, -15px)",
+          },
+          "50%": {
+            transform: "translate(-10px, -25px)",
+          },
+          "75%": {
+            transform: "translate(-20px, -10px)",
+          },
+          "100%": {
+            transform: "translate(0, 0)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 1s ease-out",
@@ -137,6 +154,7 @@ export default {
         "scale-in": "scale-in 1s ease-out",
         "float": "float 6s ease-in-out infinite",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "drift": "drift 60s linear infinite",
       },
     },
   },
