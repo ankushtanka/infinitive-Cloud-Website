@@ -1,7 +1,11 @@
 const BackgroundPattern = () => {
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-[0.14] dark:opacity-[0.16]">
-      <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        className="animate-drift"
+        style={{ width: "200%", height: "200%", marginLeft: "-50%", marginTop: "-50%" }}
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <defs>
           <pattern id="cloud-grid" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
             {/* Hexagonal dots */}
