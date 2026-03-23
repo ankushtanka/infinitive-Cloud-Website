@@ -15,6 +15,7 @@ import SEOContentSection from "@/components/SEOContentSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import FAQSection from "@/components/FAQSection";
 import LiveOfferBanner from "@/components/LiveOfferBanner";
+import BackgroundPattern from "@/components/BackgroundPattern";
 import { StructuredData, organizationSchema, websiteSchema, createBreadcrumbSchema, createFAQSchema } from "@/components/StructuredData";
 
 const Index = () => {
