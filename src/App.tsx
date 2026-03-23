@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import Lenis from "lenis";
 import SupportWidget from "@/components/SupportWidget";
+import useThemeFavicon from "@/hooks/use-theme-favicon";
 
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import PageTranslator from "@/components/PageTranslator";
@@ -85,6 +86,7 @@ const LenisProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 const App = () => {
+  useThemeFavicon();
   return (
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
