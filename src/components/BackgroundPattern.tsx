@@ -1,35 +1,26 @@
 const BackgroundPattern = () => {
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-[0.14] dark:opacity-[0.16]">
-      <svg
-        className="animate-drift"
-        style={{ width: "200%", height: "200%", marginLeft: "-50%", marginTop: "-50%" }}
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
-          <pattern id="cloud-grid" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
-            {/* Hexagonal dots */}
-            <circle cx="8" cy="8" r="1.5" fill="hsl(var(--primary))" />
-            <circle cx="48" cy="8" r="1.5" fill="hsl(var(--primary))" />
-            <circle cx="28" cy="24" r="1.5" fill="hsl(var(--secondary))" />
-            <circle cx="68" cy="24" r="1.5" fill="hsl(var(--secondary))" />
-            <circle cx="8" cy="40" r="1.5" fill="hsl(var(--primary))" />
-            <circle cx="48" cy="40" r="1.5" fill="hsl(var(--primary))" />
-            <circle cx="28" cy="56" r="1.5" fill="hsl(var(--secondary))" />
-            <circle cx="68" cy="56" r="1.5" fill="hsl(var(--secondary))" />
-            {/* Connecting lines */}
-            <line x1="8" y1="8" x2="28" y2="24" stroke="hsl(var(--primary))" strokeWidth="0.4" />
-            <line x1="28" y1="24" x2="48" y2="8" stroke="hsl(var(--primary))" strokeWidth="0.4" />
-            <line x1="48" y1="8" x2="68" y2="24" stroke="hsl(var(--secondary))" strokeWidth="0.4" />
-            <line x1="8" y1="40" x2="28" y2="56" stroke="hsl(var(--primary))" strokeWidth="0.4" />
-            <line x1="28" y1="56" x2="48" y2="40" stroke="hsl(var(--primary))" strokeWidth="0.4" />
-            <line x1="28" y1="24" x2="28" y2="56" stroke="hsl(var(--secondary))" strokeWidth="0.3" />
-            <line x1="8" y1="8" x2="8" y2="40" stroke="hsl(var(--primary))" strokeWidth="0.3" />
-            <line x1="48" y1="8" x2="48" y2="40" stroke="hsl(var(--primary))" strokeWidth="0.3" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#cloud-grid)" />
-      </svg>
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-[0.12] dark:opacity-[0.18]">
+      {/* Blob 1 - primary */}
+      <div
+        className="absolute w-[600px] h-[600px] rounded-full blur-[120px] bg-primary/40 animate-drift"
+        style={{ top: "10%", left: "5%" }}
+      />
+      {/* Blob 2 - secondary */}
+      <div
+        className="absolute w-[500px] h-[500px] rounded-full blur-[100px] bg-secondary/40 animate-float"
+        style={{ top: "50%", right: "5%" }}
+      />
+      {/* Blob 3 - accent */}
+      <div
+        className="absolute w-[450px] h-[450px] rounded-full blur-[110px] bg-accent/30 animate-drift"
+        style={{ bottom: "10%", left: "30%", animationDelay: "8s", animationDirection: "reverse" }}
+      />
+      {/* Blob 4 - smaller primary */}
+      <div
+        className="absolute w-[350px] h-[350px] rounded-full blur-[90px] bg-primary/25 animate-float"
+        style={{ top: "30%", left: "55%", animationDelay: "4s" }}
+      />
     </div>
   );
 };
