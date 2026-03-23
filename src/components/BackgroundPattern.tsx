@@ -2,7 +2,7 @@ const BackgroundPattern = () => {
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-[0.14] dark:opacity-[0.16]">
       <svg
-        className="animate-[drift_60s_linear_infinite]"
+        className="animate-drift"
         style={{ width: "200%", height: "200%", marginLeft: "-50%", marginTop: "-50%" }}
         xmlns="http://www.w3.org/2000/svg"
       >
