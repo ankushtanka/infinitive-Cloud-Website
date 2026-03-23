@@ -15,6 +15,7 @@ import SEOContentSection from "@/components/SEOContentSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import FAQSection from "@/components/FAQSection";
 import LiveOfferBanner from "@/components/LiveOfferBanner";
+import BackgroundPattern from "@/components/BackgroundPattern";
 import { StructuredData, organizationSchema, websiteSchema, createBreadcrumbSchema, createFAQSchema } from "@/components/StructuredData";
 
 const Index = () => {
@@ -31,7 +32,8 @@ const Index = () => {
   ]);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen relative">
+      <BackgroundPattern />
       <Helmet>
         <title>Infinitive Cloud | Best Cloud & Web Hosting Company in India</title>
         <meta name="description" content="Premium cloud hosting, VPS, dedicated servers & domain services in India. 99.99% uptime SLA, 24×7 support & 15-day free trial. Launch your business with Infinitive Cloud." />
