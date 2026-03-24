@@ -78,7 +78,7 @@ const WhatWeDoSection = () => {
 
         {/* Mobile: compact list, Desktop: card grid */}
         <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services.map((service) => {
+          {services.map((service, index) => {
             const Icon = service.icon;
             return (
               <ScrollReveal key={service.title} delay={index * 0.08}>
