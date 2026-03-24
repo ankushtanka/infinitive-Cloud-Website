@@ -75,7 +75,7 @@ const Index = () => {
         <FAQSection />
       </main>
       <Footer />
-      <LiveOfferBanner />
+      {/* <LiveOfferBanner /> */}
     </div>
   );
 };
