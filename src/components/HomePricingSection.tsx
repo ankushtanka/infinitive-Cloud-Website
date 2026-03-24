@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check, ArrowRight, Star, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
-import ScrollReveal from "@/components/ScrollReveal";
 
 const categories = [
   {
@@ -73,16 +72,14 @@ const HomePricingSection = () => {
   return (
     <section className="py-12 md:py-20 bg-muted/30" id="pricing">
       <div className="section-container">
-        <ScrollReveal>
-          <div className="text-center mb-8 md:mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
-              Hosting Plans That <span className="gradient-text">Scale With You</span>
-            </h2>
-            <p className="text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto">
-              Enterprise-grade infrastructure at India's most competitive prices. All plans include free SSL, 24/7 support & 99.99% uptime SLA.
-            </p>
-          </div>
-        </ScrollReveal>
+        <div className="text-center mb-8 md:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
+            Hosting Plans That <span className="gradient-text">Scale With You</span>
+          </h2>
+          <p className="text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto">
+            Enterprise-grade infrastructure at India's most competitive prices. All plans include free SSL, 24/7 support & 99.99% uptime SLA.
+          </p>
+        </div>
 
         <div className="space-y-10 md:space-y-16">
           {categories.map((category, catIndex) => (
@@ -100,12 +97,12 @@ const HomePricingSection = () => {
               {/* Mobile: only show popular plan, Desktop: show all */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                 {category.plans.map((plan, planIndex) => (
-                  <ScrollReveal key={planIndex} delay={planIndex * 0.1}>
-                    <Card
-                      className={`relative overflow-hidden transition-all duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] hover:shadow-xl hover:-translate-y-1 h-full ${
-                        plan.popular ? "border-primary/50 shadow-primary/10 shadow-lg ring-2 ring-primary/20 md:scale-[1.02]" : "hidden md:block"
-                      }`}
-                    >
+                  <Card
+                    key={planIndex}
+                    className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 ${
+                      plan.popular ? "border-primary/50 shadow-primary/10 shadow-lg ring-2 ring-primary/20 md:scale-[1.02]" : "hidden md:block"
+                    }`}
+                  >
                     {plan.popular && (
                       <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary to-accent" />
                     )}
@@ -149,7 +146,6 @@ const HomePricingSection = () => {
                       </Link>
                     </CardContent>
                   </Card>
-                  </ScrollReveal>
                 ))}
               </div>
             </div>
