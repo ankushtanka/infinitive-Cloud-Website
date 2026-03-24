@@ -5,14 +5,14 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-[0.98]",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-[0.97]",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary-hover font-bold shadow-sm hover:shadow-md",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 font-bold shadow-sm hover:shadow-md",
-        outline: "border-2 border-foreground/20 bg-transparent text-foreground hover:bg-foreground/10 hover:border-foreground/40 font-bold",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 font-bold shadow-sm hover:shadow-md",
+        default: "bg-primary text-primary-foreground hover:bg-primary-hover font-bold shadow-sm hover:shadow-lg",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 font-bold shadow-sm hover:shadow-lg",
+        outline: "border-2 border-foreground/20 bg-transparent text-foreground hover:bg-foreground/5 hover:border-primary/50 font-bold",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 font-bold shadow-sm hover:shadow-lg",
         ghost: "hover:bg-muted hover:text-foreground font-medium",
         link: "text-foreground underline-offset-4 hover:underline font-medium",
       },

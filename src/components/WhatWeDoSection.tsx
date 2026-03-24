@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Cloud, Server, Globe, Shield, Zap, Database, Lock, HardDrive, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import ScrollReveal from "@/components/ScrollReveal";
 
 const services = [
   {
@@ -64,37 +65,41 @@ const WhatWeDoSection = () => {
   return (
     <section className="py-12 md:py-20 bg-muted/30">
       <div className="section-container">
-        <div className="text-center mb-8 md:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
-            Our <span className="gradient-text">Services</span>
-          </h2>
-          <p className="text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto">
-            Everything you need to launch, grow, and scale your online presence.
-          </p>
-        </div>
+        <ScrollReveal>
+          <div className="text-center mb-8 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
+              Our <span className="gradient-text">Services</span>
+            </h2>
+            <p className="text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto">
+              Everything you need to launch, grow, and scale your online presence.
+            </p>
+          </div>
+        </ScrollReveal>
 
         {/* Mobile: compact list, Desktop: card grid */}
         <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services.map((service) => {
+          {services.map((service, index) => {
             const Icon = service.icon;
             return (
-              <Card key={service.title} className="card-hover group">
-                <CardHeader>
-                  <Link to={service.link} className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-3 group-hover:scale-110 transition-transform cursor-pointer">
-                    <Icon className="w-6 h-6 text-white" />
-                  </Link>
-                  <CardTitle className="text-xl">{service.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="mb-4">{service.description}</CardDescription>
-                  <Link to={service.link}>
-                    <Button variant="ghost" className="w-full justify-between group/btn">
-                      Learn More About {service.title}
-                      <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
+              <ScrollReveal key={service.title} delay={index * 0.08}>
+                <Card className="card-hover group h-full">
+                  <CardHeader>
+                    <Link to={service.link} className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-3 group-hover:scale-110 group-hover:shadow-lg transition-all duration-300 cursor-pointer">
+                      <Icon className="w-6 h-6 text-white" />
+                    </Link>
+                    <CardTitle className="text-xl">{service.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="mb-4">{service.description}</CardDescription>
+                    <Link to={service.link}>
+                      <Button variant="ghost" className="w-full justify-between group/btn">
+                        Learn More About {service.title}
+                        <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              </ScrollReveal>
             );
           })}
         </div>
