@@ -81,23 +81,25 @@ const WhatWeDoSection = () => {
           {services.map((service) => {
             const Icon = service.icon;
             return (
-              <Card key={service.title} className="card-hover group">
-                <CardHeader>
-                  <Link to={service.link} className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-3 group-hover:scale-110 transition-transform cursor-pointer">
-                    <Icon className="w-6 h-6 text-white" />
-                  </Link>
-                  <CardTitle className="text-xl">{service.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="mb-4">{service.description}</CardDescription>
-                  <Link to={service.link}>
-                    <Button variant="ghost" className="w-full justify-between group/btn">
-                      Learn More About {service.title}
-                      <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
+              <ScrollReveal key={service.title} delay={index * 0.08}>
+                <Card className="card-hover group h-full">
+                  <CardHeader>
+                    <Link to={service.link} className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-3 group-hover:scale-110 group-hover:shadow-lg transition-all duration-300 cursor-pointer">
+                      <Icon className="w-6 h-6 text-white" />
+                    </Link>
+                    <CardTitle className="text-xl">{service.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="mb-4">{service.description}</CardDescription>
+                    <Link to={service.link}>
+                      <Button variant="ghost" className="w-full justify-between group/btn">
+                        Learn More About {service.title}
+                        <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              </ScrollReveal>
             );
           })}
         </div>
