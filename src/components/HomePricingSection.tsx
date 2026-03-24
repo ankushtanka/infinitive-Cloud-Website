@@ -149,6 +149,7 @@ const HomePricingSection = () => {
                       </Link>
                     </CardContent>
                   </Card>
+                  </ScrollReveal>
                 ))}
               </div>
             </div>
