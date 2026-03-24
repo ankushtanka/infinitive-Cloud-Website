@@ -73,14 +73,16 @@ const HomePricingSection = () => {
   return (
     <section className="py-12 md:py-20 bg-muted/30" id="pricing">
       <div className="section-container">
-        <div className="text-center mb-8 md:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
-            Hosting Plans That <span className="gradient-text">Scale With You</span>
-          </h2>
-          <p className="text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto">
-            Enterprise-grade infrastructure at India's most competitive prices. All plans include free SSL, 24/7 support & 99.99% uptime SLA.
-          </p>
-        </div>
+        <ScrollReveal>
+          <div className="text-center mb-8 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
+              Hosting Plans That <span className="gradient-text">Scale With You</span>
+            </h2>
+            <p className="text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto">
+              Enterprise-grade infrastructure at India's most competitive prices. All plans include free SSL, 24/7 support & 99.99% uptime SLA.
+            </p>
+          </div>
+        </ScrollReveal>
 
         <div className="space-y-10 md:space-y-16">
           {categories.map((category, catIndex) => (
