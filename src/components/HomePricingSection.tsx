@@ -100,12 +100,12 @@ const HomePricingSection = () => {
               {/* Mobile: only show popular plan, Desktop: show all */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                 {category.plans.map((plan, planIndex) => (
-                  <Card
-                    key={planIndex}
-                    className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 ${
-                      plan.popular ? "border-primary/50 shadow-primary/10 shadow-lg ring-2 ring-primary/20 md:scale-[1.02]" : "hidden md:block"
-                    }`}
-                  >
+                  <ScrollReveal key={planIndex} delay={planIndex * 0.1}>
+                    <Card
+                      className={`relative overflow-hidden transition-all duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] hover:shadow-xl hover:-translate-y-1 h-full ${
+                        plan.popular ? "border-primary/50 shadow-primary/10 shadow-lg ring-2 ring-primary/20 md:scale-[1.02]" : "hidden md:block"
+                      }`}
+                    >
                     {plan.popular && (
                       <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary to-accent" />
                     )}
