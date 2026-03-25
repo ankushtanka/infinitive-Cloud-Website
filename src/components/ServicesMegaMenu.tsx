@@ -105,13 +105,14 @@ const ServicesMegaMenu = ({ onClose, onMouseEnter, onMouseLeave, initialCategory
   return (
     <div 
       className="fixed inset-x-0 top-[5.75rem] z-50 animate-fade-in"
-      style={{ animationDuration: "0.2s" }}
+      data-mega-menu
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
-      {/* Backdrop */}
-      <div className="absolute inset-0 h-screen bg-foreground/40 backdrop-blur-sm" onClick={onClose} />
       
       {/* Menu Container */}
-      <div className="relative mx-auto max-w-[1400px] px-4" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+      <div className="relative mx-auto max-w-[1400px] px-4" data-mega-menu>
         <div className="bg-background rounded-2xl border border-border shadow-[var(--shadow-strong)] overflow-hidden">
           <div className="flex min-h-[460px]">
             {/* Left sidebar - Categories */}

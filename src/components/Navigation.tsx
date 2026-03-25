@@ -65,7 +65,7 @@ const Navigation = () => {
   const [mobileServiceOpen, setMobileServiceOpen] = useState(false);
   const [mobileSubDropdown, setMobileSubDropdown] = useState<string | null>(null);
   const [topBarVisible, setTopBarVisible] = useState(true);
-  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  
 
   useEffect(() => {
     const onScroll = () => setTopBarVisible(window.scrollY < 50);
@@ -73,29 +73,29 @@ const Navigation = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const handleServicesEnter = useCallback(() => {
-    if (closeTimeoutRef.current) {
-      clearTimeout(closeTimeoutRef.current);
-      closeTimeoutRef.current = null;
-    }
-    setServicesOpen(true);
-  }, []);
-
-  const handleServicesLeave = useCallback(() => {
-    closeTimeoutRef.current = setTimeout(() => {
+  const handleProductClick = useCallback((category: string) => {
+    if (servicesOpen && megaMenuCategory === category) {
       setServicesOpen(false);
       setMegaMenuCategory(undefined);
-    }, 150);
-  }, []);
-
-  const handleProductHover = useCallback((category: string) => {
-    if (closeTimeoutRef.current) {
-      clearTimeout(closeTimeoutRef.current);
-      closeTimeoutRef.current = null;
+    } else {
+      setMegaMenuCategory(category);
+      setServicesOpen(true);
     }
-    setMegaMenuCategory(category);
-    setServicesOpen(true);
-  }, []);
+  }, [servicesOpen, megaMenuCategory]);
+
+  // Close mega menu on outside click
+  useEffect(() => {
+    if (!servicesOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest('[data-mega-menu]') && !target.closest('[data-product-trigger]')) {
+        setServicesOpen(false);
+        setMegaMenuCategory(undefined);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [servicesOpen]);
 
   const navLinks = [
     { label: "Home", path: "/" },
@@ -167,17 +167,13 @@ const Navigation = () => {
                 return (
                   <button
                     key={product.label}
+                    data-product-trigger
                     className={`relative px-3 py-2 font-bold text-sm flex items-center gap-1.5 group transition-all duration-200 rounded-lg ${
                       servicesOpen && megaMenuCategory === product.category 
                         ? "text-primary bg-primary/10" 
                         : "text-foreground hover:text-primary hover:bg-muted/50"
                     }`}
-                    onMouseEnter={() => handleProductHover(product.category)}
-                    onMouseLeave={handleServicesLeave}
-                    onClick={() => {
-                      setMegaMenuCategory(product.category);
-                      setServicesOpen(prev => !prev);
-                    }}
+                    onClick={() => handleProductClick(product.category)}
                   >
                     <Icon className="w-4 h-4" />
                     {product.label}
@@ -229,8 +225,8 @@ const Navigation = () => {
       {servicesOpen && (
         <ServicesMegaMenu
           onClose={() => { setServicesOpen(false); setMegaMenuCategory(undefined); }}
-          onMouseEnter={handleServicesEnter}
-          onMouseLeave={handleServicesLeave}
+          onMouseEnter={() => {}}
+          onMouseLeave={() => {}}
           initialCategory={megaMenuCategory}
         />
       )}
