@@ -225,8 +225,8 @@ const Navigation = () => {
       {servicesOpen && (
         <ServicesMegaMenu
           onClose={() => { setServicesOpen(false); setMegaMenuCategory(undefined); }}
-          onMouseEnter={handleServicesEnter}
-          onMouseLeave={handleServicesLeave}
+          onMouseEnter={() => {}}
+          onMouseLeave={() => {}}
           initialCategory={megaMenuCategory}
         />
       )}
