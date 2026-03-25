@@ -1,42 +1,24 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import { Search, Globe, ArrowRight, Shield, Zap, Clock, Lock } from "lucide-react";
+import { Search, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const tlds = [
-  { ext: ".com", price: "₹799", original: "₹1,199", tag: "Most Popular", color: "from-primary to-accent" },
-  { ext: ".in", price: "₹449", original: "₹699", tag: "India #1", color: "from-emerald-500 to-teal-500" },
-  { ext: ".co.in", price: "₹299", original: "₹499", tag: null, color: "from-slate-500 to-slate-600" },
-  { ext: ".net", price: "₹899", original: "₹1,299", tag: null, color: "from-blue-500 to-indigo-500" },
-  { ext: ".org", price: "₹749", original: "₹1,099", tag: null, color: "from-violet-500 to-purple-500" },
-  { ext: ".online", price: "₹199", original: "₹599", tag: "Best Value", color: "from-orange-500 to-amber-500" },
-  { ext: ".site", price: "₹199", original: "₹499", tag: null, color: "from-pink-500 to-rose-500" },
-  { ext: ".xyz", price: "₹99", original: "₹299", tag: "Cheapest", color: "from-cyan-500 to-sky-500" }
+const domainExtensions = [
+  { ext: ".com", price: "₹799/yr", renewal: "₹1,199/yr" },
+  { ext: ".in", price: "₹449/yr", renewal: "₹699/yr" },
+  { ext: ".co.in", price: "₹299/yr", renewal: "₹499/yr" },
+  { ext: ".net", price: "₹899/yr", renewal: "₹1,299/yr" },
+  { ext: ".org", price: "₹749/yr", renewal: "₹1,099/yr" },
+  { ext: ".online", price: "₹199/yr", renewal: "₹599/yr" },
+  { ext: ".site", price: "₹199/yr", renewal: "₹499/yr" },
+  { ext: ".xyz", price: "₹99/yr", renewal: "₹299/yr" },
 ];
 
-const perks = [
-  { icon: Shield, label: "Free WHOIS Privacy" },
-  { icon: Zap, label: "Instant Activation" },
-  { icon: Clock, label: "24/7 DNS Management" },
-  { icon: Lock, label: "Free SSL Included" }
-];
-
-const placeholderWords = [
-  "mybusiness.com",
-  "mystore.in",
-  "myportfolio.net",
-  "mycompany.co.in",
-  "mywebsite.online",
-  "mybrand.org",
-  "myagency.site",
-  "mystartup.xyz"
-];
+const placeholderWords = ["mybusiness.com", "mystore.in", "myagency.site"];
 
 const DomainSearchSection = () => {
   const [domain, setDomain] = useState("");
-  const [searched, setSearched] = useState(false);
   const [animatedPlaceholder, setAnimatedPlaceholder] = useState("");
   const [inputFocused, setInputFocused] = useState(false);
   const wordIndexRef = useRef(0);
@@ -51,208 +33,73 @@ const DomainSearchSection = () => {
       if (!isDeletingRef.current) {
         charIndexRef.current++;
         setAnimatedPlaceholder(word.slice(0, charIndexRef.current));
-        if (charIndexRef.current === word.length) {
-          isDeletingRef.current = true;
-          timeout = setTimeout(tick, 1800);
-        } else {
-          timeout = setTimeout(tick, 110);
-        }
+        timeout = setTimeout(tick, charIndexRef.current === word.length ? 1800 : 110);
+        if (charIndexRef.current === word.length) isDeletingRef.current = true;
       } else {
         charIndexRef.current--;
         setAnimatedPlaceholder(word.slice(0, charIndexRef.current));
         if (charIndexRef.current === 0) {
           isDeletingRef.current = false;
           wordIndexRef.current = (wordIndexRef.current + 1) % placeholderWords.length;
-          timeout = setTimeout(tick, 350);
-        } else {
-          timeout = setTimeout(tick, 55);
         }
+        timeout = setTimeout(tick, charIndexRef.current === 0 ? 350 : 55);
       }
     };
     timeout = setTimeout(tick, 100);
     return () => clearTimeout(timeout);
   }, [domain, inputFocused]);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (domain.trim()) setSearched(true);
-  };
-
-  const domainMatch = domain.trim().match(/^([a-zA-Z0-9-]+)(\.[a-zA-Z0-9-.]+)?$/);
-  const baseName = domainMatch ? domainMatch[1] : "";
-  const searchedTld = domainMatch && domainMatch[2] ? domainMatch[2].toLowerCase() : "";
-
-  let searchResultsTlds: typeof tlds = [];
-  if (searched && baseName) {
-    if (searchedTld) {
-      const match = tlds.find((tld) => tld.ext.toLowerCase() === searchedTld);
-      searchResultsTlds = match ? [match] : [];
-    } else {
-      searchResultsTlds = tlds;
-    }
-  }
-
-  function renderPrice(priceStr: string) {
-    return <span className="font-mono tabular-nums">{priceStr}</span>;
-  }
-
-  // Show only 4 TLDs on mobile when not searched
-  const mobileTlds = tlds.slice(0, 4);
-
   return (
-    <section className="py-12 md:py-20 bg-muted/30" id="domains">
+    <section className="py-20 md:py-32 bg-muted/30" id="domains">
       <div className="section-container">
-        {/* Header */}
-        <div className="text-center mb-8 md:mb-12">
-          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary font-semibold text-xs sm:text-sm px-4 py-1.5 rounded-full mb-3 md:mb-4">
-            <Globe className="w-4 h-4" />
-            Domain Registration Starting at {renderPrice("₹99")}/yr
-          </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
-            Find Your Perfect <span className="gradient-text">Domain Name</span>
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl mb-4">
+            Find Your <span className="gradient-text">Domain</span>
           </h2>
-          <p className="text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto">
-            Register your domain at India's lowest prices. Free WHOIS privacy included.
+          <p className="text-sm md:text-base text-muted-foreground max-w-xl mx-auto">
+            Domain registration included free with all hosting plans. No surprises at renewal.
           </p>
         </div>
 
         {/* Search Bar */}
-        <Card className="max-w-4xl mx-auto mb-8 md:mb-12 border-primary/20 shadow-lg shadow-primary/5">
-          <CardContent className="p-4 md:p-8">
-            <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">
-              <div className="relative flex-1">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <Input
-                  type="text"
-                  placeholder={
-                    domain
-                      ? ""
-                      : (!inputFocused ? `${animatedPlaceholder}|` : "")
-                  }
-                  value={domain}
-                  onFocus={() => setInputFocused(true)}
-                  onBlur={() => setInputFocused(false)}
-                  onChange={(e) => {
-                    setDomain(e.target.value);
-                    setSearched(false);
-                  }}
-                  className="pl-12 h-12 md:h-14 text-base md:text-lg rounded-xl border-2 focus:border-primary"
-                />
+        <div className="max-w-2xl mx-auto mb-12 md:mb-16">
+          <form onSubmit={(e) => e.preventDefault()} className="flex gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder={domain ? "" : (!inputFocused ? `${animatedPlaceholder}|` : "Search your domain...")}
+                value={domain}
+                onFocus={() => setInputFocused(true)}
+                onBlur={() => setInputFocused(false)}
+                onChange={(e) => setDomain(e.target.value)}
+                className="pl-12 h-12 md:h-14 text-base rounded-lg border-2 focus:border-accent bg-background"
+              />
+            </div>
+            <Button type="submit" className="btn-gold h-12 md:h-14 px-6 md:px-8">
+              Search
+            </Button>
+          </form>
+        </div>
+
+        {/* Domain Extensions - clean list */}
+        <div className="max-w-3xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {domainExtensions.map((d) => (
+              <div key={d.ext} className="p-4 rounded-lg border border-border bg-card text-center hover:border-accent/30 transition-colors">
+                <span className="text-lg md:text-xl font-bold text-foreground block" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{d.ext}</span>
+                <span className="text-sm font-semibold text-accent block mt-1">{d.price}</span>
+                <span className="text-[10px] text-muted-foreground">Renewal: {d.renewal}</span>
               </div>
-              <Button type="submit" className="btn-gradient h-12 md:h-14 px-8 md:px-10 rounded-xl font-bold text-sm md:text-base">
-                <Search className="w-5 h-5 mr-2" />
-                Search Domain
-              </Button>
-            </form>
-            {/* Perks hidden on mobile */}
-            <div className="hidden sm:flex flex-wrap justify-center gap-x-6 gap-y-2 mt-5">
-              {perks.map((perk) =>
-                <div key={perk.label} className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <perk.icon className="w-4 h-4 text-primary" />
-                  <span>{perk.label}</span>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Search Results */}
-        {searched && baseName &&
-          <div className="max-w-5xl mx-auto mb-8 md:mb-12 animate-fade-in">
-            <p className="text-sm text-muted-foreground mb-4">
-              Showing results for <span className="font-bold text-foreground">"{baseName}{searchedTld}"</span>
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-5">
-              {searchResultsTlds.length === 0 && (
-                <div className="col-span-full text-center py-10 text-muted-foreground text-lg font-medium">
-                  No matching domain extension found.
-                </div>
-              )}
-              {searchResultsTlds.map((tld, i) => (
-                <Card
-                  key={tld.ext}
-                  className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer animate-fade-in-up group ${
-                    tld.tag ? "border-primary/20 shadow-md" : "border-border"
-                  }`}
-                  style={{ animationDelay: `${i * 0.06}s` }}>
-                  <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${tld.color} opacity-80 group-hover:opacity-100 transition-opacity`} />
-                  {tld.tag &&
-                    <div className="absolute top-3 right-3">
-                      <span className="text-[10px] font-bold bg-primary text-primary-foreground px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                        {tld.tag}
-                      </span>
-                    </div>
-                  }
-                  <CardContent className="p-4 md:p-6 pt-5 md:pt-7 text-center">
-                    <span className="text-xl md:text-3xl font-black text-foreground block tracking-tight">
-                      {baseName}{tld.ext}
-                    </span>
-                    <div className={`w-8 h-0.5 mx-auto mt-2 mb-3 md:mb-4 rounded-full bg-gradient-to-r ${tld.color} opacity-60`} />
-                    <div>
-                      <span className="text-xs md:text-sm text-muted-foreground line-through block">{renderPrice(tld.original)}/yr</span>
-                      <span className="text-2xl md:text-4xl font-black gradient-text">{renderPrice(tld.price)}</span>
-                      <span className="text-sm md:text-base text-muted-foreground">/yr</span>
-                    </div>
-                    <Button variant="outline" size="sm" className="mt-4 w-full font-semibold text-xs md:text-sm border-primary/20 hover:bg-primary hover:text-primary-foreground transition-colors">
-                      Register
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-            <div className="mt-6 text-center">
-              <Link to="/solutions/domains">
-                <Button className="btn-gradient font-bold h-12 px-10 text-base">
-                  Register Now <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </Link>
-            </div>
+            ))}
           </div>
-        }
+        </div>
 
-        {/* Extension Cards Grid - show 4 on mobile, all on desktop */}
-        {!searched &&
-          <>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-5 max-w-5xl mx-auto">
-              {/* Mobile: show 4, Desktop: show all */}
-              {tlds.map((tld, i) =>
-                <Card
-                  key={tld.ext}
-                  className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer animate-fade-in-up group ${
-                    tld.tag ? "border-primary/20 shadow-md" : "border-border"
-                  } ${i >= 4 ? "hidden sm:block" : ""}`}
-                  style={{ animationDelay: `${i * 0.06}s` }}>
-                  <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${tld.color} opacity-80 group-hover:opacity-100 transition-opacity`} />
-                  {tld.tag &&
-                    <div className="absolute top-2 right-2 md:top-3 md:right-3">
-                      <span className="text-[9px] md:text-[10px] font-bold bg-primary text-primary-foreground px-2 md:px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                        {tld.tag}
-                      </span>
-                    </div>
-                  }
-                  <CardContent className="p-3 md:p-6 pt-5 md:pt-7 text-center">
-                    <span className="text-xl md:text-3xl font-black text-foreground block tracking-tight">{tld.ext}</span>
-                    <div className={`w-8 h-0.5 mx-auto mt-1.5 md:mt-2 mb-2 md:mb-4 rounded-full bg-gradient-to-r ${tld.color} opacity-60`} />
-                    <div>
-                      <span className="text-xs md:text-sm text-muted-foreground line-through block">{renderPrice(tld.original)}/yr</span>
-                      <span className="text-2xl md:text-4xl font-black gradient-text">{renderPrice(tld.price)}</span>
-                      <span className="text-xs md:text-base text-muted-foreground">/yr</span>
-                    </div>
-                    <Button variant="outline" size="sm" className="mt-3 md:mt-5 w-full font-semibold text-xs md:text-sm border-primary/20 hover:bg-primary hover:text-primary-foreground transition-colors">
-                      Register
-                    </Button>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
-          </>
-        }
-
-        <div className="text-center mt-8 md:mt-10">
+        <div className="text-center mt-10">
           <Link to="/solutions/domains">
-            <Button size="lg" variant="outline" className="group text-sm md:text-base">
-              View All 500+ Domain Extensions
-              <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            <Button variant="outline" className="btn-gold-outline text-sm">
+              View All Extensions
+              <ArrowRight className="ml-2 w-4 h-4" />
             </Button>
           </Link>
         </div>
