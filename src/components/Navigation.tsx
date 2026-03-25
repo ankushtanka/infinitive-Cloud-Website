@@ -167,17 +167,13 @@ const Navigation = () => {
                 return (
                   <button
                     key={product.label}
+                    data-product-trigger
                     className={`relative px-3 py-2 font-bold text-sm flex items-center gap-1.5 group transition-all duration-200 rounded-lg ${
                       servicesOpen && megaMenuCategory === product.category 
                         ? "text-primary bg-primary/10" 
                         : "text-foreground hover:text-primary hover:bg-muted/50"
                     }`}
-                    onMouseEnter={() => handleProductHover(product.category)}
-                    onMouseLeave={handleServicesLeave}
-                    onClick={() => {
-                      setMegaMenuCategory(product.category);
-                      setServicesOpen(prev => !prev);
-                    }}
+                    onClick={() => handleProductClick(product.category)}
                   >
                     <Icon className="w-4 h-4" />
                     {product.label}
