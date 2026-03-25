@@ -73,29 +73,29 @@ const Navigation = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const handleServicesEnter = useCallback(() => {
-    if (closeTimeoutRef.current) {
-      clearTimeout(closeTimeoutRef.current);
-      closeTimeoutRef.current = null;
-    }
-    setServicesOpen(true);
-  }, []);
-
-  const handleServicesLeave = useCallback(() => {
-    closeTimeoutRef.current = setTimeout(() => {
+  const handleProductClick = useCallback((category: string) => {
+    if (servicesOpen && megaMenuCategory === category) {
       setServicesOpen(false);
       setMegaMenuCategory(undefined);
-    }, 150);
-  }, []);
-
-  const handleProductHover = useCallback((category: string) => {
-    if (closeTimeoutRef.current) {
-      clearTimeout(closeTimeoutRef.current);
-      closeTimeoutRef.current = null;
+    } else {
+      setMegaMenuCategory(category);
+      setServicesOpen(true);
     }
-    setMegaMenuCategory(category);
-    setServicesOpen(true);
-  }, []);
+  }, [servicesOpen, megaMenuCategory]);
+
+  // Close mega menu on outside click
+  useEffect(() => {
+    if (!servicesOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest('[data-mega-menu]') && !target.closest('[data-product-trigger]')) {
+        setServicesOpen(false);
+        setMegaMenuCategory(undefined);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [servicesOpen]);
 
   const navLinks = [
     { label: "Home", path: "/" },
