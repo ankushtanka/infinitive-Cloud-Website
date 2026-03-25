@@ -65,7 +65,7 @@ const Navigation = () => {
   const [mobileServiceOpen, setMobileServiceOpen] = useState(false);
   const [mobileSubDropdown, setMobileSubDropdown] = useState<string | null>(null);
   const [topBarVisible, setTopBarVisible] = useState(true);
-  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  
 
   useEffect(() => {
     const onScroll = () => setTopBarVisible(window.scrollY < 50);
