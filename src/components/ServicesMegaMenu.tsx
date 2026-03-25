@@ -104,7 +104,7 @@ const ServicesMegaMenu = ({ onClose, onMouseEnter, onMouseLeave, initialCategory
 
   return (
     <div 
-      className="fixed inset-x-0 top-[5.75rem] z-50 animate-fade-in"
+      className="fixed inset-x-0 top-[5.75rem] z-50"
       data-mega-menu
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
