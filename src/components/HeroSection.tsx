@@ -98,17 +98,6 @@ const HeroSection = () => {
       {/* Main hero content */}
       <div className="section-container w-full relative z-10 flex flex-col items-center justify-center flex-1">
         <div className="max-w-5xl w-full flex flex-col items-center text-center">
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 bg-primary/10 text-primary font-semibold text-xs sm:text-sm px-4 py-1.5 sm:py-2 rounded-full mb-4 md:mb-8 border border-primary/20"
-          >
-            <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-            India's Fastest Growing Cloud Hosting
-          </motion.div>
-
           <h1 className="mb-4 md:mb-6 font-extrabold leading-[1.3] md:leading-[1.35] text-2xl sm:text-3xl md:text-[clamp(2.5rem,4.5vw,4.5rem)] tracking-tight">
             <span className="whitespace-nowrap">Premium{" "}
             <span className="gradient-text">Cloud & Web Hosting</span></span>
