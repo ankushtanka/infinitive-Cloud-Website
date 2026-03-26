@@ -41,60 +41,44 @@ const HeroSection = () => {
   const tickerHeight = useTransform(scrollY, [0, 80], ["auto", "0px"]);
 
   const offers = [
-    { text: "🔥 Limited Time: Get 50% OFF on first 3 months", code: "WELCOME50" },
-    { text: "🚀 Start your 15-day Free Trial — No credit card required", code: null },
-    { text: "⚡ Hosting starting at just ₹79/mo — Launch today!", code: null },
+    { text: "50% OFF first 3 months", code: "WELCOME50" },
+    { text: "15-day free trial — no card required", code: null },
+    { text: "Plans from ₹79/mo", code: null },
   ];
 
   useEffect(() => {
-    const timer = setInterval(() => setActiveOffer((p) => (p + 1) % offers.length), 3500);
+    const timer = setInterval(() => setActiveOffer((p) => (p + 1) % offers.length), 4000);
     return () => clearInterval(timer);
   }, []);
-
-  const stat1 = useCountUp(50, 2500, "+");
-  const stat2 = useCountUp(99, 2000, ".9%");
-  const stat3 = useCountUp(5, 1500, "x");
-  const stat4 = useCountUp(100, 1500, "%");
-
-  return (
-    <section className="relative w-full flex flex-col items-center justify-center overflow-hidden bg-background pt-16 lg:pt-24 min-h-[85vh] md:min-h-screen">
-      {/* Animated gradient background */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-muted/30 to-background" />
-        <div className="absolute inset-0" style={{ background: "var(--gradient-glow)" }} />
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-float hidden md:block" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-secondary/5 rounded-full blur-3xl animate-float hidden md:block" style={{ animationDelay: "3s" }} />
-      </div>
 
       {/* Top offer ticker - hides on scroll */}
       <motion.div 
         style={{ opacity: tickerOpacity, height: tickerHeight, overflow: "hidden" }}
-        className="relative z-10 w-full max-w-4xl mx-auto px-3 sm:px-4 mt-2 md:mt-4 mb-4 md:mb-8"
+        className="relative z-10 w-full max-w-md mx-auto px-3 sm:px-4 mt-2 md:mt-4 mb-4 md:mb-8"
       >
         <Link to="/contact" className="block">
-          <div className="overflow-hidden rounded-xl sm:rounded-2xl md:rounded-full bg-gradient-to-r from-primary/10 via-accent/10 to-secondary/10 border border-primary/20 hover:border-primary/40 transition-all cursor-pointer backdrop-blur-sm shadow-[0_0_20px_hsl(var(--primary)/0.1)]">
-            <div className="flex items-center justify-center min-h-[40px] sm:min-h-[48px] md:h-12 px-3 sm:px-5 md:px-6 py-1.5 md:py-0">
+          <div className="rounded-full border border-primary/15 hover:border-primary/30 transition-all cursor-pointer backdrop-blur-sm bg-card/50">
+            <div className="flex items-center justify-center h-9 sm:h-10 px-4 sm:px-6">
               <motion.div
                 key={activeOffer}
-                initial={{ y: 20, opacity: 0 }}
+                initial={{ y: 12, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -20, opacity: 0 }}
-                transition={{ duration: 0.4 }}
-                className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 md:gap-3 text-[11px] sm:text-xs md:text-base font-semibold text-center leading-snug"
+                exit={{ y: -12, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="flex items-center gap-2 text-xs sm:text-sm font-medium tracking-wide"
               >
-                <span className="text-foreground">{offers[activeOffer].text}</span>
+                <span className="text-muted-foreground">{offers[activeOffer].text}</span>
                 {offers[activeOffer].code && (
-                  <span className="font-mono px-2 sm:px-3 py-0.5 rounded-full bg-primary text-primary-foreground text-[10px] sm:text-xs font-bold whitespace-nowrap">
+                  <span className="font-mono px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] sm:text-xs font-semibold tracking-wider">
                     {offers[activeOffer].code}
                   </span>
                 )}
-                <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary flex-shrink-0" />
+                <ArrowRight className="w-3 h-3 text-muted-foreground" />
               </motion.div>
             </div>
           </div>
         </Link>
       </motion.div>
-
       {/* Main hero content */}
       <div className="section-container w-full relative z-10 flex flex-col items-center justify-center flex-1">
         <div className="max-w-5xl w-full flex flex-col items-center text-center">
