@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Shield, Headphones, Server, Cloud, Zap, CheckCircle2, Sparkles } from "lucide-react";
+import { ArrowRight, Shield, Headphones, Server, Cloud, Zap, CheckCircle2, Gem, Clock, BadgePercent, Sparkles } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
@@ -41,9 +41,9 @@ const HeroSection = () => {
   const tickerHeight = useTransform(scrollY, [0, 80], ["auto", "0px"]);
 
   const offers = [
-    { text: "50% OFF first 3 months", code: "WELCOME50" },
-    { text: "15-day free trial — no card required", code: null },
-    { text: "Plans from ₹79/mo", code: null },
+    { text: "50% OFF first 3 months", code: "WELCOME50", icon: BadgePercent },
+    { text: "15-day free trial — no card required", code: null, icon: Clock },
+    { text: "Plans from ₹79/mo", code: null, icon: Gem },
   ];
 
   useEffect(() => {
@@ -87,7 +87,7 @@ const HeroSection = () => {
                   transition={{ duration: 0.35, ease: "easeOut" }}
                   className="flex items-center gap-2.5 text-xs sm:text-sm font-medium"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-primary/70" />
+                  {(() => { const Icon = offers[activeOffer].icon; return <Icon className="w-3.5 h-3.5 text-primary" />; })()}
                   <span className="text-foreground/80">{offers[activeOffer].text}</span>
                   {offers[activeOffer].code && (
                     <span className="font-mono px-2.5 py-0.5 rounded-full bg-primary/15 text-primary text-[10px] sm:text-xs font-bold tracking-widest border border-primary/20">
