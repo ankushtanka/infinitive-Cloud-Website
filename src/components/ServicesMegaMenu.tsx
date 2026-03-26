@@ -233,7 +233,7 @@ const ServicesMegaMenu = ({ onClose, onMouseEnter, onMouseLeave, initialCategory
                     <div className="mt-5 pt-4 border-t border-border/50">
                       <div className="flex items-center gap-3 flex-wrap">
                         {[
-                          { icon: <Star className="w-3.5 h-3.5" />, text: "15-Day Free Trial" },
+                          { icon: <Star className="w-3.5 h-3.5" />, text: "14-Day Free Trial" },
                           { icon: <ShieldCheck className="w-3.5 h-3.5" />, text: "30-Day Money-Back" },
                           { icon: <Crown className="w-3.5 h-3.5" />, text: "Free Migration" },
                           { icon: <Sparkles className="w-3.5 h-3.5" />, text: "Free SSL & CDN" },

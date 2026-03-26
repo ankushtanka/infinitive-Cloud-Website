@@ -66,11 +66,11 @@ const SEOContentSection = () => {
               <li>Automated daily backups with one-click restore</li>
               <li>cPanel / WHM included with all hosting plans</li>
               <li>DDoS protection and advanced firewall security</li>
-              <li>15-day free trial on all cloud and VPS plans</li>
+              <li>14-day free trial on all cloud and VPS plans</li>
               <li>Transparent pricing — no hidden fees or surprise charges</li>
             </ul>
             <p className="leading-relaxed">
-              Whether you're a startup in Bangalore, an agency in Mumbai, or an enterprise in Delhi — Infinitive Cloud has the hosting infrastructure to power your growth. Get started today with our 15-day free trial and experience the difference that premium hosting makes.
+              Whether you're a startup in Bangalore, an agency in Mumbai, or an enterprise in Delhi — Infinitive Cloud has the hosting infrastructure to power your growth. Get started today with our 14-day free trial and experience the difference that premium hosting makes.
             </p>
           </div>
         </div>
@@ -81,7 +81,7 @@ const SEOContentSection = () => {
             Best Cloud Hosting in India
           </h2>
           <p className="text-sm leading-relaxed mb-4">
-            Infinitive Cloud delivers enterprise-grade hosting — NVMe SSD, 99.99% uptime SLA, free SSL, daily backups, and 24/7 expert support. Plans start at ₹79/mo with a 15-day free trial and 30-day money-back guarantee.
+            Infinitive Cloud delivers enterprise-grade hosting — NVMe SSD, 99.99% uptime SLA, free SSL, daily backups, and 24/7 expert support. Plans start at ₹79/mo with a 14-day free trial and 30-day money-back guarantee.
           </p>
           <ul className="list-disc list-inside space-y-1.5 text-xs text-foreground/70">
             <li>Free website migration with zero downtime</li>

@@ -9,7 +9,7 @@ const features = [
   { feature: "Free Website Migration", us: true, others: false },
   { feature: "cPanel / WHM Included", us: true, others: false },
   { feature: "99.99% Uptime SLA", us: true, others: false },
-  { feature: "15-Day Free Trial", us: true, others: false },
+  { feature: "14-Day Free Trial", us: true, others: false },
   { feature: "24/7 Expert Support", us: true, others: true },
   { feature: "DDoS Protection", us: true, others: false },
   { feature: "LiteSpeed Web Server", us: true, others: false },

@@ -21,7 +21,7 @@ export const organizationSchema = {
   "alternateName": "Infinitive Cloud Private Limited",
   "url": "https://infinitivecloud.com",
   "logo": "https://infinitivecloud.com/og-image.png",
-  "description": "Premium cloud hosting, VPS, dedicated servers, and domain services in India. 99.99% uptime SLA, 24×7 support, and 15-day free trial.",
+  "description": "Premium cloud hosting, VPS, dedicated servers, and domain services in India. 99.99% uptime SLA, 24×7 support, and 14-day free trial.",
   "email": "info@infinitivecloud.com",
   "telephone": "+91-8690393087",
   "address": {

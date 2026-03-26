@@ -10,7 +10,7 @@ const FreeTrialSection = () => {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   const benefits = [
-    "15 Days Free Cloud Hosting",
+    "14 Days Free Cloud Hosting",
     "30-Day Money-Back Guarantee",
     "No Setup Fees or Hidden Charges",
     "No Credit Card Required",
@@ -37,7 +37,7 @@ const FreeTrialSection = () => {
             </div>
 
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
-              Try Before You Buy — <span className="gradient-text">15 Days Free</span>
+              Try Before You Buy — <span className="gradient-text">14 Days Free</span>
             </h2>
             <p className="text-sm md:text-lg text-muted-foreground mb-6 md:mb-10 max-w-xl mx-auto">
               Experience premium cloud hosting risk-free. Full access, zero commitments.
@@ -70,7 +70,7 @@ const FreeTrialSection = () => {
             </Link>
 
             <p className="text-[10px] md:text-xs text-muted-foreground mt-3 md:mt-4">
-              15-day free trial + 30-day money-back guarantee · Join 1,000+ businesses
+              14-day free trial + 30-day money-back guarantee · Join 1,000+ businesses
             </p>
           </div>
         </motion.div>
