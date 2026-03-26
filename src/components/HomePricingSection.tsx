@@ -123,7 +123,7 @@ const HomePricingSection = () => {
                           <span className="text-3xl md:text-5xl font-black gradient-text">{plan.price}</span>
                           <span className="text-sm md:text-base text-muted-foreground">{plan.period}</span>
                         </div>
-                        <p className="text-xs text-primary font-medium mt-1">15-Day Free Trial · 30-Day Money-Back</p>
+                        <p className="text-xs text-primary font-medium mt-1">14-Day Free Trial · 30-Day Money-Back</p>
                       </div>
                       {/* Show only 4 features on mobile */}
                       <ul className="space-y-2 md:space-y-3 mb-5 md:mb-8">

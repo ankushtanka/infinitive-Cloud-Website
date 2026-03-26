@@ -42,7 +42,7 @@ const HeroSection = () => {
 
   const offers = [
     { text: "🔥 Limited Time: Get 50% OFF on first 3 months", code: "WELCOME50" },
-    { text: "🚀 Start your 15-day Free Trial — No credit card required", code: null },
+    { text: "🚀 Start your 14-day Free Trial — No credit card required", code: null },
     { text: "⚡ Hosting starting at just ₹79/mo — Launch today!", code: null },
   ];
 
@@ -159,7 +159,7 @@ const HeroSection = () => {
             </div>
             <div className="flex items-center gap-1.5 md:gap-2">
               <Cloud className="w-4 h-4 md:w-5 md:h-5 text-primary" />
-              <span className="font-medium">15-Day Free Trial</span>
+              <span className="font-medium">14-Day Free Trial</span>
             </div>
             <div className="hidden sm:flex items-center gap-2">
               <Server className="w-5 h-5 text-primary" />

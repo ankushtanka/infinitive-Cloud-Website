@@ -41,7 +41,7 @@ const testimonials = [
     name: "Vikram Singh",
     company: "StartupHub",
     role: "Co-Founder",
-    content: "The free trial convinced us. Within 15 days we knew this was the right hosting partner. Migration was handled completely by their team — zero hassle.",
+    content: "The free trial convinced us. Within 14 days we knew this was the right hosting partner. Migration was handled completely by their team — zero hassle.",
     rating: 5,
     highlight: "Zero hassle",
   },

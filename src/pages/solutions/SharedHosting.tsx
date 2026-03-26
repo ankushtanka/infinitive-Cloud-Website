@@ -117,7 +117,7 @@ const SharedHosting = () => {
                         <span className="text-4xl font-black gradient-text">{plan.price}</span>
                         <span className="text-base text-muted-foreground">{plan.period}</span>
                       </div>
-                      <p className="text-xs text-primary font-medium mt-1">15 Days Free Trial</p>
+                      <p className="text-xs text-primary font-medium mt-1">14 Days Free Trial</p>
                     </div>
                     <ul className="space-y-3 mb-8">
                       {plan.features.map((f, j) => (
@@ -168,7 +168,7 @@ const SharedHosting = () => {
               <CardContent className="py-12 text-center">
                 <h2 className="mb-4">Ready to Get Started?</h2>
                 <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
-                  Try any shared hosting plan free for 15 days. No credit card required.
+                  Try any shared hosting plan free for 14 days. No credit card required.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link to="/contact"><Button className="btn-gradient glow-effect font-bold h-14 px-8">Start Free Trial</Button></Link>
