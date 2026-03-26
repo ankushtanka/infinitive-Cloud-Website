@@ -87,7 +87,7 @@ const HeroSection = () => {
                   transition={{ duration: 0.35, ease: "easeOut" }}
                   className="flex items-center gap-2.5 text-xs sm:text-sm font-medium"
                 >
-                  <span className="text-sm">{offers[activeOffer].icon}</span>
+                  <Sparkles className="w-3.5 h-3.5 text-primary/70" />
                   <span className="text-foreground/80">{offers[activeOffer].text}</span>
                   {offers[activeOffer].code && (
                     <span className="font-mono px-2.5 py-0.5 rounded-full bg-primary/15 text-primary text-[10px] sm:text-xs font-bold tracking-widest border border-primary/20">
