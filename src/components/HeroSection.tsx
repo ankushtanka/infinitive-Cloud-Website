@@ -41,9 +41,9 @@ const HeroSection = () => {
   const tickerHeight = useTransform(scrollY, [0, 80], ["auto", "0px"]);
 
   const offers = [
-    { text: "50% OFF first 3 months", code: "WELCOME50", icon: "🔥" },
-    { text: "15-day free trial — no card required", code: null, icon: "🚀" },
-    { text: "Plans from ₹79/mo", code: null, icon: "💎" },
+    { text: "50% OFF first 3 months", code: "WELCOME50" },
+    { text: "15-day free trial — no card required", code: null },
+    { text: "Plans from ₹79/mo", code: null },
   ];
 
   useEffect(() => {
