@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
+import DomainPriceComparison from "@/components/DomainPriceComparison";
 import Footer from "@/components/Footer";
 import HeroSection from "@/components/HeroSection";
 import TechLogosSection from "@/components/TechLogosSection";
@@ -8,13 +9,16 @@ import HomePricingSection from "@/components/HomePricingSection";
 import WhatWeDoSection from "@/components/WhatWeDoSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import WhyTrustUsSection from "@/components/WhyTrustUsSection";
-import TestimonialsSection from "@/components/TestimonialsSection";
+import ComparisonSection from "@/components/ComparisonSection";
 import FreeTrialSection from "@/components/FreeTrialSection";
+import SEOContentSection from "@/components/SEOContentSection";
+import TestimonialsSection from "@/components/TestimonialsSection";
 import FAQSection from "@/components/FAQSection";
-import AboutPreviewSection from "@/components/AboutPreviewSection";
+import LiveOfferBanner from "@/components/LiveOfferBanner";
 import { StructuredData, organizationSchema, websiteSchema, createBreadcrumbSchema, createFAQSchema } from "@/components/StructuredData";
 
 const Index = () => {
+
   const breadcrumbSchema = createBreadcrumbSchema([
     { name: "Home", url: "https://infinitivecloud.com/" }
   ]);
@@ -29,18 +33,18 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       <Helmet>
-        <title>Infinitive Cloud | Premium Cloud & Web Hosting Infrastructure</title>
-        <meta name="description" content="Enterprise-grade cloud hosting, VPS, dedicated servers & domain services. 99.99% uptime SLA, 24×7 expert support & 15-day free trial. Infrastructure for the ambitious." />
-        <meta name="keywords" content="cloud hosting India, VPS hosting India, dedicated server India, web hosting India, best hosting provider, managed cloud hosting, enterprise hosting" />
+        <title>Infinitive Cloud | Best Cloud & Web Hosting Company in India</title>
+        <meta name="description" content="Premium cloud hosting, VPS, dedicated servers & domain services in India. 99.99% uptime SLA, 24×7 support & 15-day free trial. Launch your business with Infinitive Cloud." />
+        <meta name="keywords" content="cloud hosting India, VPS hosting India, dedicated server India, web hosting India, best hosting provider, managed cloud hosting, affordable web hosting, shared hosting, reseller hosting, SSL certificates" />
         <link rel="canonical" href="https://infinitivecloud.com/" />
-        <meta property="og:title" content="Infinitive Cloud | Premium Cloud & Web Hosting Infrastructure" />
-        <meta property="og:description" content="Enterprise-grade cloud hosting, dedicated servers & domain services. 99.99% uptime SLA, 24×7 expert support." />
+        <meta property="og:title" content="Infinitive Cloud | Best Cloud & Web Hosting Company in India" />
+        <meta property="og:description" content="Premium cloud hosting, VPS, dedicated servers & domain services. 99.99% uptime SLA, 24×7 support & 15-day free trial." />
         <meta property="og:url" content="https://infinitivecloud.com/" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Infinitive Cloud | Premium Cloud & Web Hosting Infrastructure" />
-        <meta name="twitter:description" content="Enterprise-grade cloud hosting, dedicated servers. 99.99% uptime, 24/7 expert support, 15-day free trial." />
+        <meta name="twitter:title" content="Infinitive Cloud | Best Cloud & Web Hosting Company in India" />
+        <meta name="twitter:description" content="Premium cloud hosting, VPS, dedicated servers. 99.99% uptime, 24/7 support, 15-day free trial." />
         <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       
@@ -50,7 +54,7 @@ const Index = () => {
       <StructuredData data={faqSchema} />
       <a 
         href="#main-content" 
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-accent focus:text-accent-foreground focus:rounded-md focus:shadow-lg"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:shadow-lg"
       >
         Skip to main content
       </a>
@@ -58,17 +62,20 @@ const Index = () => {
       <main id="main-content">
         <HeroSection />
         <TechLogosSection />
+        <DomainSearchSection />
         <HomePricingSection />
         <WhatWeDoSection />
         <HowItWorksSection />
+        <DomainPriceComparison />
         <WhyTrustUsSection />
-        <AboutPreviewSection />
-        <DomainSearchSection />
+        <ComparisonSection />
         <TestimonialsSection />
         <FreeTrialSection />
+        <SEOContentSection />
         <FAQSection />
       </main>
       <Footer />
+      {/* <LiveOfferBanner /> */}
     </div>
   );
 };

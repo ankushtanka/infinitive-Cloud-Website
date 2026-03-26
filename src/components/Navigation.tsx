@@ -1,11 +1,13 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, Globe, Server, ShieldCheck, Search, Phone, Mail } from "lucide-react";
+import { Menu, X, ChevronDown, User, Globe, Server, ShieldCheck, Search, Phone, Mail } from "lucide-react";
 import logo from "@/assets/logo-icon.png";
 import ServicesMegaMenu from "@/components/ServicesMegaMenu";
 import CurrencyLanguageDropdown from "@/components/CurrencyLanguageDropdown";
 import ThemeToggle from "@/components/ThemeToggle";
+
+const WHMCS_LOGIN = "https://billing.infinitivecloud.com";
 
 const serviceLinks = [
   {
@@ -15,6 +17,8 @@ const serviceLinks = [
       { label: "Cloud Hosting", path: "/solutions/cloud-hosting" },
       { label: "Reseller Hosting", path: "/solutions/reseller-hosting" },
       { label: "WordPress Hosting", path: "/solutions/wordpress-hosting" },
+      { label: "WooCommerce Hosting", path: "/solutions/woocommerce-hosting" },
+      { label: "Node.js Hosting", path: "/solutions/nodejs-hosting" },
     ],
   },
   {
@@ -45,6 +49,7 @@ const serviceLinks = [
   },
 ];
 
+// Quick product links shown directly in the nav bar
 const productQuickLinks = [
   { label: "Hosting", icon: Globe, category: "Hosting" },
   { label: "Servers", icon: Server, category: "Servers" },
@@ -60,6 +65,7 @@ const Navigation = () => {
   const [mobileServiceOpen, setMobileServiceOpen] = useState(false);
   const [mobileSubDropdown, setMobileSubDropdown] = useState<string | null>(null);
   const [topBarVisible, setTopBarVisible] = useState(true);
+  
 
   useEffect(() => {
     const onScroll = () => setTopBarVisible(window.scrollY < 50);
@@ -77,6 +83,7 @@ const Navigation = () => {
     }
   }, [servicesOpen, megaMenuCategory]);
 
+  // Close mega menu on outside click
   useEffect(() => {
     if (!servicesOpen) return;
     const handleClickOutside = (e: MouseEvent) => {
@@ -97,6 +104,8 @@ const Navigation = () => {
     { label: "Contact", path: "/contact" },
   ];
 
+  const isHome = location.pathname === "/";
+
   const handleCloseMenus = () => {
     setIsOpen(false);
     setServicesOpen(false);
@@ -107,11 +116,12 @@ const Navigation = () => {
 
   useEffect(() => {
     handleCloseMenus();
+    // eslint-disable-next-line
   }, [location.pathname, location.hash]);
 
   return (
     <>
-      {/* Top utility bar */}
+      {/* Top utility bar - desktop only, hides on scroll */}
       <div
         className="hidden lg:block fixed top-0 left-0 right-0 z-50 bg-muted/80 backdrop-blur-md border-b border-border/30 transition-transform duration-300"
         style={{ transform: topBarVisible ? "translateY(0)" : "translateY(-100%)" }}
@@ -119,42 +129,49 @@ const Navigation = () => {
         <div className="section-container">
           <div className="flex items-center justify-between h-9">
             <div className="flex items-center gap-4 text-xs text-foreground font-medium">
-              <span className="flex items-center gap-1.5"><Phone className="w-3 h-3 text-accent" /> +91 8690393087</span>
-              <span className="flex items-center gap-1.5"><Mail className="w-3 h-3 text-accent" /> support@infinitivecloud.com</span>
+              <span className="flex items-center gap-1.5"><Phone className="w-3 h-3 text-primary" /> +91 8690393087</span>
+              <span className="flex items-center gap-1.5"><Mail className="w-3 h-3 text-primary" /> support@infinitivecloud.com</span>
             </div>
             <div className="flex items-center gap-2">
               <CurrencyLanguageDropdown />
               <ThemeToggle />
+              <div className="h-4 w-px bg-border/50 mx-1" />
+              {/* Login button hidden until client area is ready */}
             </div>
           </div>
         </div>
       </div>
 
       {/* Main navigation */}
-      <nav className={`fixed left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/50 transition-[top] duration-300 top-0 ${topBarVisible ? "lg:top-9" : "lg:top-0"}`}>
+      <nav
+        className={`fixed left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/50 shadow-soft transition-[top] duration-300 top-0 ${topBarVisible ? "lg:top-9" : "lg:top-0"}`}
+      >
         <div className="section-container">
           <div className="flex items-center justify-between h-16 lg:h-14">
+            {/* Logo - prominent and clear */}
             <Link to="/" className="flex items-center gap-2.5 group flex-shrink-0" onClick={handleCloseMenus}>
               <img src={logo} alt="Infinitive Cloud Logo" className="h-11 lg:h-13 w-auto group-hover:scale-105 transition-transform duration-300" />
               <div className="flex flex-col leading-none">
-                <span className="text-base lg:text-lg font-black text-foreground tracking-tight" style={{ fontFamily: "'Inter', sans-serif" }}>
-                  INFINITIVE <span className="text-accent">CLOUD</span><sup className="text-[0.5em] align-super font-bold text-muted-foreground">™</sup>
+                <span className="text-base lg:text-lg font-black text-foreground tracking-tight">
+                  INFINITIVE <span className="text-primary">CLOUD</span><sup className="text-[0.5em] align-super font-bold text-muted-foreground">™</sup>
                 </span>
                 <span className="text-[8px] lg:text-[9px] font-semibold text-muted-foreground tracking-[0.2em]">PRIVATE LIMITED</span>
               </div>
             </Link>
 
+            {/* Desktop Navigation - centered */}
             <div className="hidden lg:flex items-center gap-0.5">
+              {/* Product quick links */}
               {productQuickLinks.map((product) => {
                 const Icon = product.icon;
                 return (
                   <button
                     key={product.label}
                     data-product-trigger
-                    className={`relative px-3 py-2 font-medium text-sm flex items-center gap-1.5 transition-all duration-200 rounded-lg ${
+                    className={`relative px-3 py-2 font-bold text-sm flex items-center gap-1.5 group transition-all duration-200 rounded-lg ${
                       servicesOpen && megaMenuCategory === product.category 
-                        ? "text-accent bg-accent/10" 
-                        : "text-foreground hover:text-accent hover:bg-muted/50"
+                        ? "text-primary bg-primary/10" 
+                        : "text-foreground hover:text-primary hover:bg-muted/50"
                     }`}
                     onClick={() => handleProductClick(product.category)}
                   >
@@ -172,21 +189,23 @@ const Navigation = () => {
                   key={link.path}
                   to={link.path}
                   onClick={handleCloseMenus}
-                  className="relative px-3 py-2 text-foreground hover:text-accent hover:bg-muted/50 transition-all font-medium text-sm rounded-lg"
+                  className="relative px-3 py-2 text-foreground hover:text-primary hover:bg-muted/50 transition-all font-bold text-sm rounded-lg"
                 >
                   {link.label}
                 </Link>
               ))}
             </div>
 
+            {/* Right side CTA */}
             <div className="hidden lg:flex items-center gap-2 flex-shrink-0">
               <Link to="/contact" onClick={handleCloseMenus}>
-                <Button className="btn-gold text-xs px-6 h-9">
+                <Button className="btn-gradient glow-effect shadow-medium text-sm px-6 h-9 font-bold">
                   Start Free Trial
                 </Button>
               </Link>
             </div>
 
+            {/* Mobile: utility icons + hamburger */}
             <div className="flex lg:hidden items-center gap-1">
               <ThemeToggle />
               <button
@@ -202,6 +221,7 @@ const Navigation = () => {
         </div>
       </nav>
 
+      {/* Desktop Mega Menu */}
       {servicesOpen && (
         <ServicesMegaMenu
           onClose={() => { setServicesOpen(false); setMegaMenuCategory(undefined); }}
@@ -211,18 +231,20 @@ const Navigation = () => {
         />
       )}
 
+      {/* Mobile Navigation */}
       {isOpen && (
         <div className="lg:hidden fixed inset-0 top-16 bg-background z-[60] overflow-y-auto">
           <div className="flex flex-col gap-2 px-6 py-6">
+            {/* Services Accordion */}
             <div className="flex flex-col">
               <button
-                className="flex items-center justify-between text-foreground font-semibold py-4 px-4 rounded-lg text-lg hover:text-accent transition-colors"
+                className="flex items-center justify-between text-foreground font-bold py-4 px-4 rounded-lg text-lg hover:text-primary transition-colors"
                 onClick={() => setMobileServiceOpen(!mobileServiceOpen)}
                 aria-expanded={mobileServiceOpen}
                 type="button"
               >
                 <span className="flex items-center gap-2">
-                  <Globe className="w-5 h-5 text-accent" />
+                  <Globe className="w-5 h-5 text-primary" />
                   Products & Services
                 </span>
                 <ChevronDown className={`w-5 h-5 ml-1 transition-transform duration-200 ${mobileServiceOpen ? "rotate-180" : ""}`} />
@@ -232,7 +254,7 @@ const Navigation = () => {
                   {serviceLinks.map((service) => (
                     <div key={service.heading} className="flex flex-col">
                       <button
-                        className="flex items-center justify-between py-2.5 px-4 rounded-lg font-medium text-base text-foreground/80 hover:text-accent hover:bg-muted transition-colors"
+                        className="flex items-center justify-between py-2.5 px-4 rounded-lg font-semibold text-base text-foreground/80 hover:text-primary hover:bg-muted transition-colors"
                         onClick={() =>
                           mobileSubDropdown === service.heading
                             ? setMobileSubDropdown(null)
@@ -250,7 +272,7 @@ const Navigation = () => {
                               key={link.path}
                               to={link.path}
                               onClick={handleCloseMenus}
-                              className="py-2 px-4 text-foreground/80 hover:text-accent hover:bg-muted font-normal text-base rounded-lg transition-colors"
+                              className="py-2 px-4 text-foreground/80 hover:text-primary hover:bg-muted font-normal text-base rounded-lg transition-colors"
                             >
                               {link.label}
                             </Link>
@@ -267,17 +289,18 @@ const Navigation = () => {
                 key={link.path}
                 to={link.path}
                 onClick={handleCloseMenus}
-                className="text-foreground hover:text-accent hover:bg-muted transition-colors font-semibold py-4 px-4 rounded-lg text-lg"
+                className="text-foreground hover:text-primary hover:bg-muted transition-colors font-bold py-4 px-4 rounded-lg text-lg"
               >
                 {link.label}
               </Link>
             ))}
+            {/* Login button hidden until client area is ready */}
             <div className="flex items-center justify-between py-4 px-4">
-              <span className="text-foreground font-semibold text-lg">Dark Mode</span>
+              <span className="text-foreground font-bold text-lg">Dark Mode</span>
               <ThemeToggle />
             </div>
             <Link to="/contact" onClick={handleCloseMenus} className="mt-4">
-              <Button className="btn-gold w-full h-14 text-base">
+              <Button className="btn-gradient glow-effect w-full h-14 text-lg">
                 Start Free Trial
               </Button>
             </Link>

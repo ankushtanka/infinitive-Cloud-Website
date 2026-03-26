@@ -1,107 +1,161 @@
 import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { Card, CardContent } from "@/components/ui/card";
+import { Target, Eye, CheckCircle2 } from "lucide-react";
 import { StructuredData, createBreadcrumbSchema } from "@/components/StructuredData";
-
-const team = [
-  { name: "Rahul Mehta", role: "Founder & Chief Architect", bio: "15 years in cloud infrastructure" },
-  { name: "Anjali Nair", role: "Head of Client Success", bio: "Ex-AWS, customer obsessed" },
-  { name: "Vikram Singh", role: "Senior Support Engineer", bio: "10 min average response time" },
-];
 
 const About = () => {
   const breadcrumbSchema = createBreadcrumbSchema([
     { name: "Home", url: "https://infinitivecloud.com/" },
     { name: "About", url: "https://infinitivecloud.com/about" }
   ]);
+  const values = [
+    "Trust & Transparency",
+    "Innovation & Excellence",
+    "Sustainability & Green Tech",
+    "Reliability & Performance",
+    "Customer-Centric Approach",
+    "Security First",
+  ];
 
   return (
     <div className="min-h-screen">
       <Helmet>
-        <title>About Infinitive Cloud — Infrastructure Built by Engineers</title>
-        <meta name="description" content="Founded by engineers tired of 'unlimited' hosting that meant limited support. Learn about our team, our values, and why we build differently." />
+        <title>About Infinitive Cloud - Leading IT Solutions Company India | Our Mission & Vision</title>
+        <meta name="description" content="Learn about Infinitive Cloud, a global cloud hosting, web development, and AI solutions company. Our mission is to empower businesses with reliable, scalable digital infrastructure." />
+        <meta name="keywords" content="about Infinitive Cloud, IT company India, cloud solutions provider, web development company, AI solutions company, digital infrastructure" />
         <link rel="canonical" href="https://infinitivecloud.com/about" />
-        <meta property="og:title" content="About Infinitive Cloud — Infrastructure Built by Engineers" />
-        <meta property="og:description" content="Founded by engineers who believe infrastructure should be invisible, but the people behind it shouldn't be." />
+        <meta property="og:title" content="About Infinitive Cloud - Leading IT Solutions Company India" />
+        <meta property="og:description" content="Global cloud, hosting, development, and AI solutions company delivering high-performance, scalable, secure digital infrastructure." />
         <meta property="og:url" content="https://infinitivecloud.com/about" />
         <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="About Infinitive Cloud - IT Solutions Company" />
+        <meta name="twitter:description" content="Learn about our mission to empower businesses with reliable cloud infrastructure." />
+        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       
       <StructuredData data={breadcrumbSchema} />
       
       <Navigation />
-      <main className="pt-24">
-        {/* Hero */}
-        <section className="py-20 md:py-32" style={{ background: "var(--gradient-hero)" }}>
-          <div className="section-container">
-            <div className="max-w-3xl">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl text-primary-foreground mb-8">
-                We're <span className="text-accent italic">Infinitive Cloud.</span>
-              </h1>
-              <div className="space-y-5 text-sm md:text-base text-primary-foreground/60 leading-relaxed">
-                <p>
-                  Founded by engineers who were tired of "unlimited" hosting that meant limited support. We believe infrastructure should be invisible, but the people behind it shouldn't be.
+      <main className="pt-24 pb-20">
+        {/* Hero Section */}
+        <section className="section-container mb-20">
+          <div className="max-w-4xl mx-auto text-center animate-fade-in">
+            <h1 className="mb-6">
+              About <span className="gradient-text">Infinitive Cloud</span>
+            </h1>
+            <p className="text-xl text-muted-foreground">
+              A global cloud, hosting, development, and AI solutions company delivering high-performance,
+              scalable, secure, and future-ready digital infrastructure for businesses of all sizes.
+            </p>
+          </div>
+        </section>
+
+        {/* Mission & Vision */}
+        <section className="section-container mb-20">
+          <div className="grid md:grid-cols-2 gap-8">
+            <Card className="card-hover animate-fade-in-up">
+              <CardContent className="pt-8">
+                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-4">
+                  <Target className="w-7 h-7 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold mb-4">Our Mission</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Empower businesses worldwide with reliable, scalable cloud and digital solutions that drive growth,
+                  innovation, and transformation. We're committed to making enterprise-grade technology accessible to
+                  organizations of all sizes.
                 </p>
-                <p>
-                  Every server we deploy runs on genuine licenses — cPanel, LiteSpeed, CloudLinux, and enterprise‑grade hardware. We don't cut corners because your business can't afford us to.
+              </CardContent>
+            </Card>
+
+            <Card className="card-hover animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+              <CardContent className="pt-8">
+                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-accent to-primary flex items-center justify-center mb-4">
+                  <Eye className="w-7 h-7 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold mb-4">Our Vision</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Build a sustainable, intelligent digital future where every business has access to cutting-edge cloud
+                  infrastructure, AI capabilities, and expert support. We envision a world where technology seamlessly
+                  adapts to business needs.
                 </p>
-                <p>
-                  Our team is small by design. When you reach out, you'll speak to a senior engineer who knows your environment — not a scripted agent.
-                </p>
-                <p className="text-accent font-medium">
-                  Based in India. Serving the world.
-                </p>
-                <p>
-                  We're proud to power founders, e‑commerce brands, and agencies who demand more than a hosting account.
-                </p>
-              </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* What Makes Us Different */}
+        <section className="section-container mb-20">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-center mb-12 animate-fade-in">
+              What Makes <span className="gradient-text">Us Different</span>
+            </h2>
+            
+            <div className="space-y-6">
+              <Card className="card-hover animate-fade-in-up">
+                <CardContent className="pt-6">
+                  <h4 className="text-xl font-semibold mb-3">Complete Tech Ecosystem</h4>
+                  <p className="text-muted-foreground">
+                    Unlike fragmented providers, Infinitive Cloud offers cloud infrastructure, hosting, development,
+                    and AI solutions under one roof. No juggling multiple vendors—everything you need, unified.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="card-hover animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+                <CardContent className="pt-6">
+                  <h4 className="text-xl font-semibold mb-3">Zero-Downtime Promise</h4>
+                  <p className="text-muted-foreground">
+                    Our Tier-IV infrastructure, redundant systems, and 24×7 monitoring ensure 99.99% uptime.
+                    Your business never stops, and neither do we.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="card-hover animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+                <CardContent className="pt-6">
+                  <h4 className="text-xl font-semibold mb-3">Sustainable & Green</h4>
+                  <p className="text-muted-foreground">
+                    We're committed to eco-friendly hosting powered by renewable energy and carbon-neutral operations.
+                    Grow your business while protecting the planet.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="card-hover animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
+                <CardContent className="pt-6">
+                  <h4 className="text-xl font-semibold mb-3">Expert 24×7 Support</h4>
+                  <p className="text-muted-foreground">
+                    Real humans, real expertise, real time. Our support team is always available to solve challenges,
+                    optimize performance, and guide your digital journey.
+                  </p>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </section>
 
-        {/* Team */}
-        <section className="py-20 md:py-32 bg-background">
-          <div className="section-container">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl mb-16">
-              The <span className="gradient-text">Team</span>
+        {/* Core Values */}
+        <section className="section-container">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-center mb-12 animate-fade-in">
+              Our <span className="gradient-text">Core Values</span>
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl">
-              {team.map((person) => (
-                <div key={person.name} className="group">
-                  <div className="w-full aspect-square rounded-lg bg-muted mb-5 flex items-center justify-center">
-                    <span className="text-4xl font-bold text-accent/30" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                      {person.name.split(' ').map(n => n[0]).join('')}
-                    </span>
-                  </div>
-                  <h3 className="text-lg font-semibold mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{person.name}</h3>
-                  <p className="text-sm text-accent font-medium mb-1">{person.role}</p>
-                  <p className="text-xs text-muted-foreground">{person.bio}</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {values.map((value, index) => (
+                <div
+                  key={value}
+                  className="flex items-center gap-3 bg-card p-4 rounded-lg border border-border card-hover animate-fade-in-up"
+                  style={{ animationDelay: `${index * 0.05}s` }}
+                >
+                  <CheckCircle2 className="w-5 h-5 text-accent flex-shrink-0" />
+                  <span className="font-medium">{value}</span>
                 </div>
               ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Values */}
-        <section className="py-20 md:py-32 bg-muted/20">
-          <div className="section-container">
-            <div className="max-w-3xl">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl mb-12">
-                What We <span className="gradient-text">Stand For</span>
-              </h2>
-              <div className="space-y-8">
-                {[
-                  { title: "Genuine Infrastructure", desc: "All genuine licenses. No pirated software. No compromises on the hardware your business runs on." },
-                  { title: "Transparent Pricing", desc: "No hidden fees, no surprise renewals, no aggressive upselling. What you see is what you pay." },
-                  { title: "Real Human Support", desc: "Average first response: 4 minutes 23 seconds. Escalation to senior engineer within 15 minutes." },
-                  { title: "Zero-Downtime Promise", desc: "Tier-IV infrastructure, redundant systems, and 24×7 monitoring ensure 99.99% uptime." },
-                ].map((value) => (
-                  <div key={value.title} className="border-l-2 border-accent/30 pl-6">
-                    <h3 className="text-lg font-semibold mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{value.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{value.desc}</p>
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
         </section>

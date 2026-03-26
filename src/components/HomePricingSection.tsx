@@ -1,120 +1,164 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight, Check } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Check, ArrowRight, Star, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const plans = [
+const categories = [
   {
-    name: "Launch",
-    tagline: "Everything you need to get started",
-    price: "₹79",
-    period: "/month",
-    subtext: "Billed annually. Transparent, no surge pricing.",
-    features: ["1 Website", "10 GB SSD Storage", "Free SSL Certificate", "cPanel Control Panel", "Weekly Backups", "99.99% Uptime SLA"],
-    cta: "Start 15‑day trial",
-    featured: false,
+    icon: Star,
+    title: "Shared Hosting",
+    description: "Perfect for personal websites & small businesses",
+    plans: [
+      {
+        name: "Starter",
+        originalPrice: "₹499",
+        price: "₹79",
+        period: "/mo",
+        popular: false,
+        features: ["1 Website", "10 GB SSD Storage", "Free SSL Certificate", "Free Domain (1 yr)", "Weekly Backups", "99.99% Uptime SLA"],
+      },
+      {
+        name: "Business",
+        originalPrice: "₹999",
+        price: "₹199",
+        period: "/mo",
+        popular: true,
+        features: ["Unlimited Websites", "50 GB NVMe Storage", "Free SSL & CDN", "Free Domain (1 yr)", "Daily Backups", "cPanel Control Panel"],
+      },
+      {
+        name: "Enterprise",
+        originalPrice: "₹1,999",
+        price: "₹399",
+        period: "/mo",
+        popular: false,
+        features: ["Unlimited Websites", "100 GB NVMe Storage", "Free SSL, CDN & IP", "Priority Support", "Real-time Backups", "Staging Environment"],
+      },
+    ],
   },
   {
-    name: "Cloud Plus",
-    tagline: "Auto‑scaling cloud with dedicated resources and priority support",
-    price: "₹1,199",
-    period: "/month",
-    subtext: "Billed annually. Transparent, no surge pricing.",
-    features: ["4 CPU Cores", "8 GB RAM", "200 GB NVMe", "Dedicated IP", "Load Balancer", "Priority support within 2 hours"],
-    cta: "Start 15‑day trial",
-    featured: true,
+    icon: Shield,
+    title: "Cloud Hosting",
+    description: "Auto-scaling cloud with dedicated resources",
+    plans: [
+      {
+        name: "Cloud Basic",
+        originalPrice: "₹2,499",
+        price: "₹599",
+        period: "/mo",
+        popular: false,
+        features: ["2 CPU Cores", "4 GB RAM", "80 GB NVMe", "Dedicated IP", "Free SSL & CDN", "Auto-scaling"],
+      },
+      {
+        name: "Cloud Plus",
+        originalPrice: "₹4,999",
+        price: "₹1,199",
+        period: "/mo",
+        popular: true,
+        features: ["4 CPU Cores", "8 GB RAM", "200 GB NVMe", "Dedicated IP", "Priority Support", "Load Balancer"],
+      },
+      {
+        name: "Cloud Max",
+        originalPrice: "₹9,999",
+        price: "₹2,499",
+        period: "/mo",
+        popular: false,
+        features: ["8 CPU Cores", "16 GB RAM", "400 GB NVMe", "Dedicated IP", "24/7 Priority Support", "Multi-zone Failover"],
+      },
+    ],
   },
-  {
-    name: "Dedicated Infrastructure",
-    tagline: "Bare-metal performance for mission-critical workloads",
-    price: "Custom",
-    period: "",
-    subtext: "Tailored to your requirements.",
-    features: ["Intel Xeon Processors", "64+ GB ECC RAM", "NVMe RAID Storage", "Full IPMI Access", "Hardware Firewall", "Dedicated Account Manager"],
-    cta: "Talk to an Engineer",
-    featured: false,
-  },
-];
-
-const otherPlans = [
-  { name: "Shared Hosting", specs: "From ₹79/mo · SSD · Free SSL", link: "/solutions/shared-hosting" },
-  { name: "VPS Hosting", specs: "From ₹399/mo · Full root access", link: "/solutions/vps-hosting" },
-  { name: "Cloud Hosting", specs: "From ₹599/mo · Auto-scaling", link: "/solutions/cloud-hosting" },
-  { name: "GPU Servers", specs: "AI/ML workloads · NVIDIA GPUs", link: "/solutions/gpu-dedicated-server" },
 ];
 
 const HomePricingSection = () => {
   return (
-    <section className="py-20 md:py-32 bg-background" id="pricing">
+    <section className="py-12 md:py-20 bg-muted/30" id="pricing">
       <div className="section-container">
-        <div className="text-center mb-16 md:mb-20">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl mb-4">
+        <div className="text-center mb-8 md:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
             Hosting Plans That <span className="gradient-text">Scale With You</span>
           </h2>
-          <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto">
-            Enterprise-grade infrastructure. All plans include free SSL, 24/7 support, and 99.99% uptime SLA. Annual billing: pay 11 months, get 1 month free.
+          <p className="text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto">
+            Enterprise-grade infrastructure at India's most competitive prices. All plans include free SSL, 24/7 support & 99.99% uptime SLA.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto mb-20">
-          {plans.map((plan) => (
-            <Card
-              key={plan.name}
-              className={`relative overflow-hidden transition-all duration-300 hover:-translate-y-1 ${
-                plan.featured ? "border-accent/40 shadow-lg ring-1 ring-accent/20" : ""
-              }`}
-            >
-              {plan.featured && (
-                <div className="absolute top-0 left-0 right-0 h-0.5 bg-accent" />
-              )}
-              <CardContent className="p-8 md:p-10">
-                <div className="mb-6">
-                  <h3 className="text-xl md:text-2xl font-semibold mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{plan.name}</h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">{plan.tagline}</p>
+        <div className="space-y-10 md:space-y-16">
+          {categories.map((category, catIndex) => (
+            <div key={catIndex}>
+              <div className="flex items-center gap-3 mb-5 md:mb-8">
+                <div className="p-2 md:p-3 rounded-xl bg-primary/10">
+                  <category.icon className="w-5 h-5 md:w-6 md:h-6 text-primary" />
                 </div>
-
-                <div className="mb-6">
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-3xl md:text-4xl font-bold text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{plan.price}</span>
-                    <span className="text-sm text-muted-foreground">{plan.period}</span>
-                  </div>
-                  <p className="text-[11px] text-muted-foreground mt-1">{plan.subtext}</p>
+                <div>
+                  <h3 className="text-lg md:text-2xl font-bold">{category.title}</h3>
+                  <p className="text-xs md:text-sm text-muted-foreground">{category.description}</p>
                 </div>
+              </div>
 
-                <ul className="space-y-3 mb-8">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-center gap-3 text-sm">
-                      <Check className="w-4 h-4 text-accent flex-shrink-0" />
-                      <span className="text-foreground/80">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Link to="/contact">
-                  <Button
-                    className={`w-full h-12 text-sm ${plan.featured ? "btn-gold" : "btn-gold-outline"}`}
+              {/* Mobile: only show popular plan, Desktop: show all */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                {category.plans.map((plan, planIndex) => (
+                  <Card
+                    key={planIndex}
+                    className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 ${
+                      plan.popular ? "border-primary/50 shadow-primary/10 shadow-lg ring-2 ring-primary/20 md:scale-[1.02]" : "hidden md:block"
+                    }`}
                   >
-                    {plan.cta}
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
+                    {plan.popular && (
+                      <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary to-accent" />
+                    )}
+                    {plan.popular && (
+                      <div className="absolute top-4 right-4">
+                        <span className="text-xs font-bold bg-primary text-primary-foreground px-3 py-1 rounded-full uppercase tracking-wider">
+                          Most Popular
+                        </span>
+                      </div>
+                    )}
+                    <CardHeader className="pb-2 md:pb-3 pt-6 md:pt-8 px-5 md:px-8">
+                      <CardTitle className="text-lg md:text-xl font-bold">{plan.name}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="px-5 md:px-8 pb-5 md:pb-8">
+                      <div className="mb-4 md:mb-6">
+                        <span className="text-sm text-muted-foreground line-through">{plan.originalPrice}</span>
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-3xl md:text-5xl font-black gradient-text">{plan.price}</span>
+                          <span className="text-sm md:text-base text-muted-foreground">{plan.period}</span>
+                        </div>
+                        <p className="text-xs text-primary font-medium mt-1">15-Day Free Trial · 30-Day Money-Back</p>
+                      </div>
+                      {/* Show only 4 features on mobile */}
+                      <ul className="space-y-2 md:space-y-3 mb-5 md:mb-8">
+                        {plan.features.slice(0, typeof window !== 'undefined' && window.innerWidth < 768 ? 4 : plan.features.length).map((feature, i) => (
+                          <li key={i} className="flex items-center gap-2 md:gap-3 bg-muted/50 rounded-lg px-2.5 md:px-3 py-1.5 md:py-2">
+                            <div className="w-4 h-4 md:w-5 md:h-5 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0">
+                              <Check className="w-2.5 h-2.5 md:w-3 md:h-3 text-primary" />
+                            </div>
+                            <span className="text-xs md:text-sm font-medium text-foreground">{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <Link to="/contact">
+                        <Button
+                          className={`w-full h-11 md:h-12 text-sm font-bold ${plan.popular ? "btn-gradient" : ""}`}
+                          variant={plan.popular ? "default" : "outline"}
+                        >
+                          Get Started
+                        </Button>
+                      </Link>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
 
-        {/* Other plans grid */}
-        <div className="max-w-3xl mx-auto">
-          <p className="text-xs uppercase tracking-widest text-muted-foreground text-center mb-6 font-medium">Also available</p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {otherPlans.map((plan) => (
-              <Link key={plan.name} to={plan.link} className="group">
-                <div className="p-4 rounded-lg border border-border hover:border-accent/30 transition-colors text-center">
-                  <p className="text-sm font-semibold text-foreground group-hover:text-accent transition-colors">{plan.name}</p>
-                  <p className="text-[11px] text-muted-foreground mt-1">{plan.specs}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
+        <div className="text-center mt-8 md:mt-14">
+          <Link to="/pricing">
+            <Button size="lg" variant="outline" className="group text-sm md:text-base">
+              View All Plans & Compare
+              <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

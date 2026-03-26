@@ -1,125 +1,146 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
 @layer base {
+  /* Lenis handles smooth scrolling */
+
+  /* Better focus visibility for accessibility */
   *:focus-visible {
-    outline: 2px solid hsl(var(--accent));
+    outline: 2px solid hsl(var(--primary));
     outline-offset: 2px;
   }
 
   :root {
-    /* Backgrounds - Off-white */
-    --background: 220 20% 97%;
-    --foreground: 216 28% 12%;
+    /* Backgrounds - Clean white */
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
 
     /* Card surfaces */
     --card: 0 0% 100%;
-    --card-foreground: 216 28% 12%;
+    --card-foreground: 222 47% 11%;
 
     /* Popover surfaces */
     --popover: 0 0% 100%;
-    --popover-foreground: 216 28% 12%;
+    --popover-foreground: 222 47% 11%;
 
-    /* Primary - Dark navy */
-    --primary: 216 71% 11%;
-    --primary-foreground: 220 20% 97%;
-    --primary-hover: 216 71% 16%;
+    /* Primary brand - Cyan (matching logo) - darkened for readability */
+    --primary: 186 100% 40%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 186 100% 35%;
+    --primary-glow: 186 100% 50%;
 
-    /* Secondary - Off-white */
-    --secondary: 225 20% 98%;
-    --secondary-foreground: 216 71% 11%;
+    /* Secondary - Blue (matching logo) */
+    --secondary: 217 91% 60%;
+    --secondary-foreground: 0 0% 100%;
 
-    /* Accent - Muted gold */
-    --accent: 43 55% 51%;
+    /* Accent - Cyan-Blue blend - darkened */
+    --accent: 199 89% 40%;
     --accent-foreground: 0 0% 100%;
 
     /* Muted backgrounds */
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 46%;
+    --muted: 210 40% 98%;
+    --muted-foreground: 215 16% 47%;
 
     /* Destructive */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     /* Borders and inputs */
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 43 55% 51%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 186 100% 40%;
 
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(216 71% 11%), hsl(216 71% 20%));
-    --gradient-hero: linear-gradient(135deg, hsl(216 71% 7%) 0%, hsl(216 71% 14%) 100%);
-    --gradient-subtle: linear-gradient(180deg, hsl(220 20% 97%) 0%, hsl(220 14% 96%) 100%);
+    /* Gradients - Premium Cyan to Blue */
+    --gradient-primary: linear-gradient(135deg, hsl(186 100% 40%), hsl(217 91% 60%));
+    --gradient-secondary: linear-gradient(135deg, hsl(199 89% 40%), hsl(186 100% 40%));
+    --gradient-hero: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(210 40% 98%) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 40% 98%) 100%);
+    --gradient-glow: radial-gradient(circle at 50% 50%, hsl(186 100% 40% / 0.15), transparent 70%);
 
-    /* Shadows */
-    --shadow-soft: 0 2px 8px -2px hsl(216 71% 11% / 0.06);
-    --shadow-medium: 0 8px 24px -8px hsl(216 71% 11% / 0.1);
-    --shadow-strong: 0 16px 48px -12px hsl(216 71% 11% / 0.15);
+    /* Shadows - Premium with cyan glow */
+    --shadow-soft: 0 2px 8px -2px hsl(186 100% 53% / 0.08);
+    --shadow-medium: 0 8px 24px -8px hsl(186 100% 53% / 0.15);
+    --shadow-strong: 0 16px 48px -12px hsl(186 100% 53% / 0.25);
+    --shadow-glow: 0 0 32px hsl(186 100% 53% / 0.3);
 
+    /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
+
     --sidebar-foreground: 240 5.3% 26.1%;
+
     --sidebar-primary: 240 5.9% 10%;
+
     --sidebar-primary-foreground: 0 0% 98%;
+
     --sidebar-accent: 240 4.8% 95.9%;
+
     --sidebar-accent-foreground: 240 5.9% 10%;
+
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 43 55% 51%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 216 71% 7%;
-    --foreground: 220 20% 95%;
+    /* Dark mode - Premium dark with cyan accent */
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
 
-    --card: 216 71% 10%;
-    --card-foreground: 220 20% 95%;
+    --card: 222 47% 13%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 216 71% 10%;
-    --popover-foreground: 220 20% 95%;
+    --popover: 222 47% 13%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 220 20% 95%;
-    --primary-foreground: 216 71% 7%;
-    --primary-hover: 220 20% 90%;
+    --primary: 186 100% 47%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 186 100% 55%;
+    --primary-glow: 186 100% 55%;
 
-    --secondary: 216 71% 14%;
-    --secondary-foreground: 220 20% 95%;
+    --secondary: 217 91% 60%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 216 50% 14%;
-    --muted-foreground: 220 14% 60%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 43 55% 55%;
-    --accent-foreground: 216 71% 7%;
+    --accent: 199 89% 48%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 216 40% 18%;
-    --input: 216 40% 18%;
-    --ring: 43 55% 55%;
+    --border: 217 33% 20%;
+    --input: 217 33% 20%;
+    --ring: 186 100% 47%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(216 71% 14%), hsl(216 71% 20%));
-    --gradient-hero: linear-gradient(135deg, hsl(216 71% 5%) 0%, hsl(216 71% 10%) 100%);
-    --gradient-subtle: linear-gradient(180deg, hsl(216 71% 7%) 0%, hsl(216 50% 14%) 100%);
-
+    --gradient-primary: linear-gradient(135deg, hsl(186 100% 53%), hsl(217 91% 60%));
+    --gradient-secondary: linear-gradient(135deg, hsl(199 89% 48%), hsl(186 100% 53%));
+    --gradient-hero: linear-gradient(135deg, hsl(222 47% 11%) 0%, hsl(217 33% 17%) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(222 47% 11%) 0%, hsl(217 33% 17%) 100%);
+    --gradient-glow: radial-gradient(circle at 50% 50%, hsl(186 100% 53% / 0.2), transparent 70%);
+    
     --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
-    --shadow-medium: 0 8px 24px -8px hsl(0 0% 0% / 0.4);
-    --shadow-strong: 0 16px 48px -12px hsl(0 0% 0% / 0.5);
-
-    --sidebar-background: 216 71% 7%;
-    --sidebar-foreground: 220 20% 95%;
-    --sidebar-primary: 43 55% 55%;
-    --sidebar-primary-foreground: 216 71% 7%;
-    --sidebar-accent: 216 50% 14%;
-    --sidebar-accent-foreground: 220 20% 95%;
-    --sidebar-border: 216 40% 18%;
-    --sidebar-ring: 43 55% 55%;
+    --shadow-medium: 0 8px 24px -8px hsl(186 100% 53% / 0.2);
+    --shadow-strong: 0 16px 48px -12px hsl(186 100% 53% / 0.3);
+    --shadow-glow: 0 0 32px hsl(186 100% 53% / 0.4);
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
@@ -148,23 +169,20 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', system-ui, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-    line-height: 1.6;
   }
 
+  /* Smooth momentum scrolling on iOS */
   .scroll-area,
   [data-radix-scroll-area-viewport] {
     -webkit-overflow-scrolling: touch;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    @apply font-bold tracking-tight;
-    line-height: 1.15;
+    @apply font-black tracking-tight;
   }
 
   h1 {
@@ -182,11 +200,11 @@
 
 @layer components {
   .section-container {
-    @apply max-w-7xl 2xl:max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-16 2xl:px-20;
+    @apply max-w-7xl 2xl:max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-12;
   }
 
   .gradient-text {
-    @apply text-accent;
+    @apply bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent;
   }
 
   .gradient-bg {
@@ -194,18 +212,18 @@
   }
 
   .card-hover {
-    @apply hover:-translate-y-1;
+    @apply hover:-translate-y-2;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     box-shadow: var(--shadow-soft);
     will-change: transform;
   }
 
   .card-hover:hover {
-    box-shadow: var(--shadow-medium);
+    box-shadow: var(--shadow-strong);
   }
 
   .card-premium {
-    @apply bg-card border border-border rounded-lg;
+    @apply bg-card border border-border rounded-xl;
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     box-shadow: var(--shadow-soft);
     will-change: transform;
@@ -215,28 +233,33 @@
     box-shadow: var(--shadow-medium);
   }
 
-  .btn-gold {
-    @apply bg-accent text-accent-foreground;
-    @apply hover:opacity-90 transition-all duration-300;
-    @apply font-semibold uppercase tracking-widest text-sm;
-    border-radius: 8px;
-    letter-spacing: 1px;
-  }
-
-  .btn-gold-outline {
-    @apply bg-transparent border border-accent text-accent;
-    @apply hover:bg-accent hover:text-accent-foreground transition-all duration-300;
-    @apply font-semibold uppercase tracking-widest text-sm;
-    border-radius: 8px;
-    letter-spacing: 1px;
-  }
-
-  /* Legacy class aliases */
   .btn-gradient {
-    @apply btn-gold;
+    @apply bg-gradient-to-r from-primary via-accent to-secondary text-primary-foreground;
+    @apply hover:opacity-90 transition-all duration-300;
+    @apply font-bold;
+  }
+
+  .btn-gradient:hover {
+    box-shadow: var(--shadow-glow);
   }
 
   .glow-effect {
     position: relative;
+  }
+
+  .glow-effect::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: var(--gradient-primary);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: -1;
+    filter: blur(8px);
+  }
+
+  .glow-effect:hover::before {
+    opacity: 0.6;
   }
 }
