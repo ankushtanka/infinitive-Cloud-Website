@@ -35,21 +35,7 @@ const useCountUp = (end: number, duration: number = 2000, suffix: string = "") =
 };
 
 const HeroSection = () => {
-  const [activeOffer, setActiveOffer] = useState(0);
   const { scrollY } = useScroll();
-  const tickerOpacity = useTransform(scrollY, [0, 80], [1, 0]);
-  const tickerHeight = useTransform(scrollY, [0, 80], ["auto", "0px"]);
-
-  const offers = [
-    { text: "50% OFF first 3 months", code: "WELCOME50", icon: BadgePercent },
-    { text: "15-day free trial — no card required", code: null, icon: Clock },
-    { text: "Plans from ₹79/mo", code: null, icon: Gem },
-  ];
-
-  useEffect(() => {
-    const timer = setInterval(() => setActiveOffer((p) => (p + 1) % offers.length), 4000);
-    return () => clearInterval(timer);
-  }, []);
 
   const stat1 = useCountUp(50, 2500, "+");
   const stat2 = useCountUp(99, 2000, ".9%");
@@ -62,45 +48,11 @@ const HeroSection = () => {
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-background via-muted/30 to-background" />
         <div className="absolute inset-0" style={{ background: "var(--gradient-glow)" }} />
-        {/* Animated orbs */}
         <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/8 rounded-full blur-[100px] animate-float hidden md:block" />
         <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-secondary/8 rounded-full blur-[100px] animate-float hidden md:block" style={{ animationDelay: "3s" }} />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[120px] hidden md:block" />
-        {/* Grid pattern overlay */}
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "linear-gradient(hsl(var(--foreground)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--foreground)) 1px, transparent 1px)", backgroundSize: "60px 60px" }} />
       </div>
-
-      {/* Top offer ticker */}
-      <motion.div 
-        style={{ opacity: tickerOpacity, height: tickerHeight, overflow: "hidden" }}
-        className="relative z-10 w-full max-w-lg mx-auto px-3 sm:px-4 mt-2 md:mt-4 mb-4 md:mb-8"
-      >
-        <Link to="/contact" className="block group">
-          <div className="rounded-full border border-primary/20 hover:border-primary/40 transition-all duration-300 backdrop-blur-md bg-primary/5 hover:bg-primary/10 shadow-sm hover:shadow-md" style={{ boxShadow: "0 0 20px hsl(var(--primary) / 0.05)" }}>
-            <div className="flex items-center justify-center h-10 sm:h-11 px-5 sm:px-6">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeOffer}
-                  initial={{ y: 14, opacity: 0, filter: "blur(4px)" }}
-                  animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-                  exit={{ y: -14, opacity: 0, filter: "blur(4px)" }}
-                  transition={{ duration: 0.35, ease: "easeOut" }}
-                  className="flex items-center gap-2.5 text-xs sm:text-sm font-medium"
-                >
-                  {(() => { const Icon = offers[activeOffer].icon; return <Icon className="w-3.5 h-3.5 text-primary" />; })()}
-                  <span className="text-foreground/80">{offers[activeOffer].text}</span>
-                  {offers[activeOffer].code && (
-                    <span className="font-mono px-2.5 py-0.5 rounded-full bg-primary/15 text-primary text-[10px] sm:text-xs font-bold tracking-widest border border-primary/20">
-                      {offers[activeOffer].code}
-                    </span>
-                  )}
-                  <ArrowRight className="w-3.5 h-3.5 text-primary group-hover:translate-x-0.5 transition-transform" />
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          </div>
-        </Link>
-      </motion.div>
 
       {/* Main hero content */}
       <div className="section-container w-full relative z-10 flex flex-col items-center justify-center flex-1">
