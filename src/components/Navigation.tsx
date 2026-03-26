@@ -6,6 +6,7 @@ import logo from "@/assets/logo-icon.png";
 import ServicesMegaMenu from "@/components/ServicesMegaMenu";
 import CurrencyLanguageDropdown from "@/components/CurrencyLanguageDropdown";
 import ThemeToggle from "@/components/ThemeToggle";
+import PromoFloatingPill from "@/components/PromoFloatingPill";
 
 const WHMCS_LOGIN = "https://billing.infinitivecloud.com";
 
