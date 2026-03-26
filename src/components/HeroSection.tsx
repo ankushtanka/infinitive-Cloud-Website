@@ -51,6 +51,21 @@ const HeroSection = () => {
     return () => clearInterval(timer);
   }, []);
 
+  const stat1 = useCountUp(50, 2500, "+");
+  const stat2 = useCountUp(99, 2000, ".9%");
+  const stat3 = useCountUp(5, 1500, "x");
+  const stat4 = useCountUp(100, 1500, "%");
+
+  return (
+    <section className="relative w-full flex flex-col items-center justify-center overflow-hidden bg-background pt-16 lg:pt-24 min-h-[85vh] md:min-h-screen">
+      {/* Animated gradient background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-muted/30 to-background" />
+        <div className="absolute inset-0" style={{ background: "var(--gradient-glow)" }} />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-float hidden md:block" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-secondary/5 rounded-full blur-3xl animate-float hidden md:block" style={{ animationDelay: "3s" }} />
+      </div>
+
       {/* Top offer ticker - hides on scroll */}
       <motion.div 
         style={{ opacity: tickerOpacity, height: tickerHeight, overflow: "hidden" }}
@@ -79,6 +94,7 @@ const HeroSection = () => {
           </div>
         </Link>
       </motion.div>
+
       {/* Main hero content */}
       <div className="section-container w-full relative z-10 flex flex-col items-center justify-center flex-1">
         <div className="max-w-5xl w-full flex flex-col items-center text-center">
