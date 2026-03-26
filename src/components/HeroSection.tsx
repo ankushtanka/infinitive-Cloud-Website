@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Shield, Headphones, Server, Cloud, Zap, CheckCircle2, Gem, Clock, BadgePercent, Sparkles } from "lucide-react";
+import { ArrowRight, Shield, Headphones, Server, Cloud, Zap, CheckCircle2, Sparkles } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";

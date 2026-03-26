@@ -197,8 +197,9 @@ const Navigation = () => {
               ))}
             </div>
 
-            {/* Right side CTA */}
-            <div className="hidden lg:flex items-center gap-2 flex-shrink-0">
+            {/* Right side: Promo pill + CTA */}
+            <div className="hidden lg:flex items-center gap-3 flex-shrink-0">
+              <PromoFloatingPill />
               <Link to="/contact" onClick={handleCloseMenus}>
                 <Button className="btn-gradient glow-effect shadow-medium text-sm px-6 h-9 font-bold">
                   Start Free Trial
