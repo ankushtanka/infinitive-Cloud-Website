@@ -42,6 +42,10 @@ const DomainRegistration = lazy(() => import("./pages/solutions/DomainRegistrati
 const ServerManagement = lazy(() => import("./pages/solutions/ServerManagement"));
 const CloudMigration = lazy(() => import("./pages/solutions/CloudMigration"));
 const ServerLicenses = lazy(() => import("./pages/solutions/ServerLicenses"));
+const WebDevelopment = lazy(() => import("./pages/solutions/WebDevelopment"));
+const MobileApps = lazy(() => import("./pages/solutions/MobileApps"));
+const AISolutions = lazy(() => import("./pages/solutions/AISolutions"));
+const OdooSolutions = lazy(() => import("./pages/solutions/OdooSolutions"));
 const LiveChat = lazy(() => import("./pages/LiveChat"));
 
 const queryClient = new QueryClient();
