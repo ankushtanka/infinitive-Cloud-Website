@@ -130,6 +130,10 @@ const App = () => {
                 <Route path="/solutions/server-management" element={<ServerManagement />} />
                 <Route path="/solutions/cloud-migration" element={<CloudMigration />} />
                 <Route path="/solutions/server-licenses" element={<ServerLicenses />} />
+                <Route path="/solutions/web-development" element={<WebDevelopment />} />
+                <Route path="/solutions/mobile-apps" element={<MobileApps />} />
+                <Route path="/solutions/ai-solutions" element={<AISolutions />} />
+                <Route path="/solutions/odoo-solutions" element={<OdooSolutions />} />
                 <Route path="/live-chat" element={<LiveChat />} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
