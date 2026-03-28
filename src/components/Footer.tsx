@@ -5,41 +5,7 @@ import logo from "/favicon.png";
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   const footerSections = [
-    {
-      title: "Hosting",
-      links: [
-        { label: "Shared Hosting", path: "/solutions/shared-hosting" },
-        { label: "VPS Hosting", path: "/solutions/vps-hosting" },
-        { label: "Cloud Hosting", path: "/solutions/cloud-hosting" },
-        { label: "Dedicated Servers", path: "/solutions/dedicated-servers" },
-        { label: "GPU Servers", path: "/solutions/gpu-dedicated-server" },
-        { label: "Reseller Hosting", path: "/solutions/reseller-hosting" },
-        { label: "WordPress Hosting", path: "/solutions/wordpress-hosting" },
-      ],
-    },
-    {
-      title: "Services",
-      links: [
-        { label: "SSL Certificates", path: "/solutions/ssl-certificates" },
-        { label: "Domain Registration", path: "/solutions/domains" },
-        { label: "Server Licenses", path: "/solutions/server-licenses" },
-        { label: "Server Management", path: "/solutions/server-management" },
-        { label: "Cloud Migration", path: "/solutions/cloud-migration" },
-        { label: "Contact Us", path: "/contact" },
-        { label: "Pricing", path: "/pricing" },
-      ],
-    },
-    {
-      title: "Company",
-      links: [
-        { label: "About Us", path: "/about" },
-        { label: "Blog", path: "/blog" },
-        { label: "Contact", path: "/contact" },
-        { label: "Careers", path: "/careers" },
-        { label: "SLA & Uptime", path: "/sla" },
-        { label: "Knowledgebase", path: "/knowledgebase" },
-      ],
-    },
+    // Temporarily hidden: Hosting, Services, Company sections
     {
       title: "Legal",
       links: [
