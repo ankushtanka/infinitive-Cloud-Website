@@ -264,8 +264,12 @@ const OrderConfirmation = () => {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.9 }}
-            className="flex flex-col sm:flex-row gap-3 justify-center"
+            className="flex flex-col sm:flex-row gap-3 justify-center flex-wrap"
           >
+            <Button variant="outline" className="w-full sm:w-auto gap-2" onClick={handleDownloadInvoice}>
+              <FileText className="w-4 h-4" />
+              Download Invoice
+            </Button>
             <Link to="/">
               <Button variant="outline" className="w-full sm:w-auto gap-2">
                 <Home className="w-4 h-4" />
