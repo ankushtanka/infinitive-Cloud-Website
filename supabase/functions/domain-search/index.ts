@@ -7,8 +7,8 @@ const corsHeaders = {
 
 const MIDDLEWARE_URL = 'https://client.infinitivecloud.com/middleware/domainMiddleware.php';
 const ALL_TLDS = ['com', 'net', 'org', 'in', 'co.in', 'online', 'tech', 'website', 'site', 'xyz', 'store', 'io', 'info', 'co', 'me', 'app', 'cloud', 'ai', 'dev', 'shop', 'live', 'pro', 'biz', 'digital', 'space'];
-const FEATURED_TLDS = ['com', 'in', 'net', 'org', 'co.in', 'online', 'site', 'xyz'];
-const REQUEST_TIMEOUT = 4000;
+const FEATURED_TLDS = ['com', 'in', 'net', 'org', 'co', 'info', 'co.in', 'online'];
+const REQUEST_TIMEOUT = 5000;
 const PRICING_CACHE_TTL = 60 * 60 * 1000;
 const SEARCH_CACHE_TTL = 5 * 60 * 1000;
 
