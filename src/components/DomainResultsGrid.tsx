@@ -120,7 +120,7 @@ const TakenCard = ({ r, i, alternatives }: { r: DomainResult; i: number; alterna
 const DomainResultsGrid = ({ results, suggestions = [], loading, searched, searchQuery }: DomainResultsGridProps) => {
   if (!searched) return null;
 
-  if (loading) {
+  if (loading && results.length === 0 && suggestions.length === 0) {
     return (
       <div className="animate-fade-in space-y-6">
         <div className="flex items-center gap-3 mb-2">
