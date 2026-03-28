@@ -217,10 +217,19 @@ const DomainSearchSection: React.FC = () => {
             {fallbackTlds.map((tld, i) => (
               <Card
                 key={tld.ext}
-                className={`relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1.5 cursor-pointer animate-fade-in-up group ${
+                className={`relative overflow-hidden transition-all duration-500 hover:-translate-y-2 cursor-pointer animate-fade-in-up group ${
                   tld.tag ? "border-primary/20 shadow-md" : "border-border"
                 } ${i >= 4 ? "hidden sm:block" : ""}`}
-                style={{ animationDelay: `${i * 0.06}s` }}
+                style={{
+                  animationDelay: `${i * 0.06}s`,
+                  boxShadow: "var(--shadow-soft)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = `0 8px 32px -8px hsl(var(--primary) / 0.3), 0 0 20px hsl(var(--primary) / 0.15)`;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = "var(--shadow-soft)";
+                }}
               >
                 <div
                   className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${tld.color} opacity-80 group-hover:opacity-100 transition-opacity`}
