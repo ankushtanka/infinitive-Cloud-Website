@@ -5,6 +5,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+const MIDDLEWARE_URL = 'https://client.infinitivecloud.com/middleware/domainMiddleware.php';
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -19,103 +21,64 @@ serve(async (req) => {
       });
     }
 
-    const WHMCS_API_URL = Deno.env.get('WHMCS_API_URL');
-    const WHMCS_API_IDENTIFIER = Deno.env.get('WHMCS_API_IDENTIFIER');
-    const WHMCS_API_SECRET = Deno.env.get('WHMCS_API_SECRET');
-
-    if (!WHMCS_API_URL || !WHMCS_API_IDENTIFIER || !WHMCS_API_SECRET) {
-      console.error('Missing WHMCS credentials');
-      return new Response(JSON.stringify({ error: 'Server configuration error' }), {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    }
-
-    // Clean domain input - extract base name
     const cleanDomain = domain.trim().toLowerCase().replace(/\s+/g, '');
     const domainMatch = cleanDomain.match(/^([a-zA-Z0-9-]+)(\.[a-zA-Z0-9-.]+)?$/);
     const baseName = domainMatch ? domainMatch[1] : cleanDomain;
     const specificTld = domainMatch && domainMatch[2] ? domainMatch[2] : null;
 
-    // TLDs to check
-    const tldsToCheck = specificTld 
+    const tldsToCheck = specificTld
       ? [specificTld.startsWith('.') ? specificTld.substring(1) : specificTld]
       : ['com', 'in', 'co.in', 'net', 'org', 'online', 'site', 'xyz', 'store', 'tech', 'io', 'dev'];
 
-    // Check domain availability via WHMCS API
+    // Check each TLD via the middleware
     const results = await Promise.allSettled(
       tldsToCheck.map(async (tld) => {
-        const sld = baseName;
-        const fullDomain = `${sld}.${tld}`;
+        const fullDomain = `${baseName}.${tld}`;
 
-        const params = new URLSearchParams({
-          action: 'DomainWhois',
-          identifier: WHMCS_API_IDENTIFIER,
-          secret: WHMCS_API_SECRET,
-          domain: fullDomain,
-          responsetype: 'json',
-        });
-
-        const apiUrl = WHMCS_API_URL.endsWith('/includes/api.php') 
-          ? WHMCS_API_URL 
-          : `${WHMCS_API_URL}/includes/api.php`;
-
-        const response = await fetch(apiUrl, {
+        const response = await fetch(MIDDLEWARE_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: params.toString(),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'domain_search', domain: fullDomain }),
         });
 
         const rawText = await response.text();
-        console.log(`WHMCS raw response for ${fullDomain}:`, rawText.substring(0, 500));
+        console.log(`Middleware response for ${fullDomain}:`, rawText.substring(0, 500));
+
         let data;
         try {
           data = JSON.parse(rawText);
         } catch {
-          console.error(`WHMCS returned non-JSON for ${fullDomain}:`, rawText.substring(0, 300));
-          return { domain: fullDomain, tld: `.${tld}`, sld, available: false, status: 'parse_error' };
+          console.error(`Non-JSON response for ${fullDomain}:`, rawText.substring(0, 300));
+          return { domain: fullDomain, tld: `.${tld}`, sld: baseName, available: false, status: 'parse_error' };
         }
-        console.log(`WHMCS DomainWhois response for ${fullDomain}:`, JSON.stringify(data));
-        
-        // WHMCS returns result: "success" and status: "available" or "unavailable"  
-        const isAvailable = data.status === 'available' || 
-                           (data.result === 'success' && data.status === 'available');
-        
+
+        const isAvailable = data.status === 'available' ||
+          (data.result === 'success' && data.status === 'available');
+
         return {
           domain: fullDomain,
           tld: `.${tld}`,
-          sld,
+          sld: baseName,
           available: isAvailable,
           status: data.status || data.result || 'unknown',
         };
       })
     );
 
-    // Now fetch TLD pricing
+    // Fetch TLD pricing via middleware pass-through
     let pricing: Record<string, any> = {};
     try {
-      const pricingParams = new URLSearchParams({
-        action: 'GetTLDPricing',
-        identifier: WHMCS_API_IDENTIFIER,
-        secret: WHMCS_API_SECRET,
-        responsetype: 'json',
-      });
-
-      const apiUrl = WHMCS_API_URL.endsWith('/includes/api.php') 
-        ? WHMCS_API_URL 
-        : `${WHMCS_API_URL}/includes/api.php`;
-
-      const pricingResponse = await fetch(apiUrl, {
+      const pricingResponse = await fetch(MIDDLEWARE_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: pricingParams.toString(),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'GetTLDPricing' }),
       });
 
       const pricingData = await pricingResponse.json();
-      console.log('WHMCS GetTLDPricing response keys:', JSON.stringify(Object.keys(pricingData)));
-      console.log('WHMCS GetTLDPricing sample:', JSON.stringify(pricingData).substring(0, 2000));
+      console.log('GetTLDPricing keys:', JSON.stringify(Object.keys(pricingData)));
+      console.log('GetTLDPricing sample:', JSON.stringify(pricingData).substring(0, 2000));
+
       if (pricingData.pricing) {
-        // WHMCS returns pricing grouped by category
         for (const category of Object.values(pricingData.pricing) as any[]) {
           if (typeof category === 'object') {
             for (const [tld, priceInfo] of Object.entries(category as Record<string, any>)) {
@@ -131,15 +94,14 @@ serve(async (req) => {
     const domainResults = results.map((result) => {
       if (result.status === 'fulfilled') {
         const r = result.value;
-        const tldKey = r.tld.substring(1); // remove leading dot
+        const tldKey = r.tld.substring(1);
         const tldPricing = pricing[`.${tldKey}`] || pricing[tldKey] || null;
-        
+
         let registerPrice = null;
         let renewPrice = null;
         let currency = '₹';
 
         if (tldPricing) {
-          // WHMCS pricing structure: register, renew, transfer with year keys
           if (tldPricing.register && tldPricing.register['1']) {
             registerPrice = tldPricing.register['1'];
           }
@@ -151,12 +113,7 @@ serve(async (req) => {
           }
         }
 
-        return {
-          ...r,
-          price: registerPrice,
-          renewPrice,
-          currency,
-        };
+        return { ...r, price: registerPrice, renewPrice, currency };
       }
       return null;
     }).filter(Boolean);
