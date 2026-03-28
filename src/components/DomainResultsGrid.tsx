@@ -149,19 +149,15 @@ const TakenRow = ({
             Try <span className="font-bold text-foreground">{alternative.domain}</span>
             {altPrice && <span className="text-primary font-bold"> — {altPrice}/yr</span>}
           </span>
-          <a
-            href={`${CART_BASE}${encodeURIComponent(alternative.domain)}`}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Button
+            size="sm"
+            variant="outline"
+            className="text-xs h-7 px-3 border-primary/20 hover:bg-primary hover:text-primary-foreground gap-1 rounded-lg"
+            onClick={() => window.location.href = `${DOMAIN_PAGE}?search=${encodeURIComponent(alternative.domain)}`}
           >
-            <Button
-              size="sm"
-              variant="outline"
-              className="text-xs h-7 px-3 border-primary/20 hover:bg-primary hover:text-primary-foreground gap-1 rounded-lg"
-            >
-              Register
-              <ArrowRight className="w-3 h-3" />
-            </Button>
+            Register
+            <ArrowRight className="w-3 h-3" />
+          </Button>
           </a>
         </div>
       )}
