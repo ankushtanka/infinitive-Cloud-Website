@@ -100,7 +100,7 @@ const DomainRegistration = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (domain.trim()) setSearched(true);
+    search(domain);
   };
 
   return (
