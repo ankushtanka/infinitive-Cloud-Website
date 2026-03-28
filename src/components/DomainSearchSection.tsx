@@ -120,24 +120,27 @@ const DomainSearchSection = () => {
         <Card className="max-w-4xl mx-auto mb-8 md:mb-12 border-0 shadow-none bg-transparent">
           <CardContent className="p-4 md:p-8">
             <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">
-              <div className="relative flex-1">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <Input
-                  type="text"
-                  placeholder={
-                    domain
-                      ? ""
-                      : (!inputFocused ? `${animatedPlaceholder}|` : "")
-                  }
-                  value={domain}
-                  onFocus={() => setInputFocused(true)}
-                  onBlur={() => setInputFocused(false)}
-                  onChange={(e) => {
-                    setDomain(e.target.value);
-                    setSearched(false);
-                  }}
-                  className="pl-12 h-12 md:h-14 text-base md:text-lg rounded-2xl border border-primary/20 bg-background/80 backdrop-blur-sm shadow-[0_0_20px_hsl(var(--primary)/0.08),0_0_40px_hsl(var(--primary)/0.04),inset_0_1px_0_hsl(var(--primary)/0.06)] focus:border-primary/60 focus:shadow-[0_0_20px_hsl(var(--primary)/0.2),0_0_40px_hsl(var(--primary)/0.12),0_0_60px_hsl(var(--primary)/0.06),inset_0_1px_0_hsl(var(--primary)/0.1)] focus-visible:ring-0 transition-all duration-500 ease-out"
-                />
+              <div className="relative flex-1 group">
+                <div className={`absolute -inset-[2px] rounded-2xl bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_100%] transition-all duration-500 ${inputFocused ? 'opacity-100 animate-[gradient-shift_3s_ease_infinite] blur-[1px]' : 'opacity-30'}`} />
+                <div className="relative">
+                  <Search className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors duration-300 ${inputFocused ? 'text-primary' : 'text-muted-foreground'}`} />
+                  <Input
+                    type="text"
+                    placeholder={
+                      domain
+                        ? ""
+                        : (!inputFocused ? `${animatedPlaceholder}|` : "")
+                    }
+                    value={domain}
+                    onFocus={() => setInputFocused(true)}
+                    onBlur={() => setInputFocused(false)}
+                    onChange={(e) => {
+                      setDomain(e.target.value);
+                      setSearched(false);
+                    }}
+                    className={`pl-12 h-12 md:h-14 text-base md:text-lg rounded-2xl border-0 bg-background focus-visible:ring-0 transition-all duration-500 ${inputFocused ? 'shadow-[0_0_30px_hsl(var(--primary)/0.3),0_0_60px_hsl(var(--primary)/0.15),0_0_100px_hsl(var(--primary)/0.08)]' : 'shadow-[0_0_15px_hsl(var(--primary)/0.08)]'}`}
+                  />
+                </div>
               </div>
               <Button type="submit" className="btn-gradient h-12 md:h-14 px-8 md:px-10 rounded-xl font-bold text-sm md:text-base">
                 <Search className="w-5 h-5 mr-2" />
