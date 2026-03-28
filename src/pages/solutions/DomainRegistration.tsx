@@ -169,7 +169,7 @@ const DomainRegistration = () => {
           {searched && (
             <section className="section-container mb-16">
               <div className="max-w-5xl mx-auto">
-                <DomainResultsGrid results={results} loading={loading} searched={searched} searchQuery={domain.trim()} />
+                <DomainResultsGrid results={results} suggestions={suggestions} loading={loading} searched={searched} searchQuery={domain.trim()} />
                 {!loading && results.length > 0 && (
                   <div className="mt-6 text-center">
                     <Link to="/contact">
