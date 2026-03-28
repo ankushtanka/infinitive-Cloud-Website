@@ -42,7 +42,7 @@ function getRecommended(domains: DomainResult[]): string | null {
   return available[0].domain;
 }
 
-const DOMAIN_PAGE = "/solutions/domains";
+const CART_PAGE = "/cart";
 
 /* ─── Available Card ─── */
 const AvailableCard = ({
