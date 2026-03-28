@@ -66,7 +66,15 @@ serve(async (req) => {
           body: params.toString(),
         });
 
-        const data = await response.json();
+        const rawText = await response.text();
+        console.log(`WHMCS raw response for ${fullDomain}:`, rawText.substring(0, 500));
+        let data;
+        try {
+          data = JSON.parse(rawText);
+        } catch {
+          console.error(`WHMCS returned non-JSON for ${fullDomain}:`, rawText.substring(0, 300));
+          return { domain: fullDomain, tld: `.${tld}`, sld, available: false, status: 'parse_error' };
+        }
         console.log(`WHMCS DomainWhois response for ${fullDomain}:`, JSON.stringify(data));
         
         // WHMCS returns result: "success" and status: "available" or "unavailable"  
