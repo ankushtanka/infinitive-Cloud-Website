@@ -117,7 +117,7 @@ const DomainSearchSection = () => {
         </div>
 
         {/* Search Bar */}
-        <Card className="max-w-4xl mx-auto mb-8 md:mb-12 border border-primary/30 shadow-lg shadow-primary/5">
+        <Card className="max-w-4xl mx-auto mb-8 md:mb-12 border-0 shadow-none bg-transparent">
           <CardContent className="p-4 md:p-8">
             <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">
               <div className="relative flex-1">
@@ -136,7 +136,7 @@ const DomainSearchSection = () => {
                     setDomain(e.target.value);
                     setSearched(false);
                   }}
-                  className="pl-12 h-12 md:h-14 text-base md:text-lg rounded-xl border-0 ring-0 shadow-none focus-visible:ring-0 focus:outline-none bg-transparent"
+                  className="pl-12 h-12 md:h-14 text-base md:text-lg rounded-xl border border-primary/30 shadow-lg shadow-primary/5 focus:border-primary focus-visible:ring-1 focus-visible:ring-primary/30"
                 />
               </div>
               <Button type="submit" className="btn-gradient h-12 md:h-14 px-8 md:px-10 rounded-xl font-bold text-sm md:text-base">
