@@ -89,7 +89,7 @@ const WooCommerceHosting = () => {
               {plans.map((plan) => (
                 <Card key={plan.name} className={`relative ${plan.highlight ? "border-primary shadow-lg scale-105" : ""}`}>
                   {plan.highlight && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-accent-foreground text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-badge text-badge-foreground text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-full">
                       Most Popular
                     </div>
                   )}

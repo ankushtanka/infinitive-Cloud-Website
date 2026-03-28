@@ -97,7 +97,7 @@ const EmailSecurity = () => {
                 return (
                   <Card key={service.id} id={service.id} className={`relative scroll-mt-32 ${service.popular ? "border-primary shadow-lg scale-105" : ""}`}>
                     {service.popular && (
-                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-accent-foreground text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-full">
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-badge text-badge-foreground text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-full">
                         Most Popular
                       </div>
                     )}

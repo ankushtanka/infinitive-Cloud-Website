@@ -91,7 +91,7 @@ const DedicatedServers = () => {
                     <>
                       <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary to-accent" />
                       <div className="absolute top-4 right-4">
-                        <span className="text-[9px] md:text-[10px] font-bold bg-accent text-accent-foreground px-2 py-0.5 rounded-full uppercase tracking-wider">Most Popular</span>
+                        <span className="text-[9px] md:text-[10px] font-bold bg-badge text-badge-foreground px-2 py-0.5 rounded-full uppercase tracking-wider">Most Popular</span>
                       </div>
                     </>
                   )}
