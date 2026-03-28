@@ -32,6 +32,7 @@ import {
   Smartphone,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 const billingSchema = z.object({
   firstName: z.string().trim().min(1, "First name is required").max(50),
@@ -67,6 +68,7 @@ const indianStates = [
 ];
 
 const CheckoutForm = ({ subtotal, addonsTotal, total, onBack }: CheckoutFormProps) => {
+  const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState("razorpay");
   const [promoCode, setPromoCode] = useState("");
   const [promoApplied, setPromoApplied] = useState(false);
@@ -97,11 +99,18 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, onBack }: CheckoutFormProp
       });
       return;
     }
-    toast({
-      title: "Order Placed Successfully!",
-      description: "This is a demo checkout. In production, you would be redirected to a payment gateway.",
+    const gstAmount = Math.round(total * 0.18);
+    const grandTotal = total + gstAmount;
+    const orderId = `IC-${Date.now().toString(36).toUpperCase()}`;
+    const params = new URLSearchParams({
+      id: orderId,
+      domain: new URLSearchParams(window.location.search).get("domain") || "example.com",
+      total: grandTotal.toString(),
+      name: `${data.firstName} ${data.lastName}`,
+      email: data.email,
+      payment: paymentMethod === "razorpay" ? "Razorpay" : paymentMethod === "upi" ? "UPI Direct" : "Bank Transfer",
     });
-    console.log("Checkout data:", { ...data, paymentMethod, promoCode });
+    navigate(`/order-confirmation?${params.toString()}`);
   };
 
   const applyPromo = () => {

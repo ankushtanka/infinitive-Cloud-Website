@@ -52,6 +52,7 @@ const VPSServer = lazy(() => import("./pages/solutions/VPSServer"));
 const EmailSecurity = lazy(() => import("./pages/solutions/EmailSecurity"));
 const LiveChat = lazy(() => import("./pages/LiveChat"));
 const Cart = lazy(() => import("./pages/Cart"));
+const OrderConfirmation = lazy(() => import("./pages/OrderConfirmation"));
 
 const queryClient = new QueryClient();
 
@@ -145,6 +146,7 @@ const App = () => {
                 <Route path="/solutions/email-security" element={<EmailSecurity />} />
                 <Route path="/live-chat" element={<LiveChat />} />
                 <Route path="/cart" element={<Cart />} />
+                <Route path="/order-confirmation" element={<OrderConfirmation />} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
