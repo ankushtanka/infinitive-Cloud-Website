@@ -136,7 +136,7 @@ const DomainSearchSection = () => {
                     setDomain(e.target.value);
                     setSearched(false);
                   }}
-                  className="pl-12 h-12 md:h-14 text-base md:text-lg rounded-xl border border-primary/30 shadow-lg shadow-primary/5 focus:border-primary focus-visible:ring-1 focus-visible:ring-primary/30"
+                  className="pl-12 h-12 md:h-14 text-base md:text-lg rounded-xl border border-primary/40 bg-muted/30 shadow-[0_0_15px_rgba(var(--primary-rgb),0.15)] focus:border-primary focus:shadow-[0_0_25px_rgba(var(--primary-rgb),0.25)] focus-visible:ring-1 focus-visible:ring-primary/40 transition-all duration-300"
                 />
               </div>
               <Button type="submit" className="btn-gradient h-12 md:h-14 px-8 md:px-10 rounded-xl font-bold text-sm md:text-base">
