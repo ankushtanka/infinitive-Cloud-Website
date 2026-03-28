@@ -279,13 +279,13 @@ const DomainResultsGrid = ({
         </div>
       )}
 
-      {/* Taken Domains */}
+      {/* Taken Domains — compact list */}
       {takenResults.length > 0 && (
         <div>
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 mb-3">
             <XCircle className="w-4 h-4 text-muted-foreground/60" />
             <h3 className="text-base font-semibold text-muted-foreground">
-              Unavailable Domains
+              Unavailable
             </h3>
             <Badge
               variant="outline"
@@ -294,15 +294,19 @@ const DomainResultsGrid = ({
               {takenResults.length}
             </Badge>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {takenResults.map((r, i) => (
-              <TakenCard
-                key={r.domain}
-                r={r}
-                i={i}
-                alternatives={alternativePool}
-              />
-            ))}
+          <div className="space-y-2">
+            {takenResults.map((r, i) => {
+              // Pick a unique alternative for each taken domain
+              const alt = alternativePool[i % alternativePool.length] || null;
+              return (
+                <TakenRow
+                  key={r.domain}
+                  r={r}
+                  i={i}
+                  alternative={alt}
+                />
+              );
+            })}
           </div>
         </div>
       )}
