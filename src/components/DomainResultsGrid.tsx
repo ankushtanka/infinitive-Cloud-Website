@@ -98,16 +98,13 @@ const AvailableCard = ({
             </span>
           )}
         </div>
-        <a
-          href={`${CART_BASE}${encodeURIComponent(r.domain)}`}
-          target="_blank"
-          rel="noopener noreferrer"
+        <Button
+          className="w-full btn-gradient font-bold text-sm h-10 gap-2 rounded-lg"
+          onClick={() => window.location.href = `${DOMAIN_PAGE}?search=${encodeURIComponent(r.domain)}`}
         >
-          <Button className="w-full btn-gradient font-bold text-sm h-10 gap-2 rounded-lg">
-            <ShoppingCart className="w-4 h-4" />
-            Buy Now
-          </Button>
-        </a>
+          <ShoppingCart className="w-4 h-4" />
+          Buy Now
+        </Button>
       </CardContent>
     </Card>
   );
