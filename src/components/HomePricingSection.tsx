@@ -108,7 +108,7 @@ const HomePricingSection = () => {
                     )}
                     {plan.popular && (
                       <div className="absolute top-4 right-4">
-                        <span className="text-xs font-bold bg-primary text-primary-foreground px-3 py-1 rounded-full uppercase tracking-wider">
+                        <span className="text-xs font-bold bg-accent text-accent-foreground px-3 py-1 rounded-full uppercase tracking-wider">
                           Most Popular
                         </span>
                       </div>
