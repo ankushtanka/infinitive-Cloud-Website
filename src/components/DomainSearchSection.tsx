@@ -117,7 +117,7 @@ const DomainSearchSection = () => {
         </div>
 
         {/* Search Bar */}
-        <Card className="max-w-4xl mx-auto mb-8 md:mb-12 border-primary/20 shadow-lg shadow-primary/5">
+        <Card className="max-w-4xl mx-auto mb-8 md:mb-12 border-primary/20 shadow-lg shadow-primary/5 border">
           <CardContent className="p-4 md:p-8">
             <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">
               <div className="relative flex-1">
