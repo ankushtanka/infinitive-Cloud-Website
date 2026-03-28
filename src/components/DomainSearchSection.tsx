@@ -121,9 +121,9 @@ const DomainSearchSection = () => {
           <CardContent className="p-4 md:p-8">
             <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">
               <div className="relative flex-1 group">
-                <div className={`absolute -inset-[3px] rounded-2xl bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_100%] transition-all duration-700 ${inputFocused ? 'opacity-100 animate-[gradient-shift_2s_ease_infinite] blur-[2px]' : 'opacity-20 blur-[0px]'}`} />
-                <div className={`absolute -inset-[3px] rounded-2xl bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_100%] transition-all duration-700 ${inputFocused ? 'opacity-60 animate-[gradient-shift_2s_ease_infinite] blur-[8px]' : 'opacity-0'}`} />
-                <div className={`absolute -inset-[3px] rounded-2xl bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_100%] transition-all duration-700 ${inputFocused ? 'opacity-30 animate-[gradient-shift_2s_ease_infinite] blur-[20px]' : 'opacity-0'}`} />
+                <div className={`absolute -inset-[2px] rounded-2xl bg-gradient-to-r from-primary/80 via-accent/60 to-primary/80 bg-[length:200%_100%] transition-all duration-1000 ease-in-out ${inputFocused ? 'opacity-90 animate-[gradient-shift_6s_ease-in-out_infinite]' : 'opacity-15'}`} />
+                <div className={`absolute -inset-[2px] rounded-2xl bg-gradient-to-r from-primary/60 via-accent/40 to-primary/60 bg-[length:200%_100%] transition-all duration-1000 ease-in-out ${inputFocused ? 'opacity-50 animate-[gradient-shift_6s_ease-in-out_infinite] blur-[6px]' : 'opacity-0'}`} />
+                <div className={`absolute -inset-[2px] rounded-2xl bg-gradient-to-r from-primary/40 via-accent/25 to-primary/40 bg-[length:200%_100%] transition-all duration-1000 ease-in-out ${inputFocused ? 'opacity-35 animate-[gradient-shift_6s_ease-in-out_infinite] blur-[16px]' : 'opacity-0'}`} />
                 <div className="relative">
                   <Search className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-all duration-500 ${inputFocused ? 'text-primary scale-110' : 'text-muted-foreground scale-100'}`} />
                   <Input
