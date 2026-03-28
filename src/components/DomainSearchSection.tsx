@@ -2,10 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Globe, ArrowRight, Shield, Zap, Clock, Lock } from "lucide-react";
+import { Search, Globe, ArrowRight, Shield, Zap, Clock, Lock, Loader2, CheckCircle2, XCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 
-const tlds = [
+const fallbackTlds = [
   { ext: ".com", price: "₹799", original: "₹1,199", tag: "Most Popular", color: "from-primary to-accent" },
   { ext: ".in", price: "₹449", original: "₹699", tag: "India #1", color: "from-emerald-500 to-teal-500" },
   { ext: ".co.in", price: "₹299", original: "₹499", tag: null, color: "from-slate-500 to-slate-600" },
@@ -15,6 +16,28 @@ const tlds = [
   { ext: ".site", price: "₹199", original: "₹499", tag: null, color: "from-pink-500 to-rose-500" },
   { ext: ".xyz", price: "₹99", original: "₹299", tag: "Cheapest", color: "from-cyan-500 to-sky-500" }
 ];
+
+const tldColors: Record<string, string> = {
+  ".com": "from-primary to-accent",
+  ".in": "from-emerald-500 to-teal-500",
+  ".co.in": "from-slate-500 to-slate-600",
+  ".net": "from-blue-500 to-indigo-500",
+  ".org": "from-violet-500 to-purple-500",
+  ".online": "from-orange-500 to-amber-500",
+  ".site": "from-pink-500 to-rose-500",
+  ".xyz": "from-cyan-500 to-sky-500",
+  ".store": "from-rose-500 to-red-500",
+  ".tech": "from-teal-500 to-cyan-500",
+  ".io": "from-indigo-500 to-blue-500",
+  ".dev": "from-green-500 to-emerald-500",
+};
+
+const tldTags: Record<string, string> = {
+  ".com": "Most Popular",
+  ".in": "India #1",
+  ".online": "Best Value",
+  ".xyz": "Cheapest",
+};
 
 const perks = [
   { icon: Shield, label: "Free WHOIS Privacy" },
@@ -34,9 +57,22 @@ const placeholderWords = [
   "mystartup.xyz"
 ];
 
+interface DomainResult {
+  domain: string;
+  tld: string;
+  sld: string;
+  available: boolean;
+  status: string;
+  price: string | null;
+  renewPrice: string | null;
+  currency: string;
+}
+
 const DomainSearchSection = () => {
   const [domain, setDomain] = useState("");
   const [searched, setSearched] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [results, setResults] = useState<DomainResult[]>([]);
   const [animatedPlaceholder, setAnimatedPlaceholder] = useState("");
   const [inputFocused, setInputFocused] = useState(false);
   const wordIndexRef = useRef(0);
@@ -73,31 +109,33 @@ const DomainSearchSection = () => {
     return () => clearTimeout(timeout);
   }, [domain, inputFocused]);
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (domain.trim()) setSearched(true);
+    if (!domain.trim()) return;
+    setLoading(true);
+    setSearched(true);
+    setResults([]);
+
+    try {
+      const { data, error } = await supabase.functions.invoke("domain-search", {
+        body: { domain: domain.trim() },
+      });
+
+      if (error) throw error;
+      setResults(data?.results || []);
+    } catch (err) {
+      console.error("Domain search failed:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const domainMatch = domain.trim().match(/^([a-zA-Z0-9-]+)(\.[a-zA-Z0-9-.]+)?$/);
-  const baseName = domainMatch ? domainMatch[1] : "";
-  const searchedTld = domainMatch && domainMatch[2] ? domainMatch[2].toLowerCase() : "";
-
-  let searchResultsTlds: typeof tlds = [];
-  if (searched && baseName) {
-    if (searchedTld) {
-      const match = tlds.find((tld) => tld.ext.toLowerCase() === searchedTld);
-      searchResultsTlds = match ? [match] : [];
-    } else {
-      searchResultsTlds = tlds;
-    }
+  function formatPrice(price: string | null, currency: string) {
+    if (!price) return null;
+    const num = parseFloat(price);
+    if (isNaN(num)) return null;
+    return `${currency}${Math.round(num).toLocaleString("en-IN")}`;
   }
-
-  function renderPrice(priceStr: string) {
-    return <span className="font-mono tabular-nums">{priceStr}</span>;
-  }
-
-  // Show only 4 TLDs on mobile when not searched
-  const mobileTlds = tlds.slice(0, 4);
 
   return (
     <section className="py-12 md:py-20 bg-muted/30" id="domains">
@@ -106,7 +144,7 @@ const DomainSearchSection = () => {
         <div className="text-center mb-8 md:mb-12">
           <div className="inline-flex items-center gap-2 bg-primary/10 text-primary font-semibold text-xs sm:text-sm px-4 py-1.5 rounded-full mb-3 md:mb-4">
             <Globe className="w-4 h-4" />
-            Domain Registration Starting at {renderPrice("₹99")}/yr
+            Domain Registration Starting at <span className="font-mono tabular-nums">₹799</span>/yr
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
             Find Your Perfect <span className="gradient-text">Domain Name</span>
@@ -128,11 +166,7 @@ const DomainSearchSection = () => {
                   <Search className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-all duration-500 ${inputFocused ? 'text-primary scale-110' : 'text-muted-foreground scale-100'}`} />
                   <Input
                     type="text"
-                    placeholder={
-                      domain
-                        ? ""
-                        : (!inputFocused ? `${animatedPlaceholder}|` : "")
-                    }
+                    placeholder={domain ? "" : (!inputFocused ? `${animatedPlaceholder}|` : "")}
                     value={domain}
                     onFocus={() => setInputFocused(true)}
                     onBlur={() => setInputFocused(false)}
@@ -144,12 +178,11 @@ const DomainSearchSection = () => {
                   />
                 </div>
               </div>
-              <Button type="submit" className="btn-gradient h-12 md:h-14 px-8 md:px-10 rounded-xl font-bold text-sm md:text-base">
-                <Search className="w-5 h-5 mr-2" />
-                Search Domain
+              <Button type="submit" disabled={loading} className="btn-gradient h-12 md:h-14 px-8 md:px-10 rounded-xl font-bold text-sm md:text-base">
+                {loading ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <Search className="w-5 h-5 mr-2" />}
+                {loading ? "Searching..." : "Search Domain"}
               </Button>
             </form>
-            {/* Perks hidden on mobile */}
             <div className="hidden sm:flex flex-wrap justify-center gap-x-6 gap-y-2 mt-5">
               {perks.map((perk) =>
                 <div key={perk.label} className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -162,96 +195,133 @@ const DomainSearchSection = () => {
         </Card>
 
         {/* Search Results */}
-        {searched && baseName &&
+        {searched && (
           <div className="max-w-5xl mx-auto mb-8 md:mb-12 animate-fade-in">
-            <p className="text-sm text-muted-foreground mb-4">
-              Showing results for <span className="font-bold text-foreground">"{baseName}{searchedTld}"</span>
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-5">
-              {searchResultsTlds.length === 0 && (
-                <div className="col-span-full text-center py-10 text-muted-foreground text-lg font-medium">
-                  No matching domain extension found.
-                </div>
-              )}
-              {searchResultsTlds.map((tld, i) => (
-                <Card
-                  key={tld.ext}
-                  className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer animate-fade-in-up group ${
-                    tld.tag ? "border-primary/20 shadow-md" : "border-border"
-                  }`}
-                  style={{ animationDelay: `${i * 0.06}s` }}>
-                  <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${tld.color} opacity-80 group-hover:opacity-100 transition-opacity`} />
-                  {tld.tag &&
-                    <div className="absolute top-3 right-3">
-                      <span className="text-[10px] font-bold bg-primary text-primary-foreground px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                        {tld.tag}
-                      </span>
-                    </div>
-                  }
-                  <CardContent className="p-4 md:p-6 pt-5 md:pt-7 text-center">
-                    <span className="text-xl md:text-3xl font-black text-foreground block tracking-tight">
-                      {baseName}{tld.ext}
-                    </span>
-                    <div className={`w-8 h-0.5 mx-auto mt-2 mb-3 md:mb-4 rounded-full bg-gradient-to-r ${tld.color} opacity-60`} />
-                    <div>
-                      <span className="text-xs md:text-sm text-muted-foreground line-through block">{renderPrice(tld.original)}/yr</span>
-                      <span className="text-2xl md:text-4xl font-black gradient-text">{renderPrice(tld.price)}</span>
-                      <span className="text-sm md:text-base text-muted-foreground">/yr</span>
-                    </div>
-                    <Button variant="outline" size="sm" className="mt-4 w-full font-semibold text-xs md:text-sm border-primary/20 hover:bg-primary hover:text-primary-foreground transition-colors">
-                      Register
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-            <div className="mt-6 text-center">
-              <Link to="/solutions/domains">
-                <Button className="btn-gradient font-bold h-12 px-10 text-base">
-                  Register Now <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-        }
+            {loading ? (
+              <div className="text-center py-12">
+                <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary mb-3" />
+                <p className="text-muted-foreground">Checking domain availability...</p>
+              </div>
+            ) : results.length > 0 ? (
+              <>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Showing results for <span className="font-bold text-foreground">"{domain.trim()}"</span>
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+                  {results.map((r, i) => {
+                    const color = tldColors[r.tld] || "from-slate-500 to-slate-600";
+                    const tag = tldTags[r.tld];
+                    const priceDisplay = formatPrice(r.price, r.currency);
 
-        {/* Extension Cards Grid - show 4 on mobile, all on desktop */}
-        {!searched &&
-          <>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-5 max-w-5xl mx-auto">
-              {/* Mobile: show 4, Desktop: show all */}
-              {tlds.map((tld, i) =>
-                <Card
-                  key={tld.ext}
-                  className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer animate-fade-in-up group ${
-                    tld.tag ? "border-primary/20 shadow-md" : "border-border"
-                  } ${i >= 4 ? "hidden sm:block" : ""}`}
-                  style={{ animationDelay: `${i * 0.06}s` }}>
-                  <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${tld.color} opacity-80 group-hover:opacity-100 transition-opacity`} />
-                  {tld.tag &&
-                    <div className="absolute top-2 right-2 md:top-3 md:right-3">
-                      <span className="text-[9px] md:text-[10px] font-bold bg-primary text-primary-foreground px-2 md:px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                        {tld.tag}
-                      </span>
-                    </div>
-                  }
-                  <CardContent className="p-3 md:p-6 pt-5 md:pt-7 text-center">
-                    <span className="text-xl md:text-3xl font-black text-foreground block tracking-tight">{tld.ext}</span>
-                    <div className={`w-8 h-0.5 mx-auto mt-1.5 md:mt-2 mb-2 md:mb-4 rounded-full bg-gradient-to-r ${tld.color} opacity-60`} />
-                    <div>
-                      <span className="text-xs md:text-sm text-muted-foreground line-through block">{renderPrice(tld.original)}/yr</span>
-                      <span className="text-2xl md:text-4xl font-black gradient-text">{renderPrice(tld.price)}</span>
-                      <span className="text-xs md:text-base text-muted-foreground">/yr</span>
-                    </div>
-                    <Button variant="outline" size="sm" className="mt-3 md:mt-5 w-full font-semibold text-xs md:text-sm border-primary/20 hover:bg-primary hover:text-primary-foreground transition-colors">
-                      Register
+                    return (
+                      <Card
+                        key={r.domain}
+                        className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-pointer animate-fade-in-up group ${
+                          r.available ? "border-primary/20 shadow-md" : "border-border opacity-75"
+                        }`}
+                        style={{ animationDelay: `${i * 0.05}s` }}
+                      >
+                        <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${color} ${r.available ? 'opacity-80' : 'opacity-30'} group-hover:opacity-100 transition-opacity`} />
+                        {tag && r.available && (
+                          <div className="absolute top-3 right-3">
+                            <span className="text-[10px] font-bold bg-primary text-primary-foreground px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                              {tag}
+                            </span>
+                          </div>
+                        )}
+                        <CardContent className="p-4 md:p-5">
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-1">
+                                {r.available ? (
+                                  <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />
+                                ) : (
+                                  <XCircle className="w-4 h-4 text-red-400 shrink-0" />
+                                )}
+                                <span className="text-base md:text-lg font-bold text-foreground truncate">
+                                  {r.domain}
+                                </span>
+                              </div>
+                              <span className={`text-xs font-medium ${r.available ? 'text-green-600 dark:text-green-400' : 'text-red-400'}`}>
+                                {r.available ? "Available" : "Taken"}
+                              </span>
+                            </div>
+                            <div className="text-right">
+                              {priceDisplay ? (
+                                <>
+                                  <span className="text-lg md:text-xl font-black gradient-text">{priceDisplay}</span>
+                                  <span className="text-xs text-muted-foreground">/yr</span>
+                                </>
+                              ) : (
+                                <span className="text-xs text-muted-foreground">—</span>
+                              )}
+                            </div>
+                          </div>
+                          {r.available && (
+                            <Button variant="outline" size="sm" className="mt-3 w-full font-semibold text-xs border-primary/20 hover:bg-primary hover:text-primary-foreground transition-colors">
+                              Register Now
+                            </Button>
+                          )}
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+                <div className="mt-6 text-center">
+                  <Link to="/solutions/domains">
+                    <Button className="btn-gradient font-bold h-12 px-10 text-base">
+                      View All Extensions <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
-          </>
-        }
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <div className="text-center py-10 text-muted-foreground text-lg font-medium">
+                No results found. Please try a different domain name.
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Default TLD Cards (before search) */}
+        {!searched && (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-5 max-w-5xl mx-auto">
+            {fallbackTlds.map((tld, i) => (
+              <Card
+                key={tld.ext}
+                className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer animate-fade-in-up group ${
+                  tld.tag ? "border-primary/20 shadow-md" : "border-border"
+                } ${i >= 4 ? "hidden sm:block" : ""}`}
+                style={{ animationDelay: `${i * 0.06}s` }}
+              >
+                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${tld.color} opacity-80 group-hover:opacity-100 transition-opacity`} />
+                {tld.tag && (
+                  <div className="absolute top-2 right-2 md:top-3 md:right-3">
+                    <span className="text-[9px] md:text-[10px] font-bold bg-primary text-primary-foreground px-2 md:px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                      {tld.tag}
+                    </span>
+                  </div>
+                )}
+                <CardContent className="p-3 md:p-6 pt-5 md:pt-7 text-center">
+                  <span className="text-xl md:text-3xl font-black text-foreground block tracking-tight">{tld.ext}</span>
+                  <div className={`w-8 h-0.5 mx-auto mt-1.5 md:mt-2 mb-2 md:mb-4 rounded-full bg-gradient-to-r ${tld.color} opacity-60`} />
+                  <div>
+                    <span className="text-xs md:text-sm text-muted-foreground line-through block">
+                      <span className="font-mono tabular-nums">{tld.original}</span>/yr
+                    </span>
+                    <span className="text-2xl md:text-4xl font-black gradient-text">
+                      <span className="font-mono tabular-nums">{tld.price}</span>
+                    </span>
+                    <span className="text-xs md:text-base text-muted-foreground">/yr</span>
+                  </div>
+                  <Button variant="outline" size="sm" className="mt-3 md:mt-5 w-full font-semibold text-xs md:text-sm border-primary/20 hover:bg-primary hover:text-primary-foreground transition-colors">
+                    Register
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
 
         <div className="text-center mt-8 md:mt-10">
           <Link to="/solutions/domains">
