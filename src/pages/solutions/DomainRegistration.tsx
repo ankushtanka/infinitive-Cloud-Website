@@ -94,14 +94,21 @@ const DomainRegistration = () => {
               {/* Search Bar */}
               <form onSubmit={handleSearch} className="flex gap-2 max-w-2xl mx-auto mb-4">
                 <div className="relative flex-1">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                  <Input
-                    type="text"
-                    placeholder="Search your domain... e.g. mybusiness"
-                    value={domain}
-                    onChange={(e) => { setDomain(e.target.value); setSearched(false); }}
-                    className="pl-12 h-14 text-base md:text-lg rounded-xl border-2 focus:border-primary"
-                  />
+                  <div className={`absolute -inset-[2px] rounded-2xl bg-gradient-to-r from-primary/80 via-accent/60 to-primary/80 bg-[length:200%_100%] transition-all duration-1000 ease-in-out ${inputFocused ? 'opacity-90 animate-[gradient-shift_6s_ease-in-out_infinite]' : 'opacity-15'}`} />
+                  <div className={`absolute -inset-[2px] rounded-2xl bg-gradient-to-r from-primary/60 via-accent/40 to-primary/60 bg-[length:200%_100%] transition-all duration-1000 ease-in-out ${inputFocused ? 'opacity-50 animate-[gradient-shift_6s_ease-in-out_infinite] blur-[6px]' : 'opacity-0'}`} />
+                  <div className={`absolute -inset-[2px] rounded-2xl bg-gradient-to-r from-primary/40 via-accent/25 to-primary/40 bg-[length:200%_100%] transition-all duration-1000 ease-in-out ${inputFocused ? 'opacity-35 animate-[gradient-shift_6s_ease-in-out_infinite] blur-[16px]' : 'opacity-0'}`} />
+                  <div className="relative">
+                    <Search className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-all duration-500 ${inputFocused ? 'text-primary scale-110' : 'text-muted-foreground scale-100'}`} />
+                    <Input
+                      type="text"
+                      placeholder="Search your domain... e.g. mybusiness"
+                      value={domain}
+                      onFocus={() => setInputFocused(true)}
+                      onBlur={() => setInputFocused(false)}
+                      onChange={(e) => { setDomain(e.target.value); setSearched(false); }}
+                      className="pl-12 h-14 text-base md:text-lg rounded-2xl border-0 bg-background focus-visible:ring-0 transition-all duration-500"
+                    />
+                  </div>
                 </div>
                 <Button type="submit" className="btn-gradient h-14 px-8 rounded-xl font-bold text-base">
                   Search
