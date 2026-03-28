@@ -98,9 +98,6 @@ serve(async (req) => {
           if (tldPricing.renew && tldPricing.renew['1']) {
             renewPrice = tldPricing.renew['1'];
           }
-          if (tldPricing.currency_prefix) {
-            currency = tldPricing.currency_prefix;
-          }
         }
 
         return { ...r, price: registerPrice, renewPrice, currency };
