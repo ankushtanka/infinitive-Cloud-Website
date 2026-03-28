@@ -99,11 +99,18 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, onBack }: CheckoutFormProp
       });
       return;
     }
-    toast({
-      title: "Order Placed Successfully!",
-      description: "This is a demo checkout. In production, you would be redirected to a payment gateway.",
+    const gstAmount = Math.round(total * 0.18);
+    const grandTotal = total + gstAmount;
+    const orderId = `IC-${Date.now().toString(36).toUpperCase()}`;
+    const params = new URLSearchParams({
+      id: orderId,
+      domain: new URLSearchParams(window.location.search).get("domain") || "example.com",
+      total: grandTotal.toString(),
+      name: `${data.firstName} ${data.lastName}`,
+      email: data.email,
+      payment: paymentMethod === "razorpay" ? "Razorpay" : paymentMethod === "upi" ? "UPI Direct" : "Bank Transfer",
     });
-    console.log("Checkout data:", { ...data, paymentMethod, promoCode });
+    navigate(`/order-confirmation?${params.toString()}`);
   };
 
   const applyPromo = () => {
