@@ -1,0 +1,166 @@
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
+serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
+
+  try {
+    const { domain } = await req.json();
+    if (!domain || typeof domain !== 'string') {
+      return new Response(JSON.stringify({ error: 'Domain name is required' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const WHMCS_API_URL = Deno.env.get('WHMCS_API_URL');
+    const WHMCS_API_IDENTIFIER = Deno.env.get('WHMCS_API_IDENTIFIER');
+    const WHMCS_API_SECRET = Deno.env.get('WHMCS_API_SECRET');
+
+    if (!WHMCS_API_URL || !WHMCS_API_IDENTIFIER || !WHMCS_API_SECRET) {
+      console.error('Missing WHMCS credentials');
+      return new Response(JSON.stringify({ error: 'Server configuration error' }), {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Clean domain input - extract base name
+    const cleanDomain = domain.trim().toLowerCase().replace(/\s+/g, '');
+    const domainMatch = cleanDomain.match(/^([a-zA-Z0-9-]+)(\.[a-zA-Z0-9-.]+)?$/);
+    const baseName = domainMatch ? domainMatch[1] : cleanDomain;
+    const specificTld = domainMatch && domainMatch[2] ? domainMatch[2] : null;
+
+    // TLDs to check
+    const tldsToCheck = specificTld 
+      ? [specificTld.startsWith('.') ? specificTld.substring(1) : specificTld]
+      : ['com', 'in', 'co.in', 'net', 'org', 'online', 'site', 'xyz', 'store', 'tech', 'io', 'dev'];
+
+    // Check domain availability via WHMCS API
+    const results = await Promise.allSettled(
+      tldsToCheck.map(async (tld) => {
+        const sld = baseName;
+        const fullDomain = `${sld}.${tld}`;
+
+        const params = new URLSearchParams({
+          action: 'DomainWhois',
+          identifier: WHMCS_API_IDENTIFIER,
+          secret: WHMCS_API_SECRET,
+          domain: fullDomain,
+          responsetype: 'json',
+        });
+
+        const apiUrl = WHMCS_API_URL.endsWith('/includes/api.php') 
+          ? WHMCS_API_URL 
+          : `${WHMCS_API_URL}/includes/api.php`;
+
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: params.toString(),
+        });
+
+        const data = await response.json();
+        console.log(`WHMCS DomainWhois response for ${fullDomain}:`, JSON.stringify(data));
+        
+        // WHMCS returns result: "success" and status: "available" or "unavailable"  
+        const isAvailable = data.status === 'available' || 
+                           (data.result === 'success' && data.status === 'available');
+        
+        return {
+          domain: fullDomain,
+          tld: `.${tld}`,
+          sld,
+          available: isAvailable,
+          status: data.status || data.result || 'unknown',
+        };
+      })
+    );
+
+    // Now fetch TLD pricing
+    let pricing: Record<string, any> = {};
+    try {
+      const pricingParams = new URLSearchParams({
+        action: 'GetTLDPricing',
+        identifier: WHMCS_API_IDENTIFIER,
+        secret: WHMCS_API_SECRET,
+        responsetype: 'json',
+      });
+
+      const apiUrl = WHMCS_API_URL.endsWith('/includes/api.php') 
+        ? WHMCS_API_URL 
+        : `${WHMCS_API_URL}/includes/api.php`;
+
+      const pricingResponse = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: pricingParams.toString(),
+      });
+
+      const pricingData = await pricingResponse.json();
+      console.log('WHMCS GetTLDPricing response keys:', JSON.stringify(Object.keys(pricingData)));
+      console.log('WHMCS GetTLDPricing sample:', JSON.stringify(pricingData).substring(0, 2000));
+      if (pricingData.pricing) {
+        // WHMCS returns pricing grouped by category
+        for (const category of Object.values(pricingData.pricing) as any[]) {
+          if (typeof category === 'object') {
+            for (const [tld, priceInfo] of Object.entries(category as Record<string, any>)) {
+              pricing[tld] = priceInfo;
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.error('Failed to fetch TLD pricing:', e);
+    }
+
+    const domainResults = results.map((result) => {
+      if (result.status === 'fulfilled') {
+        const r = result.value;
+        const tldKey = r.tld.substring(1); // remove leading dot
+        const tldPricing = pricing[`.${tldKey}`] || pricing[tldKey] || null;
+        
+        let registerPrice = null;
+        let renewPrice = null;
+        let currency = '₹';
+
+        if (tldPricing) {
+          // WHMCS pricing structure: register, renew, transfer with year keys
+          if (tldPricing.register && tldPricing.register['1']) {
+            registerPrice = tldPricing.register['1'];
+          }
+          if (tldPricing.renew && tldPricing.renew['1']) {
+            renewPrice = tldPricing.renew['1'];
+          }
+          if (tldPricing.currency_prefix) {
+            currency = tldPricing.currency_prefix;
+          }
+        }
+
+        return {
+          ...r,
+          price: registerPrice,
+          renewPrice,
+          currency,
+        };
+      }
+      return null;
+    }).filter(Boolean);
+
+    return new Response(JSON.stringify({ results: domainResults }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    console.error('Domain search error:', error);
+    return new Response(JSON.stringify({ error: 'Failed to search domains' }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+});
