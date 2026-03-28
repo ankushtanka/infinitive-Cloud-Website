@@ -64,11 +64,8 @@ serve(async (req) => {
     // Fetch TLD pricing via middleware pass-through
     let pricing: Record<string, any> = {};
     try {
-      const pricingResponse = await fetch(MIDDLEWARE_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'GetTLDPricing' }),
-      });
+      const pricingUrl = `${MIDDLEWARE_URL}?action=GetTLDPricing`;
+      const pricingResponse = await fetch(pricingUrl);
 
       const pricingData = await pricingResponse.json();
       console.log('GetTLDPricing keys:', JSON.stringify(Object.keys(pricingData)));
