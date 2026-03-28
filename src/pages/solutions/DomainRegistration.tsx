@@ -61,13 +61,12 @@ const placeholderWords = [
 
 const DomainRegistration = () => {
   const [domain, setDomain] = useState("");
-  const [searched, setSearched] = useState(false);
   const [inputFocused, setInputFocused] = useState(false);
   const [animatedPlaceholder, setAnimatedPlaceholder] = useState("");
   const wordIndexRef = useRef(0);
   const charIndexRef = useRef(0);
   const isDeletingRef = useRef(false);
-  const baseName = domain.replace(/\..+$/, "").trim();
+  const { loading, results, searched, search, reset } = useDomainSearch();
 
   useEffect(() => {
     if (domain || inputFocused) return;
