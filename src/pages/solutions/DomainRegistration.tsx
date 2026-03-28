@@ -4,9 +4,11 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Globe, Shield, Zap, Search, Lock, RefreshCw, Headphones, Check, ArrowRight, Star, Tag } from "lucide-react";
+import { Globe, Shield, Zap, Search, Lock, RefreshCw, Headphones, ArrowRight, Star, Tag, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { useDomainSearch } from "@/hooks/use-domain-search";
+import DomainResultsGrid from "@/components/DomainResultsGrid";
 
 const popularExtensions = [
   { ext: ".com", type: "Commercial", price: "₹799", original: "₹1,199", desc: "The world's #1 domain extension", popular: true },
