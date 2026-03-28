@@ -74,26 +74,30 @@ export function useDomainSearch() {
     setResults([]);
     setSuggestions([]);
 
+    // Fire both phases in parallel — show whichever arrives first
+    const initialPromise = supabase.functions.invoke("domain-search", {
+      body: { domain: query, phase: "initial" },
+    });
+    const fullPromise = supabase.functions.invoke("domain-search", {
+      body: { domain: query, phase: "full" },
+    });
+
     try {
-      const initialResponse = await supabase.functions.invoke("domain-search", {
-        body: { domain: query, phase: "initial" },
-      });
-
+      // Show initial results as soon as they arrive
+      const initialResponse = await initialPromise;
       if (activeSearchIdRef.current !== searchId) return;
-      if (initialResponse.error) throw initialResponse.error;
+      if (!initialResponse.error) {
+        setResults(initialResponse.data?.results || []);
+        setSuggestions(initialResponse.data?.suggestions || []);
+      }
 
-      setResults(initialResponse.data?.results || []);
-      setSuggestions(initialResponse.data?.suggestions || []);
-
-      const fullResponse = await supabase.functions.invoke("domain-search", {
-        body: { domain: query, phase: "full" },
-      });
-
+      // Then replace with full results when ready
+      const fullResponse = await fullPromise;
       if (activeSearchIdRef.current !== searchId) return;
-      if (fullResponse.error) throw fullResponse.error;
-
-      setResults(fullResponse.data?.results || initialResponse.data?.results || []);
-      setSuggestions(fullResponse.data?.suggestions || initialResponse.data?.suggestions || []);
+      if (!fullResponse.error) {
+        setResults(fullResponse.data?.results || []);
+        setSuggestions(fullResponse.data?.suggestions || []);
+      }
     } catch (err) {
       console.error("Domain search failed:", err);
     } finally {

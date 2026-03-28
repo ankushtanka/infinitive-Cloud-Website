@@ -8,7 +8,9 @@ const corsHeaders = {
 const MIDDLEWARE_URL = 'https://client.infinitivecloud.com/middleware/domainMiddleware.php';
 const ALL_TLDS = ['com', 'net', 'org', 'in', 'co.in', 'online', 'tech', 'website', 'site', 'xyz', 'store', 'io', 'info', 'co', 'me', 'app', 'cloud', 'ai', 'dev', 'shop', 'live', 'pro', 'biz', 'digital', 'space'];
 const FEATURED_TLDS = ['com', 'in', 'net', 'org', 'co', 'info', 'co.in', 'online'];
-const REQUEST_TIMEOUT = 5000;
+const REQUEST_TIMEOUT = 4000;
+const PHASE_TIMEOUT_INITIAL = 6000;
+const PHASE_TIMEOUT_FULL = 12000;
 const PRICING_CACHE_TTL = 60 * 60 * 1000;
 const SEARCH_CACHE_TTL = 5 * 60 * 1000;
 
@@ -83,14 +85,18 @@ async function checkDomain(domain: string): Promise<DomainCheckResult | null> {
   }
 }
 
-async function runWithConcurrency<T, R>(items: T[], concurrency: number, worker: (item: T) => Promise<R>): Promise<R[]> {
+async function runWithConcurrency<T, R>(items: T[], concurrency: number, worker: (item: T) => Promise<R>, timeoutMs?: number): Promise<R[]> {
   const results: R[] = new Array(items.length);
   let nextIndex = 0;
+  let timedOut = false;
+
+  const deadline = timeoutMs ? Date.now() + timeoutMs : 0;
 
   const runners = Array.from({ length: Math.min(concurrency, items.length) }, async () => {
-    while (true) {
+    while (!timedOut) {
       const currentIndex = nextIndex++;
       if (currentIndex >= items.length) break;
+      if (deadline && Date.now() > deadline) { timedOut = true; break; }
       results[currentIndex] = await worker(items[currentIndex]);
     }
   });
@@ -177,11 +183,14 @@ serve(async (req) => {
     const variationNames = normalizedPhase === 'initial' ? [] : generateVariations(baseName);
     const suggestionDomains = variationNames.flatMap((name) => ['com', 'in'].map((tld) => `${name}.${tld}`));
 
+    const phaseTimeout = normalizedPhase === 'initial' ? PHASE_TIMEOUT_INITIAL : PHASE_TIMEOUT_FULL;
+    const concurrency = normalizedPhase === 'initial' ? 8 : 10;
+
     const [pricing, primaryChecks, suggestionChecks] = await Promise.all([
       getPricing(),
-      runWithConcurrency(primaryDomains, normalizedPhase === 'initial' ? 5 : 8, checkDomain),
+      runWithConcurrency(primaryDomains, concurrency, checkDomain, phaseTimeout),
       suggestionDomains.length > 0
-        ? runWithConcurrency(suggestionDomains, 3, checkDomain)
+        ? runWithConcurrency(suggestionDomains, 4, checkDomain, phaseTimeout)
         : Promise.resolve([] as (DomainCheckResult | null)[]),
     ]);
 
