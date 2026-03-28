@@ -5,7 +5,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const MIDDLEWARE_URL = 'https://client.infinitivecloud.com/middleware/domainMiddleware.php';
+const MIDDLEWARE_URL = 'https://client.infinitivecloud.com/middleware/middleware.php';
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
