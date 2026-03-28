@@ -46,11 +46,56 @@ const transferSteps = [
   { step: "04", title: "Transfer Complete", description: "Your domain is now with Infinitive Cloud with a free 1-year extension added." },
 ];
 
+const placeholderWords = [
+  "mybusiness.com",
+  "mystore.in",
+  "myportfolio.net",
+  "mycompany.co.in",
+  "mywebsite.online",
+  "mybrand.org",
+  "myagency.site",
+  "mystartup.xyz"
+];
+
 const DomainRegistration = () => {
   const [domain, setDomain] = useState("");
   const [searched, setSearched] = useState(false);
   const [inputFocused, setInputFocused] = useState(false);
+  const [animatedPlaceholder, setAnimatedPlaceholder] = useState("");
+  const wordIndexRef = useRef(0);
+  const charIndexRef = useRef(0);
+  const isDeletingRef = useRef(false);
   const baseName = domain.replace(/\..+$/, "").trim();
+
+  useEffect(() => {
+    if (domain || inputFocused) return;
+    let timeout: ReturnType<typeof setTimeout>;
+    const tick = () => {
+      const word = placeholderWords[wordIndexRef.current];
+      if (!isDeletingRef.current) {
+        charIndexRef.current++;
+        setAnimatedPlaceholder(word.slice(0, charIndexRef.current));
+        if (charIndexRef.current === word.length) {
+          isDeletingRef.current = true;
+          timeout = setTimeout(tick, 1800);
+        } else {
+          timeout = setTimeout(tick, 110);
+        }
+      } else {
+        charIndexRef.current--;
+        setAnimatedPlaceholder(word.slice(0, charIndexRef.current));
+        if (charIndexRef.current === 0) {
+          isDeletingRef.current = false;
+          wordIndexRef.current = (wordIndexRef.current + 1) % placeholderWords.length;
+          timeout = setTimeout(tick, 350);
+        } else {
+          timeout = setTimeout(tick, 55);
+        }
+      }
+    };
+    timeout = setTimeout(tick, 100);
+    return () => clearTimeout(timeout);
+  }, [domain, inputFocused]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
