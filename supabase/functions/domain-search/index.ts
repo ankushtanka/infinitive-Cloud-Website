@@ -174,15 +174,14 @@ serve(async (req) => {
     const tlds = normalizedPhase === 'initial' ? FEATURED_TLDS : ALL_TLDS;
     const primaryDomains = tlds.map((tld) => `${baseName}.${tld}`);
 
-    const variationNames = generateVariations(baseName);
-    const suggestionTlds = normalizedPhase === 'initial' ? ['com'] : ['com', 'in'];
-    const suggestionDomains = variationNames.flatMap((name) => suggestionTlds.map((tld) => `${name}.${tld}`));
+    const variationNames = normalizedPhase === 'initial' ? [] : generateVariations(baseName);
+    const suggestionDomains = variationNames.flatMap((name) => ['com', 'in'].map((tld) => `${name}.${tld}`));
 
     const [pricing, primaryChecks, suggestionChecks] = await Promise.all([
       getPricing(),
-      runWithConcurrency(primaryDomains, normalizedPhase === 'initial' ? 8 : 12, checkDomain),
+      runWithConcurrency(primaryDomains, normalizedPhase === 'initial' ? 5 : 8, checkDomain),
       suggestionDomains.length > 0
-        ? runWithConcurrency(suggestionDomains, normalizedPhase === 'initial' ? 2 : 4, checkDomain)
+        ? runWithConcurrency(suggestionDomains, 3, checkDomain)
         : Promise.resolve([] as (DomainCheckResult | null)[]),
     ]);
 
