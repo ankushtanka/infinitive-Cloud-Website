@@ -151,7 +151,7 @@ const DomainRegistration = () => {
                       value={domain}
                       onFocus={() => setInputFocused(true)}
                       onBlur={() => setInputFocused(false)}
-                      onChange={(e) => { setDomain(e.target.value); setSearched(false); }}
+                      onChange={(e) => { setDomain(e.target.value); reset(); }}
                       className="pl-12 h-14 text-base md:text-lg rounded-2xl border-0 bg-background focus-visible:ring-0 transition-all duration-500"
                     />
                   </div>
