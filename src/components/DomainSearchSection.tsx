@@ -121,9 +121,11 @@ const DomainSearchSection = () => {
           <CardContent className="p-4 md:p-8">
             <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">
               <div className="relative flex-1 group">
-                <div className={`absolute -inset-[2px] rounded-2xl bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_100%] transition-all duration-500 ${inputFocused ? 'opacity-100 animate-[gradient-shift_3s_ease_infinite] blur-[1px]' : 'opacity-30'}`} />
+                <div className={`absolute -inset-[3px] rounded-2xl bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_100%] transition-all duration-700 ${inputFocused ? 'opacity-100 animate-[gradient-shift_2s_ease_infinite] blur-[2px]' : 'opacity-20 blur-[0px]'}`} />
+                <div className={`absolute -inset-[3px] rounded-2xl bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_100%] transition-all duration-700 ${inputFocused ? 'opacity-60 animate-[gradient-shift_2s_ease_infinite] blur-[8px]' : 'opacity-0'}`} />
+                <div className={`absolute -inset-[3px] rounded-2xl bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_100%] transition-all duration-700 ${inputFocused ? 'opacity-30 animate-[gradient-shift_2s_ease_infinite] blur-[20px]' : 'opacity-0'}`} />
                 <div className="relative">
-                  <Search className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors duration-300 ${inputFocused ? 'text-primary' : 'text-muted-foreground'}`} />
+                  <Search className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-all duration-500 ${inputFocused ? 'text-primary scale-110' : 'text-muted-foreground scale-100'}`} />
                   <Input
                     type="text"
                     placeholder={
@@ -138,7 +140,7 @@ const DomainSearchSection = () => {
                       setDomain(e.target.value);
                       setSearched(false);
                     }}
-                    className={`pl-12 h-12 md:h-14 text-base md:text-lg rounded-2xl border-0 bg-background focus-visible:ring-0 transition-all duration-500 ${inputFocused ? 'shadow-[0_0_30px_hsl(var(--primary)/0.3),0_0_60px_hsl(var(--primary)/0.15),0_0_100px_hsl(var(--primary)/0.08)]' : 'shadow-[0_0_15px_hsl(var(--primary)/0.08)]'}`}
+                    className="pl-12 h-12 md:h-14 text-base md:text-lg rounded-2xl border-0 bg-background focus-visible:ring-0 transition-all duration-500"
                   />
                 </div>
               </div>
