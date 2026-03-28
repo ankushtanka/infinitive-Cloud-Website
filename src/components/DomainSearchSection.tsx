@@ -123,7 +123,7 @@ const DomainSearchSection = () => {
             <DomainResultsGrid results={results} suggestions={suggestions} loading={loading} searched={searched} searchQuery={domain.trim()} />
             {!loading && results.length > 0 && (
               <div className="mt-6 text-center">
-                <Link to="/solutions/domains">
+                <Link to={`/solutions/domains?search=${encodeURIComponent(domain.trim())}`}>
                   <Button className="btn-gradient font-bold h-12 px-10 text-base">
                     View All Extensions <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>

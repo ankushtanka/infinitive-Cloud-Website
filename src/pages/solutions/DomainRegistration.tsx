@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Globe, Shield, Zap, Search, Lock, RefreshCw, Headphones, ArrowRight, Star, Tag, Loader2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useDomainSearch } from "@/hooks/use-domain-search";
 import DomainResultsGrid from "@/components/DomainResultsGrid";
@@ -60,6 +60,7 @@ const placeholderWords = [
 ];
 
 const DomainRegistration = () => {
+  const [searchParams] = useSearchParams();
   const [domain, setDomain] = useState("");
   const [inputFocused, setInputFocused] = useState(false);
   const [animatedPlaceholder, setAnimatedPlaceholder] = useState("");
@@ -67,6 +68,17 @@ const DomainRegistration = () => {
   const charIndexRef = useRef(0);
   const isDeletingRef = useRef(false);
   const { loading, results, suggestions, searched, search, reset } = useDomainSearch();
+  const hasAutoSearched = useRef(false);
+
+  // Auto-search if ?search= param is present
+  useEffect(() => {
+    const query = searchParams.get("search");
+    if (query && !hasAutoSearched.current) {
+      hasAutoSearched.current = true;
+      setDomain(query);
+      search(query);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (domain || inputFocused) return;
