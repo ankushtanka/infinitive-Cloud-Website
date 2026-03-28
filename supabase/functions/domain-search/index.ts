@@ -71,13 +71,10 @@ serve(async (req) => {
       console.log('GetTLDPricing keys:', JSON.stringify(Object.keys(pricingData)));
       console.log('GetTLDPricing sample:', JSON.stringify(pricingData).substring(0, 2000));
 
-      if (pricingData.pricing) {
-        for (const category of Object.values(pricingData.pricing) as any[]) {
-          if (typeof category === 'object') {
-            for (const [tld, priceInfo] of Object.entries(category as Record<string, any>)) {
-              pricing[tld] = priceInfo;
-            }
-          }
+      // WHMCS returns pricing keyed by TLD without dot (e.g. "com", "net")
+      if (pricingData.pricing && typeof pricingData.pricing === 'object') {
+        for (const [tld, priceInfo] of Object.entries(pricingData.pricing as Record<string, any>)) {
+          pricing[tld] = priceInfo;
         }
       }
     } catch (e) {
