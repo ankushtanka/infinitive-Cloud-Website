@@ -37,6 +37,23 @@ const OrderConfirmation = () => {
     toast({ title: "Copied!", description: "Order ID copied to clipboard." });
   };
 
+  const handleDownloadInvoice = async () => {
+    const subtotal = 799;
+    const gst = Math.round(subtotal * 0.18);
+    await generateInvoicePdf({
+      orderId,
+      date: new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }),
+      name,
+      email,
+      domain,
+      subtotal,
+      gst,
+      total: parseInt(total),
+      paymentMethod: payment,
+    });
+    toast({ title: "Invoice Downloaded", description: "Your invoice PDF has been saved." });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
