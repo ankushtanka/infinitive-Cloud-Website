@@ -7,12 +7,13 @@ const corsHeaders = {
 
 const MIDDLEWARE_URL = 'https://client.infinitivecloud.com/middleware/domainMiddleware.php';
 const ALL_TLDS = ['com', 'net', 'org', 'in', 'co.in', 'online', 'tech', 'website', 'site', 'xyz', 'store', 'io', 'info', 'co', 'me', 'app', 'cloud', 'ai', 'dev', 'shop', 'live', 'pro', 'biz', 'digital', 'space'];
-const FEATURED_TLDS = ['com', 'in', 'net', 'org', 'co', 'info', 'co.in', 'online'];
-const REQUEST_TIMEOUT = 4000;
-const PHASE_TIMEOUT_INITIAL = 6000;
-const PHASE_TIMEOUT_FULL = 12000;
+const FEATURED_TLDS = ['com', 'in', 'net', 'org', 'co.in', 'online'];
+const REQUEST_TIMEOUT = 2500;
+const PHASE_TIMEOUT_INITIAL = 2500;
+const PHASE_TIMEOUT_FULL = 7000;
 const PRICING_CACHE_TTL = 60 * 60 * 1000;
 const SEARCH_CACHE_TTL = 5 * 60 * 1000;
+const DOMAIN_CHECK_CACHE_TTL = 5 * 60 * 1000;
 
 type SearchPhase = 'initial' | 'full';
 
@@ -30,9 +31,16 @@ type DomainResult = DomainCheckResult & {
   currency: string;
 };
 
+type SearchPayload = {
+  results: DomainResult[];
+  suggestions: DomainResult[];
+};
+
 let pricingCache: Record<string, any> | null = null;
 let pricingCacheTime = 0;
-const searchCache = new Map<string, { timestamp: number; payload: { results: DomainResult[]; suggestions: DomainResult[] } }>();
+const searchCache = new Map<string, { timestamp: number; payload: SearchPayload }>();
+const domainCheckCache = new Map<string, { timestamp: number; result: DomainCheckResult | null }>();
+const inflightDomainChecks = new Map<string, Promise<DomainCheckResult | null>>();
 
 function generateVariations(baseName: string): string[] {
   const clean = baseName.replace(/[^a-z0-9]/g, '');
@@ -66,23 +74,43 @@ async function fetchJson(url: string, timeout = REQUEST_TIMEOUT) {
 }
 
 async function checkDomain(domain: string): Promise<DomainCheckResult | null> {
-  try {
-    const data = await fetchJson(`${MIDDLEWARE_URL}?action=domain_search&domain=${encodeURIComponent(domain)}`);
-    const parts = domain.split('.');
-    const sld = parts[0];
-    const tld = parts.slice(1).join('.');
-    const isAvailable = data.status === 'available' || (data.result === 'success' && data.status === 'available');
+  const now = Date.now();
+  const cached = domainCheckCache.get(domain);
 
-    return {
-      domain,
-      tld: `.${tld}`,
-      sld,
-      available: isAvailable,
-      status: data.status || 'unknown',
-    };
-  } catch {
-    return null;
+  if (cached && now - cached.timestamp < DOMAIN_CHECK_CACHE_TTL) {
+    return cached.result;
   }
+
+  const inflight = inflightDomainChecks.get(domain);
+  if (inflight) return inflight;
+
+  const request = (async () => {
+    try {
+      const data = await fetchJson(`${MIDDLEWARE_URL}?action=domain_search&domain=${encodeURIComponent(domain)}`);
+      const parts = domain.split('.');
+      const sld = parts[0];
+      const tld = parts.slice(1).join('.');
+      const isAvailable = data.status === 'available' || (data.result === 'success' && data.status === 'available');
+
+      const result = {
+        domain,
+        tld: `.${tld}`,
+        sld,
+        available: isAvailable,
+        status: data.status || 'unknown',
+      };
+
+      domainCheckCache.set(domain, { timestamp: Date.now(), result });
+      return result;
+    } catch {
+      return null;
+    } finally {
+      inflightDomainChecks.delete(domain);
+    }
+  })();
+
+  inflightDomainChecks.set(domain, request);
+  return request;
 }
 
 async function runWithConcurrency<T, R>(items: T[], concurrency: number, worker: (item: T) => Promise<R>, timeoutMs?: number): Promise<R[]> {
@@ -184,7 +212,7 @@ serve(async (req) => {
     const suggestionDomains = variationNames.flatMap((name) => ['com', 'in'].map((tld) => `${name}.${tld}`));
 
     const phaseTimeout = normalizedPhase === 'initial' ? PHASE_TIMEOUT_INITIAL : PHASE_TIMEOUT_FULL;
-    const concurrency = normalizedPhase === 'initial' ? 8 : 10;
+    const concurrency = normalizedPhase === 'initial' ? FEATURED_TLDS.length : 12;
 
     const [pricing, primaryChecks, suggestionChecks] = await Promise.all([
       getPricing(),
