@@ -37,7 +37,7 @@ const DomainSearchSection = () => {
   const wordIndexRef = useRef(0);
   const charIndexRef = useRef(0);
   const isDeletingRef = useRef(false);
-  const { loading, results, searched, search, reset } = useDomainSearch();
+  const { loading, results, suggestions, searched, search, reset } = useDomainSearch();
 
   useEffect(() => {
     if (domain || inputFocused) return;
