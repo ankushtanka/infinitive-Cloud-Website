@@ -120,7 +120,7 @@ const TakenCard = ({ r, i, alternatives }: { r: DomainResult; i: number; alterna
 const DomainResultsGrid = ({ results, suggestions = [], loading, searched, searchQuery }: DomainResultsGridProps) => {
   if (!searched) return null;
 
-  if (loading) {
+  if (loading && results.length === 0 && suggestions.length === 0) {
     return (
       <div className="animate-fade-in space-y-6">
         <div className="flex items-center gap-3 mb-2">
@@ -161,6 +161,13 @@ const DomainResultsGrid = ({ results, suggestions = [], loading, searched, searc
 
   return (
     <div className="animate-fade-in space-y-10">
+      {loading && (results.length > 0 || suggestions.length > 0) && (
+        <div className="flex items-center justify-center gap-2 rounded-full border border-border bg-muted/40 px-4 py-2 text-sm text-muted-foreground w-fit mx-auto">
+          <Loader2 className="w-4 h-4 animate-spin text-primary" />
+          Loading more extensions...
+        </div>
+      )}
+
       {/* Urgency banner */}
       {availableResults.length > 0 && (
         <div className="flex flex-wrap items-center justify-center gap-4 text-sm">

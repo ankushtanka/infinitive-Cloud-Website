@@ -6,65 +6,115 @@ const corsHeaders = {
 };
 
 const MIDDLEWARE_URL = 'https://client.infinitivecloud.com/middleware/domainMiddleware.php';
-
 const ALL_TLDS = ['com', 'net', 'org', 'in', 'co.in', 'online', 'tech', 'website', 'site', 'xyz', 'store', 'io', 'info', 'co', 'me', 'app', 'cloud', 'ai', 'dev', 'shop', 'live', 'pro', 'biz', 'digital', 'space'];
+const FEATURED_TLDS = ['com', 'in', 'net', 'org', 'co', 'info', 'co.in', 'online'];
+const REQUEST_TIMEOUT = 5000;
+const PRICING_CACHE_TTL = 60 * 60 * 1000;
+const SEARCH_CACHE_TTL = 5 * 60 * 1000;
 
-// In-memory pricing cache (survives across warm invocations)
+type SearchPhase = 'initial' | 'full';
+
+type DomainCheckResult = {
+  domain: string;
+  tld: string;
+  sld: string;
+  available: boolean;
+  status: string;
+};
+
+type DomainResult = DomainCheckResult & {
+  price: string | null;
+  renewPrice: string | null;
+  currency: string;
+};
+
 let pricingCache: Record<string, any> | null = null;
 let pricingCacheTime = 0;
-const PRICING_CACHE_TTL = 600_000; // 10 minutes
+const searchCache = new Map<string, { timestamp: number; payload: { results: DomainResult[]; suggestions: DomainResult[] } }>();
 
 function generateVariations(baseName: string): string[] {
   const clean = baseName.replace(/[^a-z0-9]/g, '');
   if (!clean) return [];
+
   const prefixes = ['get', 'my'];
-  const suffixes = ['app', 'hq', 'hub'];
+  const suffixes = ['app', 'hub'];
   const variations: string[] = [];
-  for (const p of prefixes) {
-    if (!clean.startsWith(p)) variations.push(`${p}${clean}`);
+
+  for (const prefix of prefixes) {
+    if (!clean.startsWith(prefix)) variations.push(`${prefix}${clean}`);
   }
-  for (const s of suffixes) {
-    if (!clean.endsWith(s)) variations.push(`${clean}${s}`);
+
+  for (const suffix of suffixes) {
+    if (!clean.endsWith(suffix)) variations.push(`${clean}${suffix}`);
   }
-  return variations.slice(0, 3);
+
+  return [...new Set(variations)].slice(0, 2);
 }
 
-async function checkDomain(domain: string): Promise<{ domain: string; tld: string; sld: string; available: boolean; status: string } | null> {
+async function fetchJson(url: string, timeout = REQUEST_TIMEOUT) {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 5000);
+  const timer = setTimeout(() => controller.abort(), timeout);
+
   try {
-    const url = `${MIDDLEWARE_URL}?action=domain_search&domain=${encodeURIComponent(domain)}`;
     const response = await fetch(url, { signal: controller.signal });
-    const data = await response.json();
-    const parts = domain.split('.');
-    const sld = parts[0];
-    const tld = parts.slice(1).join('.');
-    const isAvailable = data.status === 'available' || (data.result === 'success' && data.status === 'available');
-    return { domain, tld: `.${tld}`, sld, available: isAvailable, status: data.status || 'unknown' };
-  } catch {
-    return null;
+    return await response.json();
   } finally {
     clearTimeout(timer);
   }
 }
 
+async function checkDomain(domain: string): Promise<DomainCheckResult | null> {
+  try {
+    const data = await fetchJson(`${MIDDLEWARE_URL}?action=domain_search&domain=${encodeURIComponent(domain)}`);
+    const parts = domain.split('.');
+    const sld = parts[0];
+    const tld = parts.slice(1).join('.');
+    const isAvailable = data.status === 'available' || (data.result === 'success' && data.status === 'available');
+
+    return {
+      domain,
+      tld: `.${tld}`,
+      sld,
+      available: isAvailable,
+      status: data.status || 'unknown',
+    };
+  } catch {
+    return null;
+  }
+}
+
+async function runWithConcurrency<T, R>(items: T[], concurrency: number, worker: (item: T) => Promise<R>): Promise<R[]> {
+  const results: R[] = new Array(items.length);
+  let nextIndex = 0;
+
+  const runners = Array.from({ length: Math.min(concurrency, items.length) }, async () => {
+    while (true) {
+      const currentIndex = nextIndex++;
+      if (currentIndex >= items.length) break;
+      results[currentIndex] = await worker(items[currentIndex]);
+    }
+  });
+
+  await Promise.all(runners);
+  return results;
+}
+
 async function getPricing(): Promise<Record<string, any>> {
   const now = Date.now();
-  if (pricingCache && (now - pricingCacheTime) < PRICING_CACHE_TTL) {
+  if (pricingCache && now - pricingCacheTime < PRICING_CACHE_TTL) {
     return pricingCache;
   }
+
   try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 5000);
-    const res = await fetch(`${MIDDLEWARE_URL}?action=GetTLDPricing`, { signal: controller.signal });
-    clearTimeout(timer);
-    const data = await res.json();
+    const data = await fetchJson(`${MIDDLEWARE_URL}?action=GetTLDPricing`, 5000);
     const pricing: Record<string, any> = {};
+
     if (data.pricing && typeof data.pricing === 'object') {
       for (const [tld, info] of Object.entries(data.pricing as Record<string, any>)) {
         pricing[tld] = info;
       }
     }
+
     pricingCache = pricing;
     pricingCacheTime = now;
     return pricing;
@@ -73,75 +123,90 @@ async function getPricing(): Promise<Record<string, any>> {
   }
 }
 
+function attachPricing(result: DomainCheckResult, pricing: Record<string, any>): DomainResult {
+  const tldKey = result.tld.substring(1);
+  const tldPricing = pricing[`.${tldKey}`] || pricing[tldKey] || null;
+  let registerPrice = null;
+  let renewPrice = null;
+
+  if (tldPricing) {
+    if (tldPricing.register?.['1']) registerPrice = tldPricing.register['1'];
+    if (tldPricing.renew?.['1']) renewPrice = tldPricing.renew['1'];
+  }
+
+  return {
+    ...result,
+    price: registerPrice,
+    renewPrice,
+    currency: '₹',
+  };
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
 
   try {
-    const { domain } = await req.json();
+    const { domain, phase = 'full' } = await req.json() as { domain?: string; phase?: SearchPhase };
+
     if (!domain || typeof domain !== 'string') {
       return new Response(JSON.stringify({ error: 'Domain name is required' }), {
-        status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
     const cleanDomain = domain.trim().toLowerCase().replace(/\s+/g, '');
-    const domainMatch = cleanDomain.match(/^([a-zA-Z0-9-]+)(\.[a-zA-Z0-9-.]+)?$/);
-    const baseName = domainMatch ? domainMatch[1] : cleanDomain;
-    const specificTld = domainMatch && domainMatch[2] ? domainMatch[2] : null;
+    const normalizedPhase: SearchPhase = phase === 'initial' ? 'initial' : 'full';
+    const cacheKey = `${normalizedPhase}:${cleanDomain}`;
+    const cached = searchCache.get(cacheKey);
 
-    const tlds = specificTld
-      ? [specificTld.startsWith('.') ? specificTld.substring(1) : specificTld]
-      : ALL_TLDS;
-
-    const primaryDomains = tlds.map(tld => `${baseName}.${tld}`);
-    const variations = specificTld ? [] : generateVariations(baseName);
-    const suggestionDomains = variations.flatMap(v => [`${v}.com`, `${v}.in`]);
-
-    // Run pricing + ALL domain checks in parallel
-    // Batch size 5 for faster throughput
-    const allDomains = [...primaryDomains, ...suggestionDomains];
-    const batchSize = 5;
-    const domainChecksPromise = (async () => {
-      const results: (any | null)[] = [];
-      for (let i = 0; i < allDomains.length; i += batchSize) {
-        const batch = allDomains.slice(i, i + batchSize);
-        const batchResults = await Promise.all(batch.map(d => checkDomain(d)));
-        results.push(...batchResults);
-      }
-      return results;
-    })();
-
-    // Pricing runs in parallel with domain checks
-    const [allResults, pricing] = await Promise.all([domainChecksPromise, getPricing()]);
-
-    function attachPricing(r: any) {
-      const tldKey = r.tld.substring(1);
-      const tldPricing = pricing[`.${tldKey}`] || pricing[tldKey] || null;
-      let registerPrice = null;
-      let renewPrice = null;
-      const currency = '₹';
-      if (tldPricing) {
-        if (tldPricing.register?.['1']) registerPrice = tldPricing.register['1'];
-        if (tldPricing.renew?.['1']) renewPrice = tldPricing.renew['1'];
-      }
-      return { ...r, price: registerPrice, renewPrice, currency };
+    if (cached && Date.now() - cached.timestamp < SEARCH_CACHE_TTL) {
+      return new Response(JSON.stringify(cached.payload), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
-    const validResults = allResults.filter(Boolean);
-    const primaryResults = validResults.slice(0, primaryDomains.length).map(attachPricing);
-    const suggestionResults = validResults.slice(primaryDomains.length).filter((r: any) => r.available).map(attachPricing);
+    const domainMatch = cleanDomain.match(/^([a-zA-Z0-9-]+)(\.[a-zA-Z0-9-.]+)?$/);
+    const baseName = domainMatch ? domainMatch[1] : cleanDomain;
 
-    console.log(`"${baseName}": ${primaryResults.length}/${primaryDomains.length} results, ${suggestionResults.length} suggestions`);
+    const tlds = normalizedPhase === 'initial' ? FEATURED_TLDS : ALL_TLDS;
+    const primaryDomains = tlds.map((tld) => `${baseName}.${tld}`);
 
-    return new Response(JSON.stringify({ results: primaryResults, suggestions: suggestionResults }), {
+    const variationNames = normalizedPhase === 'initial' ? [] : generateVariations(baseName);
+    const suggestionDomains = variationNames.flatMap((name) => ['com', 'in'].map((tld) => `${name}.${tld}`));
+
+    const [pricing, primaryChecks, suggestionChecks] = await Promise.all([
+      getPricing(),
+      runWithConcurrency(primaryDomains, normalizedPhase === 'initial' ? 5 : 8, checkDomain),
+      suggestionDomains.length > 0
+        ? runWithConcurrency(suggestionDomains, 3, checkDomain)
+        : Promise.resolve([] as (DomainCheckResult | null)[]),
+    ]);
+
+    const results = primaryChecks
+      .filter(Boolean)
+      .map((result) => attachPricing(result as DomainCheckResult, pricing));
+
+    const suggestions = suggestionChecks
+      .filter(Boolean)
+      .filter((result) => (result as DomainCheckResult).available)
+      .map((result) => attachPricing(result as DomainCheckResult, pricing));
+
+    const payload = { results, suggestions };
+    searchCache.set(cacheKey, { timestamp: Date.now(), payload });
+
+    console.log(`${normalizedPhase}:${baseName}: ${results.length}/${primaryDomains.length} results, ${suggestions.length} suggestions`);
+
+    return new Response(JSON.stringify(payload), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error('Domain search error:', error);
     return new Response(JSON.stringify({ error: 'Failed to search domains' }), {
-      status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 });
