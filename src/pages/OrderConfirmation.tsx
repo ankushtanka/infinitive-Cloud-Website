@@ -18,8 +18,10 @@ import {
   Home,
   Copy,
   ShieldCheck,
+  FileText,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { generateInvoicePdf } from "@/utils/generateInvoicePdf";
 
 const OrderConfirmation = () => {
   const [searchParams] = useSearchParams();
@@ -33,6 +35,23 @@ const OrderConfirmation = () => {
   const copyOrderId = () => {
     navigator.clipboard.writeText(orderId);
     toast({ title: "Copied!", description: "Order ID copied to clipboard." });
+  };
+
+  const handleDownloadInvoice = async () => {
+    const subtotal = 799;
+    const gst = Math.round(subtotal * 0.18);
+    await generateInvoicePdf({
+      orderId,
+      date: new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }),
+      name,
+      email,
+      domain,
+      subtotal,
+      gst,
+      total: parseInt(total),
+      paymentMethod: payment,
+    });
+    toast({ title: "Invoice Downloaded", description: "Your invoice PDF has been saved." });
   };
 
   return (
@@ -245,8 +264,12 @@ const OrderConfirmation = () => {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.9 }}
-            className="flex flex-col sm:flex-row gap-3 justify-center"
+            className="flex flex-col sm:flex-row gap-3 justify-center flex-wrap"
           >
+            <Button variant="outline" className="w-full sm:w-auto gap-2" onClick={handleDownloadInvoice}>
+              <FileText className="w-4 h-4" />
+              Download Invoice
+            </Button>
             <Link to="/">
               <Button variant="outline" className="w-full sm:w-auto gap-2">
                 <Home className="w-4 h-4" />
