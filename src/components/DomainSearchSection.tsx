@@ -37,7 +37,7 @@ const DomainSearchSection = () => {
   const wordIndexRef = useRef(0);
   const charIndexRef = useRef(0);
   const isDeletingRef = useRef(false);
-  const { loading, results, searched, search, reset } = useDomainSearch();
+  const { loading, results, suggestions, searched, search, reset } = useDomainSearch();
 
   useEffect(() => {
     if (domain || inputFocused) return;
@@ -120,7 +120,7 @@ const DomainSearchSection = () => {
         {/* Live Search Results */}
         {searched && (
           <div className="max-w-5xl mx-auto mb-8 md:mb-12">
-            <DomainResultsGrid results={results} loading={loading} searched={searched} searchQuery={domain.trim()} />
+            <DomainResultsGrid results={results} suggestions={suggestions} loading={loading} searched={searched} searchQuery={domain.trim()} />
             {!loading && results.length > 0 && (
               <div className="mt-6 text-center">
                 <Link to="/solutions/domains">

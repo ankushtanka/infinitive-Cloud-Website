@@ -25,6 +25,19 @@ export const tldColors: Record<string, string> = {
   ".tech": "from-teal-500 to-cyan-500",
   ".io": "from-indigo-500 to-blue-500",
   ".dev": "from-green-500 to-emerald-500",
+  ".info": "from-amber-500 to-yellow-500",
+  ".biz": "from-fuchsia-500 to-pink-500",
+  ".co": "from-sky-500 to-blue-500",
+  ".me": "from-purple-500 to-violet-500",
+  ".app": "from-red-500 to-orange-500",
+  ".cloud": "from-blue-400 to-cyan-400",
+  ".digital": "from-indigo-400 to-violet-400",
+  ".website": "from-teal-400 to-green-400",
+  ".space": "from-violet-400 to-purple-400",
+  ".pro": "from-amber-400 to-orange-400",
+  ".live": "from-red-400 to-pink-400",
+  ".shop": "from-emerald-400 to-teal-400",
+  ".ai": "from-cyan-400 to-blue-400",
 };
 
 export const tldTags: Record<string, string> = {
@@ -32,6 +45,8 @@ export const tldTags: Record<string, string> = {
   ".in": "India #1",
   ".online": "Best Value",
   ".xyz": "Cheapest",
+  ".ai": "Trending",
+  ".io": "Startups",
 };
 
 export function formatDomainPrice(price: string | null, currency: string) {
@@ -44,6 +59,7 @@ export function formatDomainPrice(price: string | null, currency: string) {
 export function useDomainSearch() {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<DomainResult[]>([]);
+  const [suggestions, setSuggestions] = useState<DomainResult[]>([]);
   const [searched, setSearched] = useState(false);
 
   const search = async (domainInput: string) => {
@@ -51,6 +67,7 @@ export function useDomainSearch() {
     setLoading(true);
     setSearched(true);
     setResults([]);
+    setSuggestions([]);
 
     try {
       const { data, error } = await supabase.functions.invoke("domain-search", {
@@ -58,6 +75,7 @@ export function useDomainSearch() {
       });
       if (error) throw error;
       setResults(data?.results || []);
+      setSuggestions(data?.suggestions || []);
     } catch (err) {
       console.error("Domain search failed:", err);
     } finally {
@@ -68,7 +86,8 @@ export function useDomainSearch() {
   const reset = () => {
     setSearched(false);
     setResults([]);
+    setSuggestions([]);
   };
 
-  return { loading, results, searched, search, reset };
+  return { loading, results, suggestions, searched, search, reset };
 }
