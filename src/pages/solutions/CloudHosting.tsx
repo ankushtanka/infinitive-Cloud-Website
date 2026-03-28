@@ -217,8 +217,8 @@ const CloudHosting = () => {
                   className={`card-hover relative ${plan.popular ? 'border-2 border-primary shadow-xl' : ''}`}
                 >
                   {plan.popular && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-primary to-accent rounded-full">
-                      <span className="text-[9px] md:text-[10px] font-bold text-white uppercase tracking-wider">Most Popular</span>
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-badge rounded-full">
+                      <span className="text-[9px] md:text-[10px] font-bold text-badge-foreground uppercase tracking-wider">Most Popular</span>
                     </div>
                   )}
                   <CardContent className="pt-8">

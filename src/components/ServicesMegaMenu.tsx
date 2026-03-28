@@ -216,7 +216,7 @@ const ServicesMegaMenu = ({ onClose, onMouseEnter, onMouseLeave, initialCategory
                           <span className="font-bold text-[15px] text-foreground group-hover:text-primary transition-colors duration-200 flex items-center gap-2">
                             {link.label}
                             {link.tag && (
-                              <span className={`${link.tagColor} text-primary-foreground text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider`}>
+                              <span className="bg-badge text-badge-foreground text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
                                 {link.tag}
                               </span>
                             )}
