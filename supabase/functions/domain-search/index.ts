@@ -104,6 +104,8 @@ serve(async (req) => {
       });
 
       const pricingData = await pricingResponse.json();
+      console.log('WHMCS GetTLDPricing response keys:', JSON.stringify(Object.keys(pricingData)));
+      console.log('WHMCS GetTLDPricing sample:', JSON.stringify(pricingData).substring(0, 2000));
       if (pricingData.pricing) {
         // WHMCS returns pricing grouped by category
         for (const category of Object.values(pricingData.pricing) as any[]) {
