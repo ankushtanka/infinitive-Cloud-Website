@@ -37,8 +37,9 @@ const useCountUp = (end: number, duration: number = 2000, suffix: string = "") =
 const HeroSection = () => {
   const [activeOffer, setActiveOffer] = useState(0);
   const { scrollY } = useScroll();
-  const tickerOpacity = useTransform(scrollY, [0, 80], [1, 0]);
-  const tickerHeight = useTransform(scrollY, [0, 80], ["auto", "0px"]);
+  const tickerOpacity = useTransform(scrollY, [0, 120], [1, 0]);
+  const tickerScale = useTransform(scrollY, [0, 120], [1, 0.95]);
+  const tickerY = useTransform(scrollY, [0, 120], [0, -20]);
 
   const offers = [
     { text: "🔥 Limited Time: Get 50% OFF on first 3 months", code: "WELCOME50" },
@@ -68,8 +69,8 @@ const HeroSection = () => {
 
       {/* Top offer ticker - hides on scroll */}
       <motion.div 
-        style={{ opacity: tickerOpacity, height: tickerHeight, overflow: "hidden" }}
-        className="relative z-10 w-full max-w-4xl mx-auto px-3 sm:px-4 mt-2 md:mt-4 mb-4 md:mb-8"
+        style={{ opacity: tickerOpacity, scale: tickerScale, y: tickerY }}
+        className="relative z-10 w-full max-w-4xl mx-auto px-3 sm:px-4 mt-2 md:mt-4 mb-4 md:mb-8 will-change-transform"
       >
         <Link to="/contact" className="block">
           <div className="overflow-hidden rounded-xl sm:rounded-2xl md:rounded-full bg-gradient-to-r from-primary/10 via-accent/10 to-secondary/10 border border-primary/20 hover:border-primary/40 transition-all cursor-pointer backdrop-blur-sm shadow-[0_0_20px_hsl(var(--primary)/0.1)]">
