@@ -218,7 +218,7 @@ const CloudHosting = () => {
                 >
                   {plan.popular && (
                     <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-primary to-accent rounded-full">
-                      <span className="text-sm font-bold text-white">Most Popular</span>
+                      <span className="text-[9px] md:text-[10px] font-bold text-white uppercase tracking-wider">Most Popular</span>
                     </div>
                   )}
                   <CardContent className="pt-8">
