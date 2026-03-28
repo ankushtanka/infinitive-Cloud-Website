@@ -49,6 +49,7 @@ const transferSteps = [
 const DomainRegistration = () => {
   const [domain, setDomain] = useState("");
   const [searched, setSearched] = useState(false);
+  const [inputFocused, setInputFocused] = useState(false);
   const baseName = domain.replace(/\..+$/, "").trim();
 
   const handleSearch = (e: React.FormEvent) => {
