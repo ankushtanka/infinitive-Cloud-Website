@@ -212,7 +212,7 @@ serve(async (req) => {
     const suggestionDomains = variationNames.flatMap((name) => ['com', 'in'].map((tld) => `${name}.${tld}`));
 
     const phaseTimeout = normalizedPhase === 'initial' ? PHASE_TIMEOUT_INITIAL : PHASE_TIMEOUT_FULL;
-    const concurrency = normalizedPhase === 'initial' ? 8 : 10;
+    const concurrency = normalizedPhase === 'initial' ? FEATURED_TLDS.length : 12;
 
     const [pricing, primaryChecks, suggestionChecks] = await Promise.all([
       getPricing(),
