@@ -113,81 +113,62 @@ const AvailableCard = ({
   );
 };
 
-/* ─── Taken Card ─── */
-const TakenCard = ({
+/* ─── Taken Row Item ─── */
+const TakenRow = ({
   r,
   i,
-  alternatives,
+  alternative,
 }: {
   r: DomainResult;
   i: number;
-  alternatives: DomainResult[];
+  alternative: DomainResult | null;
 }) => {
-  const color = tldColors[r.tld] || "from-slate-500 to-slate-600";
-  const suggestion =
-    alternatives.length > 0
-      ? alternatives[Math.min(i, alternatives.length - 1)]
-      : null;
-  const suggestionPrice = suggestion
-    ? formatDomainPrice(suggestion.price, suggestion.currency)
+  const altPrice = alternative
+    ? formatDomainPrice(alternative.price, alternative.currency)
     : null;
 
   return (
-    <Card
-      className="relative overflow-hidden transition-all duration-300 hover:shadow-md animate-fade-in-up border-border/60"
-      style={{ animationDelay: `${i * 0.03}s` }}
+    <div
+      className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 px-4 py-3 rounded-lg border border-border/50 bg-muted/30 animate-fade-in-up"
+      style={{ animationDelay: `${i * 0.02}s` }}
     >
-      <div
-        className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${color} opacity-25`}
-      />
-      <CardContent className="p-4">
-        <div className="flex items-start justify-between gap-2 mb-1">
-          <h4 className="text-sm font-semibold text-foreground/60 tracking-tight">
-            {r.domain}
-          </h4>
-          <Badge
-            variant="outline"
-            className="bg-red-50 dark:bg-red-900/20 text-red-500 dark:text-red-400 border-red-200 dark:border-red-800/40 shrink-0 text-[10px]"
-          >
-            <XCircle className="w-3 h-3 mr-1" />
-            Taken
-          </Badge>
-        </div>
+      <div className="flex items-center gap-2 min-w-0 flex-1">
+        <XCircle className="w-4 h-4 text-red-400 shrink-0" />
+        <span className="text-sm font-medium text-foreground/50 truncate">
+          {r.domain}
+        </span>
+        <Badge
+          variant="outline"
+          className="bg-red-50 dark:bg-red-900/20 text-red-500 dark:text-red-400 border-red-200 dark:border-red-800/40 text-[10px] shrink-0"
+        >
+          Taken
+        </Badge>
+      </div>
 
-        {suggestion && (
-          <div className="mt-3 p-3 rounded-lg bg-primary/5 border border-primary/10">
-            <p className="text-xs text-muted-foreground mb-2">
-              <Sparkles className="w-3 h-3 inline mr-1 text-primary" />
-              Try{" "}
-              <span className="font-bold text-foreground">
-                {suggestion.domain}
-              </span>{" "}
-              instead
-              {suggestionPrice && (
-                <span className="text-primary font-bold">
-                  {" "}
-                  — {suggestionPrice}/yr
-                </span>
-              )}
-            </p>
-            <a
-              href={`${CART_BASE}${encodeURIComponent(suggestion.domain)}`}
-              target="_blank"
-              rel="noopener noreferrer"
+      {alternative && (
+        <div className="flex items-center gap-2 sm:ml-auto shrink-0">
+          <span className="text-xs text-muted-foreground">
+            <Sparkles className="w-3 h-3 inline mr-1 text-primary" />
+            Try <span className="font-bold text-foreground">{alternative.domain}</span>
+            {altPrice && <span className="text-primary font-bold"> — {altPrice}/yr</span>}
+          </span>
+          <a
+            href={`${CART_BASE}${encodeURIComponent(alternative.domain)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button
+              size="sm"
+              variant="outline"
+              className="text-xs h-7 px-3 border-primary/20 hover:bg-primary hover:text-primary-foreground gap-1 rounded-lg"
             >
-              <Button
-                size="sm"
-                variant="outline"
-                className="w-full text-xs h-8 border-primary/20 hover:bg-primary hover:text-primary-foreground gap-1 rounded-lg"
-              >
-                Register {suggestion.domain}
-                <ArrowRight className="w-3 h-3" />
-              </Button>
-            </a>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+              Register
+              <ArrowRight className="w-3 h-3" />
+            </Button>
+          </a>
+        </div>
+      )}
+    </div>
   );
 };
 
