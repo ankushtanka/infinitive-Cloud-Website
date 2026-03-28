@@ -183,11 +183,14 @@ serve(async (req) => {
     const variationNames = normalizedPhase === 'initial' ? [] : generateVariations(baseName);
     const suggestionDomains = variationNames.flatMap((name) => ['com', 'in'].map((tld) => `${name}.${tld}`));
 
+    const phaseTimeout = normalizedPhase === 'initial' ? PHASE_TIMEOUT_INITIAL : PHASE_TIMEOUT_FULL;
+    const concurrency = normalizedPhase === 'initial' ? 8 : 10;
+
     const [pricing, primaryChecks, suggestionChecks] = await Promise.all([
       getPricing(),
-      runWithConcurrency(primaryDomains, normalizedPhase === 'initial' ? 5 : 8, checkDomain),
+      runWithConcurrency(primaryDomains, concurrency, checkDomain, phaseTimeout),
       suggestionDomains.length > 0
-        ? runWithConcurrency(suggestionDomains, 3, checkDomain)
+        ? runWithConcurrency(suggestionDomains, 4, checkDomain, phaseTimeout)
         : Promise.resolve([] as (DomainCheckResult | null)[]),
     ]);
 
