@@ -146,7 +146,7 @@ const DomainRegistration = () => {
                     <Search className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-all duration-500 ${inputFocused ? 'text-primary scale-110' : 'text-muted-foreground scale-100'}`} />
                     <Input
                       type="text"
-                      placeholder="Search your domain... e.g. mybusiness"
+                      placeholder={domain ? "" : (!inputFocused ? `${animatedPlaceholder}|` : "")}
                       value={domain}
                       onFocus={() => setInputFocused(true)}
                       onBlur={() => setInputFocused(false)}
