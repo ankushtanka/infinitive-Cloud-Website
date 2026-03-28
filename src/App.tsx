@@ -46,6 +46,10 @@ const WebDevelopment = lazy(() => import("./pages/solutions/WebDevelopment"));
 const MobileApps = lazy(() => import("./pages/solutions/MobileApps"));
 const AISolutions = lazy(() => import("./pages/solutions/AISolutions"));
 const OdooSolutions = lazy(() => import("./pages/solutions/OdooSolutions"));
+const WooCommerceHosting = lazy(() => import("./pages/solutions/WooCommerceHosting"));
+const NodejsHosting = lazy(() => import("./pages/solutions/NodejsHosting"));
+const VPSServer = lazy(() => import("./pages/solutions/VPSServer"));
+const EmailSecurity = lazy(() => import("./pages/solutions/EmailSecurity"));
 const LiveChat = lazy(() => import("./pages/LiveChat"));
 
 const queryClient = new QueryClient();
@@ -134,6 +138,10 @@ const App = () => {
                 <Route path="/solutions/mobile-apps" element={<MobileApps />} />
                 <Route path="/solutions/ai-solutions" element={<AISolutions />} />
                 <Route path="/solutions/odoo-solutions" element={<OdooSolutions />} />
+                <Route path="/solutions/woocommerce-hosting" element={<WooCommerceHosting />} />
+                <Route path="/solutions/nodejs-hosting" element={<NodejsHosting />} />
+                <Route path="/solutions/vps-server" element={<VPSServer />} />
+                <Route path="/solutions/email-security" element={<EmailSecurity />} />
                 <Route path="/live-chat" element={<LiveChat />} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
