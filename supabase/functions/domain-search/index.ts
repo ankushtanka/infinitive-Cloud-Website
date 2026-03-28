@@ -30,17 +30,13 @@ serve(async (req) => {
       ? [specificTld.startsWith('.') ? specificTld.substring(1) : specificTld]
       : ['com', 'in', 'co.in', 'net', 'org', 'online', 'site', 'xyz', 'store', 'tech', 'io', 'dev'];
 
-    // Check each TLD via the middleware
+    // Check each TLD via the middleware (GET query params)
     const results = await Promise.allSettled(
       tldsToCheck.map(async (tld) => {
         const fullDomain = `${baseName}.${tld}`;
+        const url = `${MIDDLEWARE_URL}?action=domain_search&domain=${encodeURIComponent(fullDomain)}`;
 
-        const response = await fetch(MIDDLEWARE_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'domain_search', domain: fullDomain }),
-        });
-
+        const response = await fetch(url);
         const rawText = await response.text();
         console.log(`Middleware response for ${fullDomain}:`, rawText.substring(0, 500));
 
