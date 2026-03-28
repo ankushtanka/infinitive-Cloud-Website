@@ -100,7 +100,7 @@ const AvailableCard = ({
         </div>
         <Button
           className="w-full btn-gradient font-bold text-sm h-10 gap-2 rounded-lg"
-          onClick={() => window.location.href = `${DOMAIN_PAGE}?search=${encodeURIComponent(r.domain)}`}
+          onClick={() => window.location.href = `${CART_PAGE}?domain=${encodeURIComponent(r.domain)}`}
         >
           <ShoppingCart className="w-4 h-4" />
           Buy Now
