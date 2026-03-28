@@ -146,6 +146,7 @@ const App = () => {
                 <Route path="/solutions/email-security" element={<EmailSecurity />} />
                 <Route path="/live-chat" element={<LiveChat />} />
                 <Route path="/cart" element={<Cart />} />
+                <Route path="/order-confirmation" element={<OrderConfirmation />} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
