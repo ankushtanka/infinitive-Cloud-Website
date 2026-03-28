@@ -67,13 +67,18 @@ serve(async (req) => {
         });
 
         const data = await response.json();
+        console.log(`WHMCS DomainWhois response for ${fullDomain}:`, JSON.stringify(data));
+        
+        // WHMCS returns result: "success" and status: "available" or "unavailable"  
+        const isAvailable = data.status === 'available' || 
+                           (data.result === 'success' && data.status === 'available');
         
         return {
           domain: fullDomain,
           tld: `.${tld}`,
           sld,
-          available: data.status === 'available',
-          status: data.status || 'unknown',
+          available: isAvailable,
+          status: data.status || data.result || 'unknown',
         };
       })
     );
