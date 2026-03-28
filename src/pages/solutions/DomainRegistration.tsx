@@ -4,9 +4,11 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Globe, Shield, Zap, Search, Lock, RefreshCw, Headphones, Check, ArrowRight, Star, Tag } from "lucide-react";
+import { Globe, Shield, Zap, Search, Lock, RefreshCw, Headphones, ArrowRight, Star, Tag, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { useDomainSearch } from "@/hooks/use-domain-search";
+import DomainResultsGrid from "@/components/DomainResultsGrid";
 
 const popularExtensions = [
   { ext: ".com", type: "Commercial", price: "₹799", original: "₹1,199", desc: "The world's #1 domain extension", popular: true },
@@ -59,13 +61,12 @@ const placeholderWords = [
 
 const DomainRegistration = () => {
   const [domain, setDomain] = useState("");
-  const [searched, setSearched] = useState(false);
   const [inputFocused, setInputFocused] = useState(false);
   const [animatedPlaceholder, setAnimatedPlaceholder] = useState("");
   const wordIndexRef = useRef(0);
   const charIndexRef = useRef(0);
   const isDeletingRef = useRef(false);
-  const baseName = domain.replace(/\..+$/, "").trim();
+  const { loading, results, searched, search, reset } = useDomainSearch();
 
   useEffect(() => {
     if (domain || inputFocused) return;
@@ -99,7 +100,7 @@ const DomainRegistration = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (domain.trim()) setSearched(true);
+    search(domain);
   };
 
   return (
@@ -150,56 +151,35 @@ const DomainRegistration = () => {
                       value={domain}
                       onFocus={() => setInputFocused(true)}
                       onBlur={() => setInputFocused(false)}
-                      onChange={(e) => { setDomain(e.target.value); setSearched(false); }}
+                      onChange={(e) => { setDomain(e.target.value); reset(); }}
                       className="pl-12 h-14 text-base md:text-lg rounded-2xl border-0 bg-background focus-visible:ring-0 transition-all duration-500"
                     />
                   </div>
                 </div>
-                <Button type="submit" className="btn-gradient h-14 px-8 rounded-xl font-bold text-base">
-                  Search
+                <Button type="submit" disabled={loading} className="btn-gradient h-14 px-8 rounded-xl font-bold text-base">
+                  {loading ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <Search className="w-5 h-5 mr-2" />}
+                  {loading ? "Searching..." : "Search"}
                 </Button>
               </form>
               <p className="text-xs text-muted-foreground">Example: yourbusiness.com, mybrand.in, mywebsite.co.in</p>
             </div>
           </section>
 
-          {/* Search Results */}
-          {searched && baseName && (
-            <section className="section-container mb-16 animate-fade-in">
-              <Card className="max-w-4xl mx-auto border-2 border-primary/20">
-                <CardContent className="p-6">
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Domain results for <span className="font-bold text-foreground">"{baseName}"</span>
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {popularExtensions.slice(0, 9).map((ext) => (
-                      <div
-                        key={ext.ext}
-                        className="flex items-center justify-between bg-muted/50 hover:bg-muted rounded-xl px-4 py-3 transition-colors border border-transparent hover:border-primary/20"
-                      >
-                        <div>
-                          <span className="font-bold text-sm">{baseName}{ext.ext}</span>
-                          <div className="flex items-center gap-1 mt-0.5">
-                            <Check className="w-3 h-3 text-primary" />
-                            <span className="text-xs text-primary font-medium">Available</span>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <span className="text-xs text-muted-foreground line-through block">₹{ext.original}/yr</span>
-                          <span className="text-sm text-primary font-black">{ext.price}/yr</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="mt-4 text-center">
+          {/* Live Search Results */}
+          {searched && (
+            <section className="section-container mb-16">
+              <div className="max-w-5xl mx-auto">
+                <DomainResultsGrid results={results} loading={loading} searched={searched} searchQuery={domain.trim()} />
+                {!loading && results.length > 0 && (
+                  <div className="mt-6 text-center">
                     <Link to="/contact">
                       <Button className="btn-gradient font-bold h-12 px-8">
                         Register Now <ArrowRight className="w-4 h-4 ml-2" />
                       </Button>
                     </Link>
                   </div>
-                </CardContent>
-              </Card>
+                )}
+              </div>
             </section>
           )}
 
