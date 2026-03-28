@@ -104,25 +104,37 @@ const DomainSearchSection: React.FC = () => {
         <div className="max-w-3xl mx-auto mb-10 md:mb-14">
           <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1 group">
+              {/* Outer rotating conic gradient border */}
               <div
-                className={`absolute -inset-[2px] rounded-xl bg-gradient-to-r from-primary/80 via-accent/60 to-primary/80 bg-[length:200%_100%] transition-all duration-1000 ease-in-out ${
-                  inputFocused
-                    ? "opacity-90 animate-[gradient-shift_6s_ease-in-out_infinite]"
-                    : "opacity-15"
+                className={`absolute -inset-[2px] rounded-xl transition-all duration-700 ${
+                  inputFocused ? "opacity-100" : "opacity-20 group-hover:opacity-40"
                 }`}
+                style={{
+                  background: "conic-gradient(from var(--border-angle, 0deg), hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--accent)), hsl(var(--primary)))",
+                  animation: inputFocused ? "border-rotate 3s linear infinite" : "border-rotate 8s linear infinite",
+                }}
               />
+              {/* Soft glow layer */}
               <div
-                className={`absolute -inset-[2px] rounded-xl bg-gradient-to-r from-primary/60 via-accent/40 to-primary/60 bg-[length:200%_100%] transition-all duration-1000 ease-in-out ${
-                  inputFocused
-                    ? "opacity-50 animate-[gradient-shift_6s_ease-in-out_infinite] blur-[6px]"
-                    : "opacity-0"
+                className={`absolute -inset-[3px] rounded-xl transition-all duration-700 ${
+                  inputFocused ? "opacity-60 blur-[8px]" : "opacity-0"
+                }`}
+                style={{
+                  background: "conic-gradient(from var(--border-angle, 0deg), hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--accent)), hsl(var(--primary)))",
+                  animation: "border-rotate 3s linear infinite",
+                }}
+              />
+              {/* Inner shimmer pulse */}
+              <div
+                className={`absolute -inset-[1px] rounded-xl bg-gradient-to-r from-primary/0 via-primary/30 to-primary/0 bg-[length:200%_100%] transition-opacity duration-500 ${
+                  inputFocused ? "opacity-60 animate-[shimmer_2s_ease-in-out_infinite]" : "opacity-0"
                 }`}
               />
               <div className="relative">
                 <Search
                   className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-all duration-500 ${
                     inputFocused
-                      ? "text-primary scale-110"
+                      ? "text-primary scale-110 drop-shadow-[0_0_6px_hsl(var(--primary)/0.5)]"
                       : "text-muted-foreground scale-100"
                   }`}
                 />
