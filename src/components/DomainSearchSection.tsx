@@ -136,7 +136,7 @@ const DomainSearchSection = () => {
                     setDomain(e.target.value);
                     setSearched(false);
                   }}
-                  className="pl-12 h-12 md:h-14 text-base md:text-lg rounded-xl border border-primary/40 bg-muted/30 shadow-[0_0_15px_rgba(var(--primary-rgb),0.15)] focus:border-primary focus:shadow-[0_0_25px_rgba(var(--primary-rgb),0.25)] focus-visible:ring-1 focus-visible:ring-primary/40 transition-all duration-300"
+                  className="pl-12 h-12 md:h-14 text-base md:text-lg rounded-2xl border border-primary/20 bg-background/80 backdrop-blur-sm shadow-[0_0_20px_hsl(var(--primary)/0.08),0_0_40px_hsl(var(--primary)/0.04),inset_0_1px_0_hsl(var(--primary)/0.06)] focus:border-primary/60 focus:shadow-[0_0_20px_hsl(var(--primary)/0.2),0_0_40px_hsl(var(--primary)/0.12),0_0_60px_hsl(var(--primary)/0.06),inset_0_1px_0_hsl(var(--primary)/0.1)] focus-visible:ring-0 transition-all duration-500 ease-out"
                 />
               </div>
               <Button type="submit" className="btn-gradient h-12 md:h-14 px-8 md:px-10 rounded-xl font-bold text-sm md:text-base">
