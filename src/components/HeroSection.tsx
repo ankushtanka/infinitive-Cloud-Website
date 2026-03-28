@@ -69,8 +69,8 @@ const HeroSection = () => {
 
       {/* Top offer ticker - hides on scroll */}
       <motion.div 
-        style={{ opacity: tickerOpacity, height: tickerHeight, overflow: "hidden" }}
-        className="relative z-10 w-full max-w-4xl mx-auto px-3 sm:px-4 mt-2 md:mt-4 mb-4 md:mb-8"
+        style={{ opacity: tickerOpacity, scale: tickerScale, y: tickerY }}
+        className="relative z-10 w-full max-w-4xl mx-auto px-3 sm:px-4 mt-2 md:mt-4 mb-4 md:mb-8 will-change-transform"
       >
         <Link to="/contact" className="block">
           <div className="overflow-hidden rounded-xl sm:rounded-2xl md:rounded-full bg-gradient-to-r from-primary/10 via-accent/10 to-secondary/10 border border-primary/20 hover:border-primary/40 transition-all cursor-pointer backdrop-blur-sm shadow-[0_0_20px_hsl(var(--primary)/0.1)]">
