@@ -42,8 +42,7 @@ function getRecommended(domains: DomainResult[]): string | null {
   return available[0].domain;
 }
 
-const CART_BASE =
-  "https://client.infinitivecloud.com/cart.php?a=add&domain=register&query=";
+const DOMAIN_PAGE = "/solutions/domains";
 
 /* ─── Available Card ─── */
 const AvailableCard = ({
