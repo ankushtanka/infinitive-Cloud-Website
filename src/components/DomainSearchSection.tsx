@@ -236,7 +236,7 @@ const DomainSearchSection: React.FC = () => {
                 />
                 {tld.tag && (
                   <div className="absolute top-2 right-2 md:top-3 md:right-3">
-                    <span className="text-[9px] md:text-[10px] font-bold bg-primary text-primary-foreground px-2 md:px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                    <span className="text-[10px] md:text-xs font-bold bg-primary text-primary-foreground px-2.5 md:px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
                       {tld.tag}
                     </span>
                   </div>
