@@ -122,10 +122,24 @@ const DomainResultsGrid = ({ results, suggestions = [], loading, searched, searc
 
   if (loading) {
     return (
-      <div className="text-center py-16">
-        <Loader2 className="w-10 h-10 animate-spin mx-auto text-primary mb-4" />
-        <p className="text-muted-foreground font-medium">Searching across 25+ extensions...</p>
-        <p className="text-xs text-muted-foreground mt-1">Finding the best options for you</p>
+      <div className="animate-fade-in space-y-6">
+        <div className="flex items-center gap-3 mb-2">
+          <Loader2 className="w-5 h-5 animate-spin text-primary" />
+          <p className="text-muted-foreground font-medium">Searching across 25+ extensions...</p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Array.from({ length: 9 }).map((_, i) => (
+            <Card key={i} className="relative overflow-hidden animate-pulse" style={{ animationDelay: `${i * 0.08}s` }}>
+              <div className="absolute top-0 left-0 right-0 h-1 bg-muted" />
+              <CardContent className="p-5 space-y-3">
+                <div className="h-5 w-2/3 rounded bg-muted" />
+                <div className="h-5 w-20 rounded-full bg-muted" />
+                <div className="h-8 w-1/2 rounded bg-muted" />
+                <div className="h-10 w-full rounded-xl bg-muted" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     );
   }
