@@ -68,6 +68,7 @@ const indianStates = [
 ];
 
 const CheckoutForm = ({ subtotal, addonsTotal, total, onBack }: CheckoutFormProps) => {
+  const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState("razorpay");
   const [promoCode, setPromoCode] = useState("");
   const [promoApplied, setPromoApplied] = useState(false);
