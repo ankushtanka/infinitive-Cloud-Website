@@ -7,11 +7,12 @@ const corsHeaders = {
 
 const MIDDLEWARE_URL = 'https://client.infinitivecloud.com/middleware/domainMiddleware.php';
 const ALL_TLDS = ['com', 'net', 'org', 'in', 'co.in', 'online', 'tech', 'website', 'site', 'xyz', 'store', 'io', 'info', 'co', 'me', 'app', 'cloud', 'ai', 'dev', 'shop', 'live', 'pro', 'biz', 'digital', 'space'];
-const PRIMARY_CONCURRENCY = 12;
-const SUGGESTION_CONCURRENCY = 4;
+const FEATURED_TLDS = ['com', 'in', 'net', 'org', 'co.in', 'online', 'site', 'xyz'];
 const REQUEST_TIMEOUT = 4000;
 const PRICING_CACHE_TTL = 60 * 60 * 1000;
 const SEARCH_CACHE_TTL = 5 * 60 * 1000;
+
+type SearchPhase = 'initial' | 'full';
 
 type DomainCheckResult = {
   domain: string;
@@ -87,8 +88,9 @@ async function runWithConcurrency<T, R>(items: T[], concurrency: number, worker:
   let nextIndex = 0;
 
   const runners = Array.from({ length: Math.min(concurrency, items.length) }, async () => {
-    while (nextIndex < items.length) {
+    while (true) {
       const currentIndex = nextIndex++;
+      if (currentIndex >= items.length) break;
       results[currentIndex] = await worker(items[currentIndex]);
     }
   });
@@ -146,7 +148,7 @@ serve(async (req) => {
   }
 
   try {
-    const { domain } = await req.json();
+    const { domain, phase = 'full' } = await req.json() as { domain?: string; phase?: SearchPhase };
 
     if (!domain || typeof domain !== 'string') {
       return new Response(JSON.stringify({ error: 'Domain name is required' }), {
@@ -156,7 +158,10 @@ serve(async (req) => {
     }
 
     const cleanDomain = domain.trim().toLowerCase().replace(/\s+/g, '');
-    const cached = searchCache.get(cleanDomain);
+    const normalizedPhase: SearchPhase = phase === 'initial' ? 'initial' : 'full';
+    const cacheKey = `${normalizedPhase}:${cleanDomain}`;
+    const cached = searchCache.get(cacheKey);
+
     if (cached && Date.now() - cached.timestamp < SEARCH_CACHE_TTL) {
       return new Response(JSON.stringify(cached.payload), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -165,34 +170,35 @@ serve(async (req) => {
 
     const domainMatch = cleanDomain.match(/^([a-zA-Z0-9-]+)(\.[a-zA-Z0-9-.]+)?$/);
     const baseName = domainMatch ? domainMatch[1] : cleanDomain;
-    const specificTld = domainMatch?.[2] || null;
 
-    const tlds = specificTld
-      ? [specificTld.startsWith('.') ? specificTld.substring(1) : specificTld]
-      : ALL_TLDS;
-
+    const tlds = normalizedPhase === 'initial' ? FEATURED_TLDS : ALL_TLDS;
     const primaryDomains = tlds.map((tld) => `${baseName}.${tld}`);
-    const variationNames = specificTld ? [] : generateVariations(baseName);
-    const suggestionDomains = variationNames.flatMap((name) => [`${name}.com`, `${name}.in`]).slice(0, 4);
+
+    const variationNames = generateVariations(baseName);
+    const suggestionTlds = normalizedPhase === 'initial' ? ['com'] : ['com', 'in'];
+    const suggestionDomains = variationNames.flatMap((name) => suggestionTlds.map((tld) => `${name}.${tld}`));
 
     const [pricing, primaryChecks, suggestionChecks] = await Promise.all([
       getPricing(),
-      runWithConcurrency(primaryDomains, PRIMARY_CONCURRENCY, checkDomain),
+      runWithConcurrency(primaryDomains, normalizedPhase === 'initial' ? 8 : 12, checkDomain),
       suggestionDomains.length > 0
-        ? runWithConcurrency(suggestionDomains, SUGGESTION_CONCURRENCY, checkDomain)
+        ? runWithConcurrency(suggestionDomains, normalizedPhase === 'initial' ? 2 : 4, checkDomain)
         : Promise.resolve([] as (DomainCheckResult | null)[]),
     ]);
 
-    const results = primaryChecks.filter(Boolean).map((result) => attachPricing(result as DomainCheckResult, pricing));
+    const results = primaryChecks
+      .filter(Boolean)
+      .map((result) => attachPricing(result as DomainCheckResult, pricing));
+
     const suggestions = suggestionChecks
       .filter(Boolean)
       .filter((result) => (result as DomainCheckResult).available)
       .map((result) => attachPricing(result as DomainCheckResult, pricing));
 
     const payload = { results, suggestions };
-    searchCache.set(cleanDomain, { timestamp: Date.now(), payload });
+    searchCache.set(cacheKey, { timestamp: Date.now(), payload });
 
-    console.log(`"${baseName}": ${results.length}/${primaryDomains.length} results, ${suggestions.length} suggestions`);
+    console.log(`${normalizedPhase}:${baseName}: ${results.length}/${primaryDomains.length} results, ${suggestions.length} suggestions`);
 
     return new Response(JSON.stringify(payload), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

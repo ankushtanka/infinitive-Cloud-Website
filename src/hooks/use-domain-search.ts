@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 export interface DomainResult {
@@ -61,29 +61,51 @@ export function useDomainSearch() {
   const [results, setResults] = useState<DomainResult[]>([]);
   const [suggestions, setSuggestions] = useState<DomainResult[]>([]);
   const [searched, setSearched] = useState(false);
+  const activeSearchIdRef = useRef(0);
 
   const search = async (domainInput: string) => {
-    if (!domainInput.trim()) return;
+    const query = domainInput.trim();
+    if (!query) return;
+
+    const searchId = Date.now();
+    activeSearchIdRef.current = searchId;
     setLoading(true);
     setSearched(true);
     setResults([]);
     setSuggestions([]);
 
     try {
-      const { data, error } = await supabase.functions.invoke("domain-search", {
-        body: { domain: domainInput.trim() },
+      const initialResponse = await supabase.functions.invoke("domain-search", {
+        body: { domain: query, phase: "initial" },
       });
-      if (error) throw error;
-      setResults(data?.results || []);
-      setSuggestions(data?.suggestions || []);
+
+      if (activeSearchIdRef.current !== searchId) return;
+      if (initialResponse.error) throw initialResponse.error;
+
+      setResults(initialResponse.data?.results || []);
+      setSuggestions(initialResponse.data?.suggestions || []);
+
+      const fullResponse = await supabase.functions.invoke("domain-search", {
+        body: { domain: query, phase: "full" },
+      });
+
+      if (activeSearchIdRef.current !== searchId) return;
+      if (fullResponse.error) throw fullResponse.error;
+
+      setResults(fullResponse.data?.results || initialResponse.data?.results || []);
+      setSuggestions(fullResponse.data?.suggestions || initialResponse.data?.suggestions || []);
     } catch (err) {
       console.error("Domain search failed:", err);
     } finally {
-      setLoading(false);
+      if (activeSearchIdRef.current === searchId) {
+        setLoading(false);
+      }
     }
   };
 
   const reset = () => {
+    activeSearchIdRef.current = Date.now();
+    setLoading(false);
     setSearched(false);
     setResults([]);
     setSuggestions([]);
