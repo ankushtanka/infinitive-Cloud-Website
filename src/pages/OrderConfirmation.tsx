@@ -18,8 +18,10 @@ import {
   Home,
   Copy,
   ShieldCheck,
+  FileText,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { generateInvoicePdf } from "@/utils/generateInvoicePdf";
 
 const OrderConfirmation = () => {
   const [searchParams] = useSearchParams();
