@@ -42,8 +42,8 @@ All colors MUST be HSL.
     --accent: 199 89% 40%;
     --accent-foreground: 0 0% 100%;
 
-    /* Badge - Rich emerald green for promotional tags */
-    --badge: 160 84% 39%;
+    /* Badge - Deep indigo-blue for promotional tags */
+    --badge: 245 58% 51%;
     --badge-foreground: 0 0% 100%;
     --accent-foreground: 0 0% 100%;
 
@@ -121,9 +121,9 @@ All colors MUST be HSL.
     --accent: 199 89% 48%;
     --accent-foreground: 0 0% 100%;
 
-    /* Badge - Softer emerald for dark mode */
-    --badge: 158 64% 52%;
-    --badge-foreground: 0 0% 10%;
+    /* Badge - Lighter indigo for dark mode */
+    --badge: 245 70% 67%;
+    --badge-foreground: 0 0% 100%;
 
     --destructive: 0 84% 50%;
     --destructive-foreground: 0 0% 100%;
