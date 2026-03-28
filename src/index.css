@@ -121,6 +121,10 @@ All colors MUST be HSL.
     --accent: 199 89% 48%;
     --accent-foreground: 0 0% 100%;
 
+    /* Badge - Warm amber for promotional tags */
+    --badge: 30 95% 50%;
+    --badge-foreground: 0 0% 100%;
+
     --destructive: 0 84% 50%;
     --destructive-foreground: 0 0% 100%;
 
