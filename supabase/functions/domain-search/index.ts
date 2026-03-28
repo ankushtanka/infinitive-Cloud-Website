@@ -7,58 +7,64 @@ const corsHeaders = {
 
 const MIDDLEWARE_URL = 'https://client.infinitivecloud.com/middleware/domainMiddleware.php';
 
-// Primary TLDs to always check
 const PRIMARY_TLDS = ['com', 'in', 'co.in', 'net', 'org', 'online', 'site', 'xyz', 'store', 'tech', 'io', 'dev'];
-
-// Extended TLDs for more suggestions
 const EXTENDED_TLDS = ['info', 'biz', 'co', 'me', 'app', 'cloud', 'digital', 'website', 'space', 'pro', 'live', 'shop', 'ai'];
 
-// Generate name variations for suggestions
 function generateVariations(baseName: string): string[] {
   const variations: string[] = [];
   const clean = baseName.replace(/[^a-z0-9]/g, '');
   if (!clean) return variations;
-
-  // Add common prefixes/suffixes
   const prefixes = ['get', 'my', 'the', 'go'];
-  const suffixes = ['app', 'hq', 'hub', 'now', 'online', 'web', 'io', 'dev'];
-
+  const suffixes = ['app', 'hq', 'hub', 'now', 'online', 'web'];
   for (const prefix of prefixes) {
-    if (!clean.startsWith(prefix)) {
-      variations.push(`${prefix}${clean}`);
-    }
+    if (!clean.startsWith(prefix)) variations.push(`${prefix}${clean}`);
   }
   for (const suffix of suffixes) {
-    if (!clean.endsWith(suffix)) {
-      variations.push(`${clean}${suffix}`);
-    }
+    if (!clean.endsWith(suffix)) variations.push(`${clean}${suffix}`);
   }
-
-  // Limit to 6 variations
   return variations.slice(0, 6);
 }
 
-async function checkDomain(domain: string): Promise<{ domain: string; tld: string; sld: string; available: boolean; status: string }> {
-  const url = `${MIDDLEWARE_URL}?action=domain_search&domain=${encodeURIComponent(domain)}`;
-  const response = await fetch(url);
-  const rawText = await response.text();
+async function checkDomainWithTimeout(domain: string, timeoutMs = 8000): Promise<{ domain: string; tld: string; sld: string; available: boolean; status: string } | null> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
 
-  let data;
   try {
-    data = JSON.parse(rawText);
-  } catch {
+    const url = `${MIDDLEWARE_URL}?action=domain_search&domain=${encodeURIComponent(domain)}`;
+    const response = await fetch(url, { signal: controller.signal });
+    const rawText = await response.text();
+
+    let data;
+    try {
+      data = JSON.parse(rawText);
+    } catch {
+      console.log(`Parse error for ${domain}: ${rawText.substring(0, 200)}`);
+      return null;
+    }
+
     const parts = domain.split('.');
     const sld = parts[0];
     const tld = parts.slice(1).join('.');
-    return { domain, tld: `.${tld}`, sld, available: false, status: 'parse_error' };
+    const isAvailable = data.status === 'available' || (data.result === 'success' && data.status === 'available');
+
+    return { domain, tld: `.${tld}`, sld, available: isAvailable, status: data.status || data.result || 'unknown' };
+  } catch (err) {
+    console.log(`Timeout/error checking ${domain}: ${err.message}`);
+    return null;
+  } finally {
+    clearTimeout(timer);
   }
+}
 
-  const parts = domain.split('.');
-  const sld = parts[0];
-  const tld = parts.slice(1).join('.');
-  const isAvailable = data.status === 'available' || (data.result === 'success' && data.status === 'available');
-
-  return { domain, tld: `.${tld}`, sld, available: isAvailable, status: data.status || data.result || 'unknown' };
+// Check domains in batches to avoid overwhelming the middleware
+async function checkDomainsInBatches(domains: string[], batchSize = 5): Promise<(any | null)[]> {
+  const results: (any | null)[] = [];
+  for (let i = 0; i < domains.length; i += batchSize) {
+    const batch = domains.slice(i, i + batchSize);
+    const batchResults = await Promise.all(batch.map(d => checkDomainWithTimeout(d)));
+    results.push(...batchResults);
+  }
+  return results;
 }
 
 serve(async (req) => {
@@ -80,29 +86,33 @@ serve(async (req) => {
     const baseName = domainMatch ? domainMatch[1] : cleanDomain;
     const specificTld = domainMatch && domainMatch[2] ? domainMatch[2] : null;
 
-    // Determine which TLDs to check for the primary name
     const primaryTlds = specificTld
       ? [specificTld.startsWith('.') ? specificTld.substring(1) : specificTld]
       : [...PRIMARY_TLDS, ...EXTENDED_TLDS];
 
-    // Build all domains to check: primary name + all TLDs
     const primaryDomains = primaryTlds.map(tld => `${baseName}.${tld}`);
 
-    // Generate suggested name variations (only check .com and .in for each)
+    // Generate suggested name variations
     const variations = specificTld ? [] : generateVariations(baseName);
     const suggestionDomains = variations.flatMap(v => [`${v}.com`, `${v}.in`, `${v}.net`]);
+
+    console.log(`Checking ${primaryDomains.length} primary domains and ${suggestionDomains.length} suggestions for "${baseName}"`);
 
     // Fetch pricing in parallel with domain checks
     const pricingPromise = fetch(`${MIDDLEWARE_URL}?action=GetTLDPricing`)
       .then(r => r.json())
       .catch(() => ({ pricing: {} }));
 
-    // Check all domains in parallel (primary + suggestions)
-    const allDomains = [...primaryDomains, ...suggestionDomains];
-    const [allResults, pricingData] = await Promise.all([
-      Promise.allSettled(allDomains.map(d => checkDomain(d))),
+    // Check primary domains in batches of 5
+    const [primaryCheckResults, pricingData] = await Promise.all([
+      checkDomainsInBatches(primaryDomains, 5),
       pricingPromise,
     ]);
+
+    // Check suggestions in batches of 5 (after primary to not slow them down)
+    const suggestionCheckResults = suggestionDomains.length > 0
+      ? await checkDomainsInBatches(suggestionDomains, 5)
+      : [];
 
     // Parse pricing
     const pricing: Record<string, any> = {};
@@ -125,16 +135,16 @@ serve(async (req) => {
       return { ...r, price: registerPrice, renewPrice, currency };
     }
 
-    // Split results back into primary and suggestions
-    const primaryCount = primaryDomains.length;
-    const primaryResults = allResults.slice(0, primaryCount)
-      .map(r => r.status === 'fulfilled' ? attachPricing(r.value) : null)
-      .filter(Boolean);
-
-    const suggestionResults = allResults.slice(primaryCount)
-      .map(r => r.status === 'fulfilled' ? attachPricing(r.value) : null)
+    const primaryResults = primaryCheckResults
       .filter(Boolean)
-      .filter((r: any) => r.available); // Only show available suggestions
+      .map(attachPricing);
+
+    const suggestionResults = suggestionCheckResults
+      .filter(Boolean)
+      .filter((r: any) => r.available)
+      .map(attachPricing);
+
+    console.log(`Results: ${primaryResults.length} primary (${primaryResults.filter((r:any) => r.available).length} available), ${suggestionResults.length} suggestions`);
 
     return new Response(JSON.stringify({
       results: primaryResults,
