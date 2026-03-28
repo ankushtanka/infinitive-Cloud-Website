@@ -158,7 +158,7 @@ const TakenRow = ({
             Register
             <ArrowRight className="w-3 h-3" />
           </Button>
-          </a>
+          
         </div>
       )}
     </div>
