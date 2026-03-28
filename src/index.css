@@ -42,9 +42,9 @@ All colors MUST be HSL.
     --accent: 199 89% 40%;
     --accent-foreground: 0 0% 100%;
 
-    /* Badge - Deep indigo-blue for promotional tags */
-    --badge: 245 58% 51%;
-    --badge-foreground: 0 0% 100%;
+    /* Badge - Light sky blue matching site theme */
+    --badge: 200 80% 55%;
+    --badge-foreground: 210 50% 10%;
     --accent-foreground: 0 0% 100%;
 
     /* Muted backgrounds */
@@ -121,8 +121,8 @@ All colors MUST be HSL.
     --accent: 199 89% 48%;
     --accent-foreground: 0 0% 100%;
 
-    /* Badge - Lighter indigo for dark mode */
-    --badge: 245 70% 67%;
+    /* Badge - Softer sky blue for dark mode */
+    --badge: 200 70% 45%;
     --badge-foreground: 0 0% 100%;
 
     --destructive: 0 84% 50%;
