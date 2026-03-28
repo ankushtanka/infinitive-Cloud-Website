@@ -85,14 +85,18 @@ async function checkDomain(domain: string): Promise<DomainCheckResult | null> {
   }
 }
 
-async function runWithConcurrency<T, R>(items: T[], concurrency: number, worker: (item: T) => Promise<R>): Promise<R[]> {
+async function runWithConcurrency<T, R>(items: T[], concurrency: number, worker: (item: T) => Promise<R>, timeoutMs?: number): Promise<R[]> {
   const results: R[] = new Array(items.length);
   let nextIndex = 0;
+  let timedOut = false;
+
+  const deadline = timeoutMs ? Date.now() + timeoutMs : 0;
 
   const runners = Array.from({ length: Math.min(concurrency, items.length) }, async () => {
-    while (true) {
+    while (!timedOut) {
       const currentIndex = nextIndex++;
       if (currentIndex >= items.length) break;
+      if (deadline && Date.now() > deadline) { timedOut = true; break; }
       results[currentIndex] = await worker(items[currentIndex]);
     }
   });
