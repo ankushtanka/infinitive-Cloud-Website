@@ -7,8 +7,12 @@ const corsHeaders = {
 
 const MIDDLEWARE_URL = 'https://client.infinitivecloud.com/middleware/domainMiddleware.php';
 
-// Priority order — most important TLDs first
 const ALL_TLDS = ['com', 'net', 'org', 'in', 'co.in', 'online', 'tech', 'website', 'site', 'xyz', 'store', 'io', 'info', 'co', 'me', 'app', 'cloud', 'ai', 'dev', 'shop', 'live', 'pro', 'biz', 'digital', 'space'];
+
+// In-memory pricing cache (survives across warm invocations)
+let pricingCache: Record<string, any> | null = null;
+let pricingCacheTime = 0;
+const PRICING_CACHE_TTL = 600_000; // 10 minutes
 
 function generateVariations(baseName: string): string[] {
   const clean = baseName.replace(/[^a-z0-9]/g, '');
@@ -27,12 +31,11 @@ function generateVariations(baseName: string): string[] {
 
 async function checkDomain(domain: string): Promise<{ domain: string; tld: string; sld: string; available: boolean; status: string } | null> {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 8000);
+  const timer = setTimeout(() => controller.abort(), 5000);
   try {
     const url = `${MIDDLEWARE_URL}?action=domain_search&domain=${encodeURIComponent(domain)}`;
     const response = await fetch(url, { signal: controller.signal });
-    const rawText = await response.text();
-    const data = JSON.parse(rawText);
+    const data = await response.json();
     const parts = domain.split('.');
     const sld = parts[0];
     const tld = parts.slice(1).join('.');
@@ -45,15 +48,29 @@ async function checkDomain(domain: string): Promise<{ domain: string; tld: strin
   }
 }
 
-// Sequential batches of 3 to avoid overwhelming the middleware
-async function checkInBatches(domains: string[], batchSize = 3): Promise<(any | null)[]> {
-  const results: (any | null)[] = [];
-  for (let i = 0; i < domains.length; i += batchSize) {
-    const batch = domains.slice(i, i + batchSize);
-    const batchResults = await Promise.all(batch.map(d => checkDomain(d)));
-    results.push(...batchResults);
+async function getPricing(): Promise<Record<string, any>> {
+  const now = Date.now();
+  if (pricingCache && (now - pricingCacheTime) < PRICING_CACHE_TTL) {
+    return pricingCache;
   }
-  return results;
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 5000);
+    const res = await fetch(`${MIDDLEWARE_URL}?action=GetTLDPricing`, { signal: controller.signal });
+    clearTimeout(timer);
+    const data = await res.json();
+    const pricing: Record<string, any> = {};
+    if (data.pricing && typeof data.pricing === 'object') {
+      for (const [tld, info] of Object.entries(data.pricing as Record<string, any>)) {
+        pricing[tld] = info;
+      }
+    }
+    pricingCache = pricing;
+    pricingCacheTime = now;
+    return pricing;
+  } catch {
+    return pricingCache || {};
+  }
 }
 
 serve(async (req) => {
@@ -82,25 +99,22 @@ serve(async (req) => {
     const variations = specificTld ? [] : generateVariations(baseName);
     const suggestionDomains = variations.flatMap(v => [`${v}.com`, `${v}.in`]);
 
-    // Fetch pricing first (single request, fast)
-    const pricingData = await fetch(`${MIDDLEWARE_URL}?action=GetTLDPricing`)
-      .then(r => r.json())
-      .catch(() => ({ pricing: {} }));
-
-    const pricing: Record<string, any> = {};
-    if (pricingData.pricing && typeof pricingData.pricing === 'object') {
-      for (const [tld, priceInfo] of Object.entries(pricingData.pricing as Record<string, any>)) {
-        pricing[tld] = priceInfo;
+    // Run pricing + ALL domain checks in parallel
+    // Batch size 5 for faster throughput
+    const allDomains = [...primaryDomains, ...suggestionDomains];
+    const batchSize = 5;
+    const domainChecksPromise = (async () => {
+      const results: (any | null)[] = [];
+      for (let i = 0; i < allDomains.length; i += batchSize) {
+        const batch = allDomains.slice(i, i + batchSize);
+        const batchResults = await Promise.all(batch.map(d => checkDomain(d)));
+        results.push(...batchResults);
       }
-    }
+      return results;
+    })();
 
-    // Check primary domains in batches of 3
-    const primaryCheckResults = await checkInBatches(primaryDomains, 3);
-
-    // Then check suggestions in batches of 3
-    const suggestionCheckResults = suggestionDomains.length > 0
-      ? await checkInBatches(suggestionDomains, 3)
-      : [];
+    // Pricing runs in parallel with domain checks
+    const [allResults, pricing] = await Promise.all([domainChecksPromise, getPricing()]);
 
     function attachPricing(r: any) {
       const tldKey = r.tld.substring(1);
@@ -115,8 +129,9 @@ serve(async (req) => {
       return { ...r, price: registerPrice, renewPrice, currency };
     }
 
-    const primaryResults = primaryCheckResults.filter(Boolean).map(attachPricing);
-    const suggestionResults = suggestionCheckResults.filter(Boolean).filter((r: any) => r.available).map(attachPricing);
+    const validResults = allResults.filter(Boolean);
+    const primaryResults = validResults.slice(0, primaryDomains.length).map(attachPricing);
+    const suggestionResults = validResults.slice(primaryDomains.length).filter((r: any) => r.available).map(attachPricing);
 
     console.log(`"${baseName}": ${primaryResults.length}/${primaryDomains.length} results, ${suggestionResults.length} suggestions`);
 
