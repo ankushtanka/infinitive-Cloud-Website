@@ -12,6 +12,7 @@ import {
   ShoppingCart,
   ArrowRight,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import {
   DomainResult,
   tldColors,
@@ -41,8 +42,7 @@ function getRecommended(domains: DomainResult[]): string | null {
   return available[0].domain;
 }
 
-const CART_BASE =
-  "https://client.infinitivecloud.com/cart.php?a=add&domain=register&query=";
+const DOMAIN_PAGE = "/solutions/domains";
 
 /* ─── Available Card ─── */
 const AvailableCard = ({
@@ -98,16 +98,13 @@ const AvailableCard = ({
             </span>
           )}
         </div>
-        <a
-          href={`${CART_BASE}${encodeURIComponent(r.domain)}`}
-          target="_blank"
-          rel="noopener noreferrer"
+        <Button
+          className="w-full btn-gradient font-bold text-sm h-10 gap-2 rounded-lg"
+          onClick={() => window.location.href = `${DOMAIN_PAGE}?search=${encodeURIComponent(r.domain)}`}
         >
-          <Button className="w-full btn-gradient font-bold text-sm h-10 gap-2 rounded-lg">
-            <ShoppingCart className="w-4 h-4" />
-            Buy Now
-          </Button>
-        </a>
+          <ShoppingCart className="w-4 h-4" />
+          Buy Now
+        </Button>
       </CardContent>
     </Card>
   );
@@ -152,20 +149,16 @@ const TakenRow = ({
             Try <span className="font-bold text-foreground">{alternative.domain}</span>
             {altPrice && <span className="text-primary font-bold"> — {altPrice}/yr</span>}
           </span>
-          <a
-            href={`${CART_BASE}${encodeURIComponent(alternative.domain)}`}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Button
+            size="sm"
+            variant="outline"
+            className="text-xs h-7 px-3 border-primary/20 hover:bg-primary hover:text-primary-foreground gap-1 rounded-lg"
+            onClick={() => window.location.href = `${DOMAIN_PAGE}?search=${encodeURIComponent(alternative.domain)}`}
           >
-            <Button
-              size="sm"
-              variant="outline"
-              className="text-xs h-7 px-3 border-primary/20 hover:bg-primary hover:text-primary-foreground gap-1 rounded-lg"
-            >
-              Register
-              <ArrowRight className="w-3 h-3" />
-            </Button>
-          </a>
+            Register
+            <ArrowRight className="w-3 h-3" />
+          </Button>
+          
         </div>
       )}
     </div>
