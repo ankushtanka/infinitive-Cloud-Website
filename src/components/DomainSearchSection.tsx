@@ -36,7 +36,7 @@ const placeholderWords = [
   "mystartup.xyz",
 ];
 
-const DomainSearchSection = () => {
+const DomainSearchSection: React.FC = () => {
   const [domain, setDomain] = useState("");
   const [inputFocused, setInputFocused] = useState(false);
   const [animatedPlaceholder, setAnimatedPlaceholder] = useState("");
