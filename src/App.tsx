@@ -51,6 +51,7 @@ const NodejsHosting = lazy(() => import("./pages/solutions/NodejsHosting"));
 const VPSServer = lazy(() => import("./pages/solutions/VPSServer"));
 const EmailSecurity = lazy(() => import("./pages/solutions/EmailSecurity"));
 const LiveChat = lazy(() => import("./pages/LiveChat"));
+const Cart = lazy(() => import("./pages/Cart"));
 
 const queryClient = new QueryClient();
 
