@@ -35,6 +35,8 @@ export async function generateInvoicePdf(data: InvoiceData) {
   const dark = [15, 23, 42]; // slate-900
   const muted = [100, 116, 139]; // slate-500
   const line = [226, 232, 240]; // slate-200
+  const addonsTotal = data.addons?.reduce((sum, addon) => sum + addon.price, 0) || 0;
+  const pretaxTotal = data.subtotal + addonsTotal;
 
   // --- Header ---
   doc.setFillColor(primary[0], primary[1], primary[2]);
@@ -146,7 +148,7 @@ export async function generateInvoicePdf(data: InvoiceData) {
   doc.setFontSize(10);
   doc.text("Subtotal", totalsX, y);
   doc.setTextColor(dark[0], dark[1], dark[2]);
-  doc.text(`₹${data.subtotal.toLocaleString("en-IN")}`, pageW - margin - 4, y, { align: "right" });
+  doc.text(`₹${pretaxTotal.toLocaleString("en-IN")}`, pageW - margin - 4, y, { align: "right" });
   y += 7;
 
   doc.setTextColor(muted[0], muted[1], muted[2]);
