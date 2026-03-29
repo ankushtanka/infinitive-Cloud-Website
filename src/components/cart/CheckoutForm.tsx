@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -131,16 +131,34 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     resolver: zodResolver(existingCustomerSchema),
   });
 
+  const whmcsSubmittedRef = useRef(false);
+
   const submitOrderToWhmcs = async (
     data: { firstName: string; lastName: string; email: string; phone: string; companyName?: string; address1: string; address2?: string; city: string; state: string; postcode: string; country: string; hostingDomain?: string; password?: string },
     razorpayPaymentId?: string,
     razorpayOrderId?: string
   ) => {
-    const primaryItem = items[0];
-    if (!primaryItem) return null;
+    // Prevent duplicate submissions
+    if (whmcsSubmittedRef.current) {
+      console.log("WHMCS order already submitted, skipping duplicate");
+      return null;
+    }
+    whmcsSubmittedRef.current = true;
+
+    if (!items.length) return null;
 
     try {
       const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+      // Send ALL cart items in one call
+      const cartItems = items.map(item => ({
+        id: item.id,
+        name: item.name,
+        type: item.type,
+        price: item.price,
+        period: item.period,
+      }));
+
+      const primaryItem = items[0];
       const res = await fetch(
         `https://${projectId}.supabase.co/functions/v1/whmcs-create-order`,
         {
@@ -159,15 +177,13 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
             postcode: data.postcode,
             country: data.country,
             password: data.password,
-            productId: primaryItem.id,
             billingCycle: billingCycle,
             paymentMethod: "razorpay",
             domain: primaryItem.type === "domain" ? primaryItem.name : (data.hostingDomain || undefined),
-            itemType: primaryItem.type,
-            itemName: primaryItem.name,
             totalAmount: grandTotal,
             razorpayPaymentId,
             razorpayOrderId,
+            cartItems,
           }),
         }
       );
@@ -176,6 +192,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
       return result;
     } catch (err) {
       console.error("Failed to submit order to WHMCS:", err);
+      whmcsSubmittedRef.current = false; // Allow retry on network error
       return null;
     }
   };
