@@ -2,44 +2,13 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Check, Server, Shield, Zap, Globe, HardDrive, Headphones, Clock, ArrowRight } from "lucide-react";
+import { Check, Server, Shield, Zap, Globe, HardDrive, Headphones, ArrowRight, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { useWhmcsProducts } from "@/hooks/use-whmcs-products";
+import { useMemo } from "react";
 
-const plans = [
-  {
-    name: "Monthly Starter",
-    price: "₹49",
-    period: "/mo",
-    originalPrice: "₹99",
-    popular: false,
-    features: ["1 Website", "200 MB SSD Storage", "Unlimited Bandwidth", "1 Email Account", "Free SSL Certificate", "cPanel Access", "Weekly Backups"],
-  },
-  {
-    name: "Single Domain",
-    price: "₹549",
-    period: "/yr",
-    originalPrice: "₹999",
-    popular: false,
-    features: ["1 Website", "1 GB NVMe Storage", "Unlimited Bandwidth", "5 Email Accounts", "Free SSL Certificate", "cPanel Access", "Daily Backups"],
-  },
-  {
-    name: "Multi Domain",
-    price: "₹999",
-    period: "/yr",
-    originalPrice: "₹1,999",
-    popular: true,
-    features: ["Up to 3 Websites", "3 GB NVMe Storage", "Unlimited Bandwidth", "10 Email Accounts", "Free SSL & CDN", "cPanel Access", "Daily Backups"],
-  },
-  {
-    name: "Unlimited",
-    price: "₹1,499",
-    period: "/yr",
-    originalPrice: "₹2,999",
-    popular: false,
-    features: ["Unlimited Websites", "20 GB NVMe Storage", "Unlimited Bandwidth", "Unlimited Email Accounts", "Free SSL, CDN & IP", "cPanel Access", "Real-time Backups"],
-  },
-];
+const SHARED_HOSTING_PIDS = [1, 2, 3];
 
 const features = [
   { icon: HardDrive, title: "NVMe SSD Storage", description: "Lightning-fast NVMe drives deliver up to 10x faster read/write speeds for superior website performance." },
@@ -50,23 +19,58 @@ const features = [
   { icon: Headphones, title: "24/7 Expert Support", description: "Our dedicated support team is available around the clock to help with any technical issues or questions." },
 ];
 
+// Fallback plans if API fails
+const fallbackPlans = [
+  {
+    pid: 1, name: "Starter", popular: false,
+    features: ["1 Website", "10 GB SSD Storage", "Free SSL Certificate", "Free Domain (1 yr)", "Weekly Backups", "99.99% Uptime SLA"],
+    monthlyPrice: "₹79", annualPrice: "₹799",
+  },
+  {
+    pid: 2, name: "Business", popular: true,
+    features: ["Unlimited Websites", "50 GB NVMe Storage", "Free SSL & CDN", "Free Domain (1 yr)", "Daily Backups", "cPanel Control Panel"],
+    monthlyPrice: "₹199", annualPrice: "₹1,999",
+  },
+  {
+    pid: 3, name: "Enterprise", popular: false,
+    features: ["Unlimited Websites", "100 GB NVMe Storage", "Free SSL, CDN & IP", "Priority Support", "Real-time Backups", "Staging Environment"],
+    monthlyPrice: "₹399", annualPrice: "₹3,999",
+  },
+];
+
 const SharedHosting = () => {
+  const { products, loading, error } = useWhmcsProducts(SHARED_HOSTING_PIDS);
+
+  const plans = useMemo(() => {
+    if (!products.length) return fallbackPlans;
+
+    return products.map((p) => {
+      const inr = p.pricing?.INR;
+      const monthly = inr ? `₹${parseFloat(inr.monthly).toLocaleString('en-IN')}` : '—';
+      const annually = inr ? `₹${parseFloat(inr.annually).toLocaleString('en-IN')}` : '—';
+
+      return {
+        pid: p.pid,
+        name: p.name,
+        popular: p.pid === 2,
+        features: p.features,
+        monthlyPrice: monthly,
+        annualPrice: annually,
+      };
+    });
+  }, [products]);
+
   return (
     <>
       <Helmet>
-        <title>Shared Hosting India | Affordable cPanel Hosting from ₹49/mo - Infinitive Cloud</title>
-        <meta name="description" content="Best shared hosting plans in India starting at ₹49/mo. NVMe SSD, free SSL, LiteSpeed servers, cPanel, and 99.99% uptime. Perfect for WordPress, blogs, and business websites." />
+        <title>Shared Hosting India | Affordable cPanel Hosting from ₹79/mo - Infinitive Cloud</title>
+        <meta name="description" content="Best shared hosting plans in India starting at ₹79/mo. NVMe SSD, free SSL, LiteSpeed servers, cPanel, and 99.99% uptime. Perfect for WordPress, blogs, and business websites." />
         <meta name="keywords" content="shared hosting India, cheap web hosting, cPanel hosting, NVMe hosting, LiteSpeed hosting, WordPress hosting India, affordable hosting" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/shared-hosting" />
-        <meta property="og:title" content="Shared Hosting India | cPanel Hosting from ₹49/mo" />
+        <meta property="og:title" content="Shared Hosting India | cPanel Hosting from ₹79/mo" />
         <meta property="og:description" content="Best shared hosting in India. NVMe SSD, free SSL, LiteSpeed, cPanel, 99.99% uptime." />
         <meta property="og:url" content="https://infinitivecloud.com/solutions/shared-hosting" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Shared Hosting India | cPanel Hosting from ₹49/mo" />
-        <meta name="twitter:description" content="Best shared hosting in India. NVMe SSD, free SSL, LiteSpeed, cPanel, 99.99% uptime." />
-        <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       <div className="min-h-screen">
         <Navigation />
@@ -92,50 +96,62 @@ const SharedHosting = () => {
 
           {/* Plans */}
           <section className="section-container mb-20">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {plans.map((plan, i) => (
-                <Card
-                  key={plan.name}
-                  className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-up ${
-                    plan.popular ? "border-primary/50 shadow-primary/10 shadow-lg ring-2 ring-primary/20 scale-[1.02]" : ""
-                  }`}
-                  style={{ animationDelay: `${i * 0.1}s` }}
-                >
-                  {plan.popular && (
-                    <>
-                      <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary to-accent" />
-                      <div className="absolute top-4 right-4">
-                        <span className="text-[9px] md:text-[10px] font-bold bg-badge text-badge-foreground px-2 py-0.5 rounded-full uppercase tracking-wider">Most Popular</span>
+            {loading ? (
+              <div className="flex items-center justify-center py-20">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                <span className="ml-3 text-muted-foreground">Loading plans...</span>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                {plans.map((plan, i) => (
+                  <Card
+                    key={plan.pid}
+                    className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-up ${
+                      plan.popular ? "border-primary/50 shadow-primary/10 shadow-lg ring-2 ring-primary/20 scale-[1.02]" : ""
+                    }`}
+                    style={{ animationDelay: `${i * 0.1}s` }}
+                  >
+                    {plan.popular && (
+                      <>
+                        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary to-accent" />
+                        <div className="absolute top-4 right-4">
+                          <span className="text-[9px] md:text-[10px] font-bold bg-badge text-badge-foreground px-2 py-0.5 rounded-full uppercase tracking-wider">Most Popular</span>
+                        </div>
+                      </>
+                    )}
+                    <CardContent className="p-8 pt-10">
+                      <h3 className="text-xl font-bold mb-1">{plan.name}</h3>
+                      <div className="mb-6">
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-4xl font-black gradient-text">{plan.monthlyPrice}</span>
+                          <span className="text-base text-muted-foreground">/mo</span>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          or {plan.annualPrice}/yr
+                        </p>
+                        <p className="text-xs text-primary font-medium mt-1">14 Days Free Trial</p>
                       </div>
-                    </>
-                  )}
-                  <CardContent className="p-8 pt-10">
-                    <h3 className="text-xl font-bold mb-1">{plan.name}</h3>
-                    <div className="mb-6">
-                      <span className="text-sm text-muted-foreground line-through">{plan.originalPrice}</span>
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-4xl font-black gradient-text">{plan.price}</span>
-                        <span className="text-base text-muted-foreground">{plan.period}</span>
-                      </div>
-                      <p className="text-xs text-primary font-medium mt-1">14 Days Free Trial</p>
-                    </div>
-                    <ul className="space-y-3 mb-8">
-                      {plan.features.map((f, j) => (
-                        <li key={j} className="flex items-center gap-3">
-                          <Check className="w-4 h-4 text-primary flex-shrink-0" />
-                          <span className="text-sm text-muted-foreground">{f}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <Link to="/contact">
-                      <Button className={`w-full h-12 font-bold ${plan.popular ? "btn-gradient" : ""}`} variant={plan.popular ? "default" : "outline"}>
-                        Get Started
-                      </Button>
-                    </Link>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                      <ul className="space-y-3 mb-8">
+                        {plan.features.map((f, j) => (
+                          <li key={j} className="flex items-center gap-3">
+                            <Check className="w-4 h-4 text-primary flex-shrink-0" />
+                            <span className="text-sm text-muted-foreground">{f}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <Link to={`/cart?product=${plan.pid}&name=${encodeURIComponent(plan.name)}&type=shared-hosting`}>
+                        <Button className={`w-full h-12 font-bold ${plan.popular ? "btn-gradient" : ""}`} variant={plan.popular ? "default" : "outline"}>
+                          Get Started <ArrowRight className="w-4 h-4 ml-2" />
+                        </Button>
+                      </Link>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+            {error && !loading && (
+              <p className="text-center text-xs text-muted-foreground mt-4">Showing cached pricing. Live prices will update shortly.</p>
+            )}
           </section>
 
           {/* Features */}
