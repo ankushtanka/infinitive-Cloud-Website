@@ -119,7 +119,7 @@ serve(async (req) => {
       state: state || '',
       postcode: postcode || '',
       country: country || 'IN',
-      password2: crypto.randomUUID().slice(0, 16),
+      password2: password || crypto.randomUUID().slice(0, 16),
     });
 
     console.log('WHMCS AddClient response:', JSON.stringify(clientData).substring(0, 500));
