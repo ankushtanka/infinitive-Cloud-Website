@@ -425,8 +425,8 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
               <Card>
                 <CardContent className="p-6">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2.5 rounded-full bg-green-500/10">
-                      <CheckCircle2 className="w-6 h-6 text-green-500" />
+                    <div className="p-2.5 rounded-full bg-primary/10">
+                      <CheckCircle2 className="w-6 h-6 text-primary" />
                     </div>
                     <div>
                       <h2 className="text-lg font-bold text-foreground">Welcome back, {loggedInUser.firstName}!</h2>
