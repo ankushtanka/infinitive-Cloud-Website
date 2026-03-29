@@ -55,7 +55,16 @@ serve(async (req) => {
     let data: any;
     try {
       const response = await fetch(url, { signal: controller.signal });
-      data = await response.json();
+      const text = await response.text();
+      try {
+        data = JSON.parse(text);
+      } catch {
+        console.error('WHMCS returned non-JSON response:', text.substring(0, 300));
+        return new Response(JSON.stringify({ error: 'WHMCS returned an invalid response. Please try again.' }), {
+          status: 502,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
     } finally {
       clearTimeout(timer);
     }
