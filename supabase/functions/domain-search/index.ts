@@ -145,7 +145,7 @@ async function getPricing(): Promise<Record<string, any>> {
   }
 
   try {
-    const data = await fetchJson(`${MIDDLEWARE_URL}?action=GetTLDPricing`, 5000);
+    const data = await fetchJson({ action: 'GetTLDPricing' }, 5000);
     const pricing: Record<string, any> = {};
 
     if (data.pricing && typeof data.pricing === 'object') {
