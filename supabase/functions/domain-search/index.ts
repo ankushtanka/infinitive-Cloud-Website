@@ -61,12 +61,17 @@ function generateVariations(baseName: string): string[] {
   return [...new Set(variations)].slice(0, 2);
 }
 
-async function fetchJson(url: string, timeout = REQUEST_TIMEOUT) {
+async function fetchJson(params: Record<string, string>, timeout = REQUEST_TIMEOUT) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeout);
 
   try {
-    const response = await fetch(url, { signal: controller.signal });
+    const response = await fetch(MIDDLEWARE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'InfinitiveCloud-EdgeFunction/1.0' },
+      body: new URLSearchParams(params).toString(),
+      signal: controller.signal,
+    });
     return await response.json();
   } finally {
     clearTimeout(timer);
@@ -86,7 +91,7 @@ async function checkDomain(domain: string): Promise<DomainCheckResult | null> {
 
   const request = (async () => {
     try {
-      const data = await fetchJson(`${MIDDLEWARE_URL}?action=domain_search&domain=${encodeURIComponent(domain)}`);
+      const data = await fetchJson({ action: 'domain_search', domain });
       const parts = domain.split('.');
       const sld = parts[0];
       const tld = parts.slice(1).join('.');
@@ -140,7 +145,7 @@ async function getPricing(): Promise<Record<string, any>> {
   }
 
   try {
-    const data = await fetchJson(`${MIDDLEWARE_URL}?action=GetTLDPricing`, 5000);
+    const data = await fetchJson({ action: 'GetTLDPricing' }, 5000);
     const pricing: Record<string, any> = {};
 
     if (data.pricing && typeof data.pricing === 'object') {

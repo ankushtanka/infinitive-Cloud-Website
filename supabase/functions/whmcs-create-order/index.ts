@@ -8,11 +8,15 @@ const corsHeaders = {
 const MIDDLEWARE_URL = 'https://client.infinitivecloud.com/middleware/domainMiddleware.php';
 
 async function callMiddleware(params: Record<string, string>): Promise<any> {
-  const url = `${MIDDLEWARE_URL}?${new URLSearchParams(params).toString()}`;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 15000);
   try {
-    const res = await fetch(url, { signal: controller.signal });
+    const res = await fetch(MIDDLEWARE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'InfinitiveCloud-EdgeFunction/1.0' },
+      body: new URLSearchParams(params).toString(),
+      signal: controller.signal,
+    });
     const text = await res.text();
     try {
       return JSON.parse(text);
