@@ -42,9 +42,19 @@ export function useWhmcsProducts(productIds: number[]): UseWhmcsProductsResult {
         setLoading(true);
         setError(null);
 
-        const { data, error: fnError } = await supabase.functions.invoke('whmcs-products', {
-          body: { productIds },
-        });
+        let data: any;
+        let fnError: any;
+        
+        // Try up to 2 times to handle intermittent WHMCS middleware failures
+        for (let attempt = 0; attempt < 2; attempt++) {
+          const result = await supabase.functions.invoke('whmcs-products', {
+            body: { productIds },
+          });
+          data = result.data;
+          fnError = result.error;
+          if (!fnError && data?.products?.length) break;
+          if (attempt === 0) await new Promise((r) => setTimeout(r, 1000));
+        }
 
         if (cancelled) return;
 
