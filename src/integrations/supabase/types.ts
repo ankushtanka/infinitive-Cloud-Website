@@ -14,7 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      whmcs_order_syncs: {
+        Row: {
+          created_at: string
+          gateway_order_id: string | null
+          id: string
+          payment_id: string
+          response: Json | null
+          status: string
+          updated_at: string
+          whmcs_invoice_id: string | null
+          whmcs_order_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          gateway_order_id?: string | null
+          id?: string
+          payment_id: string
+          response?: Json | null
+          status?: string
+          updated_at?: string
+          whmcs_invoice_id?: string | null
+          whmcs_order_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          gateway_order_id?: string | null
+          id?: string
+          payment_id?: string
+          response?: Json | null
+          status?: string
+          updated_at?: string
+          whmcs_invoice_id?: string | null
+          whmcs_order_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
