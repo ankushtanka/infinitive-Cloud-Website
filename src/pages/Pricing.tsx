@@ -26,6 +26,12 @@ type Category = {
   plans: Plan[];
 };
 
+const sharedHostingRouteMap: Record<string, string> = {
+  Premium: "/cart?product=1&name=Starter&type=shared-hosting",
+  Business: "/cart?product=2&name=Business&type=shared-hosting",
+  "Cloud Startup": "/cart?product=3&name=Enterprise&type=shared-hosting",
+};
+
 const categories: Category[] = [
   {
     id: "web-hosting",
@@ -520,7 +526,7 @@ const Pricing = () => {
                     ))}
                   </ul>
 
-                  <Link to="/contact">
+                  <Link to={currentCategory.id === "web-hosting" ? (sharedHostingRouteMap[plan.name] || "/solutions/shared-hosting") : "/contact"}>
                     <Button
                       className={`w-full ${plan.popular ? "btn-gradient" : ""}`}
                       variant={plan.popular ? "default" : "outline"}

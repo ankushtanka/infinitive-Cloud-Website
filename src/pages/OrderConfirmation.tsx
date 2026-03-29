@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
@@ -10,27 +11,68 @@ import {
   CheckCircle2,
   Globe,
   Mail,
-  Phone,
-  MapPin,
   CreditCard,
   ArrowRight,
-  Download,
   Home,
   Copy,
   ShieldCheck,
   FileText,
+  Server,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { generateInvoicePdf } from "@/utils/generateInvoicePdf";
 
+type ConfirmationAddon = {
+  name: string;
+  price: number;
+  period?: string;
+};
+
 const OrderConfirmation = () => {
   const [searchParams] = useSearchParams();
   const orderId = searchParams.get("id") || `IC-${Date.now().toString(36).toUpperCase()}`;
-  const domain = searchParams.get("domain") || "example.com";
-  const total = searchParams.get("total") || "943";
+  const total = parseInt(searchParams.get("total") || "943", 10);
   const name = searchParams.get("name") || "Customer";
   const email = searchParams.get("email") || "";
   const payment = searchParams.get("payment") || "Razorpay";
+  const itemType = searchParams.get("itemType") || (searchParams.get("domain") ? "domain" : "shared-hosting");
+  const itemName =
+    searchParams.get("itemName") ||
+    searchParams.get("product") ||
+    searchParams.get("domain") ||
+    "Starter";
+  const itemLabel =
+    searchParams.get("itemLabel") ||
+    (itemType === "domain" ? "Domain Registration" : "Shared Hosting");
+  const itemPeriod =
+    searchParams.get("itemPeriod") ||
+    (itemType === "domain" ? "1 Year" : "1 Month");
+  const itemPrice = parseInt(searchParams.get("itemPrice") || searchParams.get("subtotal") || "799", 10);
+  const subtotal = parseInt(searchParams.get("subtotal") || itemPrice.toString(), 10);
+  const gst = parseInt(searchParams.get("gst") || Math.round(subtotal * 0.18).toString(), 10);
+
+  const addons = useMemo<ConfirmationAddon[]>(() => {
+    const addonsParam = searchParams.get("addons");
+    if (!addonsParam) return [];
+
+    try {
+      const parsed = JSON.parse(addonsParam);
+      if (!Array.isArray(parsed)) return [];
+
+      return parsed
+        .map((addon) => ({
+          name: typeof addon?.name === "string" ? addon.name : "Add-on",
+          price: Number(addon?.price || 0),
+          period: typeof addon?.period === "string" ? addon.period : undefined,
+        }))
+        .filter((addon) => addon.price >= 0);
+    } catch {
+      return [];
+    }
+  }, [searchParams]);
+
+  const addonsTotal = addons.reduce((sum, addon) => sum + addon.price, 0);
+  const preTaxTotal = subtotal + addonsTotal;
 
   const copyOrderId = () => {
     navigator.clipboard.writeText(orderId);
@@ -38,19 +80,22 @@ const OrderConfirmation = () => {
   };
 
   const handleDownloadInvoice = async () => {
-    const subtotal = 799;
-    const gst = Math.round(subtotal * 0.18);
     await generateInvoicePdf({
       orderId,
       date: new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }),
       name,
       email,
-      domain,
+      itemName,
+      itemType,
+      itemLabel,
+      itemPeriod,
       subtotal,
       gst,
-      total: parseInt(total),
+      total,
       paymentMethod: payment,
+      addons,
     });
+
     toast({ title: "Invoice Downloaded", description: "Your invoice PDF has been saved." });
   };
 
@@ -65,7 +110,6 @@ const OrderConfirmation = () => {
 
       <main className="pt-28 pb-20">
         <div className="container mx-auto px-4 max-w-3xl">
-          {/* Success Animation */}
           <motion.div
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -107,12 +151,7 @@ const OrderConfirmation = () => {
             </motion.p>
           </motion.div>
 
-          {/* Order Details Card */}
-          <motion.div
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.6 }}
-          >
+          <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.6 }}>
             <Card className="mb-6">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-5">
@@ -129,7 +168,7 @@ const OrderConfirmation = () => {
                 <div className="grid sm:grid-cols-2 gap-4 text-sm">
                   <div className="space-y-1">
                     <p className="text-muted-foreground">Order ID</p>
-                    <p className="font-mono font-bold text-foreground">{orderId}</p>
+                    <p className="font-mono font-bold text-foreground break-all">{orderId}</p>
                   </div>
                   <div className="space-y-1">
                     <p className="text-muted-foreground">Date</p>
@@ -159,70 +198,86 @@ const OrderConfirmation = () => {
 
                 <Separator className="my-5" />
 
-                {/* Items */}
                 <h3 className="text-sm font-bold text-foreground mb-3">Items Ordered</h3>
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-lg bg-primary/10">
-                        <Globe className="w-4 h-4 text-primary" />
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50 gap-4">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="p-2 rounded-lg bg-primary/10 shrink-0">
+                        {itemType === "domain" ? (
+                          <Globe className="w-4 h-4 text-primary" />
+                        ) : (
+                          <Server className="w-4 h-4 text-primary" />
+                        )}
                       </div>
-                      <div>
-                        <p className="font-semibold text-foreground">{domain}</p>
-                        <p className="text-xs text-muted-foreground">Domain Registration — 1 Year</p>
+                      <div className="min-w-0">
+                        <p className="font-semibold text-foreground truncate">{itemName}</p>
+                        <p className="text-xs text-muted-foreground">{itemLabel} — {itemPeriod}</p>
                       </div>
                     </div>
-                    <span className="font-bold text-foreground">₹799</span>
+                    <span className="font-bold text-foreground shrink-0">₹{itemPrice.toLocaleString("en-IN")}</span>
                   </div>
+
+                  {addons.map((addon) => (
+                    <div key={`${addon.name}-${addon.price}`} className="flex items-center justify-between p-3 rounded-lg bg-muted/30 border border-border/60 gap-4">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="p-2 rounded-lg bg-primary/10 shrink-0">
+                          <ShieldCheck className="w-4 h-4 text-primary" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-semibold text-foreground truncate">{addon.name}</p>
+                          <p className="text-xs text-muted-foreground">Add-on{addon.period ? ` — ${addon.period}` : ""}</p>
+                        </div>
+                      </div>
+                      <span className="font-bold text-foreground shrink-0">₹{addon.price.toLocaleString("en-IN")}</span>
+                    </div>
+                  ))}
                 </div>
 
                 <Separator className="my-5" />
 
-                {/* Totals */}
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between text-muted-foreground">
-                    <span>Subtotal</span>
-                    <span className="text-foreground">₹799</span>
+                    <span>{itemLabel}</span>
+                    <span className="text-foreground">₹{subtotal.toLocaleString("en-IN")}</span>
                   </div>
+                  {addonsTotal > 0 && (
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Add-ons</span>
+                      <span className="text-foreground">₹{addonsTotal.toLocaleString("en-IN")}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between text-muted-foreground">
                     <span>GST @ 18%</span>
-                    <span className="text-foreground">₹{Math.round(799 * 0.18).toLocaleString("en-IN")}</span>
+                    <span className="text-foreground">₹{gst.toLocaleString("en-IN")}</span>
                   </div>
                   <Separator className="my-2" />
                   <div className="flex justify-between">
                     <span className="text-lg font-bold text-foreground">Total Paid</span>
-                    <span className="text-xl font-black text-primary">₹{parseInt(total).toLocaleString("en-IN")}</span>
+                    <span className="text-xl font-black text-primary">₹{total.toLocaleString("en-IN")}</span>
                   </div>
+                  {preTaxTotal !== total && (
+                    <p className="text-xs text-muted-foreground text-right">Pre-tax total: ₹{preTaxTotal.toLocaleString("en-IN")}</p>
+                  )}
                 </div>
               </CardContent>
             </Card>
           </motion.div>
 
-          {/* Contact Info */}
           {email && (
-            <motion.div
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.7 }}
-            >
+            <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.7 }}>
               <Card className="mb-6">
                 <CardContent className="p-6">
                   <h3 className="text-sm font-bold text-foreground mb-3">Confirmation Sent To</h3>
                   <div className="flex items-center gap-2 text-sm">
                     <Mail className="w-4 h-4 text-primary" />
-                    <span className="text-foreground">{email}</span>
+                    <span className="text-foreground break-all">{email}</span>
                   </div>
                 </CardContent>
               </Card>
             </motion.div>
           )}
 
-          {/* What's Next */}
-          <motion.div
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.8 }}
-          >
+          <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.8 }}>
             <Card className="mb-8">
               <CardContent className="p-6">
                 <h3 className="text-lg font-bold text-foreground mb-4">What Happens Next?</h3>
@@ -235,13 +290,19 @@ const OrderConfirmation = () => {
                     },
                     {
                       step: "2",
-                      title: "Domain Activation",
-                      desc: "Your domain will be registered and activated. You'll receive DNS details via email.",
+                      title: itemType === "domain" ? "Domain Activation" : "Hosting Provisioning",
+                      desc:
+                        itemType === "domain"
+                          ? "Your domain will be registered and activated. You'll receive DNS details via email."
+                          : "Your hosting account will be provisioned and you'll receive access details and login credentials by email.",
                     },
                     {
                       step: "3",
                       title: "Ready to Go!",
-                      desc: "Manage your domain from the client area. Set up hosting, email, and more.",
+                      desc:
+                        itemType === "domain"
+                          ? "Manage your domain from the client area. Set up hosting, email, and more."
+                          : "Launch your website, connect domains, configure email, and start managing your hosting from the client area.",
                     },
                   ].map((item) => (
                     <div key={item.step} className="flex gap-4">
@@ -259,7 +320,6 @@ const OrderConfirmation = () => {
             </Card>
           </motion.div>
 
-          {/* Action Buttons */}
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -276,16 +336,15 @@ const OrderConfirmation = () => {
                 Back to Home
               </Button>
             </Link>
-            <Link to="/solutions/domains">
+            <Link to="/solutions/shared-hosting">
               <Button className="w-full sm:w-auto btn-gradient gap-2">
-                <Globe className="w-4 h-4" />
-                Register More Domains
+                <Server className="w-4 h-4" />
+                Explore More Hosting Plans
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
           </motion.div>
 
-          {/* Security Badge */}
           <div className="flex items-center justify-center gap-2 mt-8 text-xs text-muted-foreground">
             <ShieldCheck className="w-4 h-4" />
             <span>Your transaction is secured with 256-bit SSL encryption</span>
