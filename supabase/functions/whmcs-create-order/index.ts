@@ -379,8 +379,6 @@ serve(async (req) => {
       notes: `Checkout order${razorpayPaymentId ? ` | Payment ID: ${razorpayPaymentId}` : ''}${razorpayOrderId ? ` | Gateway Order ID: ${razorpayOrderId}` : ''} | Items: ${getOrderSummary(orderItems)}`,
     };
 
-    let domainIndex = 0;
-    let productIndex = 0;
 
     // Separate domain and product arrays for WHMCS AddOrder
     const domainNames: string[] = [];
