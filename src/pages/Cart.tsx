@@ -130,7 +130,12 @@ const Cart = () => {
       <Navigation />
 
       <main className="pt-28 pb-20">
-        <div className="container mx-auto px-4 max-w-5xl">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+          className="container mx-auto px-4 max-w-5xl"
+        >
           {/* Header */}
           <div className="flex items-center gap-3 mb-8">
             <div className="p-3 rounded-xl bg-primary/10">
