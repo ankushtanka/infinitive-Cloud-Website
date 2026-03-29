@@ -326,6 +326,15 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
           email: data.email,
           firstName: result.firstName || data.email.split("@")[0],
           lastName: result.lastName || "",
+          phone: result.phone || "",
+          companyName: result.companyName || "",
+          address1: result.address1 || "",
+          address2: result.address2 || "",
+          city: result.city || "",
+          state: result.state || "",
+          postcode: result.postcode || "",
+          country: result.country || "IN",
+          domains: result.domains || [],
         });
         toast({ title: "Logged In", description: `Welcome back, ${result.firstName || data.email}!` });
       } else {
