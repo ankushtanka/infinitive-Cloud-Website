@@ -36,6 +36,8 @@ type CartItem = {
 const Cart = () => {
   const [searchParams] = useSearchParams();
   const domain = searchParams.get("domain") || "";
+  const domainPrice = searchParams.get("price");
+  const domainRenewPrice = searchParams.get("renewPrice");
   const productId = searchParams.get("product");
   const productName = searchParams.get("name");
   const productType = searchParams.get("type");
