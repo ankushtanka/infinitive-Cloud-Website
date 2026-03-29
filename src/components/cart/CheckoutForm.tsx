@@ -30,6 +30,7 @@ import {
   Wallet,
   Landmark,
   Smartphone,
+  Globe,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
