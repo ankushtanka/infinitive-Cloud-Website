@@ -277,7 +277,7 @@ const DomainRegistration = () => {
               ))}
             </div>
             <div className="text-center mt-8">
-              <Link to="/contact">
+              <Link to="/domain-transfer">
                 <Button className="btn-gradient font-bold h-12 px-8">
                   Start Domain Transfer <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>

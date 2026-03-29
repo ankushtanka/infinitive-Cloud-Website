@@ -53,6 +53,8 @@ const EmailSecurity = lazy(() => import("./pages/solutions/EmailSecurity"));
 const LiveChat = lazy(() => import("./pages/LiveChat"));
 const Cart = lazy(() => import("./pages/Cart"));
 const OrderConfirmation = lazy(() => import("./pages/OrderConfirmation"));
+const DomainTransfer = lazy(() => import("./pages/DomainTransfer"));
+const DomainManagement = lazy(() => import("./pages/DomainManagement"));
 
 const queryClient = new QueryClient();
 
@@ -147,6 +149,8 @@ const App = () => {
                 <Route path="/live-chat" element={<LiveChat />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/order-confirmation" element={<OrderConfirmation />} />
+                <Route path="/domain-transfer" element={<DomainTransfer />} />
+                <Route path="/domain-management" element={<DomainManagement />} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />

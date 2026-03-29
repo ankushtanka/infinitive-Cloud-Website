@@ -35,7 +35,8 @@ const serviceLinks = [
     links: [
       { label: "Domain Registration", path: "/solutions/domains" },
       { label: "Domain Search", path: "/solutions/domains#search" },
-      { label: "Domain Transfer", path: "/solutions/domains#transfer" },
+      { label: "Domain Transfer", path: "/domain-transfer" },
+      { label: "Manage Domains", path: "/domain-management" },
     ],
   },
   {
