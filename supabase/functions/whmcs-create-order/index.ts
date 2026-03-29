@@ -144,6 +144,9 @@ serve(async (req) => {
       });
     }
 
+    // Brief pause to avoid bot detection between API calls
+    await sleep(1000);
+
     // Step 2: Create the order in WHMCS
     const isDomainOrder = itemType === 'domain';
     const hostDomain = domain || `${firstName.toLowerCase().replace(/[^a-z]/g, '')}${clientId}.infinitivecloud.com`;
