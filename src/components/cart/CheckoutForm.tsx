@@ -445,6 +445,34 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
                       <p className="text-sm text-muted-foreground">{loggedInUser.email}</p>
                     </div>
                   </div>
+
+                  {/* Show billing info */}
+                  {loggedInUser.address1 && loggedInUser.address1 !== "On File" && (
+                    <div className="text-sm text-muted-foreground mb-3 p-3 bg-muted/50 rounded-lg">
+                      <p className="font-medium text-foreground mb-1">Billing Address</p>
+                      <p>{loggedInUser.address1}{loggedInUser.address2 ? `, ${loggedInUser.address2}` : ''}</p>
+                      <p>{loggedInUser.city}, {loggedInUser.state} {loggedInUser.postcode}</p>
+                    </div>
+                  )}
+
+                  {/* Show domains */}
+                  {loggedInUser.domains && loggedInUser.domains.length > 0 && (
+                    <div className="mb-5 p-3 bg-muted/50 rounded-lg">
+                      <p className="font-medium text-foreground text-sm mb-2 flex items-center gap-2">
+                        <Globe className="w-4 h-4 text-primary" />
+                        Your Domains ({loggedInUser.domains.length})
+                      </p>
+                      <div className="space-y-1 max-h-32 overflow-y-auto">
+                        {loggedInUser.domains.map((d: any, i: number) => (
+                          <div key={i} className="text-sm text-muted-foreground flex items-center justify-between">
+                            <span>{d.domainname || d.domain || d}</span>
+                            <span className="text-xs capitalize px-2 py-0.5 rounded bg-primary/10 text-primary">{d.status || 'Active'}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   <p className="text-sm text-muted-foreground mb-5">
                     Your billing details are on file. Choose your payment method and complete your order.
                   </p>
