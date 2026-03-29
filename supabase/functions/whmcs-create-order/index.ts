@@ -9,7 +9,7 @@ const MIDDLEWARE_URL = 'https://client.infinitivecloud.com/middleware/domainMidd
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
-async function callMiddleware(params: Record<string, string>, retries = 3): Promise<any> {
+async function callMiddleware(params: Record<string, string>, retries = 2): Promise<any> {
   for (let attempt = 0; attempt <= retries; attempt++) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 30000);
@@ -21,7 +21,6 @@ async function callMiddleware(params: Record<string, string>, retries = 3): Prom
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
           'Accept': 'application/json, text/plain, */*',
           'Accept-Language': 'en-US,en;q=0.9',
-          'Accept-Encoding': 'gzip, deflate, br',
           'Referer': 'https://client.infinitivecloud.com/',
           'Origin': 'https://client.infinitivecloud.com',
         },
@@ -29,17 +28,12 @@ async function callMiddleware(params: Record<string, string>, retries = 3): Prom
         signal: controller.signal,
       });
       const text = await res.text();
-      console.log(`Middleware response status for ${params.action}: ${res.status}, length: ${text.length}`);
+      console.log(`Middleware response for ${params.action}: status=${res.status}, len=${text.length}`);
       try {
         return JSON.parse(text);
       } catch {
-        console.error(`Non-JSON response for ${params.action} (attempt ${attempt + 1}):`, text.substring(0, 500));
-        if (attempt < retries) {
-          const delay = 3000 * (attempt + 1);
-          console.log(`Retrying ${params.action} in ${delay}ms...`);
-          await sleep(delay);
-          continue;
-        }
+        console.error(`Non-JSON for ${params.action} (attempt ${attempt + 1}):`, text.substring(0, 300));
+        if (attempt < retries) { await sleep(3000 * (attempt + 1)); continue; }
         return null;
       }
     } catch (err) {
@@ -51,6 +45,34 @@ async function callMiddleware(params: Record<string, string>, retries = 3): Prom
     }
   }
   return null;
+}
+
+// DO NOT retry AddOrder — retries cause duplicate orders
+async function callMiddlewareNoRetry(params: Record<string, string>): Promise<any> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 30000);
+  try {
+    const res = await fetch(MIDDLEWARE_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'application/json, text/plain, */*',
+        'Referer': 'https://client.infinitivecloud.com/',
+        'Origin': 'https://client.infinitivecloud.com',
+      },
+      body: new URLSearchParams(params).toString(),
+      signal: controller.signal,
+    });
+    const text = await res.text();
+    console.log(`Middleware response for ${params.action}: status=${res.status}, len=${text.length}`);
+    try { return JSON.parse(text); } catch { return null; }
+  } catch (err) {
+    console.error(`Fetch error for ${params.action}:`, err.message);
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 serve(async (req) => {
@@ -68,15 +90,13 @@ serve(async (req) => {
         email: body.email || '',
         password2: body.password || '',
       });
-      
+
       if (loginResult && loginResult.result === 'success' && loginResult.userid) {
-        // Get client details
         const clientDetails = await callMiddleware({
           action: 'GetClientsDetails',
           clientid: String(loginResult.userid),
         });
 
-        // Get client domains
         const domainsResult = await callMiddleware({
           action: 'GetClientsDomains',
           clientid: String(loginResult.userid),
@@ -104,7 +124,7 @@ serve(async (req) => {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
-      
+
       return new Response(JSON.stringify({ error: 'Invalid email or password.' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -114,13 +134,40 @@ serve(async (req) => {
     const {
       firstName, lastName, email, phone, companyName,
       address1, address2, city, state, postcode, country,
-      productId, billingCycle, paymentMethod, password,
+      billingCycle, paymentMethod, password,
       razorpayPaymentId, razorpayOrderId,
-      totalAmount, domain, itemType, itemName,
+      totalAmount,
+      // items array: [{id, name, type, price, period}]
+      cartItems,
+      // Legacy single-item fields (backward compat)
+      productId, domain, itemType, itemName,
     } = body;
 
-    if (!firstName || !lastName || !email || !productId) {
-      return new Response(JSON.stringify({ error: 'Missing required fields: firstName, lastName, email, productId' }), {
+    if (!firstName || !lastName || !email) {
+      return new Response(JSON.stringify({ error: 'Missing required fields: firstName, lastName, email' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Build items list from cartItems or legacy single-item params
+    interface OrderItem {
+      id: string | number;
+      name: string;
+      type: string;
+      price: number;
+      period?: string;
+    }
+    
+    let orderItems: OrderItem[] = [];
+    if (cartItems && Array.isArray(cartItems) && cartItems.length > 0) {
+      orderItems = cartItems;
+    } else if (productId) {
+      orderItems = [{ id: productId, name: itemName || 'Service', type: itemType || 'hosting', price: totalAmount || 0 }];
+    }
+
+    if (orderItems.length === 0) {
+      return new Response(JSON.stringify({ error: 'No items in order' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -145,7 +192,7 @@ serve(async (req) => {
       password2: password || crypto.randomUUID().slice(0, 16),
     });
 
-    console.log('WHMCS AddClient response:', JSON.stringify(clientData).substring(0, 500));
+    console.log('AddClient response:', JSON.stringify(clientData).substring(0, 500));
 
     if (!clientData) {
       return new Response(JSON.stringify({ error: 'WHMCS returned an invalid response when creating client. Please try again.' }), {
@@ -159,17 +206,13 @@ serve(async (req) => {
     if (clientData.result === 'success') {
       clientId = clientData.clientid;
     } else if (clientData.message?.toLowerCase().includes('duplicate') || clientData.message?.toLowerCase().includes('already exists')) {
-      // Client exists, get their ID
       const existingData = await callMiddleware({
         action: 'GetClientsDetails',
         email: email,
       });
 
-      console.log('WHMCS GetClientsDetails response:', JSON.stringify(existingData).substring(0, 300));
-
       if (existingData?.result === 'success') {
         clientId = existingData.id || existingData.userid || existingData.client?.id;
-        // Update client details with latest info
         await callMiddleware({
           action: 'UpdateClient',
           clientid: String(clientId),
@@ -197,60 +240,66 @@ serve(async (req) => {
       });
     }
 
-    // Brief pause to avoid bot detection between API calls
     await sleep(1000);
 
-    // Step 2: Create the order in WHMCS
-    const isDomainOrder = itemType === 'domain';
-    const hostDomain = domain || `${firstName.toLowerCase().replace(/[^a-z]/g, '')}${clientId}.infinitivecloud.com`;
-
-    // Build order notes with item details
-    const orderNotes = [
-      `Item: ${itemName || (isDomainOrder ? hostDomain : 'Hosting Plan')}`,
-      `Type: ${isDomainOrder ? 'Domain Registration' : 'Hosting'}`,
-      `Billing: ${billingCycle || 'monthly'}`,
-      razorpayPaymentId ? `Razorpay Payment ID: ${razorpayPaymentId}` : '',
-      razorpayOrderId ? `Razorpay Order ID: ${razorpayOrderId}` : '',
-      totalAmount ? `Amount Paid: ₹${totalAmount}` : '',
-    ].filter(Boolean).join(' | ');
-
+    // Step 2: Build the AddOrder call with ALL items in a single order
     const orderParams: Record<string, string> = {
       action: 'AddOrder',
       clientid: String(clientId),
       paymentmethod: paymentMethod || 'razorpay',
-      notes: orderNotes,
     };
 
-    if (isDomainOrder) {
-      // Domain registration order
-      orderParams['domains[0]'] = hostDomain;
-      orderParams['domaintype[0]'] = 'register';
-      orderParams['regperiod[0]'] = body.regperiod ? String(body.regperiod) : '1';
-    } else {
-      // Hosting product order
-      orderParams['pid[0]'] = String(productId);
-      orderParams['domain[0]'] = hostDomain;
-      orderParams['billingcycle[0]'] = billingCycle || 'monthly';
+    let domainIndex = 0;
+    let productIndex = 0;
+
+    for (const item of orderItems) {
+      if (item.type === 'domain') {
+        // Domain registration
+        orderParams[`domains[${domainIndex}]`] = item.name;
+        orderParams[`domaintype[${domainIndex}]`] = 'register';
+        orderParams[`regperiod[${domainIndex}]`] = '1';
+        // Set domain price override so WHMCS records the correct amount
+        if (item.price && item.price > 0) {
+          orderParams[`domainpriceoverride[${domainIndex}]`] = String(item.price);
+        }
+        domainIndex++;
+      } else {
+        // Hosting/service product
+        const hostDomain = domain || `${firstName.toLowerCase().replace(/[^a-z]/g, '')}${clientId}.infinitivecloud.com`;
+        orderParams[`pid[${productIndex}]`] = String(item.id);
+        orderParams[`domain[${productIndex}]`] = hostDomain;
+        orderParams[`billingcycle[${productIndex}]`] = billingCycle || 'monthly';
+        // Set price override so WHMCS records the correct amount
+        if (item.price && item.price > 0) {
+          orderParams[`priceoverride[${productIndex}]`] = String(item.price);
+        }
+        productIndex++;
+      }
     }
 
-    let orderData = await callMiddleware(orderParams);
-    console.log('WHMCS AddOrder response:', JSON.stringify(orderData).substring(0, 500));
+    console.log('AddOrder params:', JSON.stringify(orderParams));
 
-    // If domain registration failed due to invalid TLD/period, retry with common periods
-    if (isDomainOrder && orderData?.result === 'error' && orderData?.message?.includes('Invalid TLD')) {
-      const fallbackPeriods = ['2', '3', '5'];
-      for (const period of fallbackPeriods) {
-        console.log(`Retrying domain order with regperiod=${period}`);
-        orderParams['regperiod[0]'] = period;
-        orderData = await callMiddleware(orderParams);
-        console.log(`WHMCS AddOrder (period=${period}) response:`, JSON.stringify(orderData).substring(0, 300));
-        if (orderData?.result === 'success') break;
+    // Use NO-RETRY for AddOrder to prevent duplicate orders
+    let orderData = await callMiddlewareNoRetry(orderParams);
+    console.log('AddOrder response:', JSON.stringify(orderData).substring(0, 500));
+
+    if (!orderData || orderData.result !== 'success') {
+      // If domain TLD error, try alternative reg periods (only once each, no retry)
+      if (domainIndex > 0 && orderData?.message?.includes('Invalid TLD')) {
+        for (const period of ['2', '3', '5']) {
+          for (let i = 0; i < domainIndex; i++) {
+            orderParams[`regperiod[${i}]`] = period;
+          }
+          orderData = await callMiddlewareNoRetry(orderParams);
+          console.log(`AddOrder (period=${period}) response:`, JSON.stringify(orderData).substring(0, 300));
+          if (orderData?.result === 'success') break;
+        }
       }
     }
 
     if (!orderData || orderData.result !== 'success') {
-      const userMessage = isDomainOrder && orderData?.message?.includes('Invalid TLD')
-        ? `The domain extension for "${hostDomain}" is not available for registration through our system. Please try a different extension like .com, .in, or .net.`
+      const userMessage = orderData?.message?.includes('Invalid TLD')
+        ? `The domain extension is not available for registration. Please try .com, .in, or .net.`
         : 'Failed to create order';
       return new Response(JSON.stringify({ error: userMessage, details: orderData }), {
         status: 500,
@@ -258,26 +307,33 @@ serve(async (req) => {
       });
     }
 
-    // Step 3: If Razorpay payment was successful, add payment and accept order
+    // Step 3: If Razorpay payment was successful, add payment to the invoice and accept order
     if (razorpayPaymentId && orderData.invoiceid) {
-      // Calculate amount in WHMCS currency (INR)
-      const paymentAmount = totalAmount ? String(totalAmount) : String(body.grandTotal || 0);
-      
+      const paymentAmount = totalAmount ? String(totalAmount) : '0';
+
       const paymentData = await callMiddleware({
         action: 'AddInvoicePayment',
         invoiceid: String(orderData.invoiceid),
         transid: razorpayPaymentId,
         gateway: 'razorpay',
         amount: paymentAmount,
-        date: new Date().toISOString().split('T')[0], // YYYY-MM-DD format
+        date: new Date().toISOString().split('T')[0],
       });
-      console.log('WHMCS AddInvoicePayment response:', JSON.stringify(paymentData).substring(0, 300));
+      console.log('AddInvoicePayment response:', JSON.stringify(paymentData).substring(0, 300));
 
+      // Accept the order to activate the service
       const acceptData = await callMiddleware({
         action: 'AcceptOrder',
         orderid: String(orderData.orderid),
       });
-      console.log('WHMCS AcceptOrder response:', JSON.stringify(acceptData).substring(0, 300));
+      console.log('AcceptOrder response:', JSON.stringify(acceptData).substring(0, 300));
+    } else if (razorpayPaymentId && !orderData.invoiceid) {
+      // No invoice was generated — still accept and log
+      console.log('No invoice ID returned from AddOrder, accepting order anyway');
+      await callMiddleware({
+        action: 'AcceptOrder',
+        orderid: String(orderData.orderid),
+      });
     }
 
     return new Response(JSON.stringify({
