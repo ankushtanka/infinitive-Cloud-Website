@@ -142,6 +142,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
             productId: primaryItem.id,
             billingCycle: "monthly",
             paymentMethod: "razorpay",
+            domain: data.hostingDomain || undefined,
             razorpayPaymentId,
             razorpayOrderId,
           }),
