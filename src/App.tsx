@@ -53,6 +53,8 @@ const EmailSecurity = lazy(() => import("./pages/solutions/EmailSecurity"));
 const LiveChat = lazy(() => import("./pages/LiveChat"));
 const Cart = lazy(() => import("./pages/Cart"));
 const OrderConfirmation = lazy(() => import("./pages/OrderConfirmation"));
+const DomainTransfer = lazy(() => import("./pages/DomainTransfer"));
+const DomainManagement = lazy(() => import("./pages/DomainManagement"));
 
 const queryClient = new QueryClient();
 
