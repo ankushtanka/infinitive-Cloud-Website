@@ -34,6 +34,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { useRazorpay } from "@/hooks/use-razorpay";
+import { supabase } from "@/integrations/supabase/client";
 
 const billingSchema = z.object({
   firstName: z.string().trim().min(1, "First name is required").max(50),
@@ -113,10 +114,51 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     },
   });
 
-  const navigateToConfirmation = (data: BillingFormData, paymentLabel: string, paymentId?: string) => {
+  const submitOrderToWhmcs = async (data: BillingFormData, razorpayPaymentId?: string, razorpayOrderId?: string) => {
+    const primaryItem = items[0];
+    if (!primaryItem || primaryItem.type === "domain") return null;
+
+    try {
+      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+      const res = await fetch(
+        `https://${projectId}.supabase.co/functions/v1/whmcs-create-order`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            phone: data.phone,
+            companyName: data.companyName,
+            address1: data.address1,
+            address2: data.address2,
+            city: data.city,
+            state: data.state,
+            postcode: data.postcode,
+            country: data.country,
+            productId: primaryItem.id,
+            billingCycle: "monthly",
+            paymentMethod: "razorpay",
+            razorpayPaymentId,
+            razorpayOrderId,
+          }),
+        }
+      );
+
+      const result = await res.json();
+      console.log("WHMCS order result:", result);
+      return result;
+    } catch (err) {
+      console.error("Failed to submit order to WHMCS:", err);
+      return null;
+    }
+  };
+
+  const navigateToConfirmation = (data: BillingFormData, paymentLabel: string, paymentId?: string, whmcsOrderId?: string) => {
     const gstAmt = Math.round(total * 0.18);
     const gt = total + gstAmt;
-    const orderId = paymentId || `IC-${Date.now().toString(36).toUpperCase()}`;
+    const orderId = whmcsOrderId || paymentId || `IC-${Date.now().toString(36).toUpperCase()}`;
     const primaryItem = items[0];
     const params = new URLSearchParams({
       id: orderId,
@@ -181,8 +223,16 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
           name: `${data.firstName} ${data.lastName}`,
           email: data.email,
           phone: data.phone,
-          onSuccess: (response) => {
-            navigateToConfirmation(data, "Razorpay", response.razorpay_payment_id);
+          onSuccess: async (response) => {
+            // Submit order to WHMCS with payment details
+            const whmcsResult = await submitOrderToWhmcs(data, response.razorpay_payment_id, response.razorpay_order_id);
+            setIsProcessing(false);
+            navigateToConfirmation(
+              data,
+              "Razorpay",
+              response.razorpay_payment_id,
+              whmcsResult?.orderId ? `WO-${whmcsResult.orderId}` : undefined
+            );
           },
           onFailure: (error) => {
             setIsProcessing(false);
