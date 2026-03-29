@@ -513,10 +513,10 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, onBack }: CheckoutFormProp
               <Button
                 type="submit"
                 className="w-full btn-gradient mt-5 h-12 text-base font-bold gap-2"
-                disabled={isSubmitting}
+                disabled={isSubmitting || isProcessing}
               >
                 <ShieldCheck className="w-5 h-5" />
-                Complete Order
+                {isProcessing ? "Processing Payment..." : paymentMethod === "razorpay" ? "Pay with Razorpay" : "Complete Order"}
               </Button>
 
               <div className="flex items-center justify-center gap-2 mt-4 text-xs text-muted-foreground">
