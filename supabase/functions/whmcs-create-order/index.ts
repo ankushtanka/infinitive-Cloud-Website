@@ -42,6 +42,7 @@ serve(async (req) => {
       address1, address2, city, state, postcode, country,
       productId, billingCycle, paymentMethod,
       razorpayPaymentId, razorpayOrderId,
+      totalAmount, domain, itemType, itemName,
     } = body;
 
     if (!firstName || !lastName || !email || !productId) {
@@ -94,6 +95,21 @@ serve(async (req) => {
 
       if (existingData?.result === 'success') {
         clientId = existingData.id || existingData.userid || existingData.client?.id;
+        // Update client details with latest info
+        await callMiddleware({
+          action: 'UpdateClient',
+          clientid: String(clientId),
+          firstname: firstName,
+          lastname: lastName,
+          phonenumber: phone || '',
+          companyname: companyName || '',
+          address1: address1 || '',
+          address2: address2 || '',
+          city: city || '',
+          state: state || '',
+          postcode: postcode || '',
+          country: country || 'IN',
+        });
       } else {
         return new Response(JSON.stringify({ error: 'Failed to find existing client', details: existingData }), {
           status: 500,
@@ -108,13 +124,24 @@ serve(async (req) => {
     }
 
     // Step 2: Create the order in WHMCS
-    const isDomainOrder = body.itemType === 'domain';
-    const hostDomain = body.domain || `${firstName.toLowerCase().replace(/[^a-z]/g, '')}${clientId}.infinitivecloud.com`;
+    const isDomainOrder = itemType === 'domain';
+    const hostDomain = domain || `${firstName.toLowerCase().replace(/[^a-z]/g, '')}${clientId}.infinitivecloud.com`;
+
+    // Build order notes with item details
+    const orderNotes = [
+      `Item: ${itemName || (isDomainOrder ? hostDomain : 'Hosting Plan')}`,
+      `Type: ${isDomainOrder ? 'Domain Registration' : 'Hosting'}`,
+      `Billing: ${billingCycle || 'monthly'}`,
+      razorpayPaymentId ? `Razorpay Payment ID: ${razorpayPaymentId}` : '',
+      razorpayOrderId ? `Razorpay Order ID: ${razorpayOrderId}` : '',
+      totalAmount ? `Amount Paid: ₹${totalAmount}` : '',
+    ].filter(Boolean).join(' | ');
 
     const orderParams: Record<string, string> = {
       action: 'AddOrder',
       clientid: String(clientId),
       paymentmethod: paymentMethod || 'razorpay',
+      notes: orderNotes,
     };
 
     if (isDomainOrder) {
@@ -156,11 +183,16 @@ serve(async (req) => {
 
     // Step 3: If Razorpay payment was successful, add payment and accept order
     if (razorpayPaymentId && orderData.invoiceid) {
+      // Calculate amount in WHMCS currency (INR)
+      const paymentAmount = totalAmount ? String(totalAmount) : String(body.grandTotal || 0);
+      
       const paymentData = await callMiddleware({
         action: 'AddInvoicePayment',
         invoiceid: String(orderData.invoiceid),
         transid: razorpayPaymentId,
         gateway: 'razorpay',
+        amount: paymentAmount,
+        date: new Date().toISOString().split('T')[0], // YYYY-MM-DD format
       });
       console.log('WHMCS AddInvoicePayment response:', JSON.stringify(paymentData).substring(0, 300));
 

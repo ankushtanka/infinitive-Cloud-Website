@@ -145,6 +145,8 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
             paymentMethod: "razorpay",
             domain: primaryItem.type === "domain" ? primaryItem.name : (data.hostingDomain || undefined),
             itemType: primaryItem.type,
+            itemName: primaryItem.name,
+            totalAmount: grandTotal,
             razorpayPaymentId,
             razorpayOrderId,
           }),
