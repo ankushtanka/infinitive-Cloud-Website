@@ -51,9 +51,9 @@ serve(async (req) => {
     const now = Date.now();
     const cacheKey = productIds.sort().join(',');
 
-    // Check cache
-    if (productsCache && now - productsCacheTime < PRODUCTS_CACHE_TTL && productsCache._key === cacheKey) {
-      return new Response(JSON.stringify(productsCache.data), {
+    // Check cache (skip if explicitly requested)
+    if (!skipCache && productsCache && now - productsCacheTime < PRODUCTS_CACHE_TTL && productsCache._key === cacheKey) {
+      return new Response(JSON.stringify({ ...productsCache.data, cached: true, version: cacheVersion }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
