@@ -256,6 +256,9 @@ const Cart = () => {
                     {items.map((item) => {
                       const displayPrice = getItemPrice(item);
                       const isAnnual = item.type !== "domain" && billingCycle === "annually";
+                      const savingsPercent = (item.type !== "domain" && item.annualPrice && item.annualPrice > 0 && item.price > 0)
+                        ? Math.round(100 - (item.annualPrice / (item.price * 12)) * 100)
+                        : 0;
                       return (
                         <Card key={item.id} className="overflow-hidden">
                           <CardContent className="p-5">
@@ -269,7 +272,14 @@ const Cart = () => {
                                   )}
                                 </div>
                                 <div>
-                                  <h3 className="font-bold text-foreground text-lg">{item.name}</h3>
+                                  <div className="flex items-center gap-2">
+                                    <h3 className="font-bold text-foreground text-lg">{item.name}</h3>
+                                    {isAnnual && savingsPercent > 0 && (
+                                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide bg-[hsl(200,80%,92%)] text-[hsl(200,80%,30%)] dark:bg-[hsl(200,60%,25%)] dark:text-[hsl(200,80%,85%)] shadow-md">
+                                        Save {savingsPercent}%
+                                      </span>
+                                    )}
+                                  </div>
                                   <div className="flex items-center gap-2 mt-1">
                                     <Badge variant="secondary" className="text-xs">{item.label}</Badge>
                                     <span className="text-xs text-muted-foreground">{isAnnual ? "1 Year" : item.period}</span>
@@ -284,11 +294,11 @@ const Cart = () => {
                                       {item.type === "domain" ? "/yr" : isAnnual ? "/yr" : "/mo"}
                                     </span>
                                   </span>
+                                  {isAnnual && item.price > 0 && (
+                                    <p className="text-xs text-muted-foreground line-through">₹{(item.price * 12).toLocaleString("en-IN")}/yr</p>
+                                  )}
                                   {!isAnnual && item.annualPrice && item.annualPrice > 0 && (
                                     <p className="text-xs text-muted-foreground">or ₹{item.annualPrice.toLocaleString("en-IN")}/yr</p>
-                                  )}
-                                  {isAnnual && item.price > 0 && (
-                                    <p className="text-xs text-muted-foreground">or ₹{item.price.toLocaleString("en-IN")}/mo</p>
                                   )}
                                 </div>
                                 <Button
