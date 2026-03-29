@@ -526,7 +526,7 @@ const Pricing = () => {
                     ))}
                   </ul>
 
-                  <Link to={category.id === "web-hosting" ? (sharedHostingRouteMap[plan.name] || "/solutions/shared-hosting") : "/contact"}>
+                  <Link to={currentCategory.id === "web-hosting" ? (sharedHostingRouteMap[plan.name] || "/solutions/shared-hosting") : "/contact"}>
                     <Button
                       className={`w-full ${plan.popular ? "btn-gradient" : ""}`}
                       variant={plan.popular ? "default" : "outline"}
