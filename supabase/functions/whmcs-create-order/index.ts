@@ -104,16 +104,28 @@ serve(async (req) => {
     }
 
     // Step 2: Create the order in WHMCS
+    const isDomainOrder = body.itemType === 'domain';
     const hostDomain = body.domain || `${firstName.toLowerCase().replace(/[^a-z]/g, '')}${clientId}.infinitivecloud.com`;
 
-    const orderData = await callMiddleware({
+    const orderParams: Record<string, string> = {
       action: 'AddOrder',
       clientid: String(clientId),
-      'pid[0]': String(productId),
-      'domain[0]': hostDomain,
-      'billingcycle[0]': billingCycle || 'monthly',
       paymentmethod: paymentMethod || 'razorpay',
-    });
+    };
+
+    if (isDomainOrder) {
+      // Domain registration order
+      orderParams['domains[0]'] = hostDomain;
+      orderParams['domaintype[0]'] = 'register';
+      orderParams['regperiod[0]'] = '1';
+    } else {
+      // Hosting product order
+      orderParams['pid[0]'] = String(productId);
+      orderParams['domain[0]'] = hostDomain;
+      orderParams['billingcycle[0]'] = billingCycle || 'monthly';
+    }
+
+    const orderData = await callMiddleware(orderParams);
 
     console.log('WHMCS AddOrder response:', JSON.stringify(orderData).substring(0, 500));
 

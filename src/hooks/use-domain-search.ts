@@ -91,12 +91,25 @@ export function useDomainSearch() {
         setSuggestions(initialResponse.data?.suggestions || []);
       }
 
-      // Then replace with full results when ready
+      // Merge full results with initial (dedup by domain, full takes priority)
       const fullResponse = await fullPromise;
       if (activeSearchIdRef.current !== searchId) return;
       if (!fullResponse.error) {
-        setResults(fullResponse.data?.results || []);
-        setSuggestions(fullResponse.data?.suggestions || []);
+        const fullResults: DomainResult[] = fullResponse.data?.results || [];
+        const fullSuggestions: DomainResult[] = fullResponse.data?.suggestions || [];
+        
+        setResults((prev) => {
+          const merged = new Map<string, DomainResult>();
+          prev.forEach((r) => merged.set(r.domain, r));
+          fullResults.forEach((r) => merged.set(r.domain, r));
+          return Array.from(merged.values());
+        });
+        setSuggestions((prev) => {
+          const merged = new Map<string, DomainResult>();
+          prev.forEach((r) => merged.set(r.domain, r));
+          fullSuggestions.forEach((r) => merged.set(r.domain, r));
+          return Array.from(merged.values());
+        });
       }
     } catch (err) {
       console.error("Domain search failed:", err);

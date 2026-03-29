@@ -119,7 +119,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
 
   const submitOrderToWhmcs = async (data: BillingFormData, razorpayPaymentId?: string, razorpayOrderId?: string) => {
     const primaryItem = items[0];
-    if (!primaryItem || primaryItem.type === "domain") return null;
+    if (!primaryItem) return null;
 
     try {
       const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
@@ -143,7 +143,8 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
             productId: primaryItem.id,
             billingCycle: billingCycle,
             paymentMethod: "razorpay",
-            domain: data.hostingDomain || undefined,
+            domain: primaryItem.type === "domain" ? primaryItem.name : (data.hostingDomain || undefined),
+            itemType: primaryItem.type,
             razorpayPaymentId,
             razorpayOrderId,
           }),

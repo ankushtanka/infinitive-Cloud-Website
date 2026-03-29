@@ -100,7 +100,7 @@ const AvailableCard = ({
         </div>
         <Button
           className="w-full btn-gradient font-bold text-sm h-10 gap-2 rounded-lg"
-          onClick={() => window.location.href = `${CART_PAGE}?domain=${encodeURIComponent(r.domain)}`}
+          onClick={() => window.location.href = `${CART_PAGE}?domain=${encodeURIComponent(r.domain)}&price=${r.price || ''}&renewPrice=${r.renewPrice || ''}`}
         >
           <ShoppingCart className="w-4 h-4" />
           Buy Now
@@ -153,7 +153,7 @@ const TakenRow = ({
             size="sm"
             variant="outline"
             className="text-xs h-7 px-3 border-primary/20 hover:bg-primary hover:text-primary-foreground gap-1 rounded-lg"
-            onClick={() => window.location.href = `${CART_PAGE}?domain=${encodeURIComponent(alternative.domain)}`}
+            onClick={() => window.location.href = `${CART_PAGE}?domain=${encodeURIComponent(alternative.domain)}&price=${alternative.price || ''}&renewPrice=${alternative.renewPrice || ''}`}
           >
             Register
             <ArrowRight className="w-3 h-3" />
