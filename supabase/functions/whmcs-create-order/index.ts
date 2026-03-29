@@ -72,11 +72,31 @@ serve(async (req) => {
           action: 'GetClientsDetails',
           clientid: String(loginResult.userid),
         });
+
+        // Get client domains
+        const domainsResult = await callMiddleware({
+          action: 'GetClientsDomains',
+          clientid: String(loginResult.userid),
+          limitnum: '100',
+        });
+
+        const domainsList = domainsResult?.domains?.domain || [];
+        const domainsArray = Array.isArray(domainsList) ? domainsList : (domainsList ? [domainsList] : []);
+
         return new Response(JSON.stringify({
           clientId: loginResult.userid,
           firstName: clientDetails?.firstname || '',
           lastName: clientDetails?.lastname || '',
           email: clientDetails?.email || body.email,
+          phone: clientDetails?.phonenumber || '',
+          companyName: clientDetails?.companyname || '',
+          address1: clientDetails?.address1 || '',
+          address2: clientDetails?.address2 || '',
+          city: clientDetails?.city || '',
+          state: clientDetails?.state || '',
+          postcode: clientDetails?.postcode || '',
+          country: clientDetails?.country || 'IN',
+          domains: domainsArray,
         }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
