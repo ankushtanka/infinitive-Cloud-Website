@@ -154,7 +154,13 @@ async function callMiddlewareNoRetry(params: Record<string, string>): Promise<an
     });
     const text = await res.text();
     console.log(`Middleware response for ${params.action}: status=${res.status}, len=${text.length}`);
-    try { return JSON.parse(text); } catch { return null; }
+    if (res.status >= 400) {
+      console.error(`Middleware ${params.action} error body:`, text.substring(0, 500));
+    }
+    try { return JSON.parse(text); } catch {
+      console.error(`Non-JSON for ${params.action}:`, text.substring(0, 400));
+      return null;
+    }
   } catch (err) {
     console.error(`Fetch error for ${params.action}:`, err.message);
     return null;
