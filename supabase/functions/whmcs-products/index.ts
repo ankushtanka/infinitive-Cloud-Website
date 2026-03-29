@@ -7,10 +7,11 @@ const corsHeaders = {
 
 const MIDDLEWARE_URL = 'https://client.infinitivecloud.com/middleware/domainMiddleware.php';
 
-// Cache products for 10 minutes
+// Cache products for 60 seconds (short TTL for near-instant sync)
 let productsCache: Record<string, any> | null = null;
 let productsCacheTime = 0;
-const PRODUCTS_CACHE_TTL = 10 * 60 * 1000;
+const PRODUCTS_CACHE_TTL = 60 * 1000;
+let cacheVersion = 0;
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
