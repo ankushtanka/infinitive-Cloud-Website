@@ -317,10 +317,11 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
             password: data.password,
           }),
         }
-      );
-      const result = await res.json();
+        );
+        
+        const result = await res.json().catch(() => ({ error: "Invalid response from server" }));
 
-      if (result.clientId) {
+        if (res.ok && result.clientId) {
         setLoggedInUser({
           email: data.email,
           firstName: result.firstName || data.email.split("@")[0],
