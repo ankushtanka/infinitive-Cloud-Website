@@ -21,11 +21,27 @@ import CheckoutForm from "@/components/cart/CheckoutForm";
 
 const Cart = () => {
   const [searchParams] = useSearchParams();
-  const domain = searchParams.get("domain") || "example.com";
+  const domain = searchParams.get("domain") || "";
+  const productId = searchParams.get("product");
+  const productName = searchParams.get("name");
+  const productType = searchParams.get("type");
   const [step, setStep] = useState<"cart" | "checkout">("cart");
-  const [items, setItems] = useState([
-    { id: 1, type: "domain", name: domain, period: "1 Year", price: 799 },
-  ]);
+
+  const getInitialItems = () => {
+    if (productType && productType !== "domain" && productId && productName) {
+      return [
+        { id: Number(productId), type: productType, name: productName, period: "1 Month", price: 0, label: "Hosting Plan" },
+      ];
+    }
+    if (domain) {
+      return [
+        { id: 1, type: "domain", name: domain, period: "1 Year", price: 799, label: "Domain Registration" },
+      ];
+    }
+    return [];
+  };
+
+  const [items, setItems] = useState(getInitialItems);
 
   const addons = [
     { id: "ssl", icon: Shield, name: "SSL Certificate", desc: "Secure your website with HTTPS", price: 499 },
@@ -121,13 +137,21 @@ const Cart = () => {
                     <CardContent className="p-12 text-center">
                       <ShoppingCart className="w-12 h-12 text-muted-foreground/40 mx-auto mb-4" />
                       <h3 className="text-lg font-semibold text-foreground mb-2">Your cart is empty</h3>
-                      <p className="text-muted-foreground mb-6">Search for a domain to get started</p>
-                      <Link to="/solutions/domains">
-                        <Button className="btn-gradient">
-                          <Globe className="w-4 h-4 mr-2" />
-                          Search Domains
-                        </Button>
-                      </Link>
+                       <p className="text-muted-foreground mb-6">Browse our hosting plans or search for a domain to get started</p>
+                      <div className="flex gap-3 justify-center flex-wrap">
+                        <Link to="/solutions/shared-hosting">
+                          <Button className="btn-gradient">
+                            <Server className="w-4 h-4 mr-2" />
+                            Browse Hosting
+                          </Button>
+                        </Link>
+                        <Link to="/solutions/domains">
+                          <Button variant="outline">
+                            <Globe className="w-4 h-4 mr-2" />
+                            Search Domains
+                          </Button>
+                        </Link>
+                      </div>
                     </CardContent>
                   </Card>
                 ) : (
@@ -138,20 +162,26 @@ const Cart = () => {
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
                               <div className="p-2.5 rounded-lg bg-primary/10">
-                                <Globe className="w-5 h-5 text-primary" />
+                                {item.type === "domain" ? (
+                                  <Globe className="w-5 h-5 text-primary" />
+                                ) : (
+                                  <Server className="w-5 h-5 text-primary" />
+                                )}
                               </div>
                               <div>
                                 <h3 className="font-bold text-foreground text-lg">{item.name}</h3>
                                 <div className="flex items-center gap-2 mt-1">
-                                  <Badge variant="secondary" className="text-xs">Domain Registration</Badge>
+                                  <Badge variant="secondary" className="text-xs">{item.label}</Badge>
                                   <span className="text-xs text-muted-foreground">{item.period}</span>
                                 </div>
                               </div>
                             </div>
                             <div className="flex items-center gap-4">
-                              <span className="text-xl font-bold text-foreground">
-                                ₹{item.price.toLocaleString("en-IN")}
-                              </span>
+                              {item.price > 0 && (
+                                <span className="text-xl font-bold text-foreground">
+                                  ₹{item.price.toLocaleString("en-IN")}
+                                </span>
+                              )}
                               <Button
                                 variant="ghost"
                                 size="icon"
