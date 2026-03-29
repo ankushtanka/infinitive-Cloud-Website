@@ -16,8 +16,12 @@ import {
   CreditCard,
   Lock,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CheckoutForm from "@/components/cart/CheckoutForm";
+import { useWhmcsProducts } from "@/hooks/use-whmcs-products";
+import { Loader2 } from "lucide-react";
+
+const HOSTING_PIDS = [1, 2, 3];
 
 const Cart = () => {
   const [searchParams] = useSearchParams();
@@ -27,12 +31,15 @@ const Cart = () => {
   const productType = searchParams.get("type");
   const [step, setStep] = useState<"cart" | "checkout">("cart");
 
-  const getInitialItems = () => {
-    if (productType && productType !== "domain" && productId && productName) {
-      return [
-        { id: Number(productId), type: productType, name: productName, period: "1 Month", price: 0, label: "Hosting Plan" },
-      ];
-    }
+  const isHostingProduct = productType && productType !== "domain" && productId;
+  const { products, loading: whmcsLoading } = useWhmcsProducts(
+    isHostingProduct ? [Number(productId)] : []
+  );
+
+  const getInitialItems = (): Array<{
+    id: number; type: string; name: string; period: string; price: number;
+    label: string; annualPrice?: number; features?: string[];
+  }> => {
     if (domain) {
       return [
         { id: 1, type: "domain", name: domain, period: "1 Year", price: 799, label: "Domain Registration" },
@@ -42,6 +49,39 @@ const Cart = () => {
   };
 
   const [items, setItems] = useState(getInitialItems);
+
+  // Update items when WHMCS product data loads
+  useEffect(() => {
+    if (isHostingProduct && products.length > 0) {
+      const product = products[0];
+      const inr = product.pricing?.INR;
+      const monthlyPrice = inr ? parseFloat(inr.monthly) : 0;
+      const annualPrice = inr ? parseFloat(inr.annually) : 0;
+
+      setItems([{
+        id: product.pid,
+        type: productType!,
+        name: product.name || productName || "Hosting Plan",
+        period: "1 Month",
+        price: monthlyPrice,
+        annualPrice,
+        label: "Shared Hosting",
+        features: product.features || [],
+      }]);
+    } else if (isHostingProduct && !whmcsLoading && products.length === 0 && productName) {
+      // Fallback if WHMCS fails
+      setItems([{
+        id: Number(productId),
+        type: productType!,
+        name: productName,
+        period: "1 Month",
+        price: 0,
+        annualPrice: 0,
+        label: "Shared Hosting",
+        features: [],
+      }]);
+    }
+  }, [products, whmcsLoading]);
 
   const addons = [
     { id: "ssl", icon: Shield, name: "SSL Certificate", desc: "Secure your website with HTTPS", price: 499 },
@@ -131,8 +171,15 @@ const Cart = () => {
           ) : (
             <div className="grid lg:grid-cols-3 gap-8">
               {/* Cart Items */}
-              <div className="lg:col-span-2 space-y-4">
-                {items.length === 0 ? (
+               <div className="lg:col-span-2 space-y-4">
+                {whmcsLoading && isHostingProduct ? (
+                  <Card>
+                    <CardContent className="p-12 text-center">
+                      <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-3" />
+                      <p className="text-muted-foreground">Loading product details...</p>
+                    </CardContent>
+                  </Card>
+                ) : items.length === 0 ? (
                   <Card className="border-dashed">
                     <CardContent className="p-12 text-center">
                       <ShoppingCart className="w-12 h-12 text-muted-foreground/40 mx-auto mb-4" />
@@ -177,11 +224,15 @@ const Cart = () => {
                               </div>
                             </div>
                             <div className="flex items-center gap-4">
-                              {item.price > 0 && (
+                              <div className="text-right">
                                 <span className="text-xl font-bold text-foreground">
                                   ₹{item.price.toLocaleString("en-IN")}
+                                  <span className="text-sm text-muted-foreground font-normal">/mo</span>
                                 </span>
-                              )}
+                                {item.annualPrice && item.annualPrice > 0 && (
+                                  <p className="text-xs text-muted-foreground">or ₹{item.annualPrice.toLocaleString("en-IN")}/yr</p>
+                                )}
+                              </div>
                               <Button
                                 variant="ghost"
                                 size="icon"
@@ -192,6 +243,19 @@ const Cart = () => {
                               </Button>
                             </div>
                           </div>
+                          {/* Show features for hosting products */}
+                          {item.features && item.features.length > 0 && (
+                            <div className="mt-4 pt-4 border-t border-border">
+                              <div className="grid grid-cols-2 gap-2">
+                                {item.features.map((f, idx) => (
+                                  <div key={idx} className="flex items-center gap-2 text-sm text-muted-foreground">
+                                    <CheckCircle2 className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+                                    <span>{f}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </CardContent>
                       </Card>
                     ))}
