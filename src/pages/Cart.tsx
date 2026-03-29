@@ -393,6 +393,19 @@ const Cart = () => {
                             </div>
                           ))}
                       </div>
+                      {billingCycle === "annually" && (() => {
+                        const totalSaved = items.reduce((sum, item) => {
+                          if (item.type === "domain" || !item.annualPrice || !item.price) return sum;
+                          return sum + (item.price * 12 - item.annualPrice);
+                        }, 0);
+                        return totalSaved > 0 ? (
+                          <div className="mt-3 p-2.5 rounded-lg bg-[hsl(200,80%,92%)] dark:bg-[hsl(200,60%,25%)] text-center">
+                            <span className="text-xs font-bold text-[hsl(200,80%,30%)] dark:text-[hsl(200,80%,85%)]">
+                              🎉 You save ₹{totalSaved.toLocaleString("en-IN")}/yr with annual billing
+                            </span>
+                          </div>
+                        ) : null;
+                      })()}
                       <div className="border-t border-border mt-4 pt-4">
                         <div className="flex justify-between items-center">
                           <span className="text-lg font-bold text-foreground">Total</span>
