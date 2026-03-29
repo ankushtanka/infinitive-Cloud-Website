@@ -34,6 +34,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { useRazorpay } from "@/hooks/use-razorpay";
+import { supabase } from "@/integrations/supabase/client";
 
 const billingSchema = z.object({
   firstName: z.string().trim().min(1, "First name is required").max(50),
