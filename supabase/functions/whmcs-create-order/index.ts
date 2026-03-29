@@ -124,13 +124,24 @@ serve(async (req) => {
     }
 
     // Step 2: Create the order in WHMCS
-    const isDomainOrder = body.itemType === 'domain';
-    const hostDomain = body.domain || `${firstName.toLowerCase().replace(/[^a-z]/g, '')}${clientId}.infinitivecloud.com`;
+    const isDomainOrder = itemType === 'domain';
+    const hostDomain = domain || `${firstName.toLowerCase().replace(/[^a-z]/g, '')}${clientId}.infinitivecloud.com`;
+
+    // Build order notes with item details
+    const orderNotes = [
+      `Item: ${itemName || (isDomainOrder ? hostDomain : 'Hosting Plan')}`,
+      `Type: ${isDomainOrder ? 'Domain Registration' : 'Hosting'}`,
+      `Billing: ${billingCycle || 'monthly'}`,
+      razorpayPaymentId ? `Razorpay Payment ID: ${razorpayPaymentId}` : '',
+      razorpayOrderId ? `Razorpay Order ID: ${razorpayOrderId}` : '',
+      totalAmount ? `Amount Paid: ₹${totalAmount}` : '',
+    ].filter(Boolean).join(' | ');
 
     const orderParams: Record<string, string> = {
       action: 'AddOrder',
       clientid: String(clientId),
       paymentmethod: paymentMethod || 'razorpay',
+      notes: orderNotes,
     };
 
     if (isDomainOrder) {
