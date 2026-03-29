@@ -16,8 +16,12 @@ import {
   CreditCard,
   Lock,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CheckoutForm from "@/components/cart/CheckoutForm";
+import { useWhmcsProducts } from "@/hooks/use-whmcs-products";
+import { Loader2 } from "lucide-react";
+
+const HOSTING_PIDS = [1, 2, 3];
 
 const Cart = () => {
   const [searchParams] = useSearchParams();
@@ -27,12 +31,12 @@ const Cart = () => {
   const productType = searchParams.get("type");
   const [step, setStep] = useState<"cart" | "checkout">("cart");
 
+  const isHostingProduct = productType && productType !== "domain" && productId;
+  const { products, loading: whmcsLoading } = useWhmcsProducts(
+    isHostingProduct ? [Number(productId)] : []
+  );
+
   const getInitialItems = () => {
-    if (productType && productType !== "domain" && productId && productName) {
-      return [
-        { id: Number(productId), type: productType, name: productName, period: "1 Month", price: 0, label: "Hosting Plan" },
-      ];
-    }
     if (domain) {
       return [
         { id: 1, type: "domain", name: domain, period: "1 Year", price: 799, label: "Domain Registration" },
@@ -42,6 +46,39 @@ const Cart = () => {
   };
 
   const [items, setItems] = useState(getInitialItems);
+
+  // Update items when WHMCS product data loads
+  useEffect(() => {
+    if (isHostingProduct && products.length > 0) {
+      const product = products[0];
+      const inr = product.pricing?.INR;
+      const monthlyPrice = inr ? parseFloat(inr.monthly) : 0;
+      const annualPrice = inr ? parseFloat(inr.annually) : 0;
+
+      setItems([{
+        id: product.pid,
+        type: productType!,
+        name: product.name || productName || "Hosting Plan",
+        period: "1 Month",
+        price: monthlyPrice,
+        annualPrice,
+        label: "Shared Hosting",
+        features: product.features || [],
+      }]);
+    } else if (isHostingProduct && !whmcsLoading && products.length === 0 && productName) {
+      // Fallback if WHMCS fails
+      setItems([{
+        id: Number(productId),
+        type: productType!,
+        name: productName,
+        period: "1 Month",
+        price: 0,
+        annualPrice: 0,
+        label: "Shared Hosting",
+        features: [],
+      }]);
+    }
+  }, [products, whmcsLoading]);
 
   const addons = [
     { id: "ssl", icon: Shield, name: "SSL Certificate", desc: "Secure your website with HTTPS", price: 499 },
