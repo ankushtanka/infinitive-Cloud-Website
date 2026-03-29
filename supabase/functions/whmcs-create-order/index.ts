@@ -99,12 +99,10 @@ serve(async (req) => {
     }
 
     // Step 2: Create the order in WHMCS
-    // Generate a username from first+last name (max 8 chars, lowercase, alphanumeric)
-    const rawUsername = (firstName.slice(0, 4) + lastName.slice(0, 4)).toLowerCase().replace(/[^a-z0-9]/g, '');
-    const username = rawUsername + Math.floor(Math.random() * 100);
-    const hostDomain = body.domain || `${rawUsername}.infinitivecloud.com`;
+    // cPanel module requires a domain to provision the account
+    const hostDomain = body.domain || `${firstName.toLowerCase().replace(/[^a-z]/g, '')}${clientId}.infinitivecloud.com`;
 
-    const addOrderUrl = `${MIDDLEWARE_URL}?action=AddOrder&clientid=${clientId}&pid[0]=${productId}&billingcycle[0]=${encodeURIComponent(billingCycle || 'monthly')}&paymentmethod=${encodeURIComponent(paymentMethod || 'razorpay')}&domain[0]=${encodeURIComponent(hostDomain)}&customfields[0][username]=${encodeURIComponent(username)}`;
+    const addOrderUrl = `${MIDDLEWARE_URL}?action=AddOrder&clientid=${clientId}&pid[0]=${productId}&domain[0]=${encodeURIComponent(hostDomain)}&billingcycle[0]=${encodeURIComponent(billingCycle || 'monthly')}&paymentmethod=${encodeURIComponent(paymentMethod || 'razorpay')}`;
 
     console.log('Creating WHMCS order for client:', clientId, 'product:', productId);
 
