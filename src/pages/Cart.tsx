@@ -268,9 +268,10 @@ const Cart = () => {
                               </div>
                             </div>
                           )}
-                        </CardContent>
+                         </CardContent>
                       </Card>
-                    ))}
+                      );
+                    })}
 
                     {/* Recommended Add-ons */}
                     <div className="mt-8">
