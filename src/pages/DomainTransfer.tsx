@@ -62,7 +62,7 @@ const DomainTransfer = () => {
           <Navigation />
           <main className="pt-28 pb-20">
             <div className="section-container max-w-2xl mx-auto text-center">
-              <CheckCircle className="w-20 h-20 text-green-500 mx-auto mb-6" />
+              <CheckCircle className="w-20 h-20 text-primary mx-auto mb-6" />
               <h1 className="text-3xl font-bold mb-4">Transfer Initiated Successfully!</h1>
               <p className="text-muted-foreground mb-2">
                 Your domain <strong>{form.domain}</strong> transfer has been submitted.
