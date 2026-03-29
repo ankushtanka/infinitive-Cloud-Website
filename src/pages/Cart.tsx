@@ -179,7 +179,15 @@ const Cart = () => {
             ))}
           </div>
 
+          <AnimatePresence mode="wait">
           {step === "checkout" ? (
+            <motion.div
+              key="checkout"
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -30 }}
+              transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+            >
             <CheckoutForm
               subtotal={subtotal}
               addonsTotal={addonsTotal}
