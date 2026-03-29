@@ -467,6 +467,21 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
                     {...register("gstNumber")}
                   />
                 </div>
+                {items.some(i => i.type !== "domain") && (
+                  <div className="space-y-2 sm:col-span-2">
+                    <Label htmlFor="hostingDomain">Domain for Hosting <span className="text-muted-foreground text-xs">(Optional - your website domain)</span></Label>
+                    <div className="relative">
+                      <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Input
+                        id="hostingDomain"
+                        placeholder="example.com"
+                        className="pl-10"
+                        {...register("hostingDomain")}
+                      />
+                    </div>
+                    <p className="text-[11px] text-muted-foreground">Enter the domain you want to host. Leave blank to set up later.</p>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
