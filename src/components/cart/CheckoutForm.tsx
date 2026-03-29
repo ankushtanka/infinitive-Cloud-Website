@@ -52,10 +52,30 @@ const billingSchema = z.object({
 
 type BillingFormData = z.infer<typeof billingSchema>;
 
+interface CheckoutItem {
+  id: number;
+  type: string;
+  name: string;
+  period: string;
+  price: number;
+  label: string;
+  annualPrice?: number;
+  features?: string[];
+}
+
+interface CheckoutAddon {
+  id: string;
+  name: string;
+  price: number;
+  period?: string;
+}
+
 interface CheckoutFormProps {
   subtotal: number;
   addonsTotal: number;
   total: number;
+  items: CheckoutItem[];
+  selectedAddons: CheckoutAddon[];
   onBack: () => void;
 }
 
@@ -68,7 +88,7 @@ const indianStates = [
   "Delhi", "Jammu and Kashmir", "Ladakh",
 ];
 
-const CheckoutForm = ({ subtotal, addonsTotal, total, onBack }: CheckoutFormProps) => {
+const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onBack }: CheckoutFormProps) => {
   const navigate = useNavigate();
   const { createOrder, openCheckout } = useRazorpay();
   const [paymentMethod, setPaymentMethod] = useState("razorpay");
@@ -97,14 +117,44 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, onBack }: CheckoutFormProp
     const gstAmt = Math.round(total * 0.18);
     const gt = total + gstAmt;
     const orderId = paymentId || `IC-${Date.now().toString(36).toUpperCase()}`;
+    const primaryItem = items[0];
     const params = new URLSearchParams({
       id: orderId,
-      domain: new URLSearchParams(window.location.search).get("domain") || "example.com",
       total: gt.toString(),
       name: `${data.firstName} ${data.lastName}`,
       email: data.email,
       payment: paymentLabel,
+      subtotal: subtotal.toString(),
+      gst: gstAmt.toString(),
+      itemName: primaryItem?.name || "Service",
+      itemType: primaryItem?.type || "service",
+      itemLabel: primaryItem?.label || "Service",
+      itemPeriod: primaryItem?.period || "1 Month",
     });
+
+    if (primaryItem) {
+      params.set("itemPrice", primaryItem.price.toString());
+    }
+
+    if (selectedAddons.length > 0) {
+      params.set(
+        "addons",
+        JSON.stringify(
+          selectedAddons.map((addon) => ({
+            name: addon.name,
+            price: addon.price,
+            period: addon.period || (addon.name.toLowerCase().includes("hosting") ? "/mo" : "/yr"),
+          }))
+        )
+      );
+    }
+
+    if (primaryItem?.type === "domain") {
+      params.set("domain", primaryItem.name);
+    } else {
+      params.set("product", primaryItem?.name || "Hosting Plan");
+    }
+
     navigate(`/order-confirmation?${params.toString()}`);
   };
 

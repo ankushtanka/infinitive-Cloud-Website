@@ -6,11 +6,19 @@ export interface InvoiceData {
   date: string;
   name: string;
   email: string;
-  domain: string;
+  itemName: string;
+  itemType: string;
+  itemLabel: string;
+  itemPeriod: string;
   subtotal: number;
   gst: number;
   total: number;
   paymentMethod: string;
+  addons?: Array<{
+    name: string;
+    price: number;
+    period?: string;
+  }>;
 }
 
 export async function generateInvoicePdf(data: InvoiceData) {
@@ -97,16 +105,34 @@ export async function generateInvoicePdf(data: InvoiceData) {
   doc.setTextColor(dark[0], dark[1], dark[2]);
   doc.setFontSize(10);
   doc.setFont("helvetica", "bold");
-  doc.text(`Domain: ${data.domain}`, margin + 4, y + 4);
+  doc.text(data.itemName, margin + 4, y + 4);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
   doc.setTextColor(muted[0], muted[1], muted[2]);
-  doc.text("Domain Registration", margin + 4, y + 10);
+  doc.text(data.itemLabel, margin + 4, y + 10);
   doc.setTextColor(dark[0], dark[1], dark[2]);
   doc.setFontSize(10);
-  doc.text("1 Year", margin + 90, y + 4);
+  doc.text(data.itemPeriod, margin + 90, y + 4);
   doc.text(`₹${data.subtotal.toLocaleString("en-IN")}`, pageW - margin - 4, y + 4, { align: "right" });
   y += 16;
+
+  if (data.addons?.length) {
+    data.addons.forEach((addon) => {
+      doc.setTextColor(dark[0], dark[1], dark[2]);
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "bold");
+      doc.text(addon.name, margin + 4, y + 4);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.setTextColor(muted[0], muted[1], muted[2]);
+      doc.text("Add-on", margin + 4, y + 10);
+      doc.setTextColor(dark[0], dark[1], dark[2]);
+      doc.setFontSize(10);
+      doc.text(addon.period || "—", margin + 90, y + 4);
+      doc.text(`₹${addon.price.toLocaleString("en-IN")}`, pageW - margin - 4, y + 4, { align: "right" });
+      y += 16;
+    });
+  }
 
   // Separator
   doc.setDrawColor(line[0], line[1], line[2]);
