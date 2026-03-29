@@ -226,15 +226,14 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
           name: `${data.firstName} ${data.lastName}`,
           email: data.email,
           phone: data.phone,
-          onSuccess: async (response) => {
-            // Submit order to WHMCS with payment details
-            const whmcsResult = await submitOrderToWhmcs(data, response.razorpay_payment_id, response.razorpay_order_id);
+          onSuccess: (response) => {
             setIsProcessing(false);
+            // Fire-and-forget: submit to WHMCS in background, don't block the user
+            submitOrderToWhmcs(data, response.razorpay_payment_id, response.razorpay_order_id);
             navigateToConfirmation(
               data,
               "Razorpay",
-              response.razorpay_payment_id,
-              whmcsResult?.orderId ? `WO-${whmcsResult.orderId}` : undefined
+              response.razorpay_payment_id
             );
           },
           onFailure: (error) => {
