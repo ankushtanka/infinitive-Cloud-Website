@@ -100,7 +100,7 @@ serve(async (req) => {
     // Filter by requested productIds
     const filteredProducts = productList.filter((p: any) => productIds.includes(Number(p.pid)));
 
-    const parsed = productList.map((p: any) => ({
+    const parsed = filteredProducts.map((p: any) => ({
       pid: p.pid,
       name: p.name,
       description: p.description || '',
