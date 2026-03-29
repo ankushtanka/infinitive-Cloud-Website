@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -6,8 +7,95 @@ const corsHeaders = {
 };
 
 const MIDDLEWARE_URL = 'https://client.infinitivecloud.com/middleware/domainMiddleware.php';
+const processedPayments = new Map<string, { timestamp: number; response: any }>();
+const PROCESSED_PAYMENT_TTL = 10 * 60 * 1000;
+
+function getAdminClient() {
+  const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
+  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+  return createClient(supabaseUrl, serviceRoleKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+}
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
+
+function cleanProcessedPayments() {
+  const now = Date.now();
+  for (const [key, value] of processedPayments.entries()) {
+    if (now - value.timestamp > PROCESSED_PAYMENT_TTL) {
+      processedPayments.delete(key);
+    }
+  }
+}
+
+function parseBillingCycle(period?: string, fallback = 'monthly') {
+  const normalized = (period || fallback || '').toLowerCase();
+  if (normalized.includes('year') || normalized.includes('annual')) return 'annually';
+  if (normalized.includes('quarter')) return 'quarterly';
+  if (normalized.includes('semi')) return 'semiannually';
+  if (normalized.includes('bienn')) return 'biennially';
+  if (normalized.includes('trienn')) return 'triennially';
+  return 'monthly';
+}
+
+function parseDomainRegPeriod(period?: string) {
+  const matched = `${period || ''}`.match(/\d+/);
+  const parsed = matched ? Number(matched[0]) : 1;
+  return Number.isFinite(parsed) && parsed > 0 ? String(parsed) : '1';
+}
+
+function getOrderSummary(orderItems: Array<{ name: string; type: string; price: number; period?: string }>) {
+  return orderItems
+    .map((item, index) => `${index + 1}. ${item.type}: ${item.name}${item.period ? ` (${item.period})` : ''} - ${item.price}`)
+    .join(' | ');
+}
+
+async function getStoredPaymentResult(paymentId: string) {
+  const supabase = getAdminClient();
+  const { data } = await supabase
+    .from('whmcs_order_syncs')
+    .select('status,response')
+    .eq('payment_id', paymentId)
+    .maybeSingle();
+
+  if (data?.status === 'completed' && data.response) {
+    return data.response;
+  }
+
+  return null;
+}
+
+async function reservePaymentLock(paymentId: string, gatewayOrderId?: string) {
+  const supabase = getAdminClient();
+  const { error } = await supabase
+    .from('whmcs_order_syncs')
+    .insert({
+      payment_id: paymentId,
+      gateway_order_id: gatewayOrderId ?? null,
+      status: 'processing',
+    });
+
+  return !error;
+}
+
+async function finalizePaymentLock(paymentId: string, payload: {
+  status: string;
+  response: any;
+  whmcsOrderId?: string | number | null;
+  whmcsInvoiceId?: string | number | null;
+}) {
+  const supabase = getAdminClient();
+  await supabase
+    .from('whmcs_order_syncs')
+    .update({
+      status: payload.status,
+      response: payload.response,
+      whmcs_order_id: payload.whmcsOrderId ? String(payload.whmcsOrderId) : null,
+      whmcs_invoice_id: payload.whmcsInvoiceId ? String(payload.whmcsInvoiceId) : null,
+    })
+    .eq('payment_id', paymentId);
+}
 
 async function callMiddleware(params: Record<string, string>, retries = 2): Promise<any> {
   for (let attempt = 0; attempt <= retries; attempt++) {
@@ -80,8 +168,12 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  let requestBody: any = null;
+
   try {
+    cleanProcessedPayments();
     const body = await req.json();
+    requestBody = body;
 
     // Handle ValidateLogin for existing customers
     if (body.action === 'ValidateLogin') {
@@ -173,6 +265,41 @@ serve(async (req) => {
       });
     }
 
+    if (razorpayPaymentId) {
+      const cachedPayment = processedPayments.get(razorpayPaymentId);
+      if (cachedPayment) {
+        console.log(`Duplicate payment callback detected for ${razorpayPaymentId}, returning cached result`);
+        return new Response(JSON.stringify(cachedPayment.response), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      const storedPayment = await getStoredPaymentResult(razorpayPaymentId);
+      if (storedPayment) {
+        console.log(`Duplicate payment callback resolved from database for ${razorpayPaymentId}`);
+        processedPayments.set(razorpayPaymentId, { timestamp: Date.now(), response: storedPayment });
+        return new Response(JSON.stringify(storedPayment), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      const lockReserved = await reservePaymentLock(razorpayPaymentId, razorpayOrderId);
+      if (!lockReserved) {
+        const lockedPayment = await getStoredPaymentResult(razorpayPaymentId);
+        if (lockedPayment) {
+          processedPayments.set(razorpayPaymentId, { timestamp: Date.now(), response: lockedPayment });
+          return new Response(JSON.stringify(lockedPayment), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+
+        return new Response(JSON.stringify({ error: 'This payment is already being processed. Please wait a moment and refresh.' }), {
+          status: 409,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+    }
+
     // Step 1: Add or get client in WHMCS
     console.log('Creating WHMCS client for:', email);
 
@@ -247,6 +374,9 @@ serve(async (req) => {
       action: 'AddOrder',
       clientid: String(clientId),
       paymentmethod: paymentMethod || 'razorpay',
+      noinvoice: '0',
+      noinvoiceemail: '0',
+      notes: `Checkout order${razorpayPaymentId ? ` | Payment ID: ${razorpayPaymentId}` : ''}${razorpayOrderId ? ` | Gateway Order ID: ${razorpayOrderId}` : ''} | Items: ${getOrderSummary(orderItems)}`,
     };
 
     let domainIndex = 0;
@@ -255,9 +385,9 @@ serve(async (req) => {
     for (const item of orderItems) {
       if (item.type === 'domain') {
         // Domain registration
-        orderParams[`domains[${domainIndex}]`] = item.name;
+        orderParams[`domain[${domainIndex}]`] = item.name;
         orderParams[`domaintype[${domainIndex}]`] = 'register';
-        orderParams[`regperiod[${domainIndex}]`] = '1';
+        orderParams[`regperiod[${domainIndex}]`] = parseDomainRegPeriod(item.period);
         // Set domain price override so WHMCS records the correct amount
         if (item.price && item.price > 0) {
           orderParams[`domainpriceoverride[${domainIndex}]`] = String(item.price);
@@ -268,7 +398,7 @@ serve(async (req) => {
         const hostDomain = domain || `${firstName.toLowerCase().replace(/[^a-z]/g, '')}${clientId}.infinitivecloud.com`;
         orderParams[`pid[${productIndex}]`] = String(item.id);
         orderParams[`domain[${productIndex}]`] = hostDomain;
-        orderParams[`billingcycle[${productIndex}]`] = billingCycle || 'monthly';
+        orderParams[`billingcycle[${productIndex}]`] = parseBillingCycle(item.period, billingCycle || 'monthly');
         // Set price override so WHMCS records the correct amount
         if (item.price && item.price > 0) {
           orderParams[`priceoverride[${productIndex}]`] = String(item.price);
@@ -308,21 +438,23 @@ serve(async (req) => {
     }
 
     // Step 3: If Razorpay payment was successful, add payment to the invoice and accept order
+    let paymentData = null;
+    let acceptData = null;
     if (razorpayPaymentId && orderData.invoiceid) {
       const paymentAmount = totalAmount ? String(totalAmount) : '0';
 
-      const paymentData = await callMiddleware({
+      paymentData = await callMiddleware({
         action: 'AddInvoicePayment',
         invoiceid: String(orderData.invoiceid),
         transid: razorpayPaymentId,
         gateway: 'razorpay',
-        amount: paymentAmount,
-        date: new Date().toISOString().split('T')[0],
+        date: new Date().toISOString().slice(0, 19).replace('T', ' '),
+        noemail: 'true',
       });
       console.log('AddInvoicePayment response:', JSON.stringify(paymentData).substring(0, 300));
 
       // Accept the order to activate the service
-      const acceptData = await callMiddleware({
+      acceptData = await callMiddleware({
         action: 'AcceptOrder',
         orderid: String(orderData.orderid),
       });
@@ -336,18 +468,42 @@ serve(async (req) => {
       });
     }
 
-    return new Response(JSON.stringify({
+    const successResponse = {
       success: true,
       orderId: orderData.orderid,
       invoiceId: orderData.invoiceid,
       clientId,
-      productIds: orderData.productids,
-    }), {
+      productIds: orderData.productids || orderData.serviceids || orderData.domainids,
+      paymentRecorded: paymentData?.result === 'success',
+      orderAccepted: acceptData?.result === 'success',
+    };
+
+    if (razorpayPaymentId) {
+      processedPayments.set(razorpayPaymentId, { timestamp: Date.now(), response: successResponse });
+      await finalizePaymentLock(razorpayPaymentId, {
+        status: 'completed',
+        response: successResponse,
+        whmcsOrderId: orderData.orderid,
+        whmcsInvoiceId: orderData.invoiceid,
+      });
+    }
+
+    return new Response(JSON.stringify(successResponse), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
 
   } catch (error) {
     console.error('WHMCS create order error:', error);
+    try {
+      if (requestBody?.razorpayPaymentId) {
+        await finalizePaymentLock(requestBody.razorpayPaymentId, {
+          status: 'failed',
+          response: { error: 'Failed to process order', message: error.message },
+        });
+      }
+    } catch {
+      // ignore lock finalization issues
+    }
     return new Response(JSON.stringify({ error: 'Failed to process order', message: error.message }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
