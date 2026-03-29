@@ -98,10 +98,10 @@ serve(async (req) => {
       paytype: p.paytype || 'recurring',
     }));
 
-    const responseData = { products: parsed };
+    const responseData = { products: parsed, version: cacheVersion };
 
     // Cache
-    productsCache = { _key: cacheKey, data: responseData };
+    productsCache = { _key: cacheKey, data: { products: parsed } };
     productsCacheTime = now;
 
     return new Response(JSON.stringify(responseData), {
@@ -109,6 +109,12 @@ serve(async (req) => {
     });
   } catch (error) {
     console.error('WHMCS products fetch error:', error);
+    // Return stale cache on error if available
+    if (productsCache) {
+      return new Response(JSON.stringify({ ...productsCache.data, stale: true, version: cacheVersion }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
     return new Response(JSON.stringify({ error: 'Failed to fetch products' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
