@@ -117,7 +117,7 @@ serve(async (req) => {
       // Domain registration order
       orderParams['domains[0]'] = hostDomain;
       orderParams['domaintype[0]'] = 'register';
-      orderParams['regperiod[0]'] = '1';
+      orderParams['regperiod[0]'] = body.regperiod ? String(body.regperiod) : '1';
     } else {
       // Hosting product order
       orderParams['pid[0]'] = String(productId);
@@ -125,12 +125,26 @@ serve(async (req) => {
       orderParams['billingcycle[0]'] = billingCycle || 'monthly';
     }
 
-    const orderData = await callMiddleware(orderParams);
-
+    let orderData = await callMiddleware(orderParams);
     console.log('WHMCS AddOrder response:', JSON.stringify(orderData).substring(0, 500));
 
+    // If domain registration failed due to invalid TLD/period, retry with common periods
+    if (isDomainOrder && orderData?.result === 'error' && orderData?.message?.includes('Invalid TLD')) {
+      const fallbackPeriods = ['2', '3', '5'];
+      for (const period of fallbackPeriods) {
+        console.log(`Retrying domain order with regperiod=${period}`);
+        orderParams['regperiod[0]'] = period;
+        orderData = await callMiddleware(orderParams);
+        console.log(`WHMCS AddOrder (period=${period}) response:`, JSON.stringify(orderData).substring(0, 300));
+        if (orderData?.result === 'success') break;
+      }
+    }
+
     if (!orderData || orderData.result !== 'success') {
-      return new Response(JSON.stringify({ error: 'Failed to create order', details: orderData }), {
+      const userMessage = isDomainOrder && orderData?.message?.includes('Invalid TLD')
+        ? `The domain extension for "${hostDomain}" is not available for registration through our system. Please try a different extension like .com, .in, or .net.`
+        : 'Failed to create order';
+      return new Response(JSON.stringify({ error: userMessage, details: orderData }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
