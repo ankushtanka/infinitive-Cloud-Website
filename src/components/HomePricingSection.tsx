@@ -11,26 +11,32 @@ const categories = [
     plans: [
       {
         name: "Starter",
+        pid: 1,
         originalPrice: "₹499",
         price: "₹79",
         period: "/mo",
         popular: false,
+        type: "shared-hosting",
         features: ["1 Website", "10 GB SSD Storage", "Free SSL Certificate", "Free Domain (1 yr)", "Weekly Backups", "99.99% Uptime SLA"],
       },
       {
         name: "Business",
+        pid: 2,
         originalPrice: "₹999",
         price: "₹199",
         period: "/mo",
         popular: true,
+        type: "shared-hosting",
         features: ["Unlimited Websites", "50 GB NVMe Storage", "Free SSL & CDN", "Free Domain (1 yr)", "Daily Backups", "cPanel Control Panel"],
       },
       {
         name: "Enterprise",
+        pid: 3,
         originalPrice: "₹1,999",
         price: "₹399",
         period: "/mo",
         popular: false,
+        type: "shared-hosting",
         features: ["Unlimited Websites", "100 GB NVMe Storage", "Free SSL, CDN & IP", "Priority Support", "Real-time Backups", "Staging Environment"],
       },
     ],
@@ -42,32 +48,37 @@ const categories = [
     plans: [
       {
         name: "Cloud Basic",
+        pid: 0,
         originalPrice: "₹2,499",
         price: "₹599",
         period: "/mo",
         popular: false,
+        type: "cloud-hosting",
         features: ["2 CPU Cores", "4 GB RAM", "80 GB NVMe", "Dedicated IP", "Free SSL & CDN", "Auto-scaling"],
       },
       {
         name: "Cloud Plus",
+        pid: 0,
         originalPrice: "₹4,999",
         price: "₹1,199",
         period: "/mo",
         popular: true,
+        type: "cloud-hosting",
         features: ["4 CPU Cores", "8 GB RAM", "200 GB NVMe", "Dedicated IP", "Priority Support", "Load Balancer"],
       },
       {
         name: "Cloud Max",
+        pid: 0,
         originalPrice: "₹9,999",
         price: "₹2,499",
         period: "/mo",
         popular: false,
+        type: "cloud-hosting",
         features: ["8 CPU Cores", "16 GB RAM", "400 GB NVMe", "Dedicated IP", "24/7 Priority Support", "Multi-zone Failover"],
       },
     ],
   },
 ];
-
 const HomePricingSection = () => {
   return (
     <section className="py-12 md:py-20 bg-muted/30" id="pricing">
