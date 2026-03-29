@@ -58,10 +58,40 @@ serve(async (req) => {
   try {
     const body = await req.json();
 
+    // Handle ValidateLogin for existing customers
+    if (body.action === 'ValidateLogin') {
+      const loginResult = await callMiddleware({
+        action: 'ValidateLogin',
+        email: body.email || '',
+        password2: body.password || '',
+      });
+      
+      if (loginResult && loginResult.result === 'success' && loginResult.userid) {
+        // Get client details
+        const clientDetails = await callMiddleware({
+          action: 'GetClientsDetails',
+          clientid: String(loginResult.userid),
+        });
+        return new Response(JSON.stringify({
+          clientId: loginResult.userid,
+          firstName: clientDetails?.firstname || '',
+          lastName: clientDetails?.lastname || '',
+          email: clientDetails?.email || body.email,
+        }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      
+      return new Response(JSON.stringify({ error: 'Invalid email or password.' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     const {
       firstName, lastName, email, phone, companyName,
       address1, address2, city, state, postcode, country,
-      productId, billingCycle, paymentMethod,
+      productId, billingCycle, paymentMethod, password,
       razorpayPaymentId, razorpayOrderId,
       totalAmount, domain, itemType, itemName,
     } = body;
@@ -89,7 +119,7 @@ serve(async (req) => {
       state: state || '',
       postcode: postcode || '',
       country: country || 'IN',
-      password2: crypto.randomUUID().slice(0, 16),
+      password2: password || crypto.randomUUID().slice(0, 16),
     });
 
     console.log('WHMCS AddClient response:', JSON.stringify(clientData).substring(0, 500));
