@@ -362,12 +362,14 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
       firstName: loggedInUser.firstName,
       lastName: loggedInUser.lastName,
       email: loggedInUser.email,
-      phone: "",
-      address1: "On File",
-      city: "On File",
-      state: "On File",
-      postcode: "000000",
-      country: "IN",
+      phone: loggedInUser.phone || "",
+      companyName: loggedInUser.companyName,
+      address1: loggedInUser.address1 || "On File",
+      address2: loggedInUser.address2,
+      city: loggedInUser.city || "On File",
+      state: loggedInUser.state || "On File",
+      postcode: loggedInUser.postcode || "000000",
+      country: loggedInUser.country || "IN",
     });
   };
 
