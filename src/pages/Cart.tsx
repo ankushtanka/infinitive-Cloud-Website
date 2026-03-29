@@ -50,8 +50,9 @@ const Cart = () => {
 
   const getInitialItems = (): CartItem[] => {
     if (domain) {
+      const price = domainPrice ? Math.round(parseFloat(domainPrice)) : 0;
       return [
-        { id: 1, type: "domain", name: domain, period: "1 Year", price: 799, label: "Domain Registration" },
+        { id: 1, type: "domain", name: domain, period: "1 Year", price, label: "Domain Registration" },
       ];
     }
     return [];
