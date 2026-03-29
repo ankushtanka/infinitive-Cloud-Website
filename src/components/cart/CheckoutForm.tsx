@@ -49,6 +49,7 @@ const billingSchema = z.object({
   postcode: z.string().trim().min(1, "Postcode is required").max(10),
   country: z.string().min(1, "Country is required"),
   gstNumber: z.string().trim().max(20).optional(),
+  hostingDomain: z.string().trim().max(255).optional(),
 });
 
 type BillingFormData = z.infer<typeof billingSchema>;
