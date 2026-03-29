@@ -697,7 +697,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
                 htmlFor="terms"
                 className={`flex items-center gap-3 mt-5 p-3 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
                   agreedToTerms
-                    ? "border-primary bg-primary/5"
+                    ? "border-border bg-transparent"
                     : "border-border hover:border-primary/30"
                 }`}
               >
