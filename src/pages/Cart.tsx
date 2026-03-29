@@ -96,6 +96,7 @@ const Cart = () => {
   ];
 
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "annually">("monthly");
 
   const toggleAddon = (id: string) => {
     setSelectedAddons((prev) =>
