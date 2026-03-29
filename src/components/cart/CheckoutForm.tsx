@@ -284,7 +284,21 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
   };
 
   const onNewCustomerSubmit = async (data: NewCustomerData) => {
-    await processPayment(data);
+    await processPayment({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      phone: data.phone,
+      password: data.password,
+      companyName: data.companyName,
+      address1: data.address1,
+      address2: data.address2,
+      city: data.city,
+      state: data.state,
+      postcode: data.postcode,
+      country: data.country,
+      hostingDomain: data.hostingDomain,
+    });
   };
 
   const handleExistingLogin = async (data: ExistingCustomerData): Promise<void> => {
