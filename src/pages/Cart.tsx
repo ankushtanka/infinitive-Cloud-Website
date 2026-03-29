@@ -36,7 +36,10 @@ const Cart = () => {
     isHostingProduct ? [Number(productId)] : []
   );
 
-  const getInitialItems = () => {
+  const getInitialItems = (): Array<{
+    id: number; type: string; name: string; period: string; price: number;
+    label: string; annualPrice?: number; features?: string[];
+  }> => {
     if (domain) {
       return [
         { id: 1, type: "domain", name: domain, period: "1 Year", price: 799, label: "Domain Registration" },
