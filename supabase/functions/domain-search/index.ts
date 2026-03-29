@@ -95,14 +95,15 @@ async function checkDomain(domain: string): Promise<DomainCheckResult | null> {
       const parts = domain.split('.');
       const sld = parts[0];
       const tld = parts.slice(1).join('.');
-      const isAvailable = data.status === 'available' || (data.result === 'success' && data.status === 'available');
+      // New middleware format: { result: 'success', domain, available: true/false, pricing: {...} }
+      const isAvailable = data.available === true || data.status === 'available' || (data.result === 'success' && data.available === true);
 
       const result = {
         domain,
         tld: `.${tld}`,
         sld,
         available: isAvailable,
-        status: data.status || 'unknown',
+        status: isAvailable ? 'available' : (data.status || 'unavailable'),
       };
 
       domainCheckCache.set(domain, { timestamp: Date.now(), result });

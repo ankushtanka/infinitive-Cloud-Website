@@ -375,83 +375,61 @@ serve(async (req) => {
 
     await sleep(1000);
 
-    // Step 2: Build the AddOrder call with ALL items in a single order
-    const orderParams: Record<string, string> = {
-      action: 'AddOrder',
-      clientid: String(clientId),
-      paymentmethod: paymentMethod || 'razorpay',
-      noinvoice: '0',
-      noinvoiceemail: '0',
-      notes: `Checkout order${razorpayPaymentId ? ` | Payment ID: ${razorpayPaymentId}` : ''}${razorpayOrderId ? ` | Gateway Order ID: ${razorpayOrderId}` : ''} | Items: ${getOrderSummary(orderItems)}`,
-    };
+    // Step 2: Build the create_order call using new standardized middleware API
+    // For each item, we create a separate order via the middleware's create_order action
+    // The middleware handles the WHMCS AddOrder internally
+    
+    let orderData: any = null;
 
-
-    // Separate domain and product arrays for WHMCS AddOrder
-    const domainNames: string[] = [];
-    const domainTypes: string[] = [];
-    const domainRegPeriods: string[] = [];
-    const productIds: string[] = [];
-    const productDomains: string[] = [];
-    const productBillingCycles: string[] = [];
-    const productPriceOverrides: string[] = [];
-
+    // Process items - the middleware create_order handles one domain/product at a time
+    // For domain items:
     for (const item of orderItems) {
       if (item.type === 'domain') {
-        domainNames.push(item.name);
-        domainTypes.push('register');
-        domainRegPeriods.push(parseDomainRegPeriod(item.period));
-      } else {
-        const hostDomain = domain || `${firstName.toLowerCase().replace(/[^a-z]/g, '')}${clientId}.infinitivecloud.com`;
-        productIds.push(String(item.id));
-        productDomains.push(hostDomain);
-        productBillingCycles.push(parseBillingCycle(item.period, billingCycle || 'monthly'));
-        if (item.price && item.price > 0) {
-          productPriceOverrides.push(String(item.price));
-        }
-      }
-    }
+        const regPeriod = parseDomainRegPeriod(item.period);
+        const createOrderParams: Record<string, string> = {
+          action: 'create_order',
+          clientid: String(clientId),
+          domain: item.name,
+          regperiod: regPeriod,
+          paymentmethod: paymentMethod || 'razorpay',
+        };
 
-    // Add domains as comma-separated or indexed params
-    for (let i = 0; i < domainNames.length; i++) {
-      orderParams[`domain[${i}]`] = domainNames[i];
-      orderParams[`domaintype[${i}]`] = domainTypes[i];
-      orderParams[`regperiod[${i}]`] = domainRegPeriods[i];
-    }
+        console.log('create_order params:', JSON.stringify(createOrderParams));
+        orderData = await callMiddlewareNoRetry(createOrderParams);
+        console.log('create_order response:', JSON.stringify(orderData).substring(0, 500));
 
-    // Add products
-    for (let i = 0; i < productIds.length; i++) {
-      orderParams[`pid[${i}]`] = productIds[i];
-      orderParams[`domain[${i + domainNames.length}]`] = productDomains[i];
-      orderParams[`billingcycle[${i}]`] = productBillingCycles[i];
-      if (productPriceOverrides[i]) {
-        orderParams[`priceoverride[${i}]`] = productPriceOverrides[i];
-      }
-    }
-
-    console.log('AddOrder params:', JSON.stringify(orderParams));
-
-    // Use NO-RETRY for AddOrder to prevent duplicate orders
-    let orderData = await callMiddlewareNoRetry(orderParams);
-    console.log('AddOrder response:', JSON.stringify(orderData).substring(0, 500));
-
-    if (!orderData || orderData.result !== 'success') {
-      // If domain TLD error, try alternative reg periods (only once each, no retry)
-      if (domainNames.length > 0 && orderData?.message?.includes('Invalid TLD')) {
-        for (const period of ['2', '3', '5']) {
-          for (let i = 0; i < domainNames.length; i++) {
-            orderParams[`regperiod[${i}]`] = period;
+        // If TLD error, try alternative reg periods
+        if (orderData && orderData.result === 'error' && orderData.message?.includes('Invalid TLD')) {
+          for (const period of ['2', '3', '5']) {
+            createOrderParams.regperiod = period;
+            orderData = await callMiddlewareNoRetry(createOrderParams);
+            console.log(`create_order (period=${period}) response:`, JSON.stringify(orderData).substring(0, 300));
+            if (orderData?.result === 'success') break;
           }
-          orderData = await callMiddlewareNoRetry(orderParams);
-          console.log(`AddOrder (period=${period}) response:`, JSON.stringify(orderData).substring(0, 300));
-          if (orderData?.result === 'success') break;
         }
+      } else {
+        // Hosting/product items
+        const hostDomain = domain || `${firstName.toLowerCase().replace(/[^a-z]/g, '')}${clientId}.infinitivecloud.com`;
+        const createOrderParams: Record<string, string> = {
+          action: 'create_order',
+          clientid: String(clientId),
+          domain: hostDomain,
+          pid: String(item.id),
+          billingcycle: parseBillingCycle(item.period, billingCycle || 'monthly'),
+          paymentmethod: paymentMethod || 'razorpay',
+        };
+        if (item.price && item.price > 0) {
+          createOrderParams.priceoverride = String(item.price);
+        }
+
+        console.log('create_order (product) params:', JSON.stringify(createOrderParams));
+        orderData = await callMiddlewareNoRetry(createOrderParams);
+        console.log('create_order (product) response:', JSON.stringify(orderData).substring(0, 500));
       }
     }
 
     if (!orderData || orderData.result !== 'success') {
-      const userMessage = orderData?.message?.includes('Invalid TLD')
-        ? `The domain extension is not available for registration. Please try .com, .in, or .net.`
-        : 'Failed to create order';
+      const userMessage = orderData?.message || 'Failed to create order';
       return new Response(JSON.stringify({ error: userMessage, details: orderData }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
