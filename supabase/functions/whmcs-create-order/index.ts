@@ -168,9 +168,12 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  let requestBody: any = null;
+
   try {
     cleanProcessedPayments();
     const body = await req.json();
+    requestBody = body;
 
     // Handle ValidateLogin for existing customers
     if (body.action === 'ValidateLogin') {
@@ -289,6 +292,11 @@ serve(async (req) => {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
           });
         }
+
+        return new Response(JSON.stringify({ error: 'This payment is already being processed. Please wait a moment and refresh.' }), {
+          status: 409,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
       }
     }
 
@@ -487,9 +495,8 @@ serve(async (req) => {
   } catch (error) {
     console.error('WHMCS create order error:', error);
     try {
-      const body = await req.clone().json();
-      if (body?.razorpayPaymentId) {
-        await finalizePaymentLock(body.razorpayPaymentId, {
+      if (requestBody?.razorpayPaymentId) {
+        await finalizePaymentLock(requestBody.razorpayPaymentId, {
           status: 'failed',
           response: { error: 'Failed to process order', message: error.message },
         });
