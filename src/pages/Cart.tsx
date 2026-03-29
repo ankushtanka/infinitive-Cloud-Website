@@ -454,9 +454,10 @@ const Cart = () => {
                   </Card>
                 </div>
               )}
-            </div>
+            </motion.div>
           )}
-        </div>
+          </AnimatePresence>
+        </motion.div>
       </main>
 
       <Footer />
