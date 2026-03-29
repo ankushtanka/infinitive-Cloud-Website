@@ -9,39 +9,42 @@ const MIDDLEWARE_URL = 'https://client.infinitivecloud.com/middleware/domainMidd
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
-async function callMiddleware(params: Record<string, string>, retries = 2): Promise<any> {
+async function callMiddleware(params: Record<string, string>, retries = 3): Promise<any> {
   for (let attempt = 0; attempt <= retries; attempt++) {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 20000);
+    const timer = setTimeout(() => controller.abort(), 30000);
     try {
       const res = await fetch(MIDDLEWARE_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'User-Agent': 'Mozilla/5.0 (compatible; InfinitiveCloud/1.0)',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
           'Accept': 'application/json, text/plain, */*',
           'Accept-Language': 'en-US,en;q=0.9',
+          'Accept-Encoding': 'gzip, deflate, br',
+          'Referer': 'https://client.infinitivecloud.com/',
+          'Origin': 'https://client.infinitivecloud.com',
         },
         body: new URLSearchParams(params).toString(),
         signal: controller.signal,
       });
       const text = await res.text();
+      console.log(`Middleware response status for ${params.action}: ${res.status}, length: ${text.length}`);
       try {
         return JSON.parse(text);
       } catch {
-        console.error(`Non-JSON response for ${params.action} (attempt ${attempt + 1}):`, text.substring(0, 300));
-        if (text.includes('recaptcha') || text.includes('Bot Verification')) {
-          if (attempt < retries) {
-            console.log(`Bot detection hit for ${params.action}, waiting before retry...`);
-            await sleep(2000 * (attempt + 1));
-            continue;
-          }
+        console.error(`Non-JSON response for ${params.action} (attempt ${attempt + 1}):`, text.substring(0, 500));
+        if (attempt < retries) {
+          const delay = 3000 * (attempt + 1);
+          console.log(`Retrying ${params.action} in ${delay}ms...`);
+          await sleep(delay);
+          continue;
         }
         return null;
       }
     } catch (err) {
       console.error(`Fetch error for ${params.action} (attempt ${attempt + 1}):`, err.message);
-      if (attempt < retries) { await sleep(1500); continue; }
+      if (attempt < retries) { await sleep(3000 * (attempt + 1)); continue; }
       return null;
     } finally {
       clearTimeout(timer);
