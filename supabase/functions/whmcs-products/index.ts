@@ -58,22 +58,24 @@ serve(async (req) => {
       });
     }
 
-    // Fetch products from WHMCS via middleware
-    const pidParam = productIds.join(',');
-    const url = `${MIDDLEWARE_URL}?action=GetProducts&pid=${encodeURIComponent(pidParam)}`;
-
+    // Fetch products from middleware using new standardized get_products action
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 10000);
 
     let data: any;
     try {
-      const response = await fetch(url, { signal: controller.signal });
+      const response = await fetch(MIDDLEWARE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ action: 'get_products' }).toString(),
+        signal: controller.signal,
+      });
       const text = await response.text();
       try {
         data = JSON.parse(text);
       } catch {
-        console.error('WHMCS returned non-JSON response:', text.substring(0, 300));
-        return new Response(JSON.stringify({ error: 'WHMCS returned an invalid response. Please try again.' }), {
+        console.error('Middleware returned non-JSON response:', text.substring(0, 300));
+        return new Response(JSON.stringify({ error: 'Middleware returned an invalid response. Please try again.' }), {
           status: 502,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
@@ -82,13 +84,23 @@ serve(async (req) => {
       clearTimeout(timer);
     }
 
-    console.log('WHMCS GetProducts response:', JSON.stringify(data).substring(0, 500));
+    console.log('get_products response:', JSON.stringify(data).substring(0, 500));
 
-    // Parse the WHMCS response
-    const products = data?.products?.product || data?.product || [];
-    const productList = Array.isArray(products) ? products : [products];
+    if (data?.result !== 'success') {
+      return new Response(JSON.stringify({ error: data?.message || 'Failed to fetch products' }), {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
 
-    const parsed = productList.map((p: any) => ({
+    // New format: { result: 'success', products: [...] }
+    const allProducts = data?.products || [];
+    const productList = Array.isArray(allProducts) ? allProducts : [allProducts];
+    
+    // Filter by requested productIds
+    const filteredProducts = productList.filter((p: any) => productIds.includes(Number(p.pid)));
+
+    const parsed = filteredProducts.map((p: any) => ({
       pid: p.pid,
       name: p.name,
       description: p.description || '',
