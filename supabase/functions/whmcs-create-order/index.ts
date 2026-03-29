@@ -99,7 +99,12 @@ serve(async (req) => {
     }
 
     // Step 2: Create the order in WHMCS
-    const addOrderUrl = `${MIDDLEWARE_URL}?action=AddOrder&clientid=${clientId}&pid[0]=${productId}&billingcycle[0]=${encodeURIComponent(billingCycle || 'monthly')}&paymentmethod=${encodeURIComponent(paymentMethod || 'razorpay')}`;
+    // Generate a username from first+last name (max 8 chars, lowercase, alphanumeric)
+    const rawUsername = (firstName.slice(0, 4) + lastName.slice(0, 4)).toLowerCase().replace(/[^a-z0-9]/g, '');
+    const username = rawUsername + Math.floor(Math.random() * 100);
+    const hostDomain = body.domain || `${rawUsername}.infinitivecloud.com`;
+
+    const addOrderUrl = `${MIDDLEWARE_URL}?action=AddOrder&clientid=${clientId}&pid[0]=${productId}&billingcycle[0]=${encodeURIComponent(billingCycle || 'monthly')}&paymentmethod=${encodeURIComponent(paymentMethod || 'razorpay')}&domain[0]=${encodeURIComponent(hostDomain)}&customfields[0][username]=${encodeURIComponent(username)}`;
 
     console.log('Creating WHMCS order for client:', clientId, 'product:', productId);
 
