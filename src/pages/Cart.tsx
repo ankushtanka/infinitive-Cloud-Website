@@ -21,11 +21,27 @@ import CheckoutForm from "@/components/cart/CheckoutForm";
 
 const Cart = () => {
   const [searchParams] = useSearchParams();
-  const domain = searchParams.get("domain") || "example.com";
+  const domain = searchParams.get("domain") || "";
+  const productId = searchParams.get("product");
+  const productName = searchParams.get("name");
+  const productType = searchParams.get("type");
   const [step, setStep] = useState<"cart" | "checkout">("cart");
-  const [items, setItems] = useState([
-    { id: 1, type: "domain", name: domain, period: "1 Year", price: 799 },
-  ]);
+
+  const getInitialItems = () => {
+    if (productType && productType !== "domain" && productId && productName) {
+      return [
+        { id: Number(productId), type: productType, name: productName, period: "1 Month", price: 0, label: "Hosting Plan" },
+      ];
+    }
+    if (domain) {
+      return [
+        { id: 1, type: "domain", name: domain, period: "1 Year", price: 799, label: "Domain Registration" },
+      ];
+    }
+    return [];
+  };
+
+  const [items, setItems] = useState(getInitialItems);
 
   const addons = [
     { id: "ssl", icon: Shield, name: "SSL Certificate", desc: "Secure your website with HTTPS", price: 499 },
