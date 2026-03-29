@@ -80,6 +80,7 @@ interface CheckoutFormProps {
   items: CheckoutItem[];
   selectedAddons: CheckoutAddon[];
   onBack: () => void;
+  billingCycle?: "monthly" | "annually";
 }
 
 const indianStates = [
