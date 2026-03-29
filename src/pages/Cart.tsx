@@ -17,6 +17,7 @@ import {
   Lock,
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import CheckoutForm from "@/components/cart/CheckoutForm";
 import { useWhmcsProducts } from "@/hooks/use-whmcs-products";
 import { Loader2 } from "lucide-react";
@@ -129,7 +130,12 @@ const Cart = () => {
       <Navigation />
 
       <main className="pt-28 pb-20">
-        <div className="container mx-auto px-4 max-w-5xl">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+          className="container mx-auto px-4 max-w-5xl"
+        >
           {/* Header */}
           <div className="flex items-center gap-3 mb-8">
             <div className="p-3 rounded-xl bg-primary/10">
@@ -173,7 +179,15 @@ const Cart = () => {
             ))}
           </div>
 
+          <AnimatePresence mode="wait">
           {step === "checkout" ? (
+            <motion.div
+              key="checkout"
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -30 }}
+              transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+            >
             <CheckoutForm
               subtotal={subtotal}
               addonsTotal={addonsTotal}
@@ -187,8 +201,16 @@ const Cart = () => {
               onBack={() => setStep("cart")}
               billingCycle={billingCycle}
             />
+            </motion.div>
           ) : (
-            <div className="grid lg:grid-cols-3 gap-8">
+            <motion.div
+              key="cart"
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 30 }}
+              transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+              className="grid lg:grid-cols-3 gap-8"
+            >
               {/* Cart Items */}
                <div className="lg:col-span-2 space-y-4">
                 {whmcsLoading && isHostingProduct ? (
@@ -432,9 +454,10 @@ const Cart = () => {
                   </Card>
                 </div>
               )}
-            </div>
+            </motion.div>
           )}
-        </div>
+          </AnimatePresence>
+        </motion.div>
       </main>
 
       <Footer />

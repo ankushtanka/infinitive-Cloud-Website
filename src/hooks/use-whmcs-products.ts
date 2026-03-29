@@ -24,13 +24,29 @@ interface UseWhmcsProductsResult {
   error: string | null;
 }
 
+// In-memory cache with 5-minute TTL
+const cache: Map<string, { products: WhmcsProduct[]; timestamp: number }> = new Map();
+const CACHE_TTL = 5 * 60 * 1000;
+
 export function useWhmcsProducts(productIds: number[]): UseWhmcsProductsResult {
-  const [products, setProducts] = useState<WhmcsProduct[]>([]);
-  const [loading, setLoading] = useState(true);
+  const cacheKey = productIds.sort().join(',');
+  const cached = cache.get(cacheKey);
+  const isFresh = cached && (Date.now() - cached.timestamp < CACHE_TTL);
+
+  const [products, setProducts] = useState<WhmcsProduct[]>(isFresh ? cached.products : []);
+  const [loading, setLoading] = useState(!isFresh && productIds.length > 0);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!productIds.length) {
+      setLoading(false);
+      return;
+    }
+
+    // Return cached data instantly
+    const cachedData = cache.get(cacheKey);
+    if (cachedData && (Date.now() - cachedData.timestamp < CACHE_TTL)) {
+      setProducts(cachedData.products);
       setLoading(false);
       return;
     }
@@ -42,22 +58,11 @@ export function useWhmcsProducts(productIds: number[]): UseWhmcsProductsResult {
         setLoading(true);
         setError(null);
 
-        let data: any;
-        let fnError: any;
-        
-        // Try up to 2 times to handle intermittent WHMCS middleware failures
-        for (let attempt = 0; attempt < 2; attempt++) {
-          const result = await supabase.functions.invoke('whmcs-products', {
-            body: { productIds },
-          });
-          data = result.data;
-          fnError = result.error;
-          if (!fnError && data?.products?.length) break;
-          if (attempt === 0) await new Promise((r) => setTimeout(r, 1000));
-        }
+        const { data, error: fnError } = await supabase.functions.invoke('whmcs-products', {
+          body: { productIds },
+        });
 
         if (cancelled) return;
-
         if (fnError) throw new Error(fnError.message);
 
         const rawProducts = data?.products || [];
@@ -75,6 +80,7 @@ export function useWhmcsProducts(productIds: number[]): UseWhmcsProductsResult {
           paytype: p.paytype,
         }));
 
+        cache.set(cacheKey, { products: parsed, timestamp: Date.now() });
         setProducts(parsed);
       } catch (err: any) {
         if (!cancelled) {
@@ -88,7 +94,7 @@ export function useWhmcsProducts(productIds: number[]): UseWhmcsProductsResult {
 
     fetchProducts();
     return () => { cancelled = true; };
-  }, [productIds.join(',')]);
+  }, [cacheKey]);
 
   return { products, loading, error };
 }
