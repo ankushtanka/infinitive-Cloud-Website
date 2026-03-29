@@ -382,28 +382,45 @@ serve(async (req) => {
     let domainIndex = 0;
     let productIndex = 0;
 
+    // Separate domain and product arrays for WHMCS AddOrder
+    const domainNames: string[] = [];
+    const domainTypes: string[] = [];
+    const domainRegPeriods: string[] = [];
+    const productIds: string[] = [];
+    const productDomains: string[] = [];
+    const productBillingCycles: string[] = [];
+    const productPriceOverrides: string[] = [];
+
     for (const item of orderItems) {
       if (item.type === 'domain') {
-        // Domain registration
-        orderParams[`domain[${domainIndex}]`] = item.name;
-        orderParams[`domaintype[${domainIndex}]`] = 'register';
-        orderParams[`regperiod[${domainIndex}]`] = parseDomainRegPeriod(item.period);
-        // Set domain price override so WHMCS records the correct amount
-        if (item.price && item.price > 0) {
-          orderParams[`domainpriceoverride[${domainIndex}]`] = String(item.price);
-        }
-        domainIndex++;
+        domainNames.push(item.name);
+        domainTypes.push('register');
+        domainRegPeriods.push(parseDomainRegPeriod(item.period));
       } else {
-        // Hosting/service product
         const hostDomain = domain || `${firstName.toLowerCase().replace(/[^a-z]/g, '')}${clientId}.infinitivecloud.com`;
-        orderParams[`pid[${productIndex}]`] = String(item.id);
-        orderParams[`domain[${productIndex}]`] = hostDomain;
-        orderParams[`billingcycle[${productIndex}]`] = parseBillingCycle(item.period, billingCycle || 'monthly');
-        // Set price override so WHMCS records the correct amount
+        productIds.push(String(item.id));
+        productDomains.push(hostDomain);
+        productBillingCycles.push(parseBillingCycle(item.period, billingCycle || 'monthly'));
         if (item.price && item.price > 0) {
-          orderParams[`priceoverride[${productIndex}]`] = String(item.price);
+          productPriceOverrides.push(String(item.price));
         }
-        productIndex++;
+      }
+    }
+
+    // Add domains as comma-separated or indexed params
+    for (let i = 0; i < domainNames.length; i++) {
+      orderParams[`domain[${i}]`] = domainNames[i];
+      orderParams[`domaintype[${i}]`] = domainTypes[i];
+      orderParams[`regperiod[${i}]`] = domainRegPeriods[i];
+    }
+
+    // Add products
+    for (let i = 0; i < productIds.length; i++) {
+      orderParams[`pid[${i}]`] = productIds[i];
+      orderParams[`domain[${i + domainNames.length}]`] = productDomains[i];
+      orderParams[`billingcycle[${i}]`] = productBillingCycles[i];
+      if (productPriceOverrides[i]) {
+        orderParams[`priceoverride[${i}]`] = productPriceOverrides[i];
       }
     }
 
