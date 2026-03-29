@@ -61,12 +61,17 @@ function generateVariations(baseName: string): string[] {
   return [...new Set(variations)].slice(0, 2);
 }
 
-async function fetchJson(url: string, timeout = REQUEST_TIMEOUT) {
+async function fetchJson(params: Record<string, string>, timeout = REQUEST_TIMEOUT) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeout);
 
   try {
-    const response = await fetch(url, { signal: controller.signal });
+    const response = await fetch(MIDDLEWARE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'InfinitiveCloud-EdgeFunction/1.0' },
+      body: new URLSearchParams(params).toString(),
+      signal: controller.signal,
+    });
     return await response.json();
   } finally {
     clearTimeout(timer);
