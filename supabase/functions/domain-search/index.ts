@@ -91,7 +91,7 @@ async function checkDomain(domain: string): Promise<DomainCheckResult | null> {
 
   const request = (async () => {
     try {
-      const data = await fetchJson(`${MIDDLEWARE_URL}?action=domain_search&domain=${encodeURIComponent(domain)}`);
+      const data = await fetchJson({ action: 'domain_search', domain });
       const parts = domain.split('.');
       const sld = parts[0];
       const tld = parts.slice(1).join('.');
