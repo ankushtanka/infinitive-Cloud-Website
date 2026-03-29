@@ -183,11 +183,16 @@ serve(async (req) => {
 
     // Step 3: If Razorpay payment was successful, add payment and accept order
     if (razorpayPaymentId && orderData.invoiceid) {
+      // Calculate amount in WHMCS currency (INR)
+      const paymentAmount = totalAmount ? String(totalAmount) : String(body.grandTotal || 0);
+      
       const paymentData = await callMiddleware({
         action: 'AddInvoicePayment',
         invoiceid: String(orderData.invoiceid),
         transid: razorpayPaymentId,
         gateway: 'razorpay',
+        amount: paymentAmount,
+        date: new Date().toISOString().split('T')[0], // YYYY-MM-DD format
       });
       console.log('WHMCS AddInvoicePayment response:', JSON.stringify(paymentData).substring(0, 300));
 
