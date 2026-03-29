@@ -693,20 +693,26 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
               <p className="text-[11px] text-muted-foreground mt-1">Inclusive of 18% GST</p>
 
               {/* Terms */}
-              <div className="flex items-start gap-2 mt-5">
+              <label
+                htmlFor="terms"
+                className={`flex items-center gap-3 mt-5 p-3 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
+                  agreedToTerms
+                    ? "border-primary bg-primary/5"
+                    : "border-border hover:border-primary/30"
+                }`}
+              >
                 <Checkbox
                   id="terms"
                   checked={agreedToTerms}
                   onCheckedChange={(val) => setAgreedToTerms(!!val)}
-                  className="mt-0.5"
                 />
-                <label htmlFor="terms" className="text-xs text-muted-foreground leading-tight cursor-pointer">
+                <span className="text-xs text-muted-foreground leading-tight">
                   I agree to the{" "}
-                  <a href="/terms" target="_blank" className="text-primary underline">Terms of Service</a>,{" "}
-                  <a href="/privacy" target="_blank" className="text-primary underline">Privacy Policy</a>, and{" "}
-                  <a href="/refund" target="_blank" className="text-primary underline">Refund Policy</a>.
-                </label>
-              </div>
+                  <a href="/terms" target="_blank" className="text-primary underline" onClick={(e) => e.stopPropagation()}>Terms of Service</a>,{" "}
+                  <a href="/privacy" target="_blank" className="text-primary underline" onClick={(e) => e.stopPropagation()}>Privacy Policy</a>, and{" "}
+                  <a href="/refund" target="_blank" className="text-primary underline" onClick={(e) => e.stopPropagation()}>Refund Policy</a>.
+                </span>
+              </label>
 
               {/* CTA Button */}
               {customerType === "new" ? (
