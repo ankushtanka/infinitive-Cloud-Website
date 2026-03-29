@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -8,6 +9,14 @@ const corsHeaders = {
 const MIDDLEWARE_URL = 'https://client.infinitivecloud.com/middleware/domainMiddleware.php';
 const processedPayments = new Map<string, { timestamp: number; response: any }>();
 const PROCESSED_PAYMENT_TTL = 10 * 60 * 1000;
+
+function getAdminClient() {
+  const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
+  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+  return createClient(supabaseUrl, serviceRoleKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+}
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
@@ -40,6 +49,52 @@ function getOrderSummary(orderItems: Array<{ name: string; type: string; price: 
   return orderItems
     .map((item, index) => `${index + 1}. ${item.type}: ${item.name}${item.period ? ` (${item.period})` : ''} - ${item.price}`)
     .join(' | ');
+}
+
+async function getStoredPaymentResult(paymentId: string) {
+  const supabase = getAdminClient();
+  const { data } = await supabase
+    .from('whmcs_order_syncs')
+    .select('status,response')
+    .eq('payment_id', paymentId)
+    .maybeSingle();
+
+  if (data?.status === 'completed' && data.response) {
+    return data.response;
+  }
+
+  return null;
+}
+
+async function reservePaymentLock(paymentId: string, gatewayOrderId?: string) {
+  const supabase = getAdminClient();
+  const { error } = await supabase
+    .from('whmcs_order_syncs')
+    .insert({
+      payment_id: paymentId,
+      gateway_order_id: gatewayOrderId ?? null,
+      status: 'processing',
+    });
+
+  return !error;
+}
+
+async function finalizePaymentLock(paymentId: string, payload: {
+  status: string;
+  response: any;
+  whmcsOrderId?: string | number | null;
+  whmcsInvoiceId?: string | number | null;
+}) {
+  const supabase = getAdminClient();
+  await supabase
+    .from('whmcs_order_syncs')
+    .update({
+      status: payload.status,
+      response: payload.response,
+      whmcs_order_id: payload.whmcsOrderId ? String(payload.whmcsOrderId) : null,
+      whmcs_invoice_id: payload.whmcsInvoiceId ? String(payload.whmcsInvoiceId) : null,
+    })
+    .eq('payment_id', paymentId);
 }
 
 async function callMiddleware(params: Record<string, string>, retries = 2): Promise<any> {
@@ -215,6 +270,26 @@ serve(async (req) => {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
+
+      const storedPayment = await getStoredPaymentResult(razorpayPaymentId);
+      if (storedPayment) {
+        console.log(`Duplicate payment callback resolved from database for ${razorpayPaymentId}`);
+        processedPayments.set(razorpayPaymentId, { timestamp: Date.now(), response: storedPayment });
+        return new Response(JSON.stringify(storedPayment), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      const lockReserved = await reservePaymentLock(razorpayPaymentId, razorpayOrderId);
+      if (!lockReserved) {
+        const lockedPayment = await getStoredPaymentResult(razorpayPaymentId);
+        if (lockedPayment) {
+          processedPayments.set(razorpayPaymentId, { timestamp: Date.now(), response: lockedPayment });
+          return new Response(JSON.stringify(lockedPayment), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+      }
     }
 
     // Step 1: Add or get client in WHMCS
@@ -365,8 +440,8 @@ serve(async (req) => {
         invoiceid: String(orderData.invoiceid),
         transid: razorpayPaymentId,
         gateway: 'razorpay',
-        amount: paymentAmount,
-        date: new Date().toISOString().split('T')[0],
+        date: new Date().toISOString().slice(0, 19).replace('T', ' '),
+        noemail: 'true',
       });
       console.log('AddInvoicePayment response:', JSON.stringify(paymentData).substring(0, 300));
 
@@ -397,6 +472,12 @@ serve(async (req) => {
 
     if (razorpayPaymentId) {
       processedPayments.set(razorpayPaymentId, { timestamp: Date.now(), response: successResponse });
+      await finalizePaymentLock(razorpayPaymentId, {
+        status: 'completed',
+        response: successResponse,
+        whmcsOrderId: orderData.orderid,
+        whmcsInvoiceId: orderData.invoiceid,
+      });
     }
 
     return new Response(JSON.stringify(successResponse), {
@@ -405,6 +486,17 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('WHMCS create order error:', error);
+    try {
+      const body = await req.clone().json();
+      if (body?.razorpayPaymentId) {
+        await finalizePaymentLock(body.razorpayPaymentId, {
+          status: 'failed',
+          response: { error: 'Failed to process order', message: error.message },
+        });
+      }
+    } catch {
+      // ignore lock finalization issues
+    }
     return new Response(JSON.stringify({ error: 'Failed to process order', message: error.message }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
