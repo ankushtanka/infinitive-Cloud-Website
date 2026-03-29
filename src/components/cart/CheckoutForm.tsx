@@ -70,10 +70,12 @@ const indianStates = [
 
 const CheckoutForm = ({ subtotal, addonsTotal, total, onBack }: CheckoutFormProps) => {
   const navigate = useNavigate();
+  const { createOrder, openCheckout } = useRazorpay();
   const [paymentMethod, setPaymentMethod] = useState("razorpay");
   const [promoCode, setPromoCode] = useState("");
   const [promoApplied, setPromoApplied] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const gstRate = 0.18;
   const gstAmount = Math.round(total * gstRate);
@@ -91,7 +93,22 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, onBack }: CheckoutFormProp
     },
   });
 
-  const onSubmit = (data: BillingFormData) => {
+  const navigateToConfirmation = (data: BillingFormData, paymentLabel: string, paymentId?: string) => {
+    const gstAmt = Math.round(total * 0.18);
+    const gt = total + gstAmt;
+    const orderId = paymentId || `IC-${Date.now().toString(36).toUpperCase()}`;
+    const params = new URLSearchParams({
+      id: orderId,
+      domain: new URLSearchParams(window.location.search).get("domain") || "example.com",
+      total: gt.toString(),
+      name: `${data.firstName} ${data.lastName}`,
+      email: data.email,
+      payment: paymentLabel,
+    });
+    navigate(`/order-confirmation?${params.toString()}`);
+  };
+
+  const onSubmit = async (data: BillingFormData) => {
     if (!agreedToTerms) {
       toast({
         title: "Terms Required",
@@ -100,18 +117,46 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, onBack }: CheckoutFormProp
       });
       return;
     }
-    const gstAmount = Math.round(total * 0.18);
-    const grandTotal = total + gstAmount;
-    const orderId = `IC-${Date.now().toString(36).toUpperCase()}`;
-    const params = new URLSearchParams({
-      id: orderId,
-      domain: new URLSearchParams(window.location.search).get("domain") || "example.com",
-      total: grandTotal.toString(),
-      name: `${data.firstName} ${data.lastName}`,
-      email: data.email,
-      payment: paymentMethod === "razorpay" ? "Razorpay" : paymentMethod === "upi" ? "UPI Direct" : "Bank Transfer",
-    });
-    navigate(`/order-confirmation?${params.toString()}`);
+
+    if (paymentMethod === "razorpay") {
+      setIsProcessing(true);
+      try {
+        const amountInPaise = grandTotal * 100;
+        const order = await createOrder(amountInPaise);
+        openCheckout({
+          orderId: order.order_id,
+          amount: order.amount,
+          currency: order.currency,
+          keyId: order.key_id,
+          name: `${data.firstName} ${data.lastName}`,
+          email: data.email,
+          phone: data.phone,
+          onSuccess: (response) => {
+            navigateToConfirmation(data, "Razorpay", response.razorpay_payment_id);
+          },
+          onFailure: (error) => {
+            setIsProcessing(false);
+            toast({
+              title: "Payment Failed",
+              description: error?.description || "Something went wrong. Please try again.",
+              variant: "destructive",
+            });
+          },
+        });
+      } catch (err: any) {
+        setIsProcessing(false);
+        toast({
+          title: "Payment Error",
+          description: err.message || "Could not initiate payment. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } else {
+      navigateToConfirmation(
+        data,
+        paymentMethod === "upi" ? "UPI Direct" : "Bank Transfer"
+      );
+    }
   };
 
   const applyPromo = () => {
