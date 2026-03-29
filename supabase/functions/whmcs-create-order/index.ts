@@ -432,9 +432,9 @@ serve(async (req) => {
 
     if (!orderData || orderData.result !== 'success') {
       // If domain TLD error, try alternative reg periods (only once each, no retry)
-      if (domainIndex > 0 && orderData?.message?.includes('Invalid TLD')) {
+      if (domainNames.length > 0 && orderData?.message?.includes('Invalid TLD')) {
         for (const period of ['2', '3', '5']) {
-          for (let i = 0; i < domainIndex; i++) {
+          for (let i = 0; i < domainNames.length; i++) {
             orderParams[`regperiod[${i}]`] = period;
           }
           orderData = await callMiddlewareNoRetry(orderParams);
