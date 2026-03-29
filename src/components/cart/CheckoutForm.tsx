@@ -30,6 +30,7 @@ import {
   Wallet,
   Landmark,
   Smartphone,
+  Globe,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
@@ -49,6 +50,7 @@ const billingSchema = z.object({
   postcode: z.string().trim().min(1, "Postcode is required").max(10),
   country: z.string().min(1, "Country is required"),
   gstNumber: z.string().trim().max(20).optional(),
+  hostingDomain: z.string().trim().max(255).optional(),
 });
 
 type BillingFormData = z.infer<typeof billingSchema>;
@@ -140,6 +142,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
             productId: primaryItem.id,
             billingCycle: "monthly",
             paymentMethod: "razorpay",
+            domain: data.hostingDomain || undefined,
             razorpayPaymentId,
             razorpayOrderId,
           }),
@@ -466,6 +469,21 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
                     {...register("gstNumber")}
                   />
                 </div>
+                {items.some(i => i.type !== "domain") && (
+                  <div className="space-y-2 sm:col-span-2">
+                    <Label htmlFor="hostingDomain">Domain for Hosting <span className="text-muted-foreground text-xs">(Optional - your website domain)</span></Label>
+                    <div className="relative">
+                      <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Input
+                        id="hostingDomain"
+                        placeholder="example.com"
+                        className="pl-10"
+                        {...register("hostingDomain")}
+                      />
+                    </div>
+                    <p className="text-[11px] text-muted-foreground">Enter the domain you want to host. Leave blank to set up later.</p>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

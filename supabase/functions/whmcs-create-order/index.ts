@@ -99,7 +99,10 @@ serve(async (req) => {
     }
 
     // Step 2: Create the order in WHMCS
-    const addOrderUrl = `${MIDDLEWARE_URL}?action=AddOrder&clientid=${clientId}&pid[0]=${productId}&billingcycle[0]=${encodeURIComponent(billingCycle || 'monthly')}&paymentmethod=${encodeURIComponent(paymentMethod || 'razorpay')}`;
+    // cPanel module requires a domain to provision the account
+    const hostDomain = body.domain || `${firstName.toLowerCase().replace(/[^a-z]/g, '')}${clientId}.infinitivecloud.com`;
+
+    const addOrderUrl = `${MIDDLEWARE_URL}?action=AddOrder&clientid=${clientId}&pid[0]=${productId}&domain[0]=${encodeURIComponent(hostDomain)}&billingcycle[0]=${encodeURIComponent(billingCycle || 'monthly')}&paymentmethod=${encodeURIComponent(paymentMethod || 'razorpay')}`;
 
     console.log('Creating WHMCS order for client:', clientId, 'product:', productId);
 
