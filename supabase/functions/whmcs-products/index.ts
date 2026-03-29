@@ -7,10 +7,11 @@ const corsHeaders = {
 
 const MIDDLEWARE_URL = 'https://client.infinitivecloud.com/middleware/domainMiddleware.php';
 
-// Cache products for 10 minutes
+// Cache products for 60 seconds (short TTL for near-instant sync)
 let productsCache: Record<string, any> | null = null;
 let productsCacheTime = 0;
-const PRODUCTS_CACHE_TTL = 10 * 60 * 1000;
+const PRODUCTS_CACHE_TTL = 60 * 1000;
+let cacheVersion = 0;
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -18,7 +19,19 @@ serve(async (req) => {
   }
 
   try {
-    const { productIds } = await req.json() as { productIds?: number[] };
+    const body = await req.json();
+
+    // Handle cache invalidation request
+    if (body.action === 'invalidate') {
+      productsCache = null;
+      productsCacheTime = 0;
+      cacheVersion++;
+      return new Response(JSON.stringify({ success: true, message: 'Cache invalidated', version: cacheVersion }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const { productIds, skipCache } = body as { productIds?: number[]; skipCache?: boolean };
 
     if (!productIds || !Array.isArray(productIds) || productIds.length === 0) {
       return new Response(JSON.stringify({ error: 'productIds array is required' }), {
@@ -38,9 +51,9 @@ serve(async (req) => {
     const now = Date.now();
     const cacheKey = productIds.sort().join(',');
 
-    // Check cache
-    if (productsCache && now - productsCacheTime < PRODUCTS_CACHE_TTL && productsCache._key === cacheKey) {
-      return new Response(JSON.stringify(productsCache.data), {
+    // Check cache (skip if explicitly requested)
+    if (!skipCache && productsCache && now - productsCacheTime < PRODUCTS_CACHE_TTL && productsCache._key === cacheKey) {
+      return new Response(JSON.stringify({ ...productsCache.data, cached: true, version: cacheVersion }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
@@ -85,10 +98,10 @@ serve(async (req) => {
       paytype: p.paytype || 'recurring',
     }));
 
-    const responseData = { products: parsed };
+    const responseData = { products: parsed, version: cacheVersion };
 
     // Cache
-    productsCache = { _key: cacheKey, data: responseData };
+    productsCache = { _key: cacheKey, data: { products: parsed } };
     productsCacheTime = now;
 
     return new Response(JSON.stringify(responseData), {
@@ -96,6 +109,12 @@ serve(async (req) => {
     });
   } catch (error) {
     console.error('WHMCS products fetch error:', error);
+    // Return stale cache on error if available
+    if (productsCache) {
+      return new Response(JSON.stringify({ ...productsCache.data, stale: true, version: cacheVersion }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
     return new Response(JSON.stringify({ error: 'Failed to fetch products' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
