@@ -178,9 +178,14 @@ const Cart = () => {
               subtotal={subtotal}
               addonsTotal={addonsTotal}
               total={total}
-              items={items}
+              items={items.map(item => ({
+                ...item,
+                price: getItemPrice(item),
+                period: item.type === "domain" ? item.period : billingCycle === "annually" ? "1 Year" : "1 Month",
+              }))}
               selectedAddons={selectedAddonDetails}
               onBack={() => setStep("cart")}
+              billingCycle={billingCycle}
             />
           ) : (
             <div className="grid lg:grid-cols-3 gap-8">
