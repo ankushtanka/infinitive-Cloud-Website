@@ -287,7 +287,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     await processPayment(data);
   };
 
-  const handleExistingLogin = async (data: ExistingCustomerData) => {
+  const handleExistingLogin = async (data: ExistingCustomerData): Promise<void> => {
     setIsLoggingIn(true);
     try {
       // Validate against WHMCS
