@@ -92,7 +92,7 @@ const indianStates = [
   "Delhi", "Jammu and Kashmir", "Ladakh",
 ];
 
-const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onBack }: CheckoutFormProps) => {
+const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onBack, billingCycle = "monthly" }: CheckoutFormProps) => {
   const navigate = useNavigate();
   const { createOrder, openCheckout } = useRazorpay();
   const [paymentMethod, setPaymentMethod] = useState("razorpay");
