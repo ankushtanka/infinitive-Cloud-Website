@@ -21,7 +21,16 @@ import CheckoutForm from "@/components/cart/CheckoutForm";
 import { useWhmcsProducts } from "@/hooks/use-whmcs-products";
 import { Loader2 } from "lucide-react";
 
-const HOSTING_PIDS = [1, 2, 3];
+type CartItem = {
+  id: number;
+  type: string;
+  name: string;
+  period: string;
+  price: number;
+  label: string;
+  annualPrice?: number;
+  features?: string[];
+};
 
 const Cart = () => {
   const [searchParams] = useSearchParams();
@@ -36,10 +45,7 @@ const Cart = () => {
     isHostingProduct ? [Number(productId)] : []
   );
 
-  const getInitialItems = (): Array<{
-    id: number; type: string; name: string; period: string; price: number;
-    label: string; annualPrice?: number; features?: string[];
-  }> => {
+  const getInitialItems = (): CartItem[] => {
     if (domain) {
       return [
         { id: 1, type: "domain", name: domain, period: "1 Year", price: 799, label: "Domain Registration" },
@@ -48,7 +54,7 @@ const Cart = () => {
     return [];
   };
 
-  const [items, setItems] = useState(getInitialItems);
+  const [items, setItems] = useState<CartItem[]>(getInitialItems);
 
   // Update items when WHMCS product data loads
   useEffect(() => {
@@ -81,7 +87,7 @@ const Cart = () => {
         features: [],
       }]);
     }
-  }, [products, whmcsLoading]);
+  }, [isHostingProduct, productId, productName, productType, products, whmcsLoading]);
 
   const addons = [
     { id: "ssl", icon: Shield, name: "SSL Certificate", desc: "Secure your website with HTTPS", price: 499 },
@@ -106,6 +112,7 @@ const Cart = () => {
     .filter((a) => selectedAddons.includes(a.id))
     .reduce((sum, a) => sum + a.price, 0);
   const total = subtotal + addonsTotal;
+  const selectedAddonDetails = addons.filter((addon) => selectedAddons.includes(addon.id));
 
   return (
     <div className="min-h-screen bg-background">
@@ -166,6 +173,8 @@ const Cart = () => {
               subtotal={subtotal}
               addonsTotal={addonsTotal}
               total={total}
+              items={items}
+              selectedAddons={selectedAddonDetails}
               onBack={() => setStep("cart")}
             />
           ) : (
@@ -227,7 +236,9 @@ const Cart = () => {
                               <div className="text-right">
                                 <span className="text-xl font-bold text-foreground">
                                   ₹{item.price.toLocaleString("en-IN")}
-                                  <span className="text-sm text-muted-foreground font-normal">/mo</span>
+                                  <span className="text-sm text-muted-foreground font-normal">
+                                    {item.type === "domain" ? "/yr" : "/mo"}
+                                  </span>
                                 </span>
                                 {item.annualPrice && item.annualPrice > 0 && (
                                   <p className="text-xs text-muted-foreground">or ₹{item.annualPrice.toLocaleString("en-IN")}/yr</p>
