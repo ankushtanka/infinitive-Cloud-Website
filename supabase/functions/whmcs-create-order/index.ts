@@ -42,6 +42,7 @@ serve(async (req) => {
       address1, address2, city, state, postcode, country,
       productId, billingCycle, paymentMethod,
       razorpayPaymentId, razorpayOrderId,
+      totalAmount, domain, itemType, itemName,
     } = body;
 
     if (!firstName || !lastName || !email || !productId) {
