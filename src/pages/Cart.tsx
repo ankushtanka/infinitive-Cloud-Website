@@ -137,13 +137,21 @@ const Cart = () => {
                     <CardContent className="p-12 text-center">
                       <ShoppingCart className="w-12 h-12 text-muted-foreground/40 mx-auto mb-4" />
                       <h3 className="text-lg font-semibold text-foreground mb-2">Your cart is empty</h3>
-                      <p className="text-muted-foreground mb-6">Search for a domain to get started</p>
-                      <Link to="/solutions/domains">
-                        <Button className="btn-gradient">
-                          <Globe className="w-4 h-4 mr-2" />
-                          Search Domains
-                        </Button>
-                      </Link>
+                       <p className="text-muted-foreground mb-6">Browse our hosting plans or search for a domain to get started</p>
+                      <div className="flex gap-3 justify-center flex-wrap">
+                        <Link to="/solutions/shared-hosting">
+                          <Button className="btn-gradient">
+                            <Server className="w-4 h-4 mr-2" />
+                            Browse Hosting
+                          </Button>
+                        </Link>
+                        <Link to="/solutions/domains">
+                          <Button variant="outline">
+                            <Globe className="w-4 h-4 mr-2" />
+                            Search Domains
+                          </Button>
+                        </Link>
+                      </div>
                     </CardContent>
                   </Card>
                 ) : (
