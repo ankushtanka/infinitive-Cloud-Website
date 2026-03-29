@@ -19,7 +19,19 @@ serve(async (req) => {
   }
 
   try {
-    const { productIds } = await req.json() as { productIds?: number[] };
+    const body = await req.json();
+
+    // Handle cache invalidation request
+    if (body.action === 'invalidate') {
+      productsCache = null;
+      productsCacheTime = 0;
+      cacheVersion++;
+      return new Response(JSON.stringify({ success: true, message: 'Cache invalidated', version: cacheVersion }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const { productIds, skipCache } = body as { productIds?: number[]; skipCache?: boolean };
 
     if (!productIds || !Array.isArray(productIds) || productIds.length === 0) {
       return new Response(JSON.stringify({ error: 'productIds array is required' }), {
