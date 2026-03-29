@@ -7,6 +7,24 @@ const corsHeaders = {
 
 const MIDDLEWARE_URL = 'https://client.infinitivecloud.com/middleware/domainMiddleware.php';
 
+async function callMiddleware(params: Record<string, string>): Promise<any> {
+  const url = `${MIDDLEWARE_URL}?${new URLSearchParams(params).toString()}`;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 15000);
+  try {
+    const res = await fetch(url, { signal: controller.signal });
+    const text = await res.text();
+    try {
+      return JSON.parse(text);
+    } catch {
+      console.error('Non-JSON middleware response for action', params.action, ':', text.substring(0, 500));
+      return null;
+    }
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -16,22 +34,10 @@ serve(async (req) => {
     const body = await req.json();
 
     const {
-      firstName,
-      lastName,
-      email,
-      phone,
-      companyName,
-      address1,
-      address2,
-      city,
-      state,
-      postcode,
-      country,
-      productId,
-      billingCycle,
-      paymentMethod,
-      razorpayPaymentId,
-      razorpayOrderId,
+      firstName, lastName, email, phone, companyName,
+      address1, address2, city, state, postcode, country,
+      productId, billingCycle, paymentMethod,
+      razorpayPaymentId, razorpayOrderId,
     } = body;
 
     if (!firstName || !lastName || !email || !productId) {
@@ -41,25 +47,33 @@ serve(async (req) => {
       });
     }
 
-    // Step 1: Add or get client in WHMCS via middleware
-    const addClientUrl = `${MIDDLEWARE_URL}?action=AddClient&firstname=${encodeURIComponent(firstName)}&lastname=${encodeURIComponent(lastName)}&email=${encodeURIComponent(email)}&phonenumber=${encodeURIComponent(phone || '')}&companyname=${encodeURIComponent(companyName || '')}&address1=${encodeURIComponent(address1 || '')}&address2=${encodeURIComponent(address2 || '')}&city=${encodeURIComponent(city || '')}&state=${encodeURIComponent(state || '')}&postcode=${encodeURIComponent(postcode || '')}&country=${encodeURIComponent(country || 'IN')}&password2=${encodeURIComponent(crypto.randomUUID().slice(0, 16))}`;
-
+    // Step 1: Add or get client in WHMCS
     console.log('Creating WHMCS client for:', email);
 
-    const clientRes = await fetch(addClientUrl);
-    const clientText = await clientRes.text();
-    let clientData: any;
-    try {
-      clientData = JSON.parse(clientText);
-    } catch {
-      console.error('Non-JSON client response:', clientText.substring(0, 300));
-      return new Response(JSON.stringify({ error: 'Invalid response from WHMCS when creating client' }), {
+    const clientData = await callMiddleware({
+      action: 'AddClient',
+      firstname: firstName,
+      lastname: lastName,
+      email: email,
+      phonenumber: phone || '',
+      companyname: companyName || '',
+      address1: address1 || '',
+      address2: address2 || '',
+      city: city || '',
+      state: state || '',
+      postcode: postcode || '',
+      country: country || 'IN',
+      password2: crypto.randomUUID().slice(0, 16),
+    });
+
+    console.log('WHMCS AddClient response:', JSON.stringify(clientData).substring(0, 500));
+
+    if (!clientData) {
+      return new Response(JSON.stringify({ error: 'WHMCS returned an invalid response when creating client. Please try again.' }), {
         status: 502,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
-
-    console.log('WHMCS AddClient response:', JSON.stringify(clientData).substring(0, 500));
 
     let clientId: number;
 
@@ -67,23 +81,14 @@ serve(async (req) => {
       clientId = clientData.clientid;
     } else if (clientData.message?.toLowerCase().includes('duplicate') || clientData.message?.toLowerCase().includes('already exists')) {
       // Client exists, get their ID
-      const getClientUrl = `${MIDDLEWARE_URL}?action=GetClientsDetails&email=${encodeURIComponent(email)}`;
-      const existingRes = await fetch(getClientUrl);
-      const existingText = await existingRes.text();
-      let existingData: any;
-      try {
-        existingData = JSON.parse(existingText);
-      } catch {
-        console.error('Non-JSON GetClientsDetails response:', existingText.substring(0, 300));
-        return new Response(JSON.stringify({ error: 'Failed to look up existing client' }), {
-          status: 502,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
-      }
+      const existingData = await callMiddleware({
+        action: 'GetClientsDetails',
+        email: email,
+      });
 
       console.log('WHMCS GetClientsDetails response:', JSON.stringify(existingData).substring(0, 300));
 
-      if (existingData.result === 'success') {
+      if (existingData?.result === 'success') {
         clientId = existingData.id || existingData.userid || existingData.client?.id;
       } else {
         return new Response(JSON.stringify({ error: 'Failed to find existing client', details: existingData }), {
@@ -99,29 +104,20 @@ serve(async (req) => {
     }
 
     // Step 2: Create the order in WHMCS
-    // cPanel module requires a domain to provision the account
     const hostDomain = body.domain || `${firstName.toLowerCase().replace(/[^a-z]/g, '')}${clientId}.infinitivecloud.com`;
 
-    const addOrderUrl = `${MIDDLEWARE_URL}?action=AddOrder&clientid=${clientId}&pid[0]=${productId}&domain[0]=${encodeURIComponent(hostDomain)}&billingcycle[0]=${encodeURIComponent(billingCycle || 'monthly')}&paymentmethod=${encodeURIComponent(paymentMethod || 'razorpay')}`;
-
-    console.log('Creating WHMCS order for client:', clientId, 'product:', productId);
-
-    const orderRes = await fetch(addOrderUrl);
-    const orderText = await orderRes.text();
-    let orderData: any;
-    try {
-      orderData = JSON.parse(orderText);
-    } catch {
-      console.error('Non-JSON AddOrder response:', orderText.substring(0, 300));
-      return new Response(JSON.stringify({ error: 'Invalid response from WHMCS when creating order' }), {
-        status: 502,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    }
+    const orderData = await callMiddleware({
+      action: 'AddOrder',
+      clientid: String(clientId),
+      'pid[0]': String(productId),
+      'domain[0]': hostDomain,
+      'billingcycle[0]': billingCycle || 'monthly',
+      paymentmethod: paymentMethod || 'razorpay',
+    });
 
     console.log('WHMCS AddOrder response:', JSON.stringify(orderData).substring(0, 500));
 
-    if (orderData.result !== 'success') {
+    if (!orderData || orderData.result !== 'success') {
       return new Response(JSON.stringify({ error: 'Failed to create order', details: orderData }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -130,16 +126,19 @@ serve(async (req) => {
 
     // Step 3: If Razorpay payment was successful, add payment and accept order
     if (razorpayPaymentId && orderData.invoiceid) {
-      const paymentUrl = `${MIDDLEWARE_URL}?action=AddInvoicePayment&invoiceid=${orderData.invoiceid}&transid=${encodeURIComponent(razorpayPaymentId)}&gateway=razorpay`;
-      const paymentRes = await fetch(paymentUrl);
-      const paymentText = await paymentRes.text();
-      console.log('WHMCS AddInvoicePayment response:', paymentText.substring(0, 300));
+      const paymentData = await callMiddleware({
+        action: 'AddInvoicePayment',
+        invoiceid: String(orderData.invoiceid),
+        transid: razorpayPaymentId,
+        gateway: 'razorpay',
+      });
+      console.log('WHMCS AddInvoicePayment response:', JSON.stringify(paymentData).substring(0, 300));
 
-      // Accept the order to trigger provisioning
-      const acceptUrl = `${MIDDLEWARE_URL}?action=AcceptOrder&orderid=${orderData.orderid}`;
-      const acceptRes = await fetch(acceptUrl);
-      const acceptText = await acceptRes.text();
-      console.log('WHMCS AcceptOrder response:', acceptText.substring(0, 300));
+      const acceptData = await callMiddleware({
+        action: 'AcceptOrder',
+        orderid: String(orderData.orderid),
+      });
+      console.log('WHMCS AcceptOrder response:', JSON.stringify(acceptData).substring(0, 300));
     }
 
     return new Response(JSON.stringify({
