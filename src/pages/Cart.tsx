@@ -171,8 +171,15 @@ const Cart = () => {
           ) : (
             <div className="grid lg:grid-cols-3 gap-8">
               {/* Cart Items */}
-              <div className="lg:col-span-2 space-y-4">
-                {items.length === 0 ? (
+               <div className="lg:col-span-2 space-y-4">
+                {whmcsLoading && isHostingProduct ? (
+                  <Card>
+                    <CardContent className="p-12 text-center">
+                      <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-3" />
+                      <p className="text-muted-foreground">Loading product details...</p>
+                    </CardContent>
+                  </Card>
+                ) : items.length === 0 ? (
                   <Card className="border-dashed">
                     <CardContent className="p-12 text-center">
                       <ShoppingCart className="w-12 h-12 text-muted-foreground/40 mx-auto mb-4" />
@@ -217,11 +224,15 @@ const Cart = () => {
                               </div>
                             </div>
                             <div className="flex items-center gap-4">
-                              {item.price > 0 && (
+                              <div className="text-right">
                                 <span className="text-xl font-bold text-foreground">
                                   ₹{item.price.toLocaleString("en-IN")}
+                                  <span className="text-sm text-muted-foreground font-normal">/mo</span>
                                 </span>
-                              )}
+                                {item.annualPrice && item.annualPrice > 0 && (
+                                  <p className="text-xs text-muted-foreground">or ₹{item.annualPrice.toLocaleString("en-IN")}/yr</p>
+                                )}
+                              </div>
                               <Button
                                 variant="ghost"
                                 size="icon"
@@ -232,6 +243,19 @@ const Cart = () => {
                               </Button>
                             </div>
                           </div>
+                          {/* Show features for hosting products */}
+                          {item.features && item.features.length > 0 && (
+                            <div className="mt-4 pt-4 border-t border-border">
+                              <div className="grid grid-cols-2 gap-2">
+                                {item.features.map((f, idx) => (
+                                  <div key={idx} className="flex items-center gap-2 text-sm text-muted-foreground">
+                                    <CheckCircle2 className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+                                    <span>{f}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </CardContent>
                       </Card>
                     ))}
