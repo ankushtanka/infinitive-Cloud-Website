@@ -213,63 +213,99 @@ const Cart = () => {
                   </Card>
                 ) : (
                   <>
-                    {items.map((item) => (
-                      <Card key={item.id} className="overflow-hidden">
-                        <CardContent className="p-5">
+                    {/* Billing Cycle Selector */}
+                    {items.some(i => i.type !== "domain" && i.annualPrice && i.annualPrice > 0) && (
+                      <Card className="overflow-hidden">
+                        <CardContent className="p-4">
                           <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                              <div className="p-2.5 rounded-lg bg-primary/10">
-                                {item.type === "domain" ? (
-                                  <Globe className="w-5 h-5 text-primary" />
-                                ) : (
-                                  <Server className="w-5 h-5 text-primary" />
-                                )}
-                              </div>
-                              <div>
-                                <h3 className="font-bold text-foreground text-lg">{item.name}</h3>
-                                <div className="flex items-center gap-2 mt-1">
-                                  <Badge variant="secondary" className="text-xs">{item.label}</Badge>
-                                  <span className="text-xs text-muted-foreground">{item.period}</span>
-                                </div>
-                              </div>
+                            <div>
+                              <h3 className="font-semibold text-foreground text-sm">Billing Cycle</h3>
+                              <p className="text-xs text-muted-foreground">Choose your preferred billing period</p>
                             </div>
-                            <div className="flex items-center gap-4">
-                              <div className="text-right">
-                                <span className="text-xl font-bold text-foreground">
-                                  ₹{item.price.toLocaleString("en-IN")}
-                                  <span className="text-sm text-muted-foreground font-normal">
-                                    {item.type === "domain" ? "/yr" : "/mo"}
-                                  </span>
-                                </span>
-                                {item.annualPrice && item.annualPrice > 0 && (
-                                  <p className="text-xs text-muted-foreground">or ₹{item.annualPrice.toLocaleString("en-IN")}/yr</p>
-                                )}
-                              </div>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="text-muted-foreground hover:text-destructive"
-                                onClick={() => removeItem(item.id)}
+                            <div className="flex items-center bg-muted rounded-lg p-1">
+                              <button
+                                type="button"
+                                onClick={() => setBillingCycle("monthly")}
+                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${billingCycle === "monthly" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
                               >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
+                                Monthly
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setBillingCycle("annually")}
+                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${billingCycle === "annually" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+                              >
+                                Annually
+                                <span className="ml-1 text-[10px] opacity-80">Save more</span>
+                              </button>
                             </div>
                           </div>
-                          {/* Show features for hosting products */}
-                          {item.features && item.features.length > 0 && (
-                            <div className="mt-4 pt-4 border-t border-border">
-                              <div className="grid grid-cols-2 gap-2">
-                                {item.features.map((f, idx) => (
-                                  <div key={idx} className="flex items-center gap-2 text-sm text-muted-foreground">
-                                    <CheckCircle2 className="w-3.5 h-3.5 text-primary flex-shrink-0" />
-                                    <span>{f}</span>
+                        </CardContent>
+                      </Card>
+                    )}
+
+                    {items.map((item) => {
+                      const displayPrice = getItemPrice(item);
+                      const isAnnual = item.type !== "domain" && billingCycle === "annually";
+                      return (
+                        <Card key={item.id} className="overflow-hidden">
+                          <CardContent className="p-5">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-4">
+                                <div className="p-2.5 rounded-lg bg-primary/10">
+                                  {item.type === "domain" ? (
+                                    <Globe className="w-5 h-5 text-primary" />
+                                  ) : (
+                                    <Server className="w-5 h-5 text-primary" />
+                                  )}
+                                </div>
+                                <div>
+                                  <h3 className="font-bold text-foreground text-lg">{item.name}</h3>
+                                  <div className="flex items-center gap-2 mt-1">
+                                    <Badge variant="secondary" className="text-xs">{item.label}</Badge>
+                                    <span className="text-xs text-muted-foreground">{isAnnual ? "1 Year" : item.period}</span>
                                   </div>
-                                ))}
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-4">
+                                <div className="text-right">
+                                  <span className="text-xl font-bold text-foreground">
+                                    ₹{displayPrice.toLocaleString("en-IN")}
+                                    <span className="text-sm text-muted-foreground font-normal">
+                                      {item.type === "domain" ? "/yr" : isAnnual ? "/yr" : "/mo"}
+                                    </span>
+                                  </span>
+                                  {!isAnnual && item.annualPrice && item.annualPrice > 0 && (
+                                    <p className="text-xs text-muted-foreground">or ₹{item.annualPrice.toLocaleString("en-IN")}/yr</p>
+                                  )}
+                                  {isAnnual && item.price > 0 && (
+                                    <p className="text-xs text-muted-foreground">or ₹{item.price.toLocaleString("en-IN")}/mo</p>
+                                  )}
+                                </div>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="text-muted-foreground hover:text-destructive"
+                                  onClick={() => removeItem(item.id)}
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
                               </div>
                             </div>
-                          )}
-                         </CardContent>
-                      </Card>
+                            {item.features && item.features.length > 0 && (
+                              <div className="mt-4 pt-4 border-t border-border">
+                                <div className="grid grid-cols-2 gap-2">
+                                  {item.features.map((f, idx) => (
+                                    <div key={idx} className="flex items-center gap-2 text-sm text-muted-foreground">
+                                      <CheckCircle2 className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+                                      <span>{f}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </CardContent>
+                        </Card>
                       );
                     })}
 
