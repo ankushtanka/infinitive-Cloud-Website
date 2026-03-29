@@ -145,7 +145,10 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     }
     whmcsSubmittedRef.current = true;
 
-    if (!items.length) return null;
+    if (!items.length) {
+      whmcsSubmittedRef.current = false;
+      return null;
+    }
 
     try {
       const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
@@ -187,7 +190,11 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
           }),
         }
       );
-      const result = await res.json();
+      const result = await res.json().catch(() => ({ error: "Invalid response from order server." }));
+      if (!res.ok || !result?.success) {
+        whmcsSubmittedRef.current = false;
+        throw new Error(result?.error || "Failed to create order in backend.");
+      }
       console.log("WHMCS order result:", result);
       return result;
     } catch (err) {
@@ -270,10 +277,30 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
           name: `${billingData.firstName} ${billingData.lastName}`,
           email: billingData.email,
           phone: billingData.phone,
-          onSuccess: (response) => {
-            setIsProcessing(false);
-            submitOrderToWhmcs(billingData, response.razorpay_payment_id, response.razorpay_order_id);
-            navigateToConfirmation(billingData, "Razorpay", response.razorpay_payment_id);
+          onSuccess: async (response) => {
+            try {
+              const whmcsResult = await submitOrderToWhmcs(
+                billingData,
+                response.razorpay_payment_id,
+                response.razorpay_order_id
+              );
+
+              navigateToConfirmation(
+                billingData,
+                "Razorpay",
+                whmcsResult?.invoiceId || whmcsResult?.orderId || response.razorpay_payment_id,
+                whmcsResult?.orderId
+              );
+            } catch (error: any) {
+              toast({
+                title: "Order Sync Failed",
+                description: error?.message || "Payment succeeded, but order sync failed. Please contact support with your payment ID.",
+                variant: "destructive",
+              });
+              navigateToConfirmation(billingData, "Razorpay", response.razorpay_payment_id);
+            } finally {
+              setIsProcessing(false);
+            }
           },
           onFailure: (error) => {
             setIsProcessing(false);
