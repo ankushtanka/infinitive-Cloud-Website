@@ -95,6 +95,21 @@ serve(async (req) => {
 
       if (existingData?.result === 'success') {
         clientId = existingData.id || existingData.userid || existingData.client?.id;
+        // Update client details with latest info
+        await callMiddleware({
+          action: 'UpdateClient',
+          clientid: String(clientId),
+          firstname: firstName,
+          lastname: lastName,
+          phonenumber: phone || '',
+          companyname: companyName || '',
+          address1: address1 || '',
+          address2: address2 || '',
+          city: city || '',
+          state: state || '',
+          postcode: postcode || '',
+          country: country || 'IN',
+        });
       } else {
         return new Response(JSON.stringify({ error: 'Failed to find existing client', details: existingData }), {
           status: 500,
