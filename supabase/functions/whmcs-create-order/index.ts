@@ -117,7 +117,7 @@ serve(async (req) => {
       // Domain registration order
       orderParams['domains[0]'] = hostDomain;
       orderParams['domaintype[0]'] = 'register';
-      orderParams['regperiod[0]'] = '1';
+      orderParams['regperiod[0]'] = body.regperiod ? String(body.regperiod) : '1';
     } else {
       // Hosting product order
       orderParams['pid[0]'] = String(productId);
