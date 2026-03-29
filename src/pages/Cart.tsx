@@ -366,7 +366,7 @@ const Cart = () => {
                         {items.map((item) => (
                           <div key={item.id} className="flex justify-between text-muted-foreground">
                             <span className="truncate mr-2">{item.name}</span>
-                            <span className="font-medium text-foreground shrink-0">₹{item.price.toLocaleString("en-IN")}</span>
+                            <span className="font-medium text-foreground shrink-0">₹{getItemPrice(item).toLocaleString("en-IN")}</span>
                           </div>
                         ))}
                         {addons
