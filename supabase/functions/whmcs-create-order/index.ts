@@ -7,26 +7,47 @@ const corsHeaders = {
 
 const MIDDLEWARE_URL = 'https://client.infinitivecloud.com/middleware/domainMiddleware.php';
 
-async function callMiddleware(params: Record<string, string>): Promise<any> {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 15000);
-  try {
-    const res = await fetch(MIDDLEWARE_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'InfinitiveCloud-EdgeFunction/1.0' },
-      body: new URLSearchParams(params).toString(),
-      signal: controller.signal,
-    });
-    const text = await res.text();
+const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
+
+async function callMiddleware(params: Record<string, string>, retries = 2): Promise<any> {
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 20000);
     try {
-      return JSON.parse(text);
-    } catch {
-      console.error('Non-JSON middleware response for action', params.action, ':', text.substring(0, 500));
+      const res = await fetch(MIDDLEWARE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'User-Agent': 'Mozilla/5.0 (compatible; InfinitiveCloud/1.0)',
+          'Accept': 'application/json, text/plain, */*',
+          'Accept-Language': 'en-US,en;q=0.9',
+        },
+        body: new URLSearchParams(params).toString(),
+        signal: controller.signal,
+      });
+      const text = await res.text();
+      try {
+        return JSON.parse(text);
+      } catch {
+        console.error(`Non-JSON response for ${params.action} (attempt ${attempt + 1}):`, text.substring(0, 300));
+        if (text.includes('recaptcha') || text.includes('Bot Verification')) {
+          if (attempt < retries) {
+            console.log(`Bot detection hit for ${params.action}, waiting before retry...`);
+            await sleep(2000 * (attempt + 1));
+            continue;
+          }
+        }
+        return null;
+      }
+    } catch (err) {
+      console.error(`Fetch error for ${params.action} (attempt ${attempt + 1}):`, err.message);
+      if (attempt < retries) { await sleep(1500); continue; }
       return null;
+    } finally {
+      clearTimeout(timer);
     }
-  } finally {
-    clearTimeout(timer);
   }
+  return null;
 }
 
 serve(async (req) => {
@@ -122,6 +143,9 @@ serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+
+    // Brief pause to avoid bot detection between API calls
+    await sleep(1000);
 
     // Step 2: Create the order in WHMCS
     const isDomainOrder = itemType === 'domain';
