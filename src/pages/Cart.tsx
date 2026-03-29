@@ -108,7 +108,11 @@ const Cart = () => {
     setItems((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const subtotal = items.reduce((sum, item) => sum + item.price, 0);
+  const getItemPrice = (item: CartItem) => {
+    if (item.type === "domain") return item.price;
+    return billingCycle === "annually" && item.annualPrice ? item.annualPrice : item.price;
+  };
+  const subtotal = items.reduce((sum, item) => sum + getItemPrice(item), 0);
   const addonsTotal = addons
     .filter((a) => selectedAddons.includes(a.id))
     .reduce((sum, a) => sum + a.price, 0);
