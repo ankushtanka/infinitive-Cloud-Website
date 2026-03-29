@@ -154,20 +154,26 @@ const Cart = () => {
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
                               <div className="p-2.5 rounded-lg bg-primary/10">
-                                <Globe className="w-5 h-5 text-primary" />
+                                {item.type === "domain" ? (
+                                  <Globe className="w-5 h-5 text-primary" />
+                                ) : (
+                                  <Server className="w-5 h-5 text-primary" />
+                                )}
                               </div>
                               <div>
                                 <h3 className="font-bold text-foreground text-lg">{item.name}</h3>
                                 <div className="flex items-center gap-2 mt-1">
-                                  <Badge variant="secondary" className="text-xs">Domain Registration</Badge>
+                                  <Badge variant="secondary" className="text-xs">{item.label}</Badge>
                                   <span className="text-xs text-muted-foreground">{item.period}</span>
                                 </div>
                               </div>
                             </div>
                             <div className="flex items-center gap-4">
-                              <span className="text-xl font-bold text-foreground">
-                                ₹{item.price.toLocaleString("en-IN")}
-                              </span>
+                              {item.price > 0 && (
+                                <span className="text-xl font-bold text-foreground">
+                                  ₹{item.price.toLocaleString("en-IN")}
+                                </span>
+                              )}
                               <Button
                                 variant="ghost"
                                 size="icon"
