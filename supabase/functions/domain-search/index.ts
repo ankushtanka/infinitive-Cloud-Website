@@ -217,7 +217,7 @@ serve(async (req) => {
 
     // Fetch TLD pricing and domain availability in parallel
     const [pricing, primaryChecks, suggestionChecks] = await Promise.all([
-      getTldPricing(),
+      getTldPricing(tlds),
       runWithConcurrency(primaryDomains, concurrency, checkDomainAvailability, phaseTimeout),
       suggestionDomains.length > 0
         ? runWithConcurrency(suggestionDomains, 4, checkDomainAvailability, phaseTimeout)
