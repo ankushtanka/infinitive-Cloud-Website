@@ -54,32 +54,45 @@ function generateVariations(baseName: string): string[] {
   return [...new Set(variations)].slice(0, 2);
 }
 
-// Fetch bulk TLD pricing via get_tld_pricing (cached for 1 hour)
-async function getTldPricing(): Promise<Record<string, any>> {
+// Fetch TLD pricing for specific TLDs (cached for 1 hour)
+async function getTldPricing(tlds: string[]): Promise<Record<string, any>> {
   const now = Date.now();
-  if (tldPricingCache && now - tldPricingCacheTime < PRICING_CACHE_TTL) {
-    return tldPricingCache;
-  }
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 10000);
-    const url = `${MIDDLEWARE_URL}?action=get_tld_pricing`;
-    const res = await fetch(url, {
-      method: 'GET',
-      headers: { 'Accept': 'application/json', 'User-Agent': 'InfinitiveCloud-EdgeFunction/1.0' },
-      signal: controller.signal,
+  if (!tldPricingCache) tldPricingCache = {};
+
+  // Find TLDs not yet cached
+  const needed = tlds.filter(tld => {
+    const cached = tldPricingCache![tld];
+    if (!cached) return true;
+    if (now - (cached._cachedAt || 0) > PRICING_CACHE_TTL) return true;
+    return false;
+  });
+
+  if (needed.length > 0) {
+    // Fetch all needed TLDs in parallel
+    const fetches = needed.map(async (tld) => {
+      try {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 8000);
+        const url = `${MIDDLEWARE_URL}?action=get_tld_pricing&tld=${encodeURIComponent(tld)}`;
+        const res = await fetch(url, {
+          method: 'GET',
+          headers: { 'Accept': 'application/json', 'User-Agent': 'InfinitiveCloud-EdgeFunction/1.0' },
+          signal: controller.signal,
+        });
+        clearTimeout(timer);
+        const data = await res.json();
+        if (data?.result === 'success' && data.pricing) {
+          // The pricing object is keyed by TLD name
+          for (const [key, value] of Object.entries(data.pricing)) {
+            tldPricingCache![key] = { ...(value as any), _cachedAt: now };
+          }
+        }
+      } catch { /* skip failed TLD */ }
     });
-    clearTimeout(timer);
-    const data = await res.json();
-    if (data?.result === 'success' && data.pricing) {
-      tldPricingCache = data.pricing;
-      tldPricingCacheTime = now;
-      return data.pricing;
-    }
-    return tldPricingCache || {};
-  } catch {
-    return tldPricingCache || {};
+    await Promise.all(fetches);
   }
+
+  return tldPricingCache;
 }
 
 // Check domain availability via GET domain_search
