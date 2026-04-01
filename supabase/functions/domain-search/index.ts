@@ -34,7 +34,6 @@ type SearchPayload = {
 };
 
 let tldPricingCache: Record<string, any> | null = null;
-let tldPricingCacheTime = 0;
 const searchCache = new Map<string, { timestamp: number; payload: SearchPayload }>();
 const domainCheckCache = new Map<string, { timestamp: number; available: boolean }>();
 const inflightDomainChecks = new Map<string, Promise<{ available: boolean } | null>>();
