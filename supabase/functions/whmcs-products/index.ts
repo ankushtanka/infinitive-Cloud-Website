@@ -7,7 +7,6 @@ const corsHeaders = {
 
 const MIDDLEWARE_URL = 'https://client.infinitivecloud.com/middleware/domainMiddleware.php';
 
-// Cache products for 60 seconds (short TTL for near-instant sync)
 let productsCache: Record<string, any> | null = null;
 let productsCacheTime = 0;
 const PRODUCTS_CACHE_TTL = 60 * 1000;
@@ -40,7 +39,6 @@ serve(async (req) => {
       });
     }
 
-    // Validate product IDs are numbers
     if (!productIds.every(id => typeof id === 'number' && Number.isInteger(id) && id > 0)) {
       return new Response(JSON.stringify({ error: 'All productIds must be positive integers' }), {
         status: 400,
@@ -51,23 +49,22 @@ serve(async (req) => {
     const now = Date.now();
     const cacheKey = productIds.sort().join(',');
 
-    // Check cache (skip if explicitly requested)
     if (!skipCache && productsCache && now - productsCacheTime < PRODUCTS_CACHE_TTL && productsCache._key === cacheKey) {
       return new Response(JSON.stringify({ ...productsCache.data, cached: true, version: cacheVersion }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    // Fetch products from middleware using new standardized get_products action
+    // Use GET request as per new middleware API
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 10000);
 
     let data: any;
     try {
-      const response = await fetch(MIDDLEWARE_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ action: 'get_products' }).toString(),
+      const url = `${MIDDLEWARE_URL}?action=get_products`;
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json', 'User-Agent': 'InfinitiveCloud-EdgeFunction/1.0' },
         signal: controller.signal,
       });
       const text = await response.text();
@@ -93,7 +90,6 @@ serve(async (req) => {
       });
     }
 
-    // New format: { result: 'success', products: [...] }
     const allProducts = data?.products || [];
     const productList = Array.isArray(allProducts) ? allProducts : [allProducts];
     
@@ -112,7 +108,6 @@ serve(async (req) => {
 
     const responseData = { products: parsed, version: cacheVersion };
 
-    // Cache
     productsCache = { _key: cacheKey, data: { products: parsed } };
     productsCacheTime = now;
 
@@ -121,7 +116,6 @@ serve(async (req) => {
     });
   } catch (error) {
     console.error('WHMCS products fetch error:', error);
-    // Return stale cache on error if available
     if (productsCache) {
       return new Response(JSON.stringify({ ...productsCache.data, stale: true, version: cacheVersion }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
