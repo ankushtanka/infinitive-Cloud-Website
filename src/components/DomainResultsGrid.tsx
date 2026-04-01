@@ -54,8 +54,13 @@ const AvailableCard = ({
   i: number;
   isRecommended: boolean;
 }) => {
+  const navigate = useNavigate();
   const color = tldColors[r.tld] || "from-slate-500 to-slate-600";
   const priceDisplay = formatDomainPrice(r.price, r.currency);
+
+  const handleBuyNow = () => {
+    navigate(`${CART_PAGE}?domain=${encodeURIComponent(r.domain)}&price=${r.price || ''}&renewPrice=${r.renewPrice || ''}`);
+  };
 
   return (
     <Card
@@ -100,7 +105,7 @@ const AvailableCard = ({
         </div>
         <Button
           className="w-full btn-gradient font-bold text-sm h-10 gap-2 rounded-lg"
-          onClick={() => window.location.href = `${CART_PAGE}?domain=${encodeURIComponent(r.domain)}&price=${r.price || ''}&renewPrice=${r.renewPrice || ''}`}
+          onClick={handleBuyNow}
         >
           <ShoppingCart className="w-4 h-4" />
           Buy Now
@@ -120,6 +125,7 @@ const TakenRow = ({
   i: number;
   alternative: DomainResult | null;
 }) => {
+  const navigate = useNavigate();
   const altPrice = alternative
     ? formatDomainPrice(alternative.price, alternative.currency)
     : null;
@@ -153,12 +159,11 @@ const TakenRow = ({
             size="sm"
             variant="outline"
             className="text-xs h-7 px-3 border-primary/20 hover:bg-primary hover:text-primary-foreground gap-1 rounded-lg"
-            onClick={() => window.location.href = `${CART_PAGE}?domain=${encodeURIComponent(alternative.domain)}&price=${alternative.price || ''}&renewPrice=${alternative.renewPrice || ''}`}
+            onClick={() => navigate(`${CART_PAGE}?domain=${encodeURIComponent(alternative.domain)}&price=${alternative.price || ''}&renewPrice=${alternative.renewPrice || ''}`)}
           >
             Register
             <ArrowRight className="w-3 h-3" />
           </Button>
-          
         </div>
       )}
     </div>

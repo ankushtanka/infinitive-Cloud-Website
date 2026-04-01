@@ -59,7 +59,6 @@ export function formatDomainPrice(price: string | null, currency: string) {
 export function useDomainSearch() {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<DomainResult[]>([]);
-  const [suggestions, setSuggestions] = useState<DomainResult[]>([]);
   const [searched, setSearched] = useState(false);
   const activeSearchIdRef = useRef(0);
 
@@ -72,44 +71,18 @@ export function useDomainSearch() {
     setLoading(true);
     setSearched(true);
     setResults([]);
-    setSuggestions([]);
-
-    // Fire both phases in parallel — show whichever arrives first
-    const initialPromise = supabase.functions.invoke("domain-search", {
-      body: { domain: query, phase: "initial" },
-    });
-    const fullPromise = supabase.functions.invoke("domain-search", {
-      body: { domain: query, phase: "full" },
-    });
 
     try {
-      // Show initial results as soon as they arrive
-      const initialResponse = await initialPromise;
-      if (activeSearchIdRef.current !== searchId) return;
-      if (!initialResponse.error) {
-        setResults(initialResponse.data?.results || []);
-        setSuggestions(initialResponse.data?.suggestions || []);
-      }
+      const response = await supabase.functions.invoke("domain-search", {
+        body: { domain: query },
+      });
 
-      // Merge full results with initial (dedup by domain, full takes priority)
-      const fullResponse = await fullPromise;
       if (activeSearchIdRef.current !== searchId) return;
-      if (!fullResponse.error) {
-        const fullResults: DomainResult[] = fullResponse.data?.results || [];
-        const fullSuggestions: DomainResult[] = fullResponse.data?.suggestions || [];
-        
-        setResults((prev) => {
-          const merged = new Map<string, DomainResult>();
-          prev.forEach((r) => merged.set(r.domain, r));
-          fullResults.forEach((r) => merged.set(r.domain, r));
-          return Array.from(merged.values());
-        });
-        setSuggestions((prev) => {
-          const merged = new Map<string, DomainResult>();
-          prev.forEach((r) => merged.set(r.domain, r));
-          fullSuggestions.forEach((r) => merged.set(r.domain, r));
-          return Array.from(merged.values());
-        });
+
+      if (!response.error) {
+        setResults(response.data?.results || []);
+      } else {
+        console.error("Domain search error:", response.error);
       }
     } catch (err) {
       console.error("Domain search failed:", err);
@@ -125,8 +98,8 @@ export function useDomainSearch() {
     setLoading(false);
     setSearched(false);
     setResults([]);
-    setSuggestions([]);
   };
 
-  return { loading, results, suggestions, searched, search, reset };
+  // No more suggestions - bulk_search returns everything in one call
+  return { loading, results, suggestions: [] as DomainResult[], searched, search, reset };
 }
