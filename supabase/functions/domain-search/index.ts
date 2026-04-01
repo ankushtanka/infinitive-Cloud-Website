@@ -13,6 +13,7 @@ const PHASE_TIMEOUT_INITIAL = 8000;
 const PHASE_TIMEOUT_FULL = 15000;
 const SEARCH_CACHE_TTL = 5 * 60 * 1000;
 const DOMAIN_CHECK_CACHE_TTL = 5 * 60 * 1000;
+const PRICING_CACHE_TTL = 60 * 60 * 1000;
 
 type SearchPhase = 'initial' | 'full';
 
@@ -32,9 +33,11 @@ type SearchPayload = {
   suggestions: DomainResult[];
 };
 
+let tldPricingCache: Record<string, any> | null = null;
+let tldPricingCacheTime = 0;
 const searchCache = new Map<string, { timestamp: number; payload: SearchPayload }>();
-const domainCheckCache = new Map<string, { timestamp: number; result: DomainResult | null }>();
-const inflightDomainChecks = new Map<string, Promise<DomainResult | null>>();
+const domainCheckCache = new Map<string, { timestamp: number; available: boolean }>();
+const inflightDomainChecks = new Map<string, Promise<{ available: boolean } | null>>();
 
 function generateVariations(baseName: string): string[] {
   const clean = baseName.replace(/[^a-z0-9]/g, '');
@@ -51,12 +54,40 @@ function generateVariations(baseName: string): string[] {
   return [...new Set(variations)].slice(0, 2);
 }
 
-// Use GET request for domain_search as per new middleware API
-async function checkDomain(fullDomain: string): Promise<DomainResult | null> {
+// Fetch bulk TLD pricing via get_tld_pricing (cached for 1 hour)
+async function getTldPricing(): Promise<Record<string, any>> {
+  const now = Date.now();
+  if (tldPricingCache && now - tldPricingCacheTime < PRICING_CACHE_TTL) {
+    return tldPricingCache;
+  }
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 10000);
+    const url = `${MIDDLEWARE_URL}?action=get_tld_pricing`;
+    const res = await fetch(url, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json', 'User-Agent': 'InfinitiveCloud-EdgeFunction/1.0' },
+      signal: controller.signal,
+    });
+    clearTimeout(timer);
+    const data = await res.json();
+    if (data?.result === 'success' && data.pricing) {
+      tldPricingCache = data.pricing;
+      tldPricingCacheTime = now;
+      return data.pricing;
+    }
+    return tldPricingCache || {};
+  } catch {
+    return tldPricingCache || {};
+  }
+}
+
+// Check domain availability via GET domain_search
+async function checkDomainAvailability(fullDomain: string): Promise<{ available: boolean } | null> {
   const now = Date.now();
   const cached = domainCheckCache.get(fullDomain);
   if (cached && now - cached.timestamp < DOMAIN_CHECK_CACHE_TTL) {
-    return cached.result;
+    return { available: cached.available };
   }
 
   const inflight = inflightDomainChecks.get(fullDomain);
@@ -66,7 +97,6 @@ async function checkDomain(fullDomain: string): Promise<DomainResult | null> {
     try {
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
-
       const url = `${MIDDLEWARE_URL}?action=domain_search&domain=${encodeURIComponent(fullDomain)}`;
       const res = await fetch(url, {
         method: 'GET',
@@ -74,30 +104,10 @@ async function checkDomain(fullDomain: string): Promise<DomainResult | null> {
         signal: controller.signal,
       });
       clearTimeout(timer);
-
       const data = await res.json();
-      // New middleware format: { result: 'success', domain, available: true/false, pricing: { register, renew, years } }
-      const parts = fullDomain.split('.');
-      const sld = parts[0];
-      const tld = parts.slice(1).join('.');
-
       const isAvailable = data.available === true;
-      const registerPrice = data.pricing?.register || null;
-      const renewPrice = data.pricing?.renew || null;
-
-      const result: DomainResult = {
-        domain: fullDomain,
-        tld: `.${tld}`,
-        sld,
-        available: isAvailable,
-        status: isAvailable ? 'available' : 'unavailable',
-        price: registerPrice,
-        renewPrice: renewPrice,
-        currency: '₹',
-      };
-
-      domainCheckCache.set(fullDomain, { timestamp: Date.now(), result });
-      return result;
+      domainCheckCache.set(fullDomain, { timestamp: Date.now(), available: isAvailable });
+      return { available: isAvailable };
     } catch {
       return null;
     } finally {
@@ -107,6 +117,33 @@ async function checkDomain(fullDomain: string): Promise<DomainResult | null> {
 
   inflightDomainChecks.set(fullDomain, request);
   return request;
+}
+
+// Attach pricing from bulk TLD pricing cache
+function buildResult(fullDomain: string, available: boolean, pricing: Record<string, any>): DomainResult {
+  const parts = fullDomain.split('.');
+  const sld = parts[0];
+  const tld = parts.slice(1).join('.');
+  const tldPricing = pricing[tld] || pricing[`.${tld}`] || null;
+
+  let registerPrice: string | null = null;
+  let renewPrice: string | null = null;
+
+  if (tldPricing) {
+    if (tldPricing.register?.['1']) registerPrice = tldPricing.register['1'];
+    if (tldPricing.renew?.['1']) renewPrice = tldPricing.renew['1'];
+  }
+
+  return {
+    domain: fullDomain,
+    tld: `.${tld}`,
+    sld,
+    available,
+    status: available ? 'available' : 'unavailable',
+    price: registerPrice,
+    renewPrice,
+    currency: '₹',
+  };
 }
 
 async function runWithConcurrency<T, R>(items: T[], concurrency: number, worker: (item: T) => Promise<R>, timeoutMs?: number): Promise<R[]> {
@@ -166,15 +203,30 @@ serve(async (req) => {
     const phaseTimeout = normalizedPhase === 'initial' ? PHASE_TIMEOUT_INITIAL : PHASE_TIMEOUT_FULL;
     const concurrency = normalizedPhase === 'initial' ? FEATURED_TLDS.length : 12;
 
-    const [primaryChecks, suggestionChecks] = await Promise.all([
-      runWithConcurrency(primaryDomains, concurrency, checkDomain, phaseTimeout),
+    // Fetch TLD pricing and domain availability in parallel
+    const [pricing, primaryChecks, suggestionChecks] = await Promise.all([
+      getTldPricing(),
+      runWithConcurrency(primaryDomains, concurrency, checkDomainAvailability, phaseTimeout),
       suggestionDomains.length > 0
-        ? runWithConcurrency(suggestionDomains, 4, checkDomain, phaseTimeout)
-        : Promise.resolve([] as (DomainResult | null)[]),
+        ? runWithConcurrency(suggestionDomains, 4, checkDomainAvailability, phaseTimeout)
+        : Promise.resolve([] as ({ available: boolean } | null)[]),
     ]);
 
-    const results = primaryChecks.filter(Boolean) as DomainResult[];
-    const suggestions = (suggestionChecks.filter(Boolean) as DomainResult[]).filter((r) => r.available);
+    const results: DomainResult[] = [];
+    for (let i = 0; i < primaryDomains.length; i++) {
+      const check = primaryChecks[i];
+      if (check) {
+        results.push(buildResult(primaryDomains[i], check.available, pricing));
+      }
+    }
+
+    const suggestions: DomainResult[] = [];
+    for (let i = 0; i < suggestionDomains.length; i++) {
+      const check = suggestionChecks[i];
+      if (check && check.available) {
+        suggestions.push(buildResult(suggestionDomains[i], true, pricing));
+      }
+    }
 
     const payload = { results, suggestions };
     searchCache.set(cacheKey, { timestamp: Date.now(), payload });
