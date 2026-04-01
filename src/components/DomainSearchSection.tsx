@@ -268,6 +268,10 @@ const DomainSearchSection: React.FC = () => {
                     variant="outline"
                     size="sm"
                     className="mt-4 md:mt-5 w-full font-semibold text-xs md:text-sm border-primary/20 hover:bg-primary hover:text-primary-foreground transition-colors rounded-lg"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      window.location.href = `/cart?domain=yourdomain${tld.ext}&price=${tld.price.replace('₹', '').replace(',', '')}&renewPrice=`;
+                    }}
                   >
                     Register
                   </Button>
