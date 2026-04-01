@@ -54,8 +54,13 @@ const AvailableCard = ({
   i: number;
   isRecommended: boolean;
 }) => {
+  const navigate = useNavigate();
   const color = tldColors[r.tld] || "from-slate-500 to-slate-600";
   const priceDisplay = formatDomainPrice(r.price, r.currency);
+
+  const handleBuyNow = () => {
+    navigate(`${CART_PAGE}?domain=${encodeURIComponent(r.domain)}&price=${r.price || ''}&renewPrice=${r.renewPrice || ''}`);
+  };
 
   return (
     <Card
@@ -100,7 +105,7 @@ const AvailableCard = ({
         </div>
         <Button
           className="w-full btn-gradient font-bold text-sm h-10 gap-2 rounded-lg"
-          onClick={() => window.location.href = `${CART_PAGE}?domain=${encodeURIComponent(r.domain)}&price=${r.price || ''}&renewPrice=${r.renewPrice || ''}`}
+          onClick={handleBuyNow}
         >
           <ShoppingCart className="w-4 h-4" />
           Buy Now
