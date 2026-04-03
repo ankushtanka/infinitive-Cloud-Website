@@ -42,6 +42,36 @@ function parseBulkResponse(data: any): DomainResult[] {
   });
 }
 
+async function fetchWithRetry(url: string, maxRetries = 2): Promise<any> {
+  let lastError: Error | null = null;
+  
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    const timeoutMs = attempt === 0 ? 15000 : 30000; // 15s first try, 30s retries
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    
+    try {
+      console.log(`Attempt ${attempt + 1}/${maxRetries + 1} (timeout: ${timeoutMs}ms)`);
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json', 'User-Agent': 'InfinitiveCloud-EdgeFunction/1.0' },
+        signal: controller.signal,
+      });
+      clearTimeout(timer);
+      return await res.json();
+    } catch (err) {
+      clearTimeout(timer);
+      lastError = err as Error;
+      console.warn(`Attempt ${attempt + 1} failed: ${(err as Error).message}`);
+      if (attempt < maxRetries) {
+        await new Promise(r => setTimeout(r, 500)); // brief pause before retry
+      }
+    }
+  }
+  
+  throw lastError;
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -58,31 +88,20 @@ serve(async (req) => {
     }
 
     const cleanDomain = domain.trim().toLowerCase().replace(/\s+/g, '');
-    // Extract just the name part (before any TLD)
     const domainMatch = cleanDomain.match(/^([a-zA-Z0-9-]+)(\.[a-zA-Z0-9-.]+)?$/);
     const baseName = domainMatch ? domainMatch[1] : cleanDomain;
 
     // Check cache
     const cached = searchCache.get(baseName);
     if (cached && Date.now() - cached.timestamp < SEARCH_CACHE_TTL) {
+      console.log(`cache hit: ${baseName}`);
       return new Response(JSON.stringify(cached.payload), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    // Single bulk_search call - returns all TLDs with availability + pricing
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 25000);
     const url = `${MIDDLEWARE_URL}?action=bulk_search&name=${encodeURIComponent(baseName)}`;
-
-    const res = await fetch(url, {
-      method: 'GET',
-      headers: { 'Accept': 'application/json', 'User-Agent': 'InfinitiveCloud-EdgeFunction/1.0' },
-      signal: controller.signal,
-    });
-    clearTimeout(timer);
-
-    const data = await res.json();
+    const data = await fetchWithRetry(url);
     const results = parseBulkResponse(data);
 
     const payload = { results };
