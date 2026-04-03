@@ -137,7 +137,11 @@ const Navigation = () => {
               <CurrencyLanguageDropdown />
               <ThemeToggle />
               <div className="h-4 w-px bg-border/50 mx-1" />
-              {/* Login button hidden until client area is ready */}
+              <Link to="/login">
+                <Button variant="ghost" size="sm" className="gap-1.5 text-sm font-medium">
+                  <User className="w-4 h-4" /> Login
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
