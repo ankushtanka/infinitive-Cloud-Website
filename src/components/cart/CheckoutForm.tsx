@@ -372,43 +372,29 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
   const handleExistingLogin = async (data: ExistingCustomerData): Promise<void> => {
     setIsLoggingIn(true);
     try {
-      // Validate against WHMCS
-      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
-      const res = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/whmcs-create-order`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            action: "ValidateLogin",
-            email: data.email,
-            password: data.password,
-          }),
-        }
-        );
-        
-        const result = await res.json().catch(() => ({ error: "Invalid response from server" }));
+      const result = await validateLogin(data.email, data.password);
 
-        if (res.ok && result.clientId) {
+      if (result.result === 'success' && result.userid) {
+        const client = result.client || {};
         setLoggedInUser({
-          email: data.email,
-          firstName: result.firstName || data.email.split("@")[0],
-          lastName: result.lastName || "",
-          phone: result.phone || "",
-          companyName: result.companyName || "",
-          address1: result.address1 || "",
-          address2: result.address2 || "",
-          city: result.city || "",
-          state: result.state || "",
-          postcode: result.postcode || "",
-          country: result.country || "IN",
-          domains: result.domains || [],
+          email: client.email || data.email,
+          firstName: client.firstname || data.email.split("@")[0],
+          lastName: client.lastname || "",
+          phone: client.phonenumber || "",
+          companyName: client.companyname || "",
+          address1: client.address1 || "",
+          address2: client.address2 || "",
+          city: client.city || "",
+          state: client.state || "",
+          postcode: client.postcode || "",
+          country: client.country || "IN",
+          domains: client.domains || [],
         });
-        toast({ title: "Logged In", description: `Welcome back, ${result.firstName || data.email}!` });
+        toast({ title: "Logged In", description: `Welcome back, ${client.firstname || data.email}!` });
       } else {
         toast({
           title: "Login Failed",
-          description: result.error || "Invalid email or password. Please try again.",
+          description: result.message || "Invalid email or password. Please try again.",
           variant: "destructive",
         });
       }
