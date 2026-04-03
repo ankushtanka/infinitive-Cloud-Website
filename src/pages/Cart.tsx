@@ -193,14 +193,7 @@ const Cart = () => {
             >
               {/* Cart Items */}
                <div className="lg:col-span-2 space-y-4">
-                {whmcsLoading && isHostingProduct ? (
-                  <Card>
-                    <CardContent className="p-12 text-center">
-                      <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-3" />
-                      <p className="text-muted-foreground">Loading product details...</p>
-                    </CardContent>
-                  </Card>
-                ) : items.length === 0 ? (
+                {items.length === 0 ? (
                   <Card className="border-dashed">
                     <CardContent className="p-12 text-center">
                       <ShoppingCart className="w-12 h-12 text-muted-foreground/40 mx-auto mb-4" />
