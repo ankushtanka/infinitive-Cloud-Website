@@ -125,6 +125,8 @@ export interface OrderPayload {
   pid?: number;
   billingcycle?: 'monthly' | 'quarterly' | 'semi-annually' | 'annually';
   paymentmethod?: string;
+  priceoverride?: number;
+  domainpriceoverride?: number;
 }
 
 export interface ValidateLoginResult {
