@@ -111,8 +111,13 @@ export function useDomainSearch() {
 
     try {
       const res = await fetch(
-        `https://client.infinitivecloud.com/middleware/domainMiddleware.php?action=bulk_search&name=${encodeURIComponent(baseName)}`,
-        { signal: controller.signal }
+        'https://client.infinitivecloud.com/middleware/domainMiddleware.php',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'bulk_search', name: baseName }),
+          signal: controller.signal,
+        }
       );
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
