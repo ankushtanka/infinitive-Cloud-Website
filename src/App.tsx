@@ -55,6 +55,8 @@ const Cart = lazy(() => import("./pages/Cart"));
 const OrderConfirmation = lazy(() => import("./pages/OrderConfirmation"));
 const DomainTransfer = lazy(() => import("./pages/DomainTransfer"));
 const DomainManagement = lazy(() => import("./pages/DomainManagement"));
+const Login = lazy(() => import("./pages/Login"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
 
 const queryClient = new QueryClient();
 
