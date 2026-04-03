@@ -91,6 +91,7 @@ export interface OrderResult {
   result: 'success' | 'error';
   message: string;
   order_id?: number;
+  order_num?: string;
   invoice_id?: number;
   client_id?: number;
   is_new_client?: boolean;

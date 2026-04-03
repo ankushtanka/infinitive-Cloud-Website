@@ -135,8 +135,11 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     success: true;
     requestKey: string;
     orderId?: number;
+    orderNum?: string;
     invoiceId?: number;
     clientId?: number;
+    isNewClient?: boolean;
+    password?: string;
     razorpay?: any;
     items?: any[];
     total?: string;
@@ -209,8 +212,11 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
           success: true,
           requestKey,
           orderId: result.order_id,
+          orderNum: result.order_num || String(result.order_id || ""),
           invoiceId: result.invoice_id,
           clientId: result.client_id,
+          isNewClient: result.is_new_client,
+          password: result.password,
           razorpay: result.razorpay,
           items: result.items,
           total: result.total,
@@ -236,53 +242,22 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     data: { firstName: string; lastName: string; email: string },
     paymentLabel: string,
     paymentId?: string,
-    whmcsOrderId?: string,
-    orderItems?: any[],
-    orderTotal?: string
+    whmcsResult?: WhmcsSubmissionResult | null
   ) => {
-    const gstAmt = Math.round(total * 0.18);
-    const gt = total + gstAmt;
-    const orderId = whmcsOrderId || paymentId || `IC-${Date.now().toString(36).toUpperCase()}`;
-    const primaryItem = items[0];
     const params = new URLSearchParams({
-      id: orderId,
-      total: orderTotal || gt.toString(),
+      id: whmcsResult?.orderNum || String(whmcsResult?.orderId || paymentId || `IC-${Date.now().toString(36).toUpperCase()}`),
+      total: whmcsResult?.total || String(total + Math.round(total * 0.18)),
       name: `${data.firstName} ${data.lastName}`,
       email: data.email,
       payment: paymentLabel,
-      subtotal: subtotal.toString(),
-      gst: gstAmt.toString(),
-      itemName: primaryItem?.name || "Service",
-      itemType: primaryItem?.type || "service",
-      itemLabel: primaryItem?.label || "Service",
-      itemPeriod: primaryItem?.period || "1 Month",
+      invoiceId: String(whmcsResult?.invoiceId || ""),
     });
 
-    if (primaryItem) {
-      params.set("itemPrice", primaryItem.price.toString());
-    }
-
-    if (orderItems && orderItems.length > 0) {
-      params.set("orderItems", JSON.stringify(orderItems));
-    }
-
-    if (selectedAddons.length > 0) {
-      params.set(
-        "addons",
-        JSON.stringify(
-          selectedAddons.map((addon) => ({
-            name: addon.name,
-            price: addon.price,
-            period: addon.period || (addon.name.toLowerCase().includes("hosting") ? "/mo" : "/yr"),
-          }))
-        )
-      );
-    }
-
-    if (primaryItem?.type === "domain") {
-      params.set("domain", primaryItem.name);
-    } else {
-      params.set("product", primaryItem?.name || "Hosting Plan");
+    if (paymentId) params.set("paymentId", paymentId);
+    if (whmcsResult?.isNewClient) params.set("isNewClient", "true");
+    if (whmcsResult?.password) params.set("password", whmcsResult.password);
+    if (whmcsResult?.items && whmcsResult.items.length > 0) {
+      params.set("orderItems", JSON.stringify(whmcsResult.items));
     }
 
     navigate(`/order-confirmation?${params.toString()}`);
@@ -338,9 +313,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
               billingData,
               "Razorpay",
               response.razorpay_payment_id,
-              String(whmcsResult.orderId || ""),
-              whmcsResult.items,
-              whmcsResult.total
+              whmcsResult
             );
             setIsProcessing(false);
           },

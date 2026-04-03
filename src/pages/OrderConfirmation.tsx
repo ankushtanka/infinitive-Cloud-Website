@@ -17,6 +17,8 @@ import {
   ShieldCheck,
   FileText,
   Server,
+  Globe,
+  Key,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { generateInvoicePdf } from "@/utils/generateInvoicePdf";
@@ -34,30 +36,18 @@ type OrderItem = {
   amount: number;
 };
 
-type ConfirmationAddon = {
-  name: string;
-  price: number;
-  period?: string;
-};
-
 const OrderConfirmation = () => {
   const [searchParams] = useSearchParams();
-  const orderId = searchParams.get("id") || `IC-${Date.now().toString(36).toUpperCase()}`;
-  const total = searchParams.get("total") || "0";
+  const orderId = searchParams.get("id") || "";
+  const totalStr = searchParams.get("total") || "0";
   const name = searchParams.get("name") || "Customer";
   const email = searchParams.get("email") || "";
   const payment = searchParams.get("payment") || "Razorpay";
-  const subtotal = parseInt(searchParams.get("subtotal") || "0", 10);
-  const gst = parseInt(searchParams.get("gst") || "0", 10);
+  const invoiceId = searchParams.get("invoiceId") || "";
+  const paymentId = searchParams.get("paymentId") || "";
+  const isNewClient = searchParams.get("isNewClient") === "true";
+  const password = searchParams.get("password") || "";
 
-  // Legacy fallback params
-  const itemType = searchParams.get("itemType") || "shared-hosting";
-  const itemName = searchParams.get("itemName") || searchParams.get("product") || searchParams.get("domain") || "Service";
-  const itemLabel = searchParams.get("itemLabel") || (itemType === "domain" ? "Domain Registration" : "Shared Hosting");
-  const itemPeriod = searchParams.get("itemPeriod") || (itemType === "domain" ? "1 Year" : "1 Month");
-  const itemPrice = parseInt(searchParams.get("itemPrice") || subtotal.toString(), 10);
-
-  // Parse order items from API response
   const orderItems = useMemo<OrderItem[]>(() => {
     const raw = searchParams.get("orderItems");
     if (!raw) return [];
@@ -69,23 +59,7 @@ const OrderConfirmation = () => {
     }
   }, [searchParams]);
 
-  const addons = useMemo<ConfirmationAddon[]>(() => {
-    const addonsParam = searchParams.get("addons");
-    if (!addonsParam) return [];
-    try {
-      const parsed = JSON.parse(addonsParam);
-      if (!Array.isArray(parsed)) return [];
-      return parsed
-        .map((addon) => ({
-          name: typeof addon?.name === "string" ? addon.name : "Add-on",
-          price: Number(addon?.price || 0),
-          period: typeof addon?.period === "string" ? addon.period : undefined,
-        }))
-        .filter((addon) => addon.price >= 0);
-    } catch {
-      return [];
-    }
-  }, [searchParams]);
+  const totalFormatted = parseFloat(totalStr).toFixed(2);
 
   const copyOrderId = () => {
     navigator.clipboard.writeText(orderId);
@@ -93,25 +67,24 @@ const OrderConfirmation = () => {
   };
 
   const handleDownloadInvoice = async () => {
+    const subtotal = orderItems.reduce((s, i) => s + (i.amount || 0), 0);
     await generateInvoicePdf({
       orderId,
       date: new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }),
       name,
       email,
-      itemName,
-      itemType,
-      itemLabel,
-      itemPeriod,
+      itemName: orderItems[0]?.name || "Service",
+      itemType: orderItems[0]?.category || "hosting",
+      itemLabel: orderItems[0]?.label || "Service",
+      itemPeriod: orderItems[0]?.period || "",
       subtotal,
-      gst,
-      total: parseInt(total, 10),
+      gst: 0,
+      total: parseFloat(totalStr),
       paymentMethod: payment,
-      addons,
+      addons: [],
     });
     toast({ title: "Invoice Downloaded", description: "Your invoice PDF has been saved." });
   };
-
-  const hasOrderItems = orderItems.length > 0;
 
   return (
     <div className="min-h-screen bg-background">
@@ -140,12 +113,6 @@ const OrderConfirmation = () => {
               >
                 <CheckCircle2 className="w-10 h-10 text-green-500" />
               </motion.div>
-              <motion.div
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: [0, 1.5, 0], opacity: [0, 0.3, 0] }}
-                transition={{ delay: 0.5, duration: 1 }}
-                className="absolute inset-0 rounded-full bg-green-500/20"
-              />
             </div>
 
             <motion.h1
@@ -162,9 +129,31 @@ const OrderConfirmation = () => {
               transition={{ delay: 0.5 }}
               className="text-muted-foreground max-w-md"
             >
-              Thank you for your purchase, <span className="font-semibold text-foreground">{name}</span>. Your order is being processed.
+              Thank you for your purchase, <span className="font-semibold text-foreground">{name}</span>.
             </motion.p>
           </motion.div>
+
+          {/* New Client Password Box */}
+          {isNewClient && password && (
+            <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.55 }}>
+              <Card className="mb-6 border-primary/30 bg-primary/5">
+                <CardContent className="p-5">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-primary/10">
+                      <Key className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-foreground text-sm">Your account has been created</p>
+                      <p className="text-sm text-muted-foreground">
+                        Password: <span className="font-mono font-bold text-foreground bg-muted px-2 py-0.5 rounded">{password}</span>
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">Save this password to log in at the client area.</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
 
           {/* Order Details Card */}
           <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.6 }}>
@@ -183,21 +172,33 @@ const OrderConfirmation = () => {
 
                 <div className="grid sm:grid-cols-2 gap-4 text-sm">
                   <div className="space-y-1">
-                    <p className="text-muted-foreground">Order ID</p>
+                    <p className="text-muted-foreground">Order Number</p>
                     <p className="font-mono font-bold text-foreground break-all">{orderId}</p>
                   </div>
-                  <div className="space-y-1">
-                    <p className="text-muted-foreground">Date</p>
-                    <p className="font-semibold text-foreground">
-                      {new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}
-                    </p>
-                  </div>
+                  {invoiceId && (
+                    <div className="space-y-1">
+                      <p className="text-muted-foreground">Invoice ID</p>
+                      <p className="font-mono font-bold text-foreground">#{invoiceId}</p>
+                    </div>
+                  )}
                   <div className="space-y-1">
                     <p className="text-muted-foreground">Payment Method</p>
                     <div className="flex items-center gap-1.5">
                       <CreditCard className="w-4 h-4 text-primary" />
                       <p className="font-semibold text-foreground">{payment}</p>
                     </div>
+                  </div>
+                  {paymentId && (
+                    <div className="space-y-1">
+                      <p className="text-muted-foreground">Payment ID</p>
+                      <p className="font-mono text-xs font-bold text-foreground break-all">{paymentId}</p>
+                    </div>
+                  )}
+                  <div className="space-y-1">
+                    <p className="text-muted-foreground">Date</p>
+                    <p className="font-semibold text-foreground">
+                      {new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}
+                    </p>
                   </div>
                   <div className="space-y-1">
                     <p className="text-muted-foreground">Status</p>
@@ -212,13 +213,17 @@ const OrderConfirmation = () => {
 
                 <h3 className="text-sm font-bold text-foreground mb-3">Items Ordered</h3>
                 <div className="space-y-3">
-                  {hasOrderItems ? (
+                  {orderItems.length > 0 ? (
                     orderItems.map((item, idx) => (
                       <div key={idx} className="flex items-center justify-between p-3 rounded-lg bg-muted/50 gap-4">
                         <div className="flex items-center gap-3 min-w-0">
-                          <span className="text-2xl shrink-0">
-                            {item.category === "domain" ? "🌐" : "🖥️"}
-                          </span>
+                          <div className="p-2 rounded-lg bg-primary/10 shrink-0">
+                            {item.category === "domain" ? (
+                              <Globe className="w-5 h-5 text-primary" />
+                            ) : (
+                              <Server className="w-5 h-5 text-primary" />
+                            )}
+                          </div>
                           <div className="min-w-0">
                             <p className="text-xs text-muted-foreground">{item.label}</p>
                             <p className="font-bold text-foreground truncate text-base">{item.name}</p>
@@ -229,42 +234,15 @@ const OrderConfirmation = () => {
                       </div>
                     ))
                   ) : (
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50 gap-4">
-                      <div className="flex items-center gap-3 min-w-0">
-                        <span className="text-2xl shrink-0">
-                          {itemType === "domain" ? "🌐" : "🖥️"}
-                        </span>
-                        <div className="min-w-0">
-                          <p className="text-xs text-muted-foreground">{itemLabel}</p>
-                          <p className="font-bold text-foreground truncate text-base">{itemName}</p>
-                          <p className="text-xs text-muted-foreground">{itemPeriod}</p>
-                        </div>
-                      </div>
-                      <span className="font-bold text-foreground shrink-0">₹{itemPrice.toLocaleString("en-IN")}</span>
-                    </div>
+                    <p className="text-sm text-muted-foreground">No item details available.</p>
                   )}
-
-                  {addons.map((addon) => (
-                    <div key={`${addon.name}-${addon.price}`} className="flex items-center justify-between p-3 rounded-lg bg-muted/30 border border-border/60 gap-4">
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className="p-2 rounded-lg bg-primary/10 shrink-0">
-                          <ShieldCheck className="w-4 h-4 text-primary" />
-                        </div>
-                        <div className="min-w-0">
-                          <p className="font-semibold text-foreground truncate">{addon.name}</p>
-                          <p className="text-xs text-muted-foreground">Add-on{addon.period ? ` — ${addon.period}` : ""}</p>
-                        </div>
-                      </div>
-                      <span className="font-bold text-foreground shrink-0">₹{addon.price.toLocaleString("en-IN")}</span>
-                    </div>
-                  ))}
                 </div>
 
                 <Separator className="my-5" />
 
                 <div className="flex justify-between items-center">
                   <span className="text-lg font-bold text-foreground">Total Paid</span>
-                  <span className="text-xl font-black text-primary">₹{parseInt(total, 10).toLocaleString("en-IN")}</span>
+                  <span className="text-xl font-black text-primary">₹{totalFormatted}</span>
                 </div>
               </CardContent>
             </Card>
