@@ -114,7 +114,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [loggedInUser, setLoggedInUser] = useState<{ email: string; firstName: string; lastName: string; phone: string; companyName: string; address1: string; address2: string; city: string; state: string; postcode: string; country: string; domains: any[] } | null>(null);
+  const [loggedInUser, setLoggedInUser] = useState<{ clientid?: number; email: string; firstName: string; lastName: string; phone: string; companyName: string; address1: string; address2: string; city: string; state: string; postcode: string; country: string; domains: any[] } | null>(null);
 
   const gstRate = 0.18;
   const gstAmount = Math.round(total * gstRate);
