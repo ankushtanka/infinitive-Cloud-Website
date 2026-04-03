@@ -104,13 +104,18 @@ export function useDomainSearch() {
 
     setLoading(true);
     setSearched(true);
-    setResults([]);
+    // Don't clear results — keep stale results visible while loading
 
     const controller = new AbortController();
     abortRef.current = controller;
 
     try {
-      const data = await bulkDomainSearch(baseName);
+      const res = await fetch(
+        `https://client.infinitivecloud.com/middleware/domainMiddleware.php?action=bulk_search&name=${encodeURIComponent(baseName)}`,
+        { signal: controller.signal }
+      );
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
 
       if (controller.signal.aborted) return;
 
