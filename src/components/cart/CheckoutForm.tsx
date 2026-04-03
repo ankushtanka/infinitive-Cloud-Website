@@ -135,8 +135,11 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     success: true;
     requestKey: string;
     orderId?: number;
+    orderNum?: string;
     invoiceId?: number;
     clientId?: number;
+    isNewClient?: boolean;
+    password?: string;
     razorpay?: any;
     items?: any[];
     total?: string;
