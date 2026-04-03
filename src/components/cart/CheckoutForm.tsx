@@ -272,69 +272,51 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
           throw new Error("Failed to create order. Please try again.");
         }
 
-        // Step 2: If middleware returned razorpay data, use it; otherwise use edge function
-        if (whmcsResult.razorpay) {
-          const rzpData = whmcsResult.razorpay;
-          const rzpKeyId = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_IvJdQ7DM2voWE5';
-          openCheckout({
-            orderId: typeof (rzpData as any).order_id === 'string' ? (rzpData as any).order_id : undefined,
-            amount: rzpData.amount,
-            currency: rzpData.currency || 'INR',
-            keyId: rzpKeyId,
-            name: rzpData.prefill?.name || `${billingData.firstName} ${billingData.lastName}`,
-            email: rzpData.prefill?.email || billingData.email,
-            phone: rzpData.prefill?.contact || billingData.phone,
-            description: rzpData.description || 'Domain & Hosting Services',
-            notes: rzpData.notes || {},
-            onSuccess: (response) => {
-              navigateToConfirmation(
-                billingData,
-                "Razorpay",
-                response.razorpay_payment_id,
-                String(whmcsResult.orderId || '')
-              );
-              setIsProcessing(false);
-            },
-            onFailure: (error) => {
-              setIsProcessing(false);
-              toast({
-                title: "Payment Failed",
-                description: error?.description || "Something went wrong. Please try again.",
-                variant: "destructive",
-              });
-            },
-          });
-        } else {
-          // Fallback: use existing Razorpay order creation edge function
-          const amountInPaise = grandTotal * 100;
-          const order = await createOrder(amountInPaise);
-          openCheckout({
-            orderId: order.order_id,
-            amount: order.amount,
-            currency: order.currency,
-            keyId: order.key_id,
-            name: `${billingData.firstName} ${billingData.lastName}`,
-            email: billingData.email,
-            phone: billingData.phone,
-            onSuccess: (response) => {
-              navigateToConfirmation(
-                billingData,
-                "Razorpay",
-                response.razorpay_payment_id,
-                String(whmcsResult.orderId || '')
-              );
-              setIsProcessing(false);
-            },
-            onFailure: (error) => {
-              setIsProcessing(false);
-              toast({
-                title: "Payment Failed",
-                description: error?.description || "Something went wrong. Please try again.",
-                variant: "destructive",
-              });
-            },
-          });
-        }
+        // Step 2: Always create a real Razorpay gateway order before opening checkout
+        const rzpData = whmcsResult.razorpay;
+        const gatewayOrder = await createOrder({
+          amount: rzpData?.amount || Math.round(grandTotal * 100),
+          currency: rzpData?.currency || 'INR',
+          receipt: `whmcs_${whmcsResult.invoiceId || whmcsResult.orderId || Date.now()}`,
+          notes: {
+            ...(rzpData?.notes || {}),
+            whmcs_order_ref: (rzpData as any)?.order_ref || undefined,
+            whmcs_invoice_id: whmcsResult.invoiceId,
+            whmcs_order_id: whmcsResult.orderId,
+          },
+        });
+
+        openCheckout({
+          orderId: gatewayOrder.order_id,
+          amount: gatewayOrder.amount,
+          currency: gatewayOrder.currency,
+          keyId: gatewayOrder.key_id,
+          name: rzpData?.prefill?.name || `${billingData.firstName} ${billingData.lastName}`,
+          email: rzpData?.prefill?.email || billingData.email,
+          phone: rzpData?.prefill?.contact || billingData.phone,
+          description: rzpData?.description || 'Domain & Hosting Services',
+          notes: {
+            ...(rzpData?.notes || {}),
+            whmcs_order_ref: (rzpData as any)?.order_ref || undefined,
+          },
+          onSuccess: (response) => {
+            navigateToConfirmation(
+              billingData,
+              "Razorpay",
+              response.razorpay_payment_id,
+              String(whmcsResult.orderId || '')
+            );
+            setIsProcessing(false);
+          },
+          onFailure: (error) => {
+            setIsProcessing(false);
+            toast({
+              title: "Payment Failed",
+              description: error?.description || "Something went wrong. Please try again.",
+              variant: "destructive",
+            });
+          },
+        });
       } catch (err: any) {
         setIsProcessing(false);
         whmcsSubmittedRef.current = false;

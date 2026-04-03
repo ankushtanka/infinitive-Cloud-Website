@@ -20,6 +20,13 @@ interface RazorpayOptions {
   onFailure: (error: any) => void;
 }
 
+interface CreateRazorpayOrderOptions {
+  amount: number;
+  currency?: string;
+  receipt?: string;
+  notes?: Record<string, any>;
+}
+
 export function useRazorpay() {
   const scriptLoaded = useRef(false);
 
@@ -71,19 +78,25 @@ export function useRazorpay() {
     rzp.open();
   }, []);
 
-  const createOrder = useCallback(async (amountInPaise: number, receipt?: string) => {
+  const createOrder = useCallback(async ({ amount, currency = "INR", receipt, notes }: CreateRazorpayOrderOptions) => {
     const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
     const res = await fetch(
       `https://${projectId}.supabase.co/functions/v1/create-razorpay-order`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: amountInPaise, receipt }),
+        body: JSON.stringify({ amount, currency, receipt, notes }),
       }
     );
     if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.error || "Failed to create order");
+      let message = "Failed to create order";
+      try {
+        const err = await res.json();
+        message = err.error || message;
+      } catch {
+        // ignore non-JSON failures
+      }
+      throw new Error(message);
     }
     return res.json() as Promise<{ order_id: string; amount: number; currency: string; key_id: string }>;
   }, []);
