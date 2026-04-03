@@ -106,33 +106,60 @@ async function middlewareGet(params: Record<string, string>, timeout = 15000): P
   }
 }
 
-// POST helper for middleware (JSON body)
+// POST helper for middleware — tries form-urlencoded first (native PHP), falls back to JSON
 async function middlewarePost(body: Record<string, any>, timeout = 30000): Promise<any> {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeout);
-  try {
-    const res = await fetch(MIDDLEWARE_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'User-Agent': 'InfinitiveCloud-EdgeFunction/1.0',
-      },
-      body: JSON.stringify(body),
-      signal: controller.signal,
-    });
-    const text = await res.text();
-    console.log(`Middleware POST ${body.action}: status=${res.status}, len=${text.length}`);
-    try { return JSON.parse(text); } catch {
-      console.error(`Non-JSON POST ${body.action}:`, text.substring(0, 400));
+  const action = body.action || 'unknown';
+
+  // Attempt 1: application/x-www-form-urlencoded (PHP $_POST)
+  for (const format of ['form', 'json'] as const) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+    try {
+      let reqBody: string;
+      let contentType: string;
+      if (format === 'form') {
+        const params = new URLSearchParams();
+        for (const [k, v] of Object.entries(body)) {
+          if (v !== undefined && v !== null) params.set(k, String(v));
+        }
+        reqBody = params.toString();
+        contentType = 'application/x-www-form-urlencoded';
+      } else {
+        reqBody = JSON.stringify(body);
+        contentType = 'application/json';
+      }
+
+      console.log(`POST ${action} [${format}]: sending...`);
+      const res = await fetch(MIDDLEWARE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': contentType,
+          'Accept': 'application/json',
+          'User-Agent': 'InfinitiveCloud-EdgeFunction/1.0',
+        },
+        body: reqBody,
+        signal: controller.signal,
+      });
+      const text = await res.text();
+      console.log(`POST ${action} [${format}]: status=${res.status}, len=${text.length}`);
+      try {
+        const data = JSON.parse(text);
+        return data; // success — valid JSON response
+      } catch {
+        console.error(`Non-JSON POST ${action} [${format}]:`, text.substring(0, 500));
+        // If form-encoded failed with HTML error, try JSON next
+        if (format === 'form') continue;
+        return null;
+      }
+    } catch (err) {
+      console.error(`Fetch error POST ${action} [${format}]:`, (err as Error).message);
+      if (format === 'form') continue;
       return null;
+    } finally {
+      clearTimeout(timer);
     }
-  } catch (err) {
-    console.error(`Fetch error POST ${body.action}:`, err.message);
-    return null;
-  } finally {
-    clearTimeout(timer);
   }
+  return null;
 }
 
 serve(async (req) => {
