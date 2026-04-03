@@ -236,7 +236,9 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     data: { firstName: string; lastName: string; email: string },
     paymentLabel: string,
     paymentId?: string,
-    whmcsOrderId?: string
+    whmcsOrderId?: string,
+    orderItems?: any[],
+    orderTotal?: string
   ) => {
     const gstAmt = Math.round(total * 0.18);
     const gt = total + gstAmt;
@@ -244,7 +246,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     const primaryItem = items[0];
     const params = new URLSearchParams({
       id: orderId,
-      total: gt.toString(),
+      total: orderTotal || gt.toString(),
       name: `${data.firstName} ${data.lastName}`,
       email: data.email,
       payment: paymentLabel,
@@ -258,6 +260,10 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
 
     if (primaryItem) {
       params.set("itemPrice", primaryItem.price.toString());
+    }
+
+    if (orderItems && orderItems.length > 0) {
+      params.set("orderItems", JSON.stringify(orderItems));
     }
 
     if (selectedAddons.length > 0) {
