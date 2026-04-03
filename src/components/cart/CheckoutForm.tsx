@@ -178,11 +178,13 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     if (domainItem) {
       payload.domain_action = "register";
       payload.regperiod = 1;
+      payload.domainpriceoverride = domainItem.price;
     }
 
     if (hostingItem) {
       payload.pid = hostingItem.id;
       payload.billingcycle = billingCycle === "annually" ? "annually" : "monthly";
+      payload.priceoverride = hostingItem.price;
     }
 
     const requestKey = JSON.stringify(payload);
