@@ -159,7 +159,11 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     const domainItem = items.find((i) => i.type === "domain");
     const hostingItem = items.find((i) => i.type !== "domain");
 
+    // Auto-generate fallback domain for hosting-only orders
+    const orderDomain = domainItem?.name || data.hostingDomain || `${data.firstName.toLowerCase()}${Date.now()}.infinitivecloud.com`;
+
     const payload: OrderPayload = {
+      ...(data.clientid ? { clientid: data.clientid } : {}),
       firstname: data.firstName,
       lastname: data.lastName,
       email: data.email,
@@ -171,7 +175,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
       state: data.state,
       postcode: data.postcode,
       country: data.country,
-      domain: domainItem?.name || data.hostingDomain || undefined,
+      domain: orderDomain,
       paymentmethod: "razorpay",
     };
 
