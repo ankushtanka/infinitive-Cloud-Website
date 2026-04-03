@@ -14,10 +14,9 @@ import {
   ExternalLink,
   Search,
   Globe,
-  Loader2,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { getInvoices } from "@/lib/whmcs";
+import { getInvoices, getInvoiceDetails } from "@/lib/whmcs";
 
 interface WhmcsUser {
   clientid: number;
@@ -35,6 +34,12 @@ interface Invoice {
   payment_url?: string;
 }
 
+interface InvoiceItemDetail {
+  description: string;
+  amount: string;
+  type?: string;
+}
+
 const statusColor: Record<string, string> = {
   Paid: "bg-emerald-500/15 text-emerald-600 border-emerald-500/30",
   Unpaid: "bg-amber-500/15 text-amber-600 border-amber-500/30",
@@ -46,6 +51,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<WhmcsUser | null>(null);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [invoiceItems, setInvoiceItems] = useState<Record<number, InvoiceItemDetail[]>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -62,6 +68,22 @@ const Dashboard = () => {
         const res = await getInvoices(parsed.clientid);
         if (res.result === "success" && Array.isArray(res.invoices)) {
           setInvoices(res.invoices);
+          // Fetch details for each invoice in parallel
+          const details = await Promise.allSettled(
+            res.invoices.map((inv: Invoice) =>
+              getInvoiceDetails(inv.id).then((d) => ({
+                id: inv.id,
+                items: Array.isArray(d.items) ? d.items : [],
+              }))
+            )
+          );
+          const itemsMap: Record<number, InvoiceItemDetail[]> = {};
+          details.forEach((r) => {
+            if (r.status === "fulfilled") {
+              itemsMap[r.value.id] = r.value.items;
+            }
+          });
+          setInvoiceItems(itemsMap);
         }
       } catch {
         toast({ title: "Error", description: "Could not load invoices.", variant: "destructive" });
@@ -157,44 +179,39 @@ const Dashboard = () => {
               ) : invoices.length === 0 ? (
                 <p className="text-center text-muted-foreground py-8">No invoices found.</p>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b text-left text-muted-foreground">
-                        <th className="pb-3 font-medium">Invoice #</th>
-                        <th className="pb-3 font-medium">Date</th>
-                        <th className="pb-3 font-medium">Total</th>
-                        <th className="pb-3 font-medium">Status</th>
-                        <th className="pb-3 font-medium"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {invoices.map((inv) => (
-                        <tr key={inv.id} className="border-b last:border-0">
-                          <td className="py-3 font-medium">#{inv.id}</td>
-                          <td className="py-3 text-muted-foreground">{inv.date}</td>
-                          <td className="py-3 font-semibold">₹{inv.total}</td>
-                          <td className="py-3">
-                            <Badge
-                              variant="outline"
-                              className={statusColor[inv.status] || ""}
-                            >
-                              {inv.status}
-                            </Badge>
-                          </td>
-                          <td className="py-3">
+                <div className="space-y-3">
+                  {invoices.map((inv) => {
+                    const items = invoiceItems[inv.id] || [];
+                    const description = items.map((i) => i.description).filter(Boolean).join(", ");
+                    return (
+                      <div key={inv.id} className="p-4 rounded-lg border border-border bg-muted/30">
+                        <div className="flex items-center justify-between gap-4">
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="font-bold text-foreground">#{inv.id}</span>
+                              <Badge variant="outline" className={statusColor[inv.status] || ""}>
+                                {inv.status}
+                              </Badge>
+                            </div>
+                            {description && (
+                              <p className="text-sm text-muted-foreground truncate">{description}</p>
+                            )}
+                            <p className="text-xs text-muted-foreground mt-1">{inv.date}</p>
+                          </div>
+                          <div className="text-right shrink-0">
+                            <p className="font-bold text-foreground text-lg">₹{inv.total}</p>
                             {inv.payment_url && inv.status !== "Paid" && (
                               <a href={inv.payment_url} target="_blank" rel="noopener noreferrer">
-                                <Button size="sm" variant="outline" className="h-7 text-xs">
+                                <Button size="sm" variant="outline" className="h-7 text-xs mt-1">
                                   Pay Now
                                 </Button>
                               </a>
                             )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </CardContent>

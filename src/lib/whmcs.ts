@@ -74,6 +74,19 @@ export interface RazorpayData {
   notes: Record<string, any>;
 }
 
+export interface OrderItem {
+  category: 'domain' | 'hosting';
+  label: string;
+  icon: 'globe' | 'server';
+  name: string;
+  action: string;
+  period: string;
+  price_formatted: string;
+  subtitle: string;
+  description: string;
+  amount: number;
+}
+
 export interface OrderResult {
   result: 'success' | 'error';
   message: string;
@@ -87,6 +100,8 @@ export interface OrderResult {
   billing_cycle?: string;
   invoice?: InvoiceData;
   razorpay?: RazorpayData;
+  items?: OrderItem[];
+  total?: string;
 }
 
 export interface OrderPayload {
@@ -177,4 +192,9 @@ export async function getInvoices(clientid: number) {
 /** Get TLD-specific pricing */
 export async function getTldPricing(tld: string) {
   return api('get_tld_pricing', { tld });
+}
+
+/** Get single invoice details with line items */
+export async function getInvoiceDetails(invoiceid: number) {
+  return api('get_invoice', { invoiceid });
 }

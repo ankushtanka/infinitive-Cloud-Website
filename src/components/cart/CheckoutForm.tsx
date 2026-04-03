@@ -138,6 +138,8 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     invoiceId?: number;
     clientId?: number;
     razorpay?: any;
+    items?: any[];
+    total?: string;
   };
 
   const whmcsRequestKeyRef = useRef<string | null>(null);
@@ -210,6 +212,8 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
           invoiceId: result.invoice_id,
           clientId: result.client_id,
           razorpay: result.razorpay,
+          items: result.items,
+          total: result.total,
         };
 
         whmcsOrderCacheRef.current = submission;
@@ -232,7 +236,9 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     data: { firstName: string; lastName: string; email: string },
     paymentLabel: string,
     paymentId?: string,
-    whmcsOrderId?: string
+    whmcsOrderId?: string,
+    orderItems?: any[],
+    orderTotal?: string
   ) => {
     const gstAmt = Math.round(total * 0.18);
     const gt = total + gstAmt;
@@ -240,7 +246,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     const primaryItem = items[0];
     const params = new URLSearchParams({
       id: orderId,
-      total: gt.toString(),
+      total: orderTotal || gt.toString(),
       name: `${data.firstName} ${data.lastName}`,
       email: data.email,
       payment: paymentLabel,
@@ -254,6 +260,10 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
 
     if (primaryItem) {
       params.set("itemPrice", primaryItem.price.toString());
+    }
+
+    if (orderItems && orderItems.length > 0) {
+      params.set("orderItems", JSON.stringify(orderItems));
     }
 
     if (selectedAddons.length > 0) {
@@ -328,7 +338,9 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
               billingData,
               "Razorpay",
               response.razorpay_payment_id,
-              String(whmcsResult.orderId || "")
+              String(whmcsResult.orderId || ""),
+              whmcsResult.items,
+              whmcsResult.total
             );
             setIsProcessing(false);
           },
@@ -737,8 +749,12 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
 
               <div className="space-y-3 text-sm">
                 {items.map((item) => (
-                  <div key={item.id} className="flex justify-between text-muted-foreground">
-                    <span className="truncate mr-2">{item.name}</span>
+                  <div key={item.id} className="flex items-center gap-2 text-muted-foreground">
+                    <span className="text-base shrink-0">{item.type === "domain" ? "🌐" : "🖥️"}</span>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold text-foreground truncate">{item.name}</p>
+                      <p className="text-xs">{item.label} · {item.period}</p>
+                    </div>
                     <span className="font-medium text-foreground shrink-0">₹{item.price.toLocaleString("en-IN")}</span>
                   </div>
                 ))}
