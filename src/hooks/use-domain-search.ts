@@ -72,48 +72,67 @@ function mapResult(d: WhmcsDomainResult): DomainResult {
   };
 }
 
+// Client-side cache: avoids re-fetching same domain within 5 minutes
+const searchCache = new Map<string, { ts: number; results: DomainResult[] }>();
+const CACHE_TTL = 5 * 60 * 1000;
+
 export function useDomainSearch() {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<DomainResult[]>([]);
   const [searched, setSearched] = useState(false);
-  const activeSearchIdRef = useRef(0);
+  const abortRef = useRef<AbortController | null>(null);
 
   const search = async (domainInput: string) => {
     const query = domainInput.trim();
     if (!query) return;
 
-    // Extract base name (strip TLD if provided)
     const match = query.match(/^([a-zA-Z0-9-]+)(\.[a-zA-Z0-9-.]+)?$/);
-    const baseName = match ? match[1] : query.replace(/[^a-zA-Z0-9-]/g, '');
+    const baseName = (match ? match[1] : query.replace(/[^a-zA-Z0-9-]/g, '')).toLowerCase();
     if (!baseName) return;
 
-    const searchId = Date.now();
-    activeSearchIdRef.current = searchId;
+    // Cancel any in-flight request
+    abortRef.current?.abort();
+
+    // Check cache first — instant results
+    const cached = searchCache.get(baseName);
+    if (cached && Date.now() - cached.ts < CACHE_TTL) {
+      setResults(cached.results);
+      setSearched(true);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setSearched(true);
     setResults([]);
 
+    const controller = new AbortController();
+    abortRef.current = controller;
+
     try {
       const data = await bulkDomainSearch(baseName);
 
-      if (activeSearchIdRef.current !== searchId) return;
+      if (controller.signal.aborted) return;
 
       if (data.result === 'success' && Array.isArray(data.domains)) {
-        setResults(data.domains.map(mapResult));
+        const mapped = data.domains.map(mapResult);
+        setResults(mapped);
+        searchCache.set(baseName, { ts: Date.now(), results: mapped });
       } else {
         console.error("Domain search error:", data.message || data);
       }
-    } catch (err) {
+    } catch (err: any) {
+      if (err?.name === 'AbortError') return;
       console.error("Domain search failed:", err);
     } finally {
-      if (activeSearchIdRef.current === searchId) {
+      if (!controller.signal.aborted) {
         setLoading(false);
       }
     }
   };
 
   const reset = () => {
-    activeSearchIdRef.current = Date.now();
+    abortRef.current?.abort();
     setLoading(false);
     setSearched(false);
     setResults([]);
