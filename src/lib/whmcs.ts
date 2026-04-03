@@ -193,3 +193,8 @@ export async function getInvoices(clientid: number) {
 export async function getTldPricing(tld: string) {
   return api('get_tld_pricing', { tld });
 }
+
+/** Get single invoice details with line items */
+export async function getInvoiceDetails(invoiceid: number) {
+  return api('get_invoice', { invoiceid });
+}
