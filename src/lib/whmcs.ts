@@ -135,7 +135,7 @@ export interface ValidateLoginResult {
 // API FUNCTIONS
 // ============================================================
 
-async function post(action: string, body: Record<string, any> = {}): Promise<any> {
+async function api(action: string, body: Record<string, any> = {}): Promise<any> {
   const res = await fetch(MIDDLEWARE_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -143,16 +143,9 @@ async function post(action: string, body: Record<string, any> = {}): Promise<any
   });
   if (!res.ok) {
     const text = await res.text();
-    console.error(`Middleware POST ${action} failed (${res.status}):`, text.substring(0, 300));
+    console.error(`Middleware ${action} failed (${res.status}):`, text.substring(0, 300));
     throw new Error(`HTTP ${res.status}: middleware returned error`);
   }
-  return res.json();
-}
-
-async function get(action: string, params: Record<string, string> = {}): Promise<any> {
-  const qs = new URLSearchParams({ action, ...params }).toString();
-  const res = await fetch(`${MIDDLEWARE_URL}?${qs}`);
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }
 
