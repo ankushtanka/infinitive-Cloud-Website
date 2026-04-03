@@ -72,7 +72,7 @@ serve(async (req) => {
 
     // Single bulk_search call - returns all TLDs with availability + pricing
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 15000);
+    const timer = setTimeout(() => controller.abort(), 25000);
     const url = `${MIDDLEWARE_URL}?action=bulk_search&name=${encodeURIComponent(baseName)}`;
 
     const res = await fetch(url, {
