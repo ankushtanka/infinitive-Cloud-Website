@@ -7,7 +7,7 @@ declare global {
 }
 
 interface RazorpayOptions {
-  orderId: string;
+  orderId?: string;
   amount: number;
   currency: string;
   keyId: string;
@@ -15,6 +15,7 @@ interface RazorpayOptions {
   email: string;
   phone: string;
   description?: string;
+  notes?: Record<string, any>;
   onSuccess: (response: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) => void;
   onFailure: (error: any) => void;
 }
@@ -38,24 +39,30 @@ export function useRazorpay() {
       return;
     }
 
-    const rzp = new window.Razorpay({
+    const razorpayOptions: Record<string, any> = {
       key: opts.keyId,
       amount: opts.amount,
       currency: opts.currency,
       name: "Infinitive Cloud",
       description: opts.description || "Domain & Hosting Services",
-      order_id: opts.orderId,
       prefill: {
         name: opts.name,
         email: opts.email,
         contact: opts.phone,
       },
+      notes: opts.notes,
       theme: { color: "#2563eb" },
       handler: opts.onSuccess,
       modal: {
         ondismiss: () => opts.onFailure({ description: "Payment cancelled" }),
       },
-    });
+    };
+
+    if (opts.orderId && opts.orderId.startsWith("order_")) {
+      razorpayOptions.order_id = opts.orderId;
+    }
+
+    const rzp = new window.Razorpay(razorpayOptions);
 
     rzp.on("payment.failed", (response: any) => {
       opts.onFailure(response.error);
