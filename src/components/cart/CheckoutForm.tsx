@@ -39,7 +39,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { useRazorpay } from "@/hooks/use-razorpay";
-import { supabase } from "@/integrations/supabase/client";
+import { placeOrder, validateLogin, type OrderPayload } from "@/lib/whmcs";
 
 // --- Schemas ---
 const newCustomerSchema = z.object({
