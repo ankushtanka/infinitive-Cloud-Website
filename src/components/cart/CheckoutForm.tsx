@@ -277,7 +277,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
           const rzpData = whmcsResult.razorpay;
           const rzpKeyId = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_IvJdQ7DM2voWE5';
           openCheckout({
-            orderId: rzpData.order_ref || '',
+            orderId: (rzpData as any).order_ref || '',
             amount: rzpData.amount,
             currency: rzpData.currency || 'INR',
             keyId: rzpKeyId,
