@@ -277,7 +277,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
           const rzpData = whmcsResult.razorpay;
           const rzpKeyId = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_IvJdQ7DM2voWE5';
           openCheckout({
-            orderId: (rzpData as any).order_ref || '',
+            orderId: typeof (rzpData as any).order_id === 'string' ? (rzpData as any).order_id : undefined,
             amount: rzpData.amount,
             currency: rzpData.currency || 'INR',
             keyId: rzpKeyId,
@@ -285,6 +285,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
             email: rzpData.prefill?.email || billingData.email,
             phone: rzpData.prefill?.contact || billingData.phone,
             description: rzpData.description || 'Domain & Hosting Services',
+            notes: rzpData.notes || {},
             onSuccess: (response) => {
               navigateToConfirmation(
                 billingData,
