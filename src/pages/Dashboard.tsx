@@ -182,7 +182,7 @@ const Dashboard = () => {
                 <div className="space-y-3">
                   {invoices.map((inv) => {
                     const items = invoiceItems[inv.id] || [];
-                    const description = items.map((i) => i.description).filter(Boolean).join(", ");
+                    const description = items.map((i) => i.description).filter(Boolean).join(" + ");
                     return (
                       <div key={inv.id} className="p-4 rounded-lg border border-border bg-muted/30">
                         <div className="flex items-center justify-between gap-4">
