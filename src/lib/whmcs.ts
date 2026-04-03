@@ -151,30 +151,30 @@ async function api(action: string, body: Record<string, any> = {}): Promise<any>
 
 /** Bulk search across all configured TLDs */
 export async function bulkDomainSearch(name: string): Promise<BulkSearchResult> {
-  return get('bulk_search', { name });
+  return api('bulk_search', { name });
 }
 
 /** Get all hosting products with live pricing */
 export async function fetchProducts(): Promise<ProductsResult> {
-  return get('get_products');
+  return api('get_products');
 }
 
 /** Place a complete order — returns invoice + Razorpay checkout data */
 export async function placeOrder(payload: OrderPayload): Promise<OrderResult> {
-  return post('complete_order', payload);
+  return api('complete_order', payload);
 }
 
 /** Validate client login */
 export async function validateLogin(email: string, password: string): Promise<ValidateLoginResult> {
-  return get('validate_login', { email, password });
+  return api('validate_login', { email, password });
 }
 
 /** Get client invoices */
 export async function getInvoices(clientid: number) {
-  return get('get_invoices', { clientid: String(clientid) });
+  return api('get_invoices', { clientid });
 }
 
 /** Get TLD-specific pricing */
 export async function getTldPricing(tld: string) {
-  return get('get_tld_pricing', { tld });
+  return api('get_tld_pricing', { tld });
 }
