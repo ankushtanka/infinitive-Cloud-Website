@@ -150,7 +150,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
   const whmcsOrderCacheRef = useRef<WhmcsSubmissionResult | null>(null);
 
   const submitOrderToWhmcs = async (
-    data: { firstName: string; lastName: string; email: string; phone: string; companyName?: string; address1: string; address2?: string; city: string; state: string; postcode: string; country: string; hostingDomain?: string; password?: string }
+    data: { clientid?: number; firstName: string; lastName: string; email: string; phone: string; companyName?: string; address1: string; address2?: string; city: string; state: string; postcode: string; country: string; hostingDomain?: string; password?: string }
   ) => {
     if (!items.length) {
       return null;
