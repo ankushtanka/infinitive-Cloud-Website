@@ -153,6 +153,8 @@ const App = () => {
                 <Route path="/order-confirmation" element={<OrderConfirmation />} />
                 <Route path="/domain-transfer" element={<DomainTransfer />} />
                 <Route path="/domain-management" element={<DomainManagement />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/dashboard" element={<Dashboard />} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
