@@ -338,7 +338,9 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
               billingData,
               "Razorpay",
               response.razorpay_payment_id,
-              String(whmcsResult.orderId || "")
+              String(whmcsResult.orderId || ""),
+              whmcsResult.items,
+              whmcsResult.total
             );
             setIsProcessing(false);
           },
