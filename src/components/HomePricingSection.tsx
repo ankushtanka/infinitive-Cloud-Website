@@ -144,7 +144,7 @@ const HomePricingSection = () => {
                         </li>
                       ))}
                     </ul>
-                    <Link to={plan.pid ? `/cart?product=${plan.pid}&name=${encodeURIComponent(plan.name)}&type=shared-hosting` : "/contact"}>
+                    <Link to={plan.pid ? `/cart?product=${plan.pid}&name=${encodeURIComponent(plan.name)}&type=shared-hosting&price=${plan.price_monthly || ''}&annualPrice=${plan.price_annually || ''}` : "/contact"}>
                       <Button
                         className={`w-full h-11 md:h-12 text-sm font-bold ${plan.popular ? "btn-gradient" : ""}`}
                         variant={plan.popular ? "default" : "outline"}

@@ -41,57 +41,34 @@ const Cart = () => {
   const productId = searchParams.get("product");
   const productName = searchParams.get("name");
   const productType = searchParams.get("type");
+  const productPrice = searchParams.get("price");
+  const productAnnualPrice = searchParams.get("annualPrice");
   const [step, setStep] = useState<"cart" | "checkout">("cart");
 
-  const isHostingProduct = productType && productType !== "domain" && productId;
-  const { products, loading: whmcsLoading } = useWhmcsProducts(
-    isHostingProduct ? [Number(productId)] : []
-  );
-
   const getInitialItems = (): CartItem[] => {
-    if (domain) {
+    if (domain && !productId) {
       const price = domainPrice ? Math.round(parseFloat(domainPrice)) : 0;
       return [
         { id: 1, type: "domain", name: domain, period: "1 Year", price, label: "Domain Registration" },
       ];
     }
+    if (productId && productType && productType !== "domain") {
+      const monthly = productPrice ? parseFloat(productPrice) : 0;
+      const annual = productAnnualPrice ? parseFloat(productAnnualPrice) : 0;
+      return [{
+        id: Number(productId),
+        type: productType,
+        name: productName || "Hosting Plan",
+        period: "1 Month",
+        price: monthly,
+        annualPrice: annual,
+        label: productType === "shared-hosting" ? "Shared Hosting" : "Hosting",
+      }];
+    }
     return [];
   };
 
   const [items, setItems] = useState<CartItem[]>(getInitialItems);
-
-  // Update items when WHMCS product data loads
-  useEffect(() => {
-    if (isHostingProduct && products.length > 0) {
-      const product = products[0];
-      const inr = product.pricing?.INR;
-      const monthlyPrice = inr ? parseFloat(inr.monthly) : 0;
-      const annualPrice = inr ? parseFloat(inr.annually) : 0;
-
-      setItems([{
-        id: product.pid,
-        type: productType!,
-        name: product.name || productName || "Hosting Plan",
-        period: "1 Month",
-        price: monthlyPrice,
-        annualPrice,
-        label: "Shared Hosting",
-        features: product.features || [],
-      }]);
-    } else if (isHostingProduct && !whmcsLoading && products.length === 0 && productName) {
-      // Fallback if WHMCS fails
-      setItems([{
-        id: Number(productId),
-        type: productType!,
-        name: productName,
-        period: "1 Month",
-        price: 0,
-        annualPrice: 0,
-        label: "Shared Hosting",
-        features: [],
-      }]);
-    }
-  }, [isHostingProduct, productId, productName, productType, products, whmcsLoading]);
 
   const addons = [
     { id: "ssl", icon: Shield, name: "SSL Certificate", desc: "Secure your website with HTTPS", price: 499 },
