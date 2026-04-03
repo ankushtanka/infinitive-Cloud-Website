@@ -39,7 +39,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { useRazorpay } from "@/hooks/use-razorpay";
-import { supabase } from "@/integrations/supabase/client";
+import { placeOrder, validateLogin, type OrderPayload } from "@/lib/whmcs";
 
 // --- Schemas ---
 const newCustomerSchema = z.object({
@@ -138,7 +138,6 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     razorpayPaymentId?: string,
     razorpayOrderId?: string
   ) => {
-    // Prevent duplicate submissions
     if (whmcsSubmittedRef.current) {
       console.log("WHMCS order already submitted, skipping duplicate");
       return null;
@@ -151,55 +150,54 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     }
 
     try {
-      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
-      // Send ALL cart items in one call
-      const cartItems = items.map(item => ({
-        id: item.id,
-        name: item.name,
-        type: item.type,
-        price: item.price,
-        period: item.period,
-      }));
-
       const primaryItem = items[0];
-      const res = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/whmcs-create-order`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email,
-            phone: data.phone,
-            companyName: data.companyName,
-            address1: data.address1,
-            address2: data.address2,
-            city: data.city,
-            state: data.state,
-            postcode: data.postcode,
-            country: data.country,
-            password: data.password,
-            billingCycle: billingCycle,
-            paymentMethod: "razorpay",
-            domain: primaryItem.type === "domain" ? primaryItem.name : (data.hostingDomain || undefined),
-            totalAmount: grandTotal,
-            razorpayPaymentId,
-            razorpayOrderId,
-            cartItems,
-          }),
-        }
-      );
-      const result = await res.json().catch(() => ({ error: "Invalid response from order server." }));
-      if (!res.ok || !result?.success) {
-        whmcsSubmittedRef.current = false;
-        throw new Error(result?.error || "Failed to create order in backend.");
+      const domainItem = items.find(i => i.type === 'domain');
+      const hostingItem = items.find(i => i.type !== 'domain');
+
+      const payload: OrderPayload = {
+        firstname: data.firstName,
+        lastname: data.lastName,
+        email: data.email,
+        password2: data.password || undefined,
+        phonenumber: data.phone,
+        address1: data.address1,
+        address2: data.address2,
+        city: data.city,
+        state: data.state,
+        postcode: data.postcode,
+        country: data.country,
+        domain: domainItem?.name || data.hostingDomain || undefined,
+        paymentmethod: 'razorpay',
+      };
+
+      if (domainItem) {
+        payload.domain_action = 'register';
+        payload.regperiod = 1;
       }
-      console.log("WHMCS order result:", result);
-      return result;
+      if (hostingItem) {
+        payload.pid = hostingItem.id;
+        payload.billingcycle = billingCycle === 'annually' ? 'annually' : 'monthly';
+      }
+
+      console.log("Placing order via middleware:", payload);
+      const result = await placeOrder(payload);
+
+      if (result.result !== 'success') {
+        whmcsSubmittedRef.current = false;
+        throw new Error(result.message || "Failed to create order");
+      }
+
+      console.log("Order placed successfully:", result);
+      return {
+        success: true,
+        orderId: result.order_id,
+        invoiceId: result.invoice_id,
+        clientId: result.client_id,
+        razorpay: result.razorpay,
+      };
     } catch (err) {
-      console.error("Failed to submit order to WHMCS:", err);
-      whmcsSubmittedRef.current = false; // Allow retry on network error
+      console.error("Failed to submit order:", err);
+      whmcsSubmittedRef.current = false;
       return null;
     }
   };
@@ -267,55 +265,81 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     if (paymentMethod === "razorpay") {
       setIsProcessing(true);
       try {
-        const amountInPaise = grandTotal * 100;
-        const order = await createOrder(amountInPaise);
-        openCheckout({
-          orderId: order.order_id,
-          amount: order.amount,
-          currency: order.currency,
-          keyId: order.key_id,
-          name: `${billingData.firstName} ${billingData.lastName}`,
-          email: billingData.email,
-          phone: billingData.phone,
-          onSuccess: async (response) => {
-            try {
-              const whmcsResult = await submitOrderToWhmcs(
-                billingData,
-                response.razorpay_payment_id,
-                response.razorpay_order_id
-              );
+        // Step 1: Create WHMCS order first — middleware returns razorpay data
+        const whmcsResult = await submitOrderToWhmcs(billingData);
 
+        if (!whmcsResult?.success) {
+          throw new Error("Failed to create order. Please try again.");
+        }
+
+        // Step 2: If middleware returned razorpay data, use it; otherwise use edge function
+        if (whmcsResult.razorpay) {
+          // Middleware returned Razorpay checkout data directly
+          const rzpData = whmcsResult.razorpay;
+          openCheckout({
+            orderId: '', // No Razorpay order — direct payment
+            amount: rzpData.amount,
+            currency: rzpData.currency || 'INR',
+            keyId: rzpData.prefill ? '' : '', // Will be set from env
+            name: `${billingData.firstName} ${billingData.lastName}`,
+            email: billingData.email,
+            phone: billingData.phone,
+            description: rzpData.description || 'Domain & Hosting Services',
+            onSuccess: (response) => {
               navigateToConfirmation(
                 billingData,
                 "Razorpay",
-                whmcsResult?.invoiceId || whmcsResult?.orderId || response.razorpay_payment_id,
-                whmcsResult?.orderId
+                response.razorpay_payment_id,
+                String(whmcsResult.orderId || '')
               );
-            } catch (error: any) {
+              setIsProcessing(false);
+            },
+            onFailure: (error) => {
+              setIsProcessing(false);
               toast({
-                title: "Order Sync Failed",
-                description: error?.message || "Payment succeeded, but order sync failed. Please contact support with your payment ID.",
+                title: "Payment Failed",
+                description: error?.description || "Something went wrong. Please try again.",
                 variant: "destructive",
               });
-              navigateToConfirmation(billingData, "Razorpay", response.razorpay_payment_id);
-            } finally {
+            },
+          });
+        } else {
+          // Fallback: use existing Razorpay order creation edge function
+          const amountInPaise = grandTotal * 100;
+          const order = await createOrder(amountInPaise);
+          openCheckout({
+            orderId: order.order_id,
+            amount: order.amount,
+            currency: order.currency,
+            keyId: order.key_id,
+            name: `${billingData.firstName} ${billingData.lastName}`,
+            email: billingData.email,
+            phone: billingData.phone,
+            onSuccess: (response) => {
+              navigateToConfirmation(
+                billingData,
+                "Razorpay",
+                response.razorpay_payment_id,
+                String(whmcsResult.orderId || '')
+              );
               setIsProcessing(false);
-            }
-          },
-          onFailure: (error) => {
-            setIsProcessing(false);
-            toast({
-              title: "Payment Failed",
-              description: error?.description || "Something went wrong. Please try again.",
-              variant: "destructive",
-            });
-          },
-        });
+            },
+            onFailure: (error) => {
+              setIsProcessing(false);
+              toast({
+                title: "Payment Failed",
+                description: error?.description || "Something went wrong. Please try again.",
+                variant: "destructive",
+              });
+            },
+          });
+        }
       } catch (err: any) {
         setIsProcessing(false);
+        whmcsSubmittedRef.current = false;
         toast({
-          title: "Payment Error",
-          description: err.message || "Could not initiate payment. Please try again.",
+          title: "Order Error",
+          description: err.message || "Could not process your order. Please try again.",
           variant: "destructive",
         });
       }
@@ -348,43 +372,29 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
   const handleExistingLogin = async (data: ExistingCustomerData): Promise<void> => {
     setIsLoggingIn(true);
     try {
-      // Validate against WHMCS
-      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
-      const res = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/whmcs-create-order`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            action: "ValidateLogin",
-            email: data.email,
-            password: data.password,
-          }),
-        }
-        );
-        
-        const result = await res.json().catch(() => ({ error: "Invalid response from server" }));
+      const result = await validateLogin(data.email, data.password);
 
-        if (res.ok && result.clientId) {
+      if (result.result === 'success' && result.userid) {
+        const client = result.client || {};
         setLoggedInUser({
-          email: data.email,
-          firstName: result.firstName || data.email.split("@")[0],
-          lastName: result.lastName || "",
-          phone: result.phone || "",
-          companyName: result.companyName || "",
-          address1: result.address1 || "",
-          address2: result.address2 || "",
-          city: result.city || "",
-          state: result.state || "",
-          postcode: result.postcode || "",
-          country: result.country || "IN",
-          domains: result.domains || [],
+          email: client.email || data.email,
+          firstName: client.firstname || data.email.split("@")[0],
+          lastName: client.lastname || "",
+          phone: client.phonenumber || "",
+          companyName: client.companyname || "",
+          address1: client.address1 || "",
+          address2: client.address2 || "",
+          city: client.city || "",
+          state: client.state || "",
+          postcode: client.postcode || "",
+          country: client.country || "IN",
+          domains: client.domains || [],
         });
-        toast({ title: "Logged In", description: `Welcome back, ${result.firstName || data.email}!` });
+        toast({ title: "Logged In", description: `Welcome back, ${client.firstname || data.email}!` });
       } else {
         toast({
           title: "Login Failed",
-          description: result.error || "Invalid email or password. Please try again.",
+          description: result.message || "Invalid email or password. Please try again.",
           variant: "destructive",
         });
       }

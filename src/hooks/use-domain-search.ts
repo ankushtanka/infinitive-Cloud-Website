@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { bulkDomainSearch, type WhmcsDomainResult } from "@/lib/whmcs";
 
 export interface DomainResult {
   domain: string;
@@ -56,6 +56,22 @@ export function formatDomainPrice(price: string | null, currency: string) {
   return `${currency}${Math.round(num).toLocaleString("en-IN")}`;
 }
 
+function mapResult(d: WhmcsDomainResult): DomainResult {
+  const parts = d.domain.split('.');
+  const sld = parts[0];
+  const tld = `.${d.tld || parts.slice(1).join('.')}`;
+  return {
+    domain: d.domain,
+    tld,
+    sld,
+    available: d.available === true,
+    status: d.available ? 'available' : 'unavailable',
+    price: d.pricing?.register || null,
+    renewPrice: d.pricing?.renew || null,
+    currency: '₹',
+  };
+}
+
 export function useDomainSearch() {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<DomainResult[]>([]);
@@ -66,6 +82,11 @@ export function useDomainSearch() {
     const query = domainInput.trim();
     if (!query) return;
 
+    // Extract base name (strip TLD if provided)
+    const match = query.match(/^([a-zA-Z0-9-]+)(\.[a-zA-Z0-9-.]+)?$/);
+    const baseName = match ? match[1] : query.replace(/[^a-zA-Z0-9-]/g, '');
+    if (!baseName) return;
+
     const searchId = Date.now();
     activeSearchIdRef.current = searchId;
     setLoading(true);
@@ -73,16 +94,14 @@ export function useDomainSearch() {
     setResults([]);
 
     try {
-      const response = await supabase.functions.invoke("domain-search", {
-        body: { domain: query },
-      });
+      const data = await bulkDomainSearch(baseName);
 
       if (activeSearchIdRef.current !== searchId) return;
 
-      if (!response.error) {
-        setResults(response.data?.results || []);
+      if (data.result === 'success' && Array.isArray(data.domains)) {
+        setResults(data.domains.map(mapResult));
       } else {
-        console.error("Domain search error:", response.error);
+        console.error("Domain search error:", data.message || data);
       }
     } catch (err) {
       console.error("Domain search failed:", err);
@@ -100,6 +119,5 @@ export function useDomainSearch() {
     setResults([]);
   };
 
-  // No more suggestions - bulk_search returns everything in one call
   return { loading, results, suggestions: [] as DomainResult[], searched, search, reset };
 }
