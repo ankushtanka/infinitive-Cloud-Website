@@ -265,55 +265,81 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     if (paymentMethod === "razorpay") {
       setIsProcessing(true);
       try {
-        const amountInPaise = grandTotal * 100;
-        const order = await createOrder(amountInPaise);
-        openCheckout({
-          orderId: order.order_id,
-          amount: order.amount,
-          currency: order.currency,
-          keyId: order.key_id,
-          name: `${billingData.firstName} ${billingData.lastName}`,
-          email: billingData.email,
-          phone: billingData.phone,
-          onSuccess: async (response) => {
-            try {
-              const whmcsResult = await submitOrderToWhmcs(
-                billingData,
-                response.razorpay_payment_id,
-                response.razorpay_order_id
-              );
+        // Step 1: Create WHMCS order first — middleware returns razorpay data
+        const whmcsResult = await submitOrderToWhmcs(billingData);
 
+        if (!whmcsResult?.success) {
+          throw new Error("Failed to create order. Please try again.");
+        }
+
+        // Step 2: If middleware returned razorpay data, use it; otherwise use edge function
+        if (whmcsResult.razorpay) {
+          // Middleware returned Razorpay checkout data directly
+          const rzpData = whmcsResult.razorpay;
+          openCheckout({
+            orderId: '', // No Razorpay order — direct payment
+            amount: rzpData.amount,
+            currency: rzpData.currency || 'INR',
+            keyId: rzpData.prefill ? '' : '', // Will be set from env
+            name: `${billingData.firstName} ${billingData.lastName}`,
+            email: billingData.email,
+            phone: billingData.phone,
+            description: rzpData.description || 'Domain & Hosting Services',
+            onSuccess: (response) => {
               navigateToConfirmation(
                 billingData,
                 "Razorpay",
-                whmcsResult?.invoiceId || whmcsResult?.orderId || response.razorpay_payment_id,
-                whmcsResult?.orderId
+                response.razorpay_payment_id,
+                String(whmcsResult.orderId || '')
               );
-            } catch (error: any) {
+              setIsProcessing(false);
+            },
+            onFailure: (error) => {
+              setIsProcessing(false);
               toast({
-                title: "Order Sync Failed",
-                description: error?.message || "Payment succeeded, but order sync failed. Please contact support with your payment ID.",
+                title: "Payment Failed",
+                description: error?.description || "Something went wrong. Please try again.",
                 variant: "destructive",
               });
-              navigateToConfirmation(billingData, "Razorpay", response.razorpay_payment_id);
-            } finally {
+            },
+          });
+        } else {
+          // Fallback: use existing Razorpay order creation edge function
+          const amountInPaise = grandTotal * 100;
+          const order = await createOrder(amountInPaise);
+          openCheckout({
+            orderId: order.order_id,
+            amount: order.amount,
+            currency: order.currency,
+            keyId: order.key_id,
+            name: `${billingData.firstName} ${billingData.lastName}`,
+            email: billingData.email,
+            phone: billingData.phone,
+            onSuccess: (response) => {
+              navigateToConfirmation(
+                billingData,
+                "Razorpay",
+                response.razorpay_payment_id,
+                String(whmcsResult.orderId || '')
+              );
               setIsProcessing(false);
-            }
-          },
-          onFailure: (error) => {
-            setIsProcessing(false);
-            toast({
-              title: "Payment Failed",
-              description: error?.description || "Something went wrong. Please try again.",
-              variant: "destructive",
-            });
-          },
-        });
+            },
+            onFailure: (error) => {
+              setIsProcessing(false);
+              toast({
+                title: "Payment Failed",
+                description: error?.description || "Something went wrong. Please try again.",
+                variant: "destructive",
+              });
+            },
+          });
+        }
       } catch (err: any) {
         setIsProcessing(false);
+        whmcsSubmittedRef.current = false;
         toast({
-          title: "Payment Error",
-          description: err.message || "Could not initiate payment. Please try again.",
+          title: "Order Error",
+          description: err.message || "Could not process your order. Please try again.",
           variant: "destructive",
         });
       }
