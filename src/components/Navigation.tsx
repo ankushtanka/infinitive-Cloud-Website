@@ -137,7 +137,11 @@ const Navigation = () => {
               <CurrencyLanguageDropdown />
               <ThemeToggle />
               <div className="h-4 w-px bg-border/50 mx-1" />
-              {/* Login button hidden until client area is ready */}
+              <Link to="/login">
+                <Button variant="ghost" size="sm" className="gap-1.5 text-sm font-medium">
+                  <User className="w-4 h-4" /> Login
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -295,7 +299,9 @@ const Navigation = () => {
                 {link.label}
               </Link>
             ))}
-            {/* Login button hidden until client area is ready */}
+            <Link to="/login" onClick={() => setIsOpen(false)} className="block py-3 px-4 text-foreground font-semibold hover:text-primary transition-colors">
+              Login
+            </Link>
             <div className="flex items-center justify-between py-4 px-4">
               <span className="text-foreground font-bold text-lg">Dark Mode</span>
               <ThemeToggle />
