@@ -269,7 +269,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     navigate(`/order-confirmation?${params.toString()}`);
   };
 
-  const processPayment = async (billingData: { firstName: string; lastName: string; email: string; phone: string; companyName?: string; address1: string; address2?: string; city: string; state: string; postcode: string; country: string; hostingDomain?: string; password?: string }) => {
+  const processPayment = async (billingData: { clientid?: number; firstName: string; lastName: string; email: string; phone: string; companyName?: string; address1: string; address2?: string; city: string; state: string; postcode: string; country: string; hostingDomain?: string; password?: string }) => {
     if (!agreedToTerms) {
       toast({
         title: "Terms Required",
