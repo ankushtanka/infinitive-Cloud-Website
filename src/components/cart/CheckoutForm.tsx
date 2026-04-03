@@ -411,6 +411,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
   const handleExistingPay = async () => {
     if (!loggedInUser) return;
     await processPayment({
+      clientid: loggedInUser.clientid,
       firstName: loggedInUser.firstName,
       lastName: loggedInUser.lastName,
       email: loggedInUser.email,
