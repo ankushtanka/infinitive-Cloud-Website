@@ -274,16 +274,16 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
 
         // Step 2: If middleware returned razorpay data, use it; otherwise use edge function
         if (whmcsResult.razorpay) {
-          // Middleware returned Razorpay checkout data directly
           const rzpData = whmcsResult.razorpay;
+          const rzpKeyId = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_IvJdQ7DM2voWE5';
           openCheckout({
-            orderId: '', // No Razorpay order — direct payment
+            orderId: rzpData.order_ref || '',
             amount: rzpData.amount,
             currency: rzpData.currency || 'INR',
-            keyId: rzpData.prefill ? '' : '', // Will be set from env
-            name: `${billingData.firstName} ${billingData.lastName}`,
-            email: billingData.email,
-            phone: billingData.phone,
+            keyId: rzpKeyId,
+            name: rzpData.prefill?.name || `${billingData.firstName} ${billingData.lastName}`,
+            email: rzpData.prefill?.email || billingData.email,
+            phone: rzpData.prefill?.contact || billingData.phone,
             description: rzpData.description || 'Domain & Hosting Services',
             onSuccess: (response) => {
               navigateToConfirmation(
