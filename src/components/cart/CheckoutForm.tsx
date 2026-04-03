@@ -138,6 +138,8 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     invoiceId?: number;
     clientId?: number;
     razorpay?: any;
+    items?: any[];
+    total?: string;
   };
 
   const whmcsRequestKeyRef = useRef<string | null>(null);
