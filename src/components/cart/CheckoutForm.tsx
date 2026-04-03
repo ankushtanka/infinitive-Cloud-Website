@@ -131,75 +131,101 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     resolver: zodResolver(existingCustomerSchema),
   });
 
-  const whmcsSubmittedRef = useRef(false);
+  type WhmcsSubmissionResult = {
+    success: true;
+    requestKey: string;
+    orderId?: number;
+    invoiceId?: number;
+    clientId?: number;
+    razorpay?: any;
+  };
+
+  const whmcsRequestKeyRef = useRef<string | null>(null);
+  const whmcsRequestPromiseRef = useRef<Promise<WhmcsSubmissionResult | null> | null>(null);
+  const whmcsOrderCacheRef = useRef<WhmcsSubmissionResult | null>(null);
 
   const submitOrderToWhmcs = async (
-    data: { firstName: string; lastName: string; email: string; phone: string; companyName?: string; address1: string; address2?: string; city: string; state: string; postcode: string; country: string; hostingDomain?: string; password?: string },
-    razorpayPaymentId?: string,
-    razorpayOrderId?: string
+    data: { firstName: string; lastName: string; email: string; phone: string; companyName?: string; address1: string; address2?: string; city: string; state: string; postcode: string; country: string; hostingDomain?: string; password?: string }
   ) => {
-    if (whmcsSubmittedRef.current) {
-      console.log("WHMCS order already submitted, skipping duplicate");
-      return null;
-    }
-    whmcsSubmittedRef.current = true;
-
     if (!items.length) {
-      whmcsSubmittedRef.current = false;
       return null;
     }
 
-    try {
-      const primaryItem = items[0];
-      const domainItem = items.find(i => i.type === 'domain');
-      const hostingItem = items.find(i => i.type !== 'domain');
+    const domainItem = items.find((i) => i.type === "domain");
+    const hostingItem = items.find((i) => i.type !== "domain");
 
-      const payload: OrderPayload = {
-        firstname: data.firstName,
-        lastname: data.lastName,
-        email: data.email,
-        password2: data.password || undefined,
-        phonenumber: data.phone,
-        address1: data.address1,
-        address2: data.address2,
-        city: data.city,
-        state: data.state,
-        postcode: data.postcode,
-        country: data.country,
-        domain: domainItem?.name || data.hostingDomain || undefined,
-        paymentmethod: 'razorpay',
-      };
+    const payload: OrderPayload = {
+      firstname: data.firstName,
+      lastname: data.lastName,
+      email: data.email,
+      password2: data.password || undefined,
+      phonenumber: data.phone,
+      address1: data.address1,
+      address2: data.address2,
+      city: data.city,
+      state: data.state,
+      postcode: data.postcode,
+      country: data.country,
+      domain: domainItem?.name || data.hostingDomain || undefined,
+      paymentmethod: "razorpay",
+    };
 
-      if (domainItem) {
-        payload.domain_action = 'register';
-        payload.regperiod = 1;
-      }
-      if (hostingItem) {
-        payload.pid = hostingItem.id;
-        payload.billingcycle = billingCycle === 'annually' ? 'annually' : 'monthly';
-      }
-
-      console.log("Placing order via middleware:", payload);
-      const result = await placeOrder(payload);
-
-      if (result.result !== 'success') {
-        whmcsSubmittedRef.current = false;
-        throw new Error(result.message || "Failed to create order");
-      }
-
-      console.log("Order placed successfully:", result);
-      return {
-        success: true,
-        orderId: result.order_id,
-        invoiceId: result.invoice_id,
-        clientId: result.client_id,
-        razorpay: result.razorpay,
-      };
-    } catch (err) {
-      console.error("Failed to submit order:", err);
-      whmcsSubmittedRef.current = false;
-      return null;
+    if (domainItem) {
+      payload.domain_action = "register";
+      payload.regperiod = 1;
     }
+
+    if (hostingItem) {
+      payload.pid = hostingItem.id;
+      payload.billingcycle = billingCycle === "annually" ? "annually" : "monthly";
+    }
+
+    const requestKey = JSON.stringify(payload);
+
+    if (whmcsOrderCacheRef.current?.requestKey === requestKey) {
+      console.log("Reusing existing WHMCS order for current checkout attempt");
+      return whmcsOrderCacheRef.current;
+    }
+
+    if (whmcsRequestPromiseRef.current && whmcsRequestKeyRef.current === requestKey) {
+      console.log("WHMCS order request already in flight, waiting for existing request");
+      return whmcsRequestPromiseRef.current;
+    }
+
+    whmcsRequestKeyRef.current = requestKey;
+    whmcsRequestPromiseRef.current = (async () => {
+      try {
+        console.log("Placing order via middleware:", payload);
+        const result = await placeOrder(payload);
+
+        if (result.result !== "success") {
+          throw new Error(result.message || "Failed to create order");
+        }
+
+        console.log("Order placed successfully:", result);
+        const submission: WhmcsSubmissionResult = {
+          success: true,
+          requestKey,
+          orderId: result.order_id,
+          invoiceId: result.invoice_id,
+          clientId: result.client_id,
+          razorpay: result.razorpay,
+        };
+
+        whmcsOrderCacheRef.current = submission;
+        return submission;
+      } catch (err) {
+        console.error("Failed to submit order:", err);
+        return null;
+      } finally {
+        if (whmcsRequestKeyRef.current === requestKey) {
+          whmcsRequestKeyRef.current = null;
+          whmcsRequestPromiseRef.current = null;
+        }
+      }
+    })();
+
+    return whmcsRequestPromiseRef.current;
   };
 
   const navigateToConfirmation = (
@@ -265,18 +291,16 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     if (paymentMethod === "razorpay") {
       setIsProcessing(true);
       try {
-        // Step 1: Create WHMCS order first — middleware returns razorpay data
         const whmcsResult = await submitOrderToWhmcs(billingData);
 
         if (!whmcsResult?.success) {
           throw new Error("Failed to create order. Please try again.");
         }
 
-        // Step 2: Always create a real Razorpay gateway order before opening checkout
         const rzpData = whmcsResult.razorpay;
         const gatewayOrder = await createOrder({
           amount: rzpData?.amount || Math.round(grandTotal * 100),
-          currency: rzpData?.currency || 'INR',
+          currency: rzpData?.currency || "INR",
           receipt: `whmcs_${whmcsResult.invoiceId || whmcsResult.orderId || Date.now()}`,
           notes: {
             ...(rzpData?.notes || {}),
@@ -294,7 +318,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
           name: rzpData?.prefill?.name || `${billingData.firstName} ${billingData.lastName}`,
           email: rzpData?.prefill?.email || billingData.email,
           phone: rzpData?.prefill?.contact || billingData.phone,
-          description: rzpData?.description || 'Domain & Hosting Services',
+          description: rzpData?.description || "Domain & Hosting Services",
           notes: {
             ...(rzpData?.notes || {}),
             whmcs_order_ref: (rzpData as any)?.order_ref || undefined,
@@ -304,7 +328,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
               billingData,
               "Razorpay",
               response.razorpay_payment_id,
-              String(whmcsResult.orderId || '')
+              String(whmcsResult.orderId || "")
             );
             setIsProcessing(false);
           },
@@ -319,7 +343,6 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
         });
       } catch (err: any) {
         setIsProcessing(false);
-        whmcsSubmittedRef.current = false;
         toast({
           title: "Order Error",
           description: err.message || "Could not process your order. Please try again.",
