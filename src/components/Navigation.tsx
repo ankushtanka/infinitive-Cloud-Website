@@ -299,7 +299,9 @@ const Navigation = () => {
                 {link.label}
               </Link>
             ))}
-            {/* Login button hidden until client area is ready */}
+            <Link to="/login" onClick={() => setIsOpen(false)} className="block py-3 px-4 text-foreground font-semibold hover:text-primary transition-colors">
+              Login
+            </Link>
             <div className="flex items-center justify-between py-4 px-4">
               <span className="text-foreground font-bold text-lg">Dark Mode</span>
               <ThemeToggle />
