@@ -16,11 +16,9 @@ import {
   CreditCard,
   Lock,
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import CheckoutForm from "@/components/cart/CheckoutForm";
-import { useWhmcsProducts } from "@/hooks/use-whmcs-products";
-import { Loader2 } from "lucide-react";
 
 type CartItem = {
   id: number;
