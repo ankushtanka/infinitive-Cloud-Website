@@ -212,6 +212,8 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
           invoiceId: result.invoice_id,
           clientId: result.client_id,
           razorpay: result.razorpay,
+          items: result.items,
+          total: result.total,
         };
 
         whmcsOrderCacheRef.current = submission;
