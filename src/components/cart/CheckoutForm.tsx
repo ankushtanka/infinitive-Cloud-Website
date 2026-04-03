@@ -374,6 +374,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
       if (result.result === 'success' && result.userid) {
         const client = result.client || {};
         setLoggedInUser({
+          clientid: result.userid,
           email: client.email || data.email,
           firstName: client.firstname || data.email.split("@")[0],
           lastName: client.lastname || "",
