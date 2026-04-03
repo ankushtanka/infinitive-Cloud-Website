@@ -138,7 +138,6 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     razorpayPaymentId?: string,
     razorpayOrderId?: string
   ) => {
-    // Prevent duplicate submissions
     if (whmcsSubmittedRef.current) {
       console.log("WHMCS order already submitted, skipping duplicate");
       return null;
@@ -151,55 +150,54 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     }
 
     try {
-      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
-      // Send ALL cart items in one call
-      const cartItems = items.map(item => ({
-        id: item.id,
-        name: item.name,
-        type: item.type,
-        price: item.price,
-        period: item.period,
-      }));
-
       const primaryItem = items[0];
-      const res = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/whmcs-create-order`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email,
-            phone: data.phone,
-            companyName: data.companyName,
-            address1: data.address1,
-            address2: data.address2,
-            city: data.city,
-            state: data.state,
-            postcode: data.postcode,
-            country: data.country,
-            password: data.password,
-            billingCycle: billingCycle,
-            paymentMethod: "razorpay",
-            domain: primaryItem.type === "domain" ? primaryItem.name : (data.hostingDomain || undefined),
-            totalAmount: grandTotal,
-            razorpayPaymentId,
-            razorpayOrderId,
-            cartItems,
-          }),
-        }
-      );
-      const result = await res.json().catch(() => ({ error: "Invalid response from order server." }));
-      if (!res.ok || !result?.success) {
-        whmcsSubmittedRef.current = false;
-        throw new Error(result?.error || "Failed to create order in backend.");
+      const domainItem = items.find(i => i.type === 'domain');
+      const hostingItem = items.find(i => i.type !== 'domain');
+
+      const payload: OrderPayload = {
+        firstname: data.firstName,
+        lastname: data.lastName,
+        email: data.email,
+        password2: data.password || undefined,
+        phonenumber: data.phone,
+        address1: data.address1,
+        address2: data.address2,
+        city: data.city,
+        state: data.state,
+        postcode: data.postcode,
+        country: data.country,
+        domain: domainItem?.name || data.hostingDomain || undefined,
+        paymentmethod: 'razorpay',
+      };
+
+      if (domainItem) {
+        payload.domain_action = 'register';
+        payload.regperiod = 1;
       }
-      console.log("WHMCS order result:", result);
-      return result;
+      if (hostingItem) {
+        payload.pid = hostingItem.id;
+        payload.billingcycle = billingCycle === 'annually' ? 'annually' : 'monthly';
+      }
+
+      console.log("Placing order via middleware:", payload);
+      const result = await placeOrder(payload);
+
+      if (result.result !== 'success') {
+        whmcsSubmittedRef.current = false;
+        throw new Error(result.message || "Failed to create order");
+      }
+
+      console.log("Order placed successfully:", result);
+      return {
+        success: true,
+        orderId: result.order_id,
+        invoiceId: result.invoice_id,
+        clientId: result.client_id,
+        razorpay: result.razorpay,
+      };
     } catch (err) {
-      console.error("Failed to submit order to WHMCS:", err);
-      whmcsSubmittedRef.current = false; // Allow retry on network error
+      console.error("Failed to submit order:", err);
+      whmcsSubmittedRef.current = false;
       return null;
     }
   };
