@@ -114,7 +114,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [loggedInUser, setLoggedInUser] = useState<{ email: string; firstName: string; lastName: string; phone: string; companyName: string; address1: string; address2: string; city: string; state: string; postcode: string; country: string; domains: any[] } | null>(null);
+  const [loggedInUser, setLoggedInUser] = useState<{ clientid?: number; email: string; firstName: string; lastName: string; phone: string; companyName: string; address1: string; address2: string; city: string; state: string; postcode: string; country: string; domains: any[] } | null>(null);
 
   const gstRate = 0.18;
   const gstAmount = Math.round(total * gstRate);
@@ -150,7 +150,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
   const whmcsOrderCacheRef = useRef<WhmcsSubmissionResult | null>(null);
 
   const submitOrderToWhmcs = async (
-    data: { firstName: string; lastName: string; email: string; phone: string; companyName?: string; address1: string; address2?: string; city: string; state: string; postcode: string; country: string; hostingDomain?: string; password?: string }
+    data: { clientid?: number; firstName: string; lastName: string; email: string; phone: string; companyName?: string; address1: string; address2?: string; city: string; state: string; postcode: string; country: string; hostingDomain?: string; password?: string }
   ) => {
     if (!items.length) {
       return null;
@@ -159,7 +159,11 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     const domainItem = items.find((i) => i.type === "domain");
     const hostingItem = items.find((i) => i.type !== "domain");
 
+    // Auto-generate fallback domain for hosting-only orders
+    const orderDomain = domainItem?.name || data.hostingDomain || `${data.firstName.toLowerCase()}${Date.now()}.infinitivecloud.com`;
+
     const payload: OrderPayload = {
+      ...(data.clientid ? { clientid: data.clientid } : {}),
       firstname: data.firstName,
       lastname: data.lastName,
       email: data.email,
@@ -171,7 +175,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
       state: data.state,
       postcode: data.postcode,
       country: data.country,
-      domain: domainItem?.name || data.hostingDomain || undefined,
+      domain: orderDomain,
       paymentmethod: "razorpay",
     };
 
@@ -265,7 +269,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     navigate(`/order-confirmation?${params.toString()}`);
   };
 
-  const processPayment = async (billingData: { firstName: string; lastName: string; email: string; phone: string; companyName?: string; address1: string; address2?: string; city: string; state: string; postcode: string; country: string; hostingDomain?: string; password?: string }) => {
+  const processPayment = async (billingData: { clientid?: number; firstName: string; lastName: string; email: string; phone: string; companyName?: string; address1: string; address2?: string; city: string; state: string; postcode: string; country: string; hostingDomain?: string; password?: string }) => {
     if (!agreedToTerms) {
       toast({
         title: "Terms Required",
@@ -370,6 +374,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
       if (result.result === 'success' && result.userid) {
         const client = result.client || {};
         setLoggedInUser({
+          clientid: result.userid,
           email: client.email || data.email,
           firstName: client.firstname || data.email.split("@")[0],
           lastName: client.lastname || "",
@@ -406,6 +411,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
   const handleExistingPay = async () => {
     if (!loggedInUser) return;
     await processPayment({
+      clientid: loggedInUser.clientid,
       firstName: loggedInUser.firstName,
       lastName: loggedInUser.lastName,
       email: loggedInUser.email,
