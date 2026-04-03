@@ -749,8 +749,12 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
 
               <div className="space-y-3 text-sm">
                 {items.map((item) => (
-                  <div key={item.id} className="flex justify-between text-muted-foreground">
-                    <span className="truncate mr-2">{item.name}</span>
+                  <div key={item.id} className="flex items-center gap-2 text-muted-foreground">
+                    <span className="text-base shrink-0">{item.type === "domain" ? "🌐" : "🖥️"}</span>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold text-foreground truncate">{item.name}</p>
+                      <p className="text-xs">{item.label} · {item.period}</p>
+                    </div>
                     <span className="font-medium text-foreground shrink-0">₹{item.price.toLocaleString("en-IN")}</span>
                   </div>
                 ))}
