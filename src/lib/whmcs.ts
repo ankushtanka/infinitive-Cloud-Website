@@ -68,8 +68,8 @@ export interface RazorpayData {
   amount: number;
   currency: string;
   description: string;
-  order_id: number;
-  invoice_id: number;
+  order_id: number | string;
+  invoice_id: number | string;
   prefill: { name: string; email: string; contact: string };
   notes: Record<string, any>;
 }
@@ -132,6 +132,7 @@ export interface OrderPayload {
 export interface ValidateLoginResult {
   result: 'success' | 'error';
   userid?: number;
+  clientid?: number;
   message?: string;
   client?: {
     firstname?: string;
@@ -152,6 +153,80 @@ export interface ValidateLoginResult {
 // ============================================================
 // API FUNCTIONS
 // ============================================================
+
+const toPositiveNumber = (value: unknown): number | undefined => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
+};
+
+function normalizeOrderResult(result: any): OrderResult {
+  if (!result || typeof result !== 'object') return result;
+
+  return {
+    ...result,
+    order_id: toPositiveNumber(result.order_id),
+    invoice_id: toPositiveNumber(result.invoice_id),
+    client_id: toPositiveNumber(result.client_id),
+    items: Array.isArray(result.items) ? result.items : [],
+    total:
+      result.total == null || result.total === ''
+        ? undefined
+        : Number(result.total).toFixed(2),
+  };
+}
+
+function normalizeValidateLoginResult(result: any, requestedEmail: string): ValidateLoginResult {
+  if (!result || result.result !== 'success') {
+    return {
+      result: 'error',
+      message: result?.message || 'Invalid email or password.',
+    };
+  }
+
+  const userid = toPositiveNumber(result.userid ?? result.clientid);
+  if (!userid) {
+    return {
+      result: 'error',
+      message: result?.message || 'Login succeeded but no client account was returned.',
+    };
+  }
+
+  const client = result.client ?? {
+    firstname: result.firstname,
+    lastname: result.lastname,
+    email: result.email,
+    phonenumber: result.phonenumber,
+    companyname: result.companyname,
+    address1: result.address1,
+    address2: result.address2,
+    city: result.city,
+    state: result.state,
+    postcode: result.postcode,
+    country: result.country,
+    domains: result.domains,
+  };
+
+  return {
+    result: 'success',
+    userid,
+    clientid: userid,
+    message: result.message,
+    client: {
+      firstname: client?.firstname || '',
+      lastname: client?.lastname || '',
+      email: client?.email || requestedEmail,
+      phonenumber: client?.phonenumber || '',
+      companyname: client?.companyname || '',
+      address1: client?.address1 || '',
+      address2: client?.address2 || '',
+      city: client?.city || '',
+      state: client?.state || '',
+      postcode: client?.postcode || '',
+      country: client?.country || 'IN',
+      domains: Array.isArray(client?.domains) ? client.domains : [],
+    },
+  };
+}
 
 async function api(action: string, body: Record<string, any> = {}, retries = 2): Promise<any> {
   for (let attempt = 0; attempt <= retries; attempt++) {
@@ -207,12 +282,14 @@ export async function fetchProducts(): Promise<ProductsResult> {
 
 /** Place a complete order — returns invoice + Razorpay checkout data */
 export async function placeOrder(payload: OrderPayload): Promise<OrderResult> {
-  return api('complete_order', payload);
+  const result = await api('complete_order', payload);
+  return normalizeOrderResult(result);
 }
 
 /** Validate client login */
 export async function validateLogin(email: string, password: string): Promise<ValidateLoginResult> {
-  return api('validate_login', { email, password });
+  const result = await api('validate_login', { email, password });
+  return normalizeValidateLoginResult(result, email);
 }
 
 /** Get client invoices */

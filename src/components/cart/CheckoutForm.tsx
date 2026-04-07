@@ -119,6 +119,17 @@ const indianStates = [
 
 const fmt = (n: number) => `₹${n.toFixed(2)}`;
 
+type WhmcsSessionUser = {
+  clientid: number;
+  firstname: string;
+  lastname: string;
+  email: string;
+};
+
+const persistWhmcsUser = (user: WhmcsSessionUser) => {
+  localStorage.setItem("whmcs_user", JSON.stringify(user));
+};
+
 const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onBack, billingCycle = "monthly" }: CheckoutFormProps) => {
   const [customerType, setCustomerType] = useState<"new" | "existing">("new");
   const [paymentMethod, setPaymentMethod] = useState("razorpay");
@@ -210,7 +221,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
           success: true,
           requestKey,
           orderId: result.order_id,
-          orderNum: result.order_num || String(result.order_id || ""),
+          orderNum: result.order_num || (result.order_id ? `#${result.order_id}` : ""),
           invoiceId: result.invoice_id,
           clientId: result.client_id,
           isNewClient: result.is_new_client,
@@ -250,6 +261,33 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
         throw new Error("Failed to create order. Please try again.");
       }
 
+      const resolvedPassword = whmcsResult.password || billingData.password;
+
+      if (whmcsResult.clientId) {
+        const sessionUser = {
+          clientid: whmcsResult.clientId,
+          firstname: billingData.firstName,
+          lastname: billingData.lastName,
+          email: billingData.email,
+        };
+        persistWhmcsUser(sessionUser);
+        setLoggedInUser({
+          clientid: whmcsResult.clientId,
+          email: billingData.email,
+          firstName: billingData.firstName,
+          lastName: billingData.lastName,
+          phone: billingData.phone,
+          companyName: billingData.companyName || "",
+          address1: billingData.address1,
+          address2: billingData.address2 || "",
+          city: billingData.city,
+          state: billingData.state,
+          postcode: billingData.postcode,
+          country: billingData.country,
+          domains: [],
+        });
+      }
+
       // Show confirmation panel immediately
       const confirmation: OrderConfirmation = {
         orderId: whmcsResult.orderId,
@@ -257,7 +295,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
         invoiceId: whmcsResult.invoiceId,
         clientId: whmcsResult.clientId,
         isNewClient: whmcsResult.isNewClient,
-        password: whmcsResult.password,
+        password: resolvedPassword,
         items: whmcsResult.items,
         total: whmcsResult.total,
       };
@@ -324,11 +362,19 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
       const result = await validateLogin(data.email, data.password);
       if (result.result === "success" && result.userid) {
         const client = result.client || {};
+        const sessionUser = {
+          clientid: result.userid,
+          firstname: client.firstname || data.email.split("@")[0],
+          lastname: client.lastname || "",
+          email: client.email || data.email,
+        };
+
+        persistWhmcsUser(sessionUser);
         setLoggedInUser({
           clientid: result.userid,
-          email: client.email || data.email,
-          firstName: client.firstname || data.email.split("@")[0],
-          lastName: client.lastname || "",
+          email: sessionUser.email,
+          firstName: sessionUser.firstname,
+          lastName: sessionUser.lastname,
           phone: client.phonenumber || "",
           companyName: client.companyname || "",
           address1: client.address1 || "",
@@ -391,10 +437,10 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
             <p className="text-muted-foreground">Your order has been created and is being processed.</p>
 
             <div className="flex flex-wrap justify-center gap-4 mt-4 text-sm">
-              {orderConfirmation.orderId && (
+              {(orderConfirmation.orderNum || orderConfirmation.orderId) && (
                 <div className="px-3 py-1.5 rounded-lg bg-muted">
-                  <span className="text-muted-foreground">Order ID:</span>{" "}
-                  <span className="font-bold text-foreground">#{orderConfirmation.orderId}</span>
+                  <span className="text-muted-foreground">Order Number:</span>{" "}
+                  <span className="font-bold text-foreground">{orderConfirmation.orderNum || `#${orderConfirmation.orderId}`}</span>
                 </div>
               )}
               {orderConfirmation.invoiceId && (
@@ -435,6 +481,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
               <p className="font-semibold text-foreground text-sm mb-2">
                 🎉 Your account has been created — save your password:
               </p>
+              <p className="text-xs text-muted-foreground mb-2">Use this same password to log in to your account later.</p>
               <div className="flex items-center gap-2">
                 <code className="flex-1 px-3 py-2 rounded-lg bg-muted font-mono text-sm text-foreground">
                   {orderConfirmation.password}
