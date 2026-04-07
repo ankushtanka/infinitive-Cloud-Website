@@ -35,10 +35,10 @@ import {
   UserPlus,
   Lock,
   Loader2,
+  Copy,
+  AlertTriangle,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
-import { useRazorpay } from "@/hooks/use-razorpay";
 import { placeOrder, validateLogin, type OrderPayload } from "@/lib/whmcs";
 
 // --- Schemas ---
@@ -95,6 +95,19 @@ interface CheckoutFormProps {
   billingCycle?: "monthly" | "annually";
 }
 
+interface OrderConfirmation {
+  orderId?: number;
+  orderNum?: string;
+  invoiceId?: number;
+  clientId?: number;
+  isNewClient?: boolean;
+  password?: string;
+  items?: any[];
+  total?: string;
+  paymentId?: string;
+  paymentCancelled?: boolean;
+}
+
 const indianStates = [
   "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
   "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka",
@@ -104,9 +117,9 @@ const indianStates = [
   "Delhi", "Jammu and Kashmir", "Ladakh",
 ];
 
+const fmt = (n: number) => `₹${n.toFixed(2)}`;
+
 const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onBack, billingCycle = "monthly" }: CheckoutFormProps) => {
-  const navigate = useNavigate();
-  const { createOrder, openCheckout } = useRazorpay();
   const [customerType, setCustomerType] = useState<"new" | "existing">("new");
   const [paymentMethod, setPaymentMethod] = useState("razorpay");
   const [promoCode, setPromoCode] = useState("");
@@ -115,52 +128,33 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
   const [isProcessing, setIsProcessing] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState<{ clientid?: number; email: string; firstName: string; lastName: string; phone: string; companyName: string; address1: string; address2: string; city: string; state: string; postcode: string; country: string; domains: any[] } | null>(null);
+  const [orderConfirmation, setOrderConfirmation] = useState<OrderConfirmation | null>(null);
 
   const gstRate = 0.18;
   const gstAmount = Math.round(total * gstRate);
   const grandTotal = total + gstAmount;
 
-  // New customer form
   const newForm = useForm<NewCustomerData>({
     resolver: zodResolver(newCustomerSchema),
     defaultValues: { country: "IN" },
   });
 
-  // Existing customer login form
   const loginForm = useForm<ExistingCustomerData>({
     resolver: zodResolver(existingCustomerSchema),
   });
 
-  type WhmcsSubmissionResult = {
-    success: true;
-    requestKey: string;
-    orderId?: number;
-    orderNum?: string;
-    invoiceId?: number;
-    clientId?: number;
-    isNewClient?: boolean;
-    password?: string;
-    razorpay?: any;
-    items?: any[];
-    total?: string;
-  };
-
   const whmcsRequestKeyRef = useRef<string | null>(null);
-  const whmcsRequestPromiseRef = useRef<Promise<WhmcsSubmissionResult | null> | null>(null);
-  const whmcsOrderCacheRef = useRef<WhmcsSubmissionResult | null>(null);
+  const whmcsRequestPromiseRef = useRef<Promise<any> | null>(null);
+  const whmcsOrderCacheRef = useRef<any>(null);
 
   const submitOrderToWhmcs = async (
     data: { clientid?: number; firstName: string; lastName: string; email: string; phone: string; companyName?: string; address1: string; address2?: string; city: string; state: string; postcode: string; country: string; hostingDomain?: string; password?: string }
   ) => {
-    if (!items.length) {
-      return null;
-    }
+    if (!items.length) return null;
 
     const domainItem = items.find((i) => i.type === "domain");
     const hostingItem = items.find((i) => i.type !== "domain");
-
-    // Auto-generate fallback domain for hosting-only orders
-    const orderDomain = domainItem?.name || data.hostingDomain || `${data.firstName.toLowerCase()}${Date.now()}.infinitivecloud.com`;
+    const orderDomain = domainItem?.name || data.hostingDomain || `${data.firstName.toLowerCase().replace(/[^a-z]/g, "")}${Date.now()}.infinitivecloud.com`;
 
     const payload: OrderPayload = {
       ...(data.clientid ? { clientid: data.clientid } : {}),
@@ -194,12 +188,10 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     const requestKey = JSON.stringify(payload);
 
     if (whmcsOrderCacheRef.current?.requestKey === requestKey) {
-      console.log("Reusing existing WHMCS order for current checkout attempt");
       return whmcsOrderCacheRef.current;
     }
 
     if (whmcsRequestPromiseRef.current && whmcsRequestKeyRef.current === requestKey) {
-      console.log("WHMCS order request already in flight, waiting for existing request");
       return whmcsRequestPromiseRef.current;
     }
 
@@ -214,7 +206,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
         }
 
         console.log("Order placed successfully:", result);
-        const submission: WhmcsSubmissionResult = {
+        const submission = {
           success: true,
           requestKey,
           orderId: result.order_id,
@@ -244,124 +236,84 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     return whmcsRequestPromiseRef.current;
   };
 
-  const navigateToConfirmation = (
-    data: { firstName: string; lastName: string; email: string },
-    paymentLabel: string,
-    paymentId?: string,
-    whmcsResult?: WhmcsSubmissionResult | null
-  ) => {
-    const params = new URLSearchParams({
-      id: whmcsResult?.orderNum || String(whmcsResult?.orderId || paymentId || `IC-${Date.now().toString(36).toUpperCase()}`),
-      total: whmcsResult?.total || String(total + Math.round(total * 0.18)),
-      name: `${data.firstName} ${data.lastName}`,
-      email: data.email,
-      payment: paymentLabel,
-      invoiceId: String(whmcsResult?.invoiceId || ""),
-    });
-
-    if (paymentId) params.set("paymentId", paymentId);
-    if (whmcsResult?.isNewClient) params.set("isNewClient", "true");
-    if (whmcsResult?.password) params.set("password", whmcsResult.password);
-    if (whmcsResult?.items && whmcsResult.items.length > 0) {
-      params.set("orderItems", JSON.stringify(whmcsResult.items));
-    }
-
-    navigate(`/order-confirmation?${params.toString()}`);
-  };
-
   const processPayment = async (billingData: { clientid?: number; firstName: string; lastName: string; email: string; phone: string; companyName?: string; address1: string; address2?: string; city: string; state: string; postcode: string; country: string; hostingDomain?: string; password?: string }) => {
     if (!agreedToTerms) {
-      toast({
-        title: "Terms Required",
-        description: "Please agree to the Terms of Service before proceeding.",
-        variant: "destructive",
-      });
+      toast({ title: "Terms Required", description: "Please agree to the Terms of Service before proceeding.", variant: "destructive" });
       return;
     }
 
-    if (paymentMethod === "razorpay") {
-      setIsProcessing(true);
-      try {
-        const whmcsResult = await submitOrderToWhmcs(billingData);
+    setIsProcessing(true);
+    try {
+      const whmcsResult = await submitOrderToWhmcs(billingData);
 
-        if (!whmcsResult?.success) {
-          throw new Error("Failed to create order. Please try again.");
+      if (!whmcsResult?.success) {
+        throw new Error("Failed to create order. Please try again.");
+      }
+
+      // Show confirmation panel immediately
+      const confirmation: OrderConfirmation = {
+        orderId: whmcsResult.orderId,
+        orderNum: whmcsResult.orderNum,
+        invoiceId: whmcsResult.invoiceId,
+        clientId: whmcsResult.clientId,
+        isNewClient: whmcsResult.isNewClient,
+        password: whmcsResult.password,
+        items: whmcsResult.items,
+        total: whmcsResult.total,
+      };
+      setOrderConfirmation(confirmation);
+
+      // Trigger Razorpay if available
+      if (paymentMethod === "razorpay" && whmcsResult.razorpay && window.Razorpay) {
+        const rzpData = whmcsResult.razorpay;
+        const rzpOptions: Record<string, any> = {
+          key: "rzp_test_IvJdQ7DM2voWE5",
+          amount: rzpData.amount,
+          currency: rzpData.currency || "INR",
+          name: "Infinitive Cloud",
+          description: rzpData.description || "Domain & Hosting Services",
+          prefill: rzpData.prefill || {
+            name: `${billingData.firstName} ${billingData.lastName}`,
+            email: billingData.email,
+            contact: billingData.phone,
+          },
+          notes: rzpData.notes || {},
+          theme: { color: "#2563eb" },
+          handler: (response: any) => {
+            setOrderConfirmation((prev) => prev ? { ...prev, paymentId: response.razorpay_payment_id, paymentCancelled: false } : prev);
+            toast({ title: "Payment Successful!", description: `Payment ID: ${response.razorpay_payment_id}` });
+          },
+          modal: {
+            ondismiss: () => {
+              setOrderConfirmation((prev) => prev ? { ...prev, paymentCancelled: true } : prev);
+            },
+          },
+        };
+
+        if (rzpData.order_id && String(rzpData.order_id).startsWith("order_")) {
+          rzpOptions.order_id = rzpData.order_id;
         }
 
-        const rzpData = whmcsResult.razorpay;
-        const gatewayOrder = await createOrder({
-          amount: rzpData?.amount || Math.round(grandTotal * 100),
-          currency: rzpData?.currency || "INR",
-          receipt: `whmcs_${whmcsResult.invoiceId || whmcsResult.orderId || Date.now()}`,
-          notes: {
-            ...(rzpData?.notes || {}),
-            whmcs_order_ref: (rzpData as any)?.order_ref || undefined,
-            whmcs_invoice_id: whmcsResult.invoiceId,
-            whmcs_order_id: whmcsResult.orderId,
-          },
+        const rzp = new window.Razorpay(rzpOptions);
+        rzp.on("payment.failed", (response: any) => {
+          setOrderConfirmation((prev) => prev ? { ...prev, paymentCancelled: true } : prev);
+          toast({ title: "Payment Failed", description: response?.error?.description || "Please try again.", variant: "destructive" });
         });
-
-        openCheckout({
-          orderId: gatewayOrder.order_id,
-          amount: gatewayOrder.amount,
-          currency: gatewayOrder.currency,
-          keyId: gatewayOrder.key_id,
-          name: rzpData?.prefill?.name || `${billingData.firstName} ${billingData.lastName}`,
-          email: rzpData?.prefill?.email || billingData.email,
-          phone: rzpData?.prefill?.contact || billingData.phone,
-          description: rzpData?.description || "Domain & Hosting Services",
-          notes: {
-            ...(rzpData?.notes || {}),
-            whmcs_order_ref: (rzpData as any)?.order_ref || undefined,
-          },
-          onSuccess: (response) => {
-            navigateToConfirmation(
-              billingData,
-              "Razorpay",
-              response.razorpay_payment_id,
-              whmcsResult
-            );
-            setIsProcessing(false);
-          },
-          onFailure: (error) => {
-            setIsProcessing(false);
-            toast({
-              title: "Payment Failed",
-              description: error?.description || "Something went wrong. Please try again.",
-              variant: "destructive",
-            });
-          },
-        });
-      } catch (err: any) {
-        setIsProcessing(false);
-        toast({
-          title: "Order Error",
-          description: err.message || "Could not process your order. Please try again.",
-          variant: "destructive",
-        });
+        rzp.open();
       }
-    } else {
-      navigateToConfirmation(
-        billingData,
-        paymentMethod === "upi" ? "UPI Direct" : "Bank Transfer"
-      );
+    } catch (err: any) {
+      toast({ title: "Order Error", description: err.message || "Could not process your order. Please try again.", variant: "destructive" });
+    } finally {
+      setIsProcessing(false);
     }
   };
 
   const onNewCustomerSubmit = async (data: NewCustomerData) => {
     await processPayment({
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      phone: data.phone,
-      password: data.password,
-      companyName: data.companyName,
-      address1: data.address1,
-      address2: data.address2,
-      city: data.city,
-      state: data.state,
-      postcode: data.postcode,
-      country: data.country,
+      firstName: data.firstName, lastName: data.lastName, email: data.email,
+      phone: data.phone, password: data.password, companyName: data.companyName,
+      address1: data.address1, address2: data.address2, city: data.city,
+      state: data.state, postcode: data.postcode, country: data.country,
       hostingDomain: data.hostingDomain,
     });
   };
@@ -370,8 +322,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     setIsLoggingIn(true);
     try {
       const result = await validateLogin(data.email, data.password);
-
-      if (result.result === 'success' && result.userid) {
+      if (result.result === "success" && result.userid) {
         const client = result.client || {};
         setLoggedInUser({
           clientid: result.userid,
@@ -390,32 +341,21 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
         });
         toast({ title: "Logged In", description: `Welcome back, ${client.firstname || data.email}!` });
       } else {
-        toast({
-          title: "Login Failed",
-          description: result.message || "Invalid email or password. Please try again.",
-          variant: "destructive",
-        });
+        toast({ title: "Login Failed", description: result.message || "Invalid email or password.", variant: "destructive" });
       }
-    } catch (err) {
-      toast({
-        title: "Login Error",
-        description: "Could not verify your account. Please try again.",
-        variant: "destructive",
-      });
+    } catch {
+      toast({ title: "Login Error", description: "Could not verify your account.", variant: "destructive" });
     } finally {
       setIsLoggingIn(false);
     }
   };
 
-  // If existing customer is logged in, go straight to payment
   const handleExistingPay = async () => {
     if (!loggedInUser) return;
     await processPayment({
       clientid: loggedInUser.clientid,
-      firstName: loggedInUser.firstName,
-      lastName: loggedInUser.lastName,
-      email: loggedInUser.email,
-      phone: loggedInUser.phone || "",
+      firstName: loggedInUser.firstName, lastName: loggedInUser.lastName,
+      email: loggedInUser.email, phone: loggedInUser.phone || "",
       companyName: loggedInUser.companyName,
       address1: loggedInUser.address1 || "On File",
       address2: loggedInUser.address2,
@@ -429,22 +369,140 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
   const applyPromo = () => {
     if (!promoCode.trim()) return;
     setPromoApplied(true);
-    toast({
-      title: "Promo Code",
-      description: "Invalid or expired promo code.",
-      variant: "destructive",
-    });
+    toast({ title: "Promo Code", description: "Invalid or expired promo code.", variant: "destructive" });
   };
 
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast({ title: "Copied!", description: "Password copied to clipboard." });
+  };
+
+  // ===== ORDER CONFIRMATION VIEW =====
+  if (orderConfirmation) {
+    return (
+      <div className="max-w-2xl mx-auto space-y-6">
+        {/* Success Header */}
+        <Card>
+          <CardContent className="p-8 text-center">
+            <div className="w-20 h-20 rounded-full bg-emerald-500/15 flex items-center justify-center mx-auto mb-4">
+              <CheckCircle2 className="w-10 h-10 text-emerald-500" />
+            </div>
+            <h2 className="text-2xl font-bold text-foreground mb-2">Order Successful!</h2>
+            <p className="text-muted-foreground">Your order has been created and is being processed.</p>
+
+            <div className="flex flex-wrap justify-center gap-4 mt-4 text-sm">
+              {orderConfirmation.orderId && (
+                <div className="px-3 py-1.5 rounded-lg bg-muted">
+                  <span className="text-muted-foreground">Order ID:</span>{" "}
+                  <span className="font-bold text-foreground">#{orderConfirmation.orderId}</span>
+                </div>
+              )}
+              {orderConfirmation.invoiceId && (
+                <div className="px-3 py-1.5 rounded-lg bg-muted">
+                  <span className="text-muted-foreground">Invoice:</span>{" "}
+                  <span className="font-bold text-foreground">#{orderConfirmation.invoiceId}</span>
+                </div>
+              )}
+              {orderConfirmation.paymentId && (
+                <div className="px-3 py-1.5 rounded-lg bg-emerald-500/10">
+                  <span className="text-muted-foreground">Payment ID:</span>{" "}
+                  <span className="font-bold text-emerald-600">{orderConfirmation.paymentId}</span>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Payment Cancelled Warning */}
+        {orderConfirmation.paymentCancelled && !orderConfirmation.paymentId && (
+          <Card className="border-amber-500/30 bg-amber-500/5">
+            <CardContent className="p-4 flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-semibold text-foreground text-sm">Payment cancelled</p>
+                <p className="text-sm text-muted-foreground">
+                  Your order is saved. Invoice ID: #{orderConfirmation.invoiceId} — you can pay later from your dashboard.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* New Client Password */}
+        {orderConfirmation.isNewClient && orderConfirmation.password && (
+          <Card className="border-emerald-500/30 bg-emerald-500/5">
+            <CardContent className="p-4">
+              <p className="font-semibold text-foreground text-sm mb-2">
+                🎉 Your account has been created — save your password:
+              </p>
+              <div className="flex items-center gap-2">
+                <code className="flex-1 px-3 py-2 rounded-lg bg-muted font-mono text-sm text-foreground">
+                  {orderConfirmation.password}
+                </code>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => copyToClipboard(orderConfirmation.password!)}
+                >
+                  <Copy className="w-4 h-4" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Order Items */}
+        {orderConfirmation.items && orderConfirmation.items.length > 0 && (
+          <Card>
+            <CardContent className="p-6">
+              <h3 className="text-lg font-bold text-foreground mb-4">Order Items</h3>
+              <div className="space-y-3">
+                {orderConfirmation.items.map((item: any, idx: number) => (
+                  <div key={idx} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                    <span className="text-2xl shrink-0">
+                      {item.icon === "globe" || item.category === "domain" ? "🌐" : "🖥️"}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-bold text-foreground">{item.name}</p>
+                      <p className="text-xs text-muted-foreground">{item.subtitle || `${item.action} · ${item.period}`}</p>
+                    </div>
+                    <span className="font-bold text-foreground shrink-0">
+                      {item.price_formatted || fmt(item.amount || 0)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <Separator className="my-4" />
+
+              <div className="flex justify-between items-center">
+                <span className="text-lg font-bold text-foreground">Total Paid</span>
+                <span className="text-xl font-black text-primary">
+                  ₹{Number(orderConfirmation.total || 0).toFixed(2)}
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Actions */}
+        <div className="flex flex-wrap gap-3 justify-center">
+          <a href="/dashboard">
+            <Button variant="outline">Go to Dashboard</Button>
+          </a>
+          <a href="/">
+            <Button variant="ghost">Back to Home</Button>
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  // ===== CHECKOUT FORM VIEW =====
   return (
     <div className="space-y-6">
-      {/* Back Button */}
-      <Button
-        type="button"
-        variant="ghost"
-        className="gap-2 text-muted-foreground hover:text-foreground mb-2"
-        onClick={onBack}
-      >
+      <Button type="button" variant="ghost" className="gap-2 text-muted-foreground hover:text-foreground mb-2" onClick={onBack}>
         <ArrowLeft className="w-4 h-4" />
         Back to Cart
       </Button>
@@ -453,39 +511,22 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
       <Card>
         <CardContent className="p-4">
           <div className="flex items-center gap-1 bg-muted rounded-xl p-1">
-            <button
-              type="button"
-              onClick={() => { setCustomerType("new"); setLoggedInUser(null); }}
-              className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-200 ${
-                customerType === "new"
-                  ? "bg-primary text-primary-foreground shadow-md"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <UserPlus className="w-4 h-4" />
-              New Customer
+            <button type="button" onClick={() => { setCustomerType("new"); setLoggedInUser(null); }}
+              className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-200 ${customerType === "new" ? "bg-primary text-primary-foreground shadow-md" : "text-muted-foreground hover:text-foreground"}`}>
+              <UserPlus className="w-4 h-4" />New Customer
             </button>
-            <button
-              type="button"
-              onClick={() => setCustomerType("existing")}
-              className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-200 ${
-                customerType === "existing"
-                  ? "bg-primary text-primary-foreground shadow-md"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <LogIn className="w-4 h-4" />
-              Existing Customer
+            <button type="button" onClick={() => setCustomerType("existing")}
+              className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-200 ${customerType === "existing" ? "bg-primary text-primary-foreground shadow-md" : "text-muted-foreground hover:text-foreground"}`}>
+              <LogIn className="w-4 h-4" />Existing Customer
             </button>
           </div>
         </CardContent>
       </Card>
 
       <div className="grid lg:grid-cols-3 gap-8">
-        {/* Main Content Area */}
+        {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
           {customerType === "existing" ? (
-            /* ===== EXISTING CUSTOMER ===== */
             loggedInUser ? (
               <Card>
                 <CardContent className="p-6">
@@ -498,39 +539,29 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
                       <p className="text-sm text-muted-foreground">{loggedInUser.email}</p>
                     </div>
                   </div>
-
-                  {/* Show billing info */}
                   {loggedInUser.address1 && loggedInUser.address1 !== "On File" && (
                     <div className="text-sm text-muted-foreground mb-3 p-3 bg-muted/50 rounded-lg">
                       <p className="font-medium text-foreground mb-1">Billing Address</p>
-                      <p>{loggedInUser.address1}{loggedInUser.address2 ? `, ${loggedInUser.address2}` : ''}</p>
+                      <p>{loggedInUser.address1}{loggedInUser.address2 ? `, ${loggedInUser.address2}` : ""}</p>
                       <p>{loggedInUser.city}, {loggedInUser.state} {loggedInUser.postcode}</p>
                     </div>
                   )}
-
-                  {/* Show domains */}
                   {loggedInUser.domains && loggedInUser.domains.length > 0 && (
                     <div className="mb-5 p-3 bg-muted/50 rounded-lg">
                       <p className="font-medium text-foreground text-sm mb-2 flex items-center gap-2">
-                        <Globe className="w-4 h-4 text-primary" />
-                        Your Domains ({loggedInUser.domains.length})
+                        <Globe className="w-4 h-4 text-primary" />Your Domains ({loggedInUser.domains.length})
                       </p>
                       <div className="space-y-1 max-h-32 overflow-y-auto">
                         {loggedInUser.domains.map((d: any, i: number) => (
                           <div key={i} className="text-sm text-muted-foreground flex items-center justify-between">
                             <span>{d.domainname || d.domain || d}</span>
-                            <span className="text-xs capitalize px-2 py-0.5 rounded bg-primary/10 text-primary">{d.status || 'Active'}</span>
+                            <span className="text-xs capitalize px-2 py-0.5 rounded bg-primary/10 text-primary">{d.status || "Active"}</span>
                           </div>
                         ))}
                       </div>
                     </div>
                   )}
-
-                  <p className="text-sm text-muted-foreground mb-5">
-                    Your billing details are on file. Choose your payment method and complete your order.
-                  </p>
-
-                  {/* Payment Method for existing user */}
+                  <p className="text-sm text-muted-foreground mb-5">Your billing details are on file. Choose your payment method and complete your order.</p>
                   <PaymentMethodSelector paymentMethod={paymentMethod} setPaymentMethod={setPaymentMethod} />
                 </CardContent>
               </Card>
@@ -541,41 +572,22 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
                     <LogIn className="w-5 h-5 text-primary" />
                     <h2 className="text-lg font-bold text-foreground">Login to Your Account</h2>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-5">
-                    Enter your registered email and password to continue with your existing account.
-                  </p>
                   <form onSubmit={loginForm.handleSubmit(handleExistingLogin)} className="space-y-4 max-w-md">
                     <div className="space-y-2">
                       <Label htmlFor="login-email">Email Address</Label>
                       <div className="relative">
                         <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <Input
-                          id="login-email"
-                          type="email"
-                          placeholder="you@example.com"
-                          className={`pl-10 ${loginForm.formState.errors.email ? "border-destructive" : ""}`}
-                          {...loginForm.register("email")}
-                        />
+                        <Input id="login-email" type="email" placeholder="you@example.com" className={`pl-10 ${loginForm.formState.errors.email ? "border-destructive" : ""}`} {...loginForm.register("email")} />
                       </div>
-                      {loginForm.formState.errors.email && (
-                        <p className="text-xs text-destructive">{loginForm.formState.errors.email.message}</p>
-                      )}
+                      {loginForm.formState.errors.email && <p className="text-xs text-destructive">{loginForm.formState.errors.email.message}</p>}
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="login-password">Password</Label>
                       <div className="relative">
                         <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <Input
-                          id="login-password"
-                          type="password"
-                          placeholder="••••••••"
-                          className={`pl-10 ${loginForm.formState.errors.password ? "border-destructive" : ""}`}
-                          {...loginForm.register("password")}
-                        />
+                        <Input id="login-password" type="password" placeholder="••••••••" className={`pl-10 ${loginForm.formState.errors.password ? "border-destructive" : ""}`} {...loginForm.register("password")} />
                       </div>
-                      {loginForm.formState.errors.password && (
-                        <p className="text-xs text-destructive">{loginForm.formState.errors.password.message}</p>
-                      )}
+                      {loginForm.formState.errors.password && <p className="text-xs text-destructive">{loginForm.formState.errors.password.message}</p>}
                     </div>
                     <Button type="submit" className="w-full btn-gradient h-11 font-semibold gap-2" disabled={isLoggingIn}>
                       {isLoggingIn ? <Loader2 className="w-4 h-4 animate-spin" /> : <LogIn className="w-4 h-4" />}
@@ -586,9 +598,8 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
               </Card>
             )
           ) : (
-            /* ===== NEW CUSTOMER ===== */
+            /* ===== NEW CUSTOMER FORM ===== */
             <form id="new-customer-form" onSubmit={newForm.handleSubmit(onNewCustomerSubmit)} className="space-y-6">
-              {/* Account Details */}
               <Card>
                 <CardContent className="p-6">
                   <div className="flex items-center gap-2 mb-5">
@@ -642,7 +653,6 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
                 </CardContent>
               </Card>
 
-              {/* Billing Address */}
               <Card>
                 <CardContent className="p-6">
                   <div className="flex items-center gap-2 mb-5">
@@ -702,7 +712,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
                       <Label htmlFor="gstNumber">GST Number <span className="text-muted-foreground text-xs">(Optional)</span></Label>
                       <Input id="gstNumber" placeholder="22AAAAA0000A1Z5" {...newForm.register("gstNumber")} />
                     </div>
-                    {items.some(i => i.type !== "domain") && (
+                    {items.some((i) => i.type !== "domain") && (
                       <div className="space-y-2 sm:col-span-2">
                         <Label htmlFor="hostingDomain">Domain for Hosting <span className="text-muted-foreground text-xs">(Optional)</span></Label>
                         <div className="relative">
@@ -716,13 +726,12 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
                 </CardContent>
               </Card>
 
-              {/* Payment Method */}
               <PaymentMethodSelector paymentMethod={paymentMethod} setPaymentMethod={setPaymentMethod} />
             </form>
           )}
         </div>
 
-        {/* Order Summary Sidebar */}
+        {/* ===== ORDER SUMMARY SIDEBAR ===== */}
         <div className="lg:col-span-1">
           <Card className="sticky top-28">
             <CardContent className="p-6">
@@ -730,78 +739,68 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
 
               <div className="space-y-3 text-sm">
                 {items.map((item) => (
-                  <div key={item.id} className="flex items-center gap-2 text-muted-foreground">
+                  <div key={item.id} className="flex items-center gap-2">
                     <span className="text-base shrink-0">{item.type === "domain" ? "🌐" : "🖥️"}</span>
                     <div className="min-w-0 flex-1">
-                      <p className="font-semibold text-foreground truncate">{item.name}</p>
-                      <p className="text-xs">{item.label} · {item.period}</p>
+                      <p className="font-bold text-foreground truncate">{item.name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {item.type === "domain" ? `Register · ${item.period}` : `${item.label} · ${item.period}`}
+                      </p>
                     </div>
-                    <span className="font-medium text-foreground shrink-0">₹{item.price.toLocaleString("en-IN")}</span>
+                    <span className="font-medium text-foreground shrink-0">₹{item.price.toFixed(2)}</span>
                   </div>
                 ))}
                 {selectedAddons.map((addon) => (
                   <div key={addon.id} className="flex justify-between text-muted-foreground">
                     <span className="truncate mr-2">{addon.name}</span>
-                    <span className="font-medium text-foreground shrink-0">₹{addon.price.toLocaleString("en-IN")}</span>
+                    <span className="font-medium text-foreground shrink-0">₹{addon.price.toFixed(2)}</span>
                   </div>
                 ))}
-                <div className="flex justify-between text-muted-foreground">
-                  <span>Subtotal</span>
-                  <span className="font-medium text-foreground">₹{subtotal.toLocaleString("en-IN")}</span>
-                </div>
-                {addonsTotal > 0 && (
-                  <div className="flex justify-between text-muted-foreground">
-                    <span>Add-ons</span>
-                    <span className="font-medium text-foreground">₹{addonsTotal.toLocaleString("en-IN")}</span>
-                  </div>
-                )}
-                <div className="flex justify-between text-muted-foreground">
-                  <span>GST @ 18%</span>
-                  <span className="font-medium text-foreground">₹{gstAmount.toLocaleString("en-IN")}</span>
-                </div>
               </div>
 
               <Separator className="my-4" />
 
-              {/* Promo Code */}
-              <div className="mb-4">
-                <Label className="text-xs font-semibold text-muted-foreground mb-2 flex items-center gap-1">
-                  <Tag className="w-3 h-3" />
-                  Promo Code
-                </Label>
-                <div className="flex gap-2 mt-2">
-                  <Input
-                    placeholder="Enter code"
-                    value={promoCode}
-                    onChange={(e) => { setPromoCode(e.target.value); setPromoApplied(false); }}
-                    className="h-9 text-sm"
-                  />
-                  <Button type="button" variant="outline" size="sm" onClick={applyPromo} className="shrink-0">Apply</Button>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between text-muted-foreground">
+                  <span>Subtotal</span>
+                  <span className="font-medium text-foreground">₹{subtotal.toFixed(2)}</span>
+                </div>
+                {addonsTotal > 0 && (
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>Add-ons</span>
+                    <span className="font-medium text-foreground">₹{addonsTotal.toFixed(2)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between text-muted-foreground">
+                  <span>GST @ 18%</span>
+                  <span className="font-medium text-foreground">₹{gstAmount.toFixed(2)}</span>
                 </div>
               </div>
 
               <Separator className="my-4" />
 
               <div className="flex justify-between items-center">
-                <span className="text-lg font-bold text-foreground">Total Due</span>
-                <span className="text-2xl font-black text-primary">₹{grandTotal.toLocaleString("en-IN")}</span>
+                <span className="text-lg font-bold text-foreground">Total</span>
+                <span className="text-2xl font-black text-primary">₹{grandTotal.toFixed(2)}</span>
               </div>
               <p className="text-[11px] text-muted-foreground mt-1">Inclusive of 18% GST</p>
 
+              {/* Promo Code */}
+              <div className="mt-4 mb-4">
+                <Label className="text-xs font-semibold text-muted-foreground mb-2 flex items-center gap-1">
+                  <Tag className="w-3 h-3" />Promo Code
+                </Label>
+                <div className="flex gap-2 mt-2">
+                  <Input placeholder="Enter code" value={promoCode} onChange={(e) => { setPromoCode(e.target.value); setPromoApplied(false); }} className="h-9 text-sm" />
+                  <Button type="button" variant="outline" size="sm" onClick={applyPromo} className="shrink-0">Apply</Button>
+                </div>
+              </div>
+
+              <Separator className="my-4" />
+
               {/* Terms */}
-              <label
-                htmlFor="terms"
-                className={`flex items-center gap-3 mt-5 p-3 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
-                  agreedToTerms
-                    ? "border-border bg-transparent"
-                    : "border-border hover:border-primary/30"
-                }`}
-              >
-                <Checkbox
-                  id="terms"
-                  checked={agreedToTerms}
-                  onCheckedChange={(val) => setAgreedToTerms(!!val)}
-                />
+              <label htmlFor="terms" className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all duration-200 ${agreedToTerms ? "border-border bg-transparent" : "border-border hover:border-primary/30"}`}>
+                <Checkbox id="terms" checked={agreedToTerms} onCheckedChange={(val) => setAgreedToTerms(!!val)} />
                 <span className="text-xs text-muted-foreground leading-tight">
                   I agree to the{" "}
                   <a href="/terms" target="_blank" className="text-primary underline" onClick={(e) => e.stopPropagation()}>Terms of Service</a>,{" "}
@@ -810,26 +809,16 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
                 </span>
               </label>
 
-              {/* CTA Button */}
+              {/* CTA */}
               {customerType === "new" ? (
-                <Button
-                  type="submit"
-                  form="new-customer-form"
-                  className="w-full btn-gradient mt-5 h-12 text-base font-bold gap-2"
-                  disabled={newForm.formState.isSubmitting || isProcessing}
-                >
-                  <ShieldCheck className="w-5 h-5" />
-                  {isProcessing ? "Processing Payment..." : "Complete Order"}
+                <Button type="submit" form="new-customer-form" className="w-full btn-gradient mt-5 h-12 text-base font-bold gap-2" disabled={newForm.formState.isSubmitting || isProcessing}>
+                  {isProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : <ShieldCheck className="w-5 h-5" />}
+                  {isProcessing ? "Processing..." : "Place Order"}
                 </Button>
               ) : loggedInUser ? (
-                <Button
-                  type="button"
-                  className="w-full btn-gradient mt-5 h-12 text-base font-bold gap-2"
-                  disabled={isProcessing}
-                  onClick={handleExistingPay}
-                >
-                  <ShieldCheck className="w-5 h-5" />
-                  {isProcessing ? "Processing Payment..." : "Complete Order"}
+                <Button type="button" className="w-full btn-gradient mt-5 h-12 text-base font-bold gap-2" disabled={isProcessing} onClick={handleExistingPay}>
+                  {isProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : <ShieldCheck className="w-5 h-5" />}
+                  {isProcessing ? "Processing..." : "Place Order"}
                 </Button>
               ) : (
                 <p className="text-xs text-muted-foreground text-center mt-5">Please login to continue checkout.</p>
@@ -850,7 +839,6 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
   );
 };
 
-// Extracted payment method selector
 const PaymentMethodSelector = ({ paymentMethod, setPaymentMethod }: { paymentMethod: string; setPaymentMethod: (v: string) => void }) => (
   <Card>
     <CardContent className="p-6">
@@ -864,14 +852,7 @@ const PaymentMethodSelector = ({ paymentMethod, setPaymentMethod }: { paymentMet
           { value: "upi", icon: Smartphone, label: "UPI Direct", desc: "Google Pay, PhonePe, Paytm, BHIM UPI" },
           { value: "bank", icon: Landmark, label: "Bank Transfer / NEFT", desc: "Direct bank transfer (manual verification)" },
         ].map((method) => (
-          <label
-            key={method.value}
-            className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
-              paymentMethod === method.value
-                ? "border-primary bg-primary/5"
-                : "border-border hover:border-primary/30"
-            }`}
-          >
+          <label key={method.value} className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${paymentMethod === method.value ? "border-primary bg-primary/5" : "border-border hover:border-primary/30"}`}>
             <RadioGroupItem value={method.value} />
             <div className={`p-2 rounded-lg ${paymentMethod === method.value ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
               <method.icon className="w-5 h-5" />
