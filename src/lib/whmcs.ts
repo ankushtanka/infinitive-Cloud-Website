@@ -159,12 +159,19 @@ async function api(action: string, body: Record<string, any> = {}): Promise<any>
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ action, ...body }),
   });
-  if (!res.ok) {
-    const text = await res.text();
-    console.error(`Middleware ${action} failed (${res.status}):`, text.substring(0, 300));
-    throw new Error(`HTTP ${res.status}: middleware returned error`);
+  const text = await res.text();
+  let data: any;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    console.error(`Middleware ${action} returned non-JSON (${res.status}):`, text.substring(0, 300));
+    throw new Error(`Middleware error: server returned an unexpected response`);
   }
-  return res.json();
+  if (!res.ok) {
+    console.error(`Middleware ${action} failed (${res.status}):`, data);
+    throw new Error(data?.message || `HTTP ${res.status}: middleware returned error`);
+  }
+  return data;
 }
 
 /** Bulk search across all configured TLDs */
