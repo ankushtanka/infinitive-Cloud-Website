@@ -153,25 +153,46 @@ export interface ValidateLoginResult {
 // API FUNCTIONS
 // ============================================================
 
-async function api(action: string, body: Record<string, any> = {}): Promise<any> {
-  const res = await fetch(MIDDLEWARE_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action, ...body }),
-  });
-  const text = await res.text();
-  let data: any;
-  try {
-    data = JSON.parse(text);
-  } catch {
-    console.error(`Middleware ${action} returned non-JSON (${res.status}):`, text.substring(0, 300));
-    throw new Error(`Middleware error: server returned an unexpected response`);
+async function api(action: string, body: Record<string, any> = {}, retries = 2): Promise<any> {
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const res = await fetch(MIDDLEWARE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+          'Referer': 'https://infinitivecloud.com/',
+          'Origin': 'https://infinitivecloud.com',
+        },
+        body: JSON.stringify({ action, ...body }),
+      });
+      const text = await res.text();
+      let data: any;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        console.error(`Middleware ${action} attempt ${attempt + 1} returned non-JSON (${res.status}):`, text.substring(0, 500));
+        if (attempt < retries) {
+          await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+          continue;
+        }
+        throw new Error(`Server returned an unexpected response. Please try again.`);
+      }
+      if (!res.ok) {
+        console.error(`Middleware ${action} failed (${res.status}):`, data);
+        throw new Error(data?.message || `HTTP ${res.status}: order failed`);
+      }
+      return data;
+    } catch (err: any) {
+      if (err.message?.includes('HTTP') || err.message?.includes('Server returned')) throw err;
+      if (attempt < retries) {
+        await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+        continue;
+      }
+      throw err;
+    }
   }
-  if (!res.ok) {
-    console.error(`Middleware ${action} failed (${res.status}):`, data);
-    throw new Error(data?.message || `HTTP ${res.status}: middleware returned error`);
-  }
-  return data;
 }
 
 /** Bulk search across all configured TLDs */
