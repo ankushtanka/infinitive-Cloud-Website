@@ -184,6 +184,13 @@ function normalizeValidateLoginResult(result: any, requestedEmail: string): Vali
   }
 
   const userid = toPositiveNumber(result.userid ?? result.clientid);
+  if (!userid) {
+    return {
+      result: 'error',
+      message: result?.message || 'Login succeeded but no client account was returned.',
+    };
+  }
+
   const client = result.client ?? {
     firstname: result.firstname,
     lastname: result.lastname,
