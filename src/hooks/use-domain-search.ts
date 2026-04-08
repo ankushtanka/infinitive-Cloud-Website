@@ -148,7 +148,8 @@ export function useDomainSearch() {
     setLoading(false);
     setSearched(false);
     setResults([]);
+    setCheckTime(null);
   };
 
-  return { loading, results, suggestions: [] as DomainResult[], searched, search, reset };
+  return { loading, results, suggestions: [] as DomainResult[], searched, checkTime, search, reset };
 }
