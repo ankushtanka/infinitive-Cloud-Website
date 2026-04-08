@@ -128,6 +128,7 @@ export function useDomainSearch() {
       if (data.result === 'success' && Array.isArray(data.domains)) {
         const mapped = data.domains.map(mapResult);
         setResults(mapped);
+        setCheckTime(data.check_time_s ?? null);
         searchCache.set(baseName, { ts: Date.now(), results: mapped });
       } else {
         console.error("Domain search error:", data.message || data);
