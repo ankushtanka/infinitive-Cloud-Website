@@ -43,7 +43,7 @@ const DomainSearchSection: React.FC = () => {
   const wordIndexRef = useRef(0);
   const charIndexRef = useRef(0);
   const isDeletingRef = useRef(false);
-  const { loading, results, suggestions, searched, search, reset } = useDomainSearch();
+  const { loading, results, suggestions, searched, checkTime, search, reset } = useDomainSearch();
 
   useEffect(() => {
     if (domain || inputFocused) return;
