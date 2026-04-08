@@ -154,6 +154,7 @@ const App = () => {
                 <Route path="/order-confirmation" element={<OrderConfirmation />} />
                 <Route path="/domain-transfer" element={<DomainTransfer />} />
                 <Route path="/domain-management" element={<DomainManagement />} />
+                <Route path="/domain-search" element={<DomainSearch />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/dashboard" element={<Dashboard />} />
 
