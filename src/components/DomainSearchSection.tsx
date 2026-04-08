@@ -43,7 +43,7 @@ const DomainSearchSection: React.FC = () => {
   const wordIndexRef = useRef(0);
   const charIndexRef = useRef(0);
   const isDeletingRef = useRef(false);
-  const { loading, results, suggestions, searched, search, reset } = useDomainSearch();
+  const [navigating, setNavigating] = useState(false);
 
   useEffect(() => {
     if (domain || inputFocused) return;
@@ -71,10 +71,8 @@ const DomainSearchSection: React.FC = () => {
     return () => clearTimeout(timeout);
   }, [domain, inputFocused]);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    search(domain);
-  };
+  const navigate = (await import("react-router-dom")).useNavigate ? undefined : undefined;
+  const nav = require("react-router-dom").useNavigate;
 
   return (
     <section className="py-16 md:py-24 relative overflow-hidden" id="domains">
