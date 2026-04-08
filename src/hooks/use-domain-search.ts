@@ -80,6 +80,7 @@ export function useDomainSearch() {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<DomainResult[]>([]);
   const [searched, setSearched] = useState(false);
+  const [checkTime, setCheckTime] = useState<number | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
   const search = async (domainInput: string) => {
@@ -127,6 +128,7 @@ export function useDomainSearch() {
       if (data.result === 'success' && Array.isArray(data.domains)) {
         const mapped = data.domains.map(mapResult);
         setResults(mapped);
+        setCheckTime(data.check_time_s ?? null);
         searchCache.set(baseName, { ts: Date.now(), results: mapped });
       } else {
         console.error("Domain search error:", data.message || data);
@@ -146,7 +148,8 @@ export function useDomainSearch() {
     setLoading(false);
     setSearched(false);
     setResults([]);
+    setCheckTime(null);
   };
 
-  return { loading, results, suggestions: [] as DomainResult[], searched, search, reset };
+  return { loading, results, suggestions: [] as DomainResult[], searched, checkTime, search, reset };
 }

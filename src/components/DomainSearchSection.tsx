@@ -43,7 +43,7 @@ const DomainSearchSection: React.FC = () => {
   const wordIndexRef = useRef(0);
   const charIndexRef = useRef(0);
   const isDeletingRef = useRef(false);
-  const { loading, results, suggestions, searched, search, reset } = useDomainSearch();
+  const { loading, results, suggestions, searched, checkTime, search, reset } = useDomainSearch();
 
   useEffect(() => {
     if (domain || inputFocused) return;
@@ -189,6 +189,11 @@ const DomainSearchSection: React.FC = () => {
         {/* Live Search Results */}
         {searched && (
           <div className="max-w-5xl mx-auto mb-10 md:mb-14">
+            {!loading && checkTime && results.length > 0 && (
+              <p className="text-xs text-muted-foreground text-center mb-4">
+                Checked {results.length} extensions in {checkTime.toFixed(1)}s
+              </p>
+            )}
             <DomainResultsGrid
               results={results}
               suggestions={suggestions}
