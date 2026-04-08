@@ -80,6 +80,7 @@ export function useDomainSearch() {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<DomainResult[]>([]);
   const [searched, setSearched] = useState(false);
+  const [checkTime, setCheckTime] = useState<number | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
   const search = async (domainInput: string) => {
