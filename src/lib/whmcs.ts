@@ -164,14 +164,19 @@ function normalizeOrderResult(result: any): OrderResult {
 
   return {
     ...result,
-    order_id: toPositiveNumber(result.order_id),
-    invoice_id: toPositiveNumber(result.invoice_id),
-    client_id: toPositiveNumber(result.client_id),
+    result: result.result ?? 'success',
+    order_id: toPositiveNumber(result.order_id ?? result.orderid),
+    order_num: result.order_num ?? result.ordernum ?? undefined,
+    invoice_id: toPositiveNumber(result.invoice_id ?? result.invoiceid),
+    client_id: toPositiveNumber(result.client_id ?? result.clientid),
+    is_new_client: result.is_new_client ?? result.is_new ?? false,
+    password: result.password ?? undefined,
     items: Array.isArray(result.items) ? result.items : [],
     total:
       result.total == null || result.total === ''
         ? undefined
         : Number(result.total).toFixed(2),
+    razorpay: result.razorpay ?? undefined,
   };
 }
 
