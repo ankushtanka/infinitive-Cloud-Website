@@ -5,13 +5,45 @@ import logo from "/favicon.png";
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   const footerSections = [
-    // Temporarily hidden: Hosting, Services, Company sections
+    {
+      title: "Hosting",
+      links: [
+        { label: "Shared Hosting", path: "/solutions/shared-hosting" },
+        { label: "Cloud Hosting", path: "/solutions/cloud-hosting" },
+        { label: "WordPress Hosting", path: "/solutions/wordpress-hosting" },
+        { label: "VPS Hosting", path: "/solutions/vps-server" },
+        { label: "Dedicated Servers", path: "/solutions/dedicated-servers" },
+        { label: "Reseller Hosting", path: "/solutions/reseller-hosting" },
+      ],
+    },
+    {
+      title: "Services",
+      links: [
+        { label: "Domain Registration", path: "/solutions/domains" },
+        { label: "SSL Certificates", path: "/solutions/email-security#ssl" },
+        { label: "Email Security", path: "/solutions/email-security" },
+        { label: "Server Management", path: "/solutions/server-management" },
+        { label: "GPU Servers", path: "/solutions/gpu-dedicated-server" },
+        { label: "Server Licenses", path: "/solutions/server-licenses" },
+      ],
+    },
+    {
+      title: "Company",
+      links: [
+        { label: "About Us", path: "/about" },
+        { label: "Contact", path: "/contact" },
+        { label: "Pricing", path: "/pricing" },
+        { label: "Blog", path: "/blog" },
+        { label: "Careers", path: "/careers" },
+      ],
+    },
     {
       title: "Legal",
       links: [
         { label: "Privacy Policy", path: "/privacy" },
         { label: "Terms of Service", path: "/terms" },
         { label: "Refund Policy", path: "/refund" },
+        { label: "SLA", path: "/sla" },
       ],
     },
   ];
