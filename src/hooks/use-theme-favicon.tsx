@@ -6,7 +6,7 @@ const useThemeFavicon = () => {
       const isDark = document.documentElement.classList.contains("dark");
       const favicon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
       const appleFavicon = document.querySelector<HTMLLinkElement>('link[rel="apple-touch-icon"]');
-      const href = isDark ? "/favicon-dark.png?v=2" : "/favicon.png?v=2";
+      const href = isDark ? "/favicon-dark.png?v=3" : "/favicon.png?v=3";
       if (favicon) favicon.href = href;
       if (appleFavicon) appleFavicon.href = href;
     };
