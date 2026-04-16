@@ -1,73 +1,71 @@
-# Welcome to your Lovable project
+# 🚀 Cloud Hosting Website Template for Startups
 
-## Project info
+A modern, fast, and scalable cloud hosting website template built using React, Tailwind, and AI-assisted development.
 
-**URL**: https://lovable.dev/projects/57a450bc-b55c-4e55-a71d-98a24cc4d3af
+This project is designed to help startups, freelancers, and hosting providers quickly launch their online presence without starting from scratch.
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 💡 Problem This Solves
 
-**Use Lovable**
+Many small businesses struggle with:
+- Launching a professional hosting website
+- Managing performance and UI
+- High development costs
+- Technical complexity in setup
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/57a450bc-b55c-4e55-a71d-98a24cc4d3af) and start prompting.
+This template simplifies the process by providing a ready-to-use, optimized foundation.
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## 🎯 Who Is This For?
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- Hosting providers  
+- Cloud service startups  
+- Freelancers building client websites  
+- Agencies offering web solutions  
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+---
 
-Follow these steps:
+## 📸 Preview
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+![Homepage](https://freeimage.host/i/B8uce7n)  
+![Pricing](https://freeimage.host/i/B8uc7qB)  
+![Features](https://freeimage.host/i/B8ucAWQ)
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+---
 
-# Step 3: Install the necessary dependencies.
-npm i
+## 🔗 Live Demo
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+https://infinitivecloud.com
+
+---
+
+## ⚙️ Features
+
+- ⚡ Fast loading (Vite + React)  
+- 🎨 Modern UI (Tailwind + shadcn)  
+- 📱 Fully responsive design  
+- 🔧 Easy customization  
+- 🌐 Ready for deployment  
+- 💼 Business-ready layout  
+
+---
+
+## 🛠 Tech Stack
+
+- React  
+- TypeScript  
+- Vite  
+- Tailwind CSS  
+- shadcn-ui  
+
+---
+
+## 🚀 Getting Started
+
+```bash
+git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+cd YOUR_REPO_NAME
+npm install
 npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/57a450bc-b55c-4e55-a71d-98a24cc4d3af) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
