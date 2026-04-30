@@ -68,6 +68,7 @@ const Index = () => {
         <HomePricingSection />
         <WhatWeDoSection />
         <PremiumVisualSection />
+        <PremiumInfographicSection />
         <HowItWorksSection />
         <DomainPriceComparison />
         <WhyTrustUsSection />
