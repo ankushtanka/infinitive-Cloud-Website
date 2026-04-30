@@ -69,13 +69,23 @@ const SSLCertificates = () => {
         <Navigation />
         <main className="pt-24 pb-20">
           <section className="section-container mb-16">
-            <div className="max-w-4xl mx-auto text-center animate-fade-in">
-              <h1 className="mb-6">
-                <span className="gradient-text">SSL Certificates</span> for Complete Security
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                Protect your website and build customer trust with industry-standard SSL certificates. Free SSL included with all hosting plans, plus premium options for businesses that need more.
-              </p>
+            <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+              <div className="animate-fade-in">
+                <h1 className="mb-6">
+                  <span className="gradient-text">SSL Certificates</span> for Complete Security
+                </h1>
+                <p className="text-xl text-muted-foreground max-w-xl leading-relaxed">
+                  Protect your website and build customer trust with industry-standard SSL certificates. Free SSL included with all hosting plans, plus premium options for businesses that need more.
+                </p>
+                <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" />Free DV with hosting</div>
+                  <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" />5-min issuance</div>
+                  <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" />Up to $1M warranty</div>
+                </div>
+              </div>
+              <div className="animate-fade-in">
+                <SSLHandshakeDiagram />
+              </div>
             </div>
           </section>
 
