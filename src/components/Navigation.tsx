@@ -47,7 +47,7 @@ const serviceLinks = [
     links: [
       { label: "Zoho Email", path: "/solutions/email-security#zoho" },
       { label: "Microsoft 365", path: "/solutions/email-security#office365" },
-      { label: "Google Workspace", path: "/solutions/email-security#workspace" },
+      { label: "Google Workspace", path: "/solutions/google-workspace" },
       { label: "SSL Certificates", path: "/solutions/email-security#ssl" },
     ],
   },

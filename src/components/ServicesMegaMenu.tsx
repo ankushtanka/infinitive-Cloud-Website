@@ -69,7 +69,7 @@ const serviceCategories: ServiceCategory[] = [
     links: [
       { label: "Zoho Email", path: "/solutions/email-security#zoho", description: "Professional email by Zoho", icon: <Mail className="w-5 h-5" /> },
       { label: "Microsoft 365", path: "/solutions/email-security#office365", description: "Productivity suite by Microsoft", icon: <Monitor className="w-5 h-5" />, tag: "Popular", tagColor: "bg-primary" },
-      { label: "Google Workspace", path: "/solutions/email-security#workspace", description: "Business tools by Google", icon: <Zap className="w-5 h-5" /> },
+      { label: "Google Workspace", path: "/solutions/google-workspace", description: "Business tools by Google", icon: <Zap className="w-5 h-5" /> },
       { label: "SSL Certificates", path: "/solutions/email-security#ssl", description: "Encrypt & secure your site", icon: <Lock className="w-5 h-5" />, tag: "Free SSL", tagColor: "bg-accent" },
     ],
   },

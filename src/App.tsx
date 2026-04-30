@@ -154,6 +154,7 @@ const App = () => {
                 <Route path="/solutions/email-security" element={<EmailSecurity />} />
                 <Route path="/solutions/n8n-hosting" element={<N8nHosting />} />
                 <Route path="/solutions/openclaw" element={<OpenWebUIHosting />} />
+                <Route path="/solutions/google-workspace" element={<GoogleWorkspace />} />
                 
                 <Route path="/live-chat" element={<LiveChat />} />
                 <Route path="/cart" element={<Cart />} />
