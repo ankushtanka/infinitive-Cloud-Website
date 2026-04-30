@@ -227,16 +227,24 @@ const VPSServer = () => {
         </section>
 
         {/* STATS */}
-        <section className="py-12 border-y border-border bg-muted/30">
-          <div className="container">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <section className="relative py-14 border-y border-border bg-gradient-to-b from-muted/40 via-muted/20 to-muted/40 overflow-hidden">
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--primary)/0.08),transparent_60%)]"
+          />
+          <div className="container relative">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-border/50 rounded-2xl overflow-hidden border border-border/60 shadow-sm">
               {stats.map((s) => {
                 const Icon = s.icon;
                 return (
-                  <div key={s.label} className="text-center">
-                    <Icon className="w-6 h-6 text-primary mx-auto mb-2" />
-                    <div className="text-3xl md:text-4xl font-black text-foreground tracking-tight">{s.value}</div>
-                    <div className="text-sm text-muted-foreground mt-1">{s.label}</div>
+                  <div key={s.label} className="bg-background/60 backdrop-blur p-6 md:p-8 text-center hover:bg-background transition-colors">
+                    <div className="inline-flex w-10 h-10 rounded-xl bg-primary/10 text-primary items-center justify-center mb-3">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <div className="text-3xl md:text-4xl font-black text-foreground tracking-tight bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text">
+                      {s.value}
+                    </div>
+                    <div className="text-xs md:text-sm text-muted-foreground mt-1.5 font-medium uppercase tracking-wider">{s.label}</div>
                   </div>
                 );
               })}
