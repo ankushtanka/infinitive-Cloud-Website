@@ -2,9 +2,11 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Zap, Shield, Server, Globe, Clock, Cpu } from "lucide-react";
+import { Zap, Shield, Server, Globe, Clock, Cpu, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { motion } from "framer-motion";
+import GPUServerDiagram from "@/components/infographics/GPUServerDiagram";
 
 const GPUDedicatedServer = () => {
   const features = [
@@ -36,21 +38,63 @@ const GPUDedicatedServer = () => {
       <div className="min-h-screen">
         <Navigation />
         <main className="pt-24 pb-20">
-          <section className="section-container mb-16">
-            <div className="max-w-4xl mx-auto text-center animate-fade-in">
-              <h1 className="mb-6">
-                <span className="gradient-text">GPU Dedicated</span> Servers
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                High-performance GPU servers built for AI training, 3D rendering, video processing, and any workload that demands raw computing power. No shared resources — the entire server is yours.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-                <Link to="/contact">
-                  <Button className="btn-gradient glow-effect font-bold h-14 px-8">Get a Quote</Button>
-                </Link>
-                <Link to="/contact">
-                  <Button variant="outline" className="h-14 px-8 font-semibold">Talk to an Expert</Button>
-                </Link>
+          {/* HERO */}
+          <section className="relative overflow-hidden">
+            <div className="pointer-events-none absolute inset-0" style={{ background: "var(--gradient-glow)" }} aria-hidden />
+            <div className="section-container relative z-10 pb-12 lg:pb-20">
+              <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                  className="space-y-6"
+                >
+                  <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs md:text-sm font-semibold tracking-[0.18em] uppercase">
+                    <Cpu className="h-3.5 w-3.5" />
+                    Accelerated Compute
+                  </span>
+                  <h1 className="tracking-tight text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.05]">
+                    <span className="gradient-text">GPU Dedicated</span> Servers
+                    <br />
+                    <span className="text-foreground">built for AI at scale.</span>
+                  </h1>
+                  <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-xl">
+                    NVIDIA-powered bare-metal GPUs for AI training, inference, 3D rendering, and any workload that needs raw compute. No noisy neighbours — the silicon is yours.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Link to="/contact?topic=gpu-dedicated">
+                      <Button className="btn-gradient glow-effect h-14 px-8 font-semibold text-base">
+                        Get a Quote
+                        <ArrowRight className="ml-2 w-5 h-5" />
+                      </Button>
+                    </Link>
+                    <Link to="/contact">
+                      <Button variant="outline" className="h-14 px-8 font-semibold text-base">Talk to an Expert</Button>
+                    </Link>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-x-6 gap-y-3 pt-4 text-sm text-muted-foreground">
+                    {[
+                      "NVIDIA H100 / A100 / L40S",
+                      "Tier-IV Datacenters",
+                      "99.9% Uptime SLA",
+                      "Setup in minutes",
+                    ].map((b) => (
+                      <div key={b} className="flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-primary" />
+                        <span>{b}</span>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  className="relative"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <GPUServerDiagram />
+                </motion.div>
               </div>
             </div>
           </section>
