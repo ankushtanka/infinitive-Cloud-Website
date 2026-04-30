@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet";
+import { motion } from "framer-motion";
 import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -217,12 +218,12 @@ const GoogleWorkspace = () => {
           {/* HERO */}
           <section className="relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-background to-background pointer-events-none" />
-            <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-[#4285F4]/10 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] bg-[#EA4335]/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-[#4285F4]/10 rounded-full blur-3xl pointer-events-none animate-float" />
+            <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] bg-[#EA4335]/10 rounded-full blur-3xl pointer-events-none animate-float" style={{ animationDelay: "2s" }} />
 
             <div className="section-container relative pt-20 pb-16 lg:pt-28 lg:pb-24">
               <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                <div className="space-y-8 animate-fade-in">
+                <motion.div className="space-y-8" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-md">
                     <Sparkles className="w-4 h-4 text-primary" />
                     <span className="text-sm font-medium text-foreground">
@@ -268,9 +269,9 @@ const GoogleWorkspace = () => {
                       </div>
                     ))}
                   </div>
-                </div>
+                </motion.div>
 
-                <div className="relative">
+                <motion.div className="relative" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}>
                   <div className="absolute inset-0 bg-gradient-to-tr from-[#4285F4]/30 via-[#EA4335]/20 to-[#FBBC04]/20 blur-3xl opacity-40" />
                   <div className="relative rounded-3xl overflow-hidden border border-border/50 shadow-2xl">
                     <img
@@ -285,13 +286,13 @@ const GoogleWorkspace = () => {
                     <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                     <span className="text-sm font-medium">Live: 4,200+ teams onboarded</span>
                   </div>
-                </div>
+                </motion.div>
               </div>
             </div>
           </section>
 
           {/* APPS SHOWCASE */}
-          <section className="section-container py-20 lg:py-28">
+          <motion.section className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="text-center max-w-3xl mx-auto mb-16">
               <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">
                 One subscription. Every tool your team will ever need.
@@ -317,10 +318,10 @@ const GoogleWorkspace = () => {
                 </Card>
               ))}
             </div>
-          </section>
+          </motion.section>
 
           {/* WHY THROUGH US */}
-          <section className="relative py-20 lg:py-28 overflow-hidden">
+          <motion.section className="relative py-20 lg:py-28 overflow-hidden" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
             <div className="section-container relative">
               <div className="text-center max-w-3xl mx-auto mb-16">
@@ -347,17 +348,17 @@ const GoogleWorkspace = () => {
                       <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                         <r.icon className="w-6 h-6 text-primary" />
                       </div>
-                      <h3 className="font-semibold text-lg mb-2">{r.title}</h3>
+       <h3 className="font-semibold text-lg mb-2">{r.title}</h3>
                       <p className="text-sm text-muted-foreground leading-relaxed">{r.desc}</p>
                     </CardContent>
                   </Card>
                 ))}
               </div>
             </div>
-          </section>
+          </motion.section>
 
           {/* PRICING */}
-          <section id="pricing" className="section-container py-20 lg:py-28">
+          <motion.section id="pricing" className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="text-center max-w-3xl mx-auto mb-12">
               <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">
                 Simple, per-user pricing
@@ -480,7 +481,7 @@ const GoogleWorkspace = () => {
                         ))}
                       </ul>
                     </CardContent>
-                  </Card>
+               </Card>
                 );
               })}
             </div>
@@ -494,10 +495,10 @@ const GoogleWorkspace = () => {
                 Get a custom quote →
               </Link>
             </p>
-          </section>
+          </motion.section>
 
           {/* CUSTOM EMAIL FEATURE */}
-          <section className="relative py-20 lg:py-28 overflow-hidden">
+          <motion.section className="relative py-20 lg:py-28 overflow-hidden" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent pointer-events-none" />
             <div className="section-container relative">
               <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
@@ -545,7 +546,7 @@ const GoogleWorkspace = () => {
                 </div>
 
                 <div className="relative order-1 lg:order-2">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-[#EA4335]/20 via-[#FBBC04]/20 to-[#34A853]/20 blur-3xl opacity-50" />
+                  <div className="absolute inset-0 bg-gradient-to-tr from-[#4285F4]/30 via-[#FBBC04]/20 to-[#34A853]/20 blur-3xl opacity-50" />
                   <div className="relative rounded-3xl overflow-hidden border border-border/50 shadow-2xl">
                     <img
                       src={workspaceHero}
@@ -559,10 +560,10 @@ const GoogleWorkspace = () => {
                 </div>
               </div>
             </div>
-          </section>
+          </motion.section>
 
           {/* COLLABORATION */}
-          <section className="section-container py-20 lg:py-28">
+          <motion.section className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="text-center max-w-3xl mx-auto mb-16">
               <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">
                 Built for the way your team actually works
@@ -588,10 +589,10 @@ const GoogleWorkspace = () => {
                 </Card>
               ))}
             </div>
-          </section>
+          </motion.section>
 
           {/* SECURITY */}
-          <section className="relative py-20 lg:py-28 overflow-hidden">
+          <motion.section className="relative py-20 lg:py-28 overflow-hidden" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
             <div className="section-container relative">
               <div className="text-center max-w-3xl mx-auto mb-16">
@@ -603,7 +604,7 @@ const GoogleWorkspace = () => {
                   Enterprise-grade security. Without the enterprise complexity.
                 </h2>
                 <p className="text-lg text-muted-foreground">
-                  Everything your IT and compliance teams need — without the migraine. All managed from one admin
+                  Everything your IT and compliance teams need — managed from one admin
                   console.
                 </p>
               </div>
@@ -622,10 +623,10 @@ const GoogleWorkspace = () => {
                 ))}
               </div>
             </div>
-          </section>
+          </motion.section>
 
           {/* MIGRATION */}
-          <section className="section-container py-20 lg:py-28">
+          <motion.section className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="text-center max-w-3xl mx-auto mb-16">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 mb-5">
                 <Check className="w-4 h-4 text-emerald-500" />
@@ -635,8 +636,7 @@ const GoogleWorkspace = () => {
                 Already using another email provider? We'll move everything.
               </h2>
               <p className="text-lg text-muted-foreground">
-                Outlook, Zoho, legacy G Suite, cPanel mail or anything in between — we migrate your team without
-                losing a single message.
+                Outlook, Zoho, legacy G Suite, cPanel mail or anything else — we move every mailbox without losing a single message.
               </p>
             </div>
 
@@ -658,10 +658,10 @@ const GoogleWorkspace = () => {
                 </div>
               ))}
             </div>
-          </section>
+          </motion.section>
 
           {/* TESTIMONIALS */}
-          <section className="relative py-20 lg:py-28 overflow-hidden">
+          <motion.section className="relative py-20 lg:py-28 overflow-hidden" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
             <div className="section-container relative">
               <div className="text-center max-w-3xl mx-auto mb-16">
@@ -700,10 +700,10 @@ const GoogleWorkspace = () => {
                 ))}
               </div>
             </div>
-          </section>
+          </motion.section>
 
           {/* FAQ */}
-          <section className="section-container py-20 lg:py-28">
+          <motion.section className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="max-w-3xl mx-auto">
               <div className="text-center mb-12">
                 <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">
@@ -731,10 +731,10 @@ const GoogleWorkspace = () => {
                 ))}
               </Accordion>
             </div>
-          </section>
+          </motion.section>
 
           {/* FINAL CTA */}
-          <section className="section-container pb-20 lg:pb-28">
+          <motion.section className="section-container pb-20 lg:pb-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="relative rounded-3xl border border-cyan-500/30 bg-[#0A1A2F] dark:bg-[#0A1A2F] px-6 py-16 sm:py-20 text-center overflow-hidden">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(66,133,244,0.15),transparent_60%)] pointer-events-none" />
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.12),transparent_60%)] pointer-events-none" />
@@ -789,7 +789,7 @@ const GoogleWorkspace = () => {
                 </div>
               </div>
             </div>
-          </section>
+          </motion.section>
         </main>
         <Footer />
       </div>
