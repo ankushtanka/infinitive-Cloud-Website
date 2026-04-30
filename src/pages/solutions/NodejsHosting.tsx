@@ -9,6 +9,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import nodejsHeroPremium from "@/assets/nodejs-hero-premium.jpg";
+import nodejsDeveloperPremium from "@/assets/nodejs-developer-premium.jpg";
 import { Link } from "react-router-dom";
 import {
   Code2,
@@ -184,29 +186,47 @@ const NodejsHosting = () => {
                 </div>
               </div>
 
-              {/* Code/terminal visual */}
+              {/* Premium hero visual: image + floating terminal */}
               <div className="relative animate-fade-in">
-                <div className="absolute -inset-6 bg-gradient-to-tr from-primary/20 via-secondary/10 to-transparent blur-3xl rounded-full" aria-hidden />
-                <div className="relative rounded-2xl overflow-hidden border border-border shadow-2xl bg-card">
-                  <div className="flex items-center gap-2 px-4 py-3 bg-muted/50 border-b border-border">
+                <div className="absolute -inset-10 bg-gradient-to-tr from-primary/30 via-secondary/20 to-transparent blur-[80px] rounded-full" aria-hidden />
+                <div className="absolute -inset-4 bg-gradient-to-bl from-secondary/20 to-primary/10 blur-2xl rounded-3xl opacity-70" aria-hidden />
+
+                {/* Background premium image */}
+                <div className="relative rounded-3xl overflow-hidden border border-border/60 shadow-2xl ring-1 ring-primary/10">
+                  <img
+                    src={nodejsHeroPremium}
+                    alt="Premium Node.js development visualization"
+                    loading="eager"
+                    width={1600}
+                    height={1200}
+                    className="w-full h-auto object-cover aspect-[4/3]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-background/10 to-transparent" aria-hidden />
+                </div>
+
+                {/* Floating glass terminal */}
+                <div className="absolute inset-x-4 md:inset-x-6 bottom-4 md:bottom-6 rounded-2xl overflow-hidden border border-border/60 shadow-2xl bg-card/85 backdrop-blur-xl ring-1 ring-primary/10">
+                  <div className="flex items-center gap-2 px-4 py-2.5 bg-muted/60 border-b border-border/60">
                     <div className="flex gap-1.5">
-                      <span className="w-3 h-3 rounded-full bg-destructive/60" />
-                      <span className="w-3 h-3 rounded-full bg-primary/60" />
-                      <span className="w-3 h-3 rounded-full bg-secondary/60" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-destructive/60" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-primary/60" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-secondary/60" />
                     </div>
-                    <div className="text-xs text-muted-foreground font-mono ml-2">~ deploy.sh</div>
+                    <div className="text-[11px] text-muted-foreground font-mono ml-2">~ deploy.sh</div>
                   </div>
-                  <pre className="p-5 md:p-6 text-xs md:text-sm font-mono text-foreground leading-relaxed overflow-x-auto bg-card">
+                  <pre className="p-4 md:p-5 text-[11px] md:text-xs font-mono text-foreground leading-relaxed overflow-x-auto">
                     <code>{codeSnippet}</code>
                   </pre>
                 </div>
-                <div className="hidden md:flex absolute -bottom-6 -right-6 bg-card border border-border rounded-2xl p-4 shadow-xl items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                    <Zap className="w-5 h-5 text-primary" />
+
+                {/* Floating deploy time pill */}
+                <div className="hidden md:flex absolute -top-5 -right-5 bg-card/90 backdrop-blur-xl border border-border/60 rounded-2xl p-4 shadow-2xl items-center gap-3 ring-1 ring-primary/10">
+                  <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary text-primary-foreground flex items-center justify-center">
+                    <Zap className="w-5 h-5" />
                   </div>
                   <div>
-                    <div className="text-xs text-muted-foreground">Avg deploy time</div>
-                    <div className="text-base font-bold text-foreground">38 seconds</div>
+                    <div className="text-xs text-muted-foreground">Avg deploy</div>
+                    <div className="text-base font-bold text-foreground tracking-tight">38 seconds</div>
                   </div>
                 </div>
               </div>
