@@ -184,9 +184,9 @@ const N8nHosting = () => {
                       Cancel anytime
                     </div>
                   </div>
-                </div>
+                </motion.div>
 
-                <div className="relative">
+                <motion.div className="relative" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}>
                   <div className="absolute inset-0 bg-gradient-to-tr from-primary/30 to-accent/30 blur-3xl opacity-40" />
                   <div className="relative rounded-3xl overflow-hidden border border-border/50 shadow-2xl">
                     <img
