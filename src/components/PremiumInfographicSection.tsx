@@ -13,7 +13,7 @@ const PremiumInfographicSection = () => {
   // Points of Presence (relative coords on viewBox 800x500)
   // Tier-1 highlights: India (HQ), USA, Germany — plus key global PoPs.
   const pops = [
-    { x: 210, y: 210, label: "Mumbai", code: "IN", tier: 1 },
+    { x: 210, y: 210, label: "India", code: "IN", tier: 1 },
     { x: 150, y: 180, label: "Ashburn", code: "US-E", tier: 1 },
     { x: 110, y: 240, label: "Los Angeles", code: "US-W", tier: 1 },
     { x: 320, y: 150, label: "Frankfurt", code: "DE", tier: 1 },
