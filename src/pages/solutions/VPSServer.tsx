@@ -179,26 +179,8 @@ const VPSServer = () => {
                 <div className="absolute -inset-10 bg-gradient-to-tr from-primary/30 via-secondary/20 to-transparent blur-[80px] rounded-full" aria-hidden />
                 <div className="absolute -inset-4 bg-gradient-to-bl from-secondary/20 to-primary/10 blur-2xl rounded-3xl opacity-70" aria-hidden />
 
-                <div className="relative rounded-3xl overflow-hidden border border-border/60 shadow-2xl ring-1 ring-primary/10">
-                  <img
-                    src={vpsHeroPremium}
-                    alt="Premium VPS server with glowing circuit lines"
-                    loading="eager"
-                    width={1600}
-                    height={1200}
-                    className="w-full h-auto object-cover aspect-[4/3]"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/30 via-transparent to-transparent" aria-hidden />
-                  {/* Subtle grid overlay */}
-                  <div
-                    className="absolute inset-0 opacity-[0.07] mix-blend-overlay"
-                    aria-hidden
-                    style={{
-                      backgroundImage:
-                        "linear-gradient(hsl(var(--foreground)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--foreground)) 1px, transparent 1px)",
-                      backgroundSize: "32px 32px",
-                    }}
-                  />
+                <div className="relative">
+                  <PremiumServerDiagram />
                 </div>
 
                 {/* Floating live-uptime card */}
