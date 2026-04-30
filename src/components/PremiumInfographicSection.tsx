@@ -26,7 +26,7 @@ const PremiumInfographicSection = () => {
     { x: 620, y: 305, label: "Sydney", code: "AU", tier: 2 },
   ];
 
-  // Indices: 0 Mumbai, 1 Ashburn, 2 LA, 3 Frankfurt, 4 Berlin, 5 London,
+  // Indices: 0 India, 1 Ashburn, 2 LA, 3 Frankfurt, 4 Berlin, 5 London,
   //          6 Singapore, 7 Tokyo, 8 São Paulo, 9 JNB, 10 Sydney
   const edges: Array<[number, number]> = [
     // USA <-> Europe spine
