@@ -286,7 +286,7 @@ const GoogleWorkspace = () => {
                     <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                     <span className="text-sm font-medium">Live: 4,200+ teams onboarded</span>
                   </div>
-                </div>
+                </motion.div>
               </div>
             </div>
           </section>
