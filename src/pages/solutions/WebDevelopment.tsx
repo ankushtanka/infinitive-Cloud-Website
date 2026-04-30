@@ -1,12 +1,14 @@
 import { Helmet } from "react-helmet";
-import UniversalOrbitDiagram from "@/components/infographics/UniversalOrbitDiagram";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { StructuredData, createServiceSchema, createBreadcrumbSchema, createFAQSchema } from "@/components/StructuredData";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, CheckCircle2, Code, Code2, Database, Figma, Globe, Layers, Palette, Rocket, Server, ShoppingCart, Smartphone, TestTube, Zap } from "lucide-react";
+import { 
+  Code, Globe, Smartphone, Database, Palette, ShoppingCart,
+  CheckCircle2, ArrowRight, Layers, Zap
+} from "lucide-react";
 
 const WebDevelopment = () => {
   const serviceSchema = createServiceSchema(
@@ -161,29 +163,6 @@ const WebDevelopment = () => {
               </div>
             </div>
           </section>
-          {/* Premium animated infographic */}
-          <section className="section-container -mt-8 mb-20">
-            <div className="max-w-5xl mx-auto animate-fade-in">
-              <UniversalOrbitDiagram
-                CenterIcon={Code}
-                centerTitle="Engineering Studio"
-                centerSubtitle="Design · Build · Ship"
-                statusLabel="Sprint · in-progress"
-                metric="100/100"
-                badge="Production Ready"
-                uid="webdevel"
-                nodes={[
-                  { icon: Figma, label: "Design", angle: 0 },
-                  { icon: Code2, label: "Frontend", angle: 60 },
-                  { icon: Server, label: "Backend", angle: 120 },
-                  { icon: Database, label: "Database", angle: 180 },
-                  { icon: TestTube, label: "QA", angle: 240 },
-                  { icon: Rocket, label: "Deploy", angle: 300 },
-                ]}
-              />
-            </div>
-          </section>
-
 
           {/* Services */}
           <section className="section-container mb-20">

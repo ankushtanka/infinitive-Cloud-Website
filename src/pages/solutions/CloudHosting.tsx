@@ -1,12 +1,14 @@
 import { Helmet } from "react-helmet";
-import UniversalOrbitDiagram from "@/components/infographics/UniversalOrbitDiagram";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { StructuredData, createServiceSchema, createBreadcrumbSchema, createFAQSchema } from "@/components/StructuredData";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, CheckCircle2, Cloud, Database, Globe, HardDrive, Lock, Server, Shield, Zap } from "lucide-react";
+import { 
+  Cloud, Server, Database, Lock, Zap, Shield, 
+  CheckCircle2, ArrowRight, Globe, HardDrive 
+} from "lucide-react";
 
 const CloudHosting = () => {
   const serviceSchema = createServiceSchema(
@@ -165,29 +167,6 @@ const CloudHosting = () => {
               </div>
             </div>
           </section>
-          {/* Premium animated infographic */}
-          <section className="section-container -mt-8 mb-20">
-            <div className="max-w-5xl mx-auto animate-fade-in">
-              <UniversalOrbitDiagram
-                CenterIcon={Cloud}
-                centerTitle="Cloud Platform"
-                centerSubtitle="Auto-scaling Core"
-                statusLabel="Region · IN-BOM-1 · healthy"
-                metric="99.99%"
-                badge="Multi-AZ · Live"
-                uid="cloudhos"
-                nodes={[
-                  { icon: Server, label: "Compute", angle: 0 },
-                  { icon: Database, label: "Database", angle: 60 },
-                  { icon: HardDrive, label: "NVMe SSD", angle: 120 },
-                  { icon: Shield, label: "WAF", angle: 180 },
-                  { icon: Globe, label: "CDN", angle: 240 },
-                  { icon: Lock, label: "SSL", angle: 300 },
-                ]}
-              />
-            </div>
-          </section>
-
 
           {/* Features Grid */}
           <section className="section-container mb-20">

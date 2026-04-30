@@ -1,11 +1,10 @@
 import { Helmet } from "react-helmet";
-import UniversalOrbitDiagram from "@/components/infographics/UniversalOrbitDiagram";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { AlertTriangle, Archive, ArrowRight, Bug, Check, CheckCircle2, Globe, Lock, Mail, Monitor, Shield, ShieldCheck, Zap } from "lucide-react";
+import { Mail, Shield, Lock, Monitor, Zap, Globe, ArrowRight, Check, ShieldCheck } from "lucide-react";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -86,29 +85,6 @@ const EmailSecurity = () => {
             </p>
           </div>
         </section>
-          {/* Premium animated infographic */}
-          <section className="section-container -mt-8 mb-20">
-            <div className="max-w-5xl mx-auto animate-fade-in">
-              <UniversalOrbitDiagram
-                CenterIcon={Mail}
-                centerTitle="Email Gateway"
-                centerSubtitle="Threat-Free Inbox"
-                statusLabel="MX · scanning · clean"
-                metric="99.9%"
-                badge="AI Threat Detection"
-                uid="emailsec"
-                nodes={[
-                  { icon: Shield, label: "Anti-Spam", angle: 0 },
-                  { icon: Lock, label: "Encrypt", angle: 60 },
-                  { icon: AlertTriangle, label: "Phishing", angle: 120 },
-                  { icon: Bug, label: "Malware", angle: 180 },
-                  { icon: Archive, label: "Archive", angle: 240 },
-                  { icon: CheckCircle2, label: "Verified", angle: 300 },
-                ]}
-              />
-            </div>
-          </section>
-
 
         {/* Email Services */}
         <section className="py-20">

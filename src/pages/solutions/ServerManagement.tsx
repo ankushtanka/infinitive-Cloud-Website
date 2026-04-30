@@ -2,10 +2,9 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Activity, AlertTriangle, BarChart3, Clock, HardDrive, Headphones, RefreshCw, Server, Settings, Shield, Zap } from "lucide-react";
+import { Server, Shield, Zap, Clock, Settings, Activity, RefreshCw, Headphones } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import UniversalOrbitDiagram from "@/components/infographics/UniversalOrbitDiagram";
 
 const services = [
   { icon: Settings, title: "Server Setup & Configuration", description: "Complete server provisioning including OS installation, security hardening, firewall setup, and performance optimization." },
@@ -51,29 +50,6 @@ const ServerManagement = () => {
               </div>
             </div>
           </section>
-          {/* Premium animated infographic */}
-          <section className="section-container -mt-8 mb-20">
-            <div className="max-w-5xl mx-auto animate-fade-in">
-              <UniversalOrbitDiagram
-                CenterIcon={Settings}
-                centerTitle="NOC Operations"
-                centerSubtitle="24×7 Monitoring"
-                statusLabel="Engineers · on-call"
-                metric="24×7"
-                badge="Proactive Care"
-                uid="serverma"
-                nodes={[
-                  { icon: Activity, label: "Monitor", angle: 0 },
-                  { icon: Shield, label: "Harden", angle: 60 },
-                  { icon: RefreshCw, label: "Patch", angle: 120 },
-                  { icon: HardDrive, label: "Backup", angle: 180 },
-                  { icon: AlertTriangle, label: "Incident", angle: 240 },
-                  { icon: BarChart3, label: "Reports", angle: 300 },
-                ]}
-              />
-            </div>
-          </section>
-
 
           <section className="section-container mb-20">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

@@ -1,11 +1,10 @@
 import { Helmet } from "react-helmet";
-import UniversalOrbitDiagram from "@/components/infographics/UniversalOrbitDiagram";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Bug, CheckCircle2, Database, Globe, KeyRound, Lock, Mail, Monitor, Server, Shield, Zap } from "lucide-react";
+import { Shield, Server, Monitor, Database, Globe, Lock, Zap, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const licenses = [
@@ -149,29 +148,6 @@ const ServerLicenses = () => {
             </div>
           </div>
         </section>
-          {/* Premium animated infographic */}
-          <section className="section-container -mt-8 mb-20">
-            <div className="max-w-5xl mx-auto animate-fade-in">
-              <UniversalOrbitDiagram
-                CenterIcon={KeyRound}
-                centerTitle="License Vault"
-                centerSubtitle="Instant Activation"
-                statusLabel="Keys · provisioning"
-                metric="< 1 min"
-                badge="Authorized Reseller"
-                uid="serverli"
-                nodes={[
-                  { icon: Server, label: "cPanel", angle: 0 },
-                  { icon: Shield, label: "CloudLinux", angle: 60 },
-                  { icon: Bug, label: "Imunify360", angle: 120 },
-                  { icon: Mail, label: "SitePad", angle: 180 },
-                  { icon: Database, label: "JetBackup", angle: 240 },
-                  { icon: Zap, label: "LiteSpeed", angle: 300 },
-                ]}
-              />
-            </div>
-          </section>
-
 
         {/* Trust Badges */}
         <section className="py-8 border-y border-border bg-muted/30">

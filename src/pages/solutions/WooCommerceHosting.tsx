@@ -1,11 +1,10 @@
 import { Helmet } from "react-helmet";
-import UniversalOrbitDiagram from "@/components/infographics/UniversalOrbitDiagram";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { ArrowRight, BarChart3, Check, Clock, CreditCard, Globe, Mail, Package, Server, Shield, ShoppingBag, ShoppingCart, Tag, Truck, Zap } from "lucide-react";
+import { ShoppingCart, Zap, Shield, Clock, Server, Globe, ArrowRight, Check } from "lucide-react";
 
 const features = [
   { icon: ShoppingCart, title: "WooCommerce Optimized", desc: "Pre-configured servers tuned for WooCommerce performance" },
@@ -58,29 +57,6 @@ const WooCommerceHosting = () => {
             </div>
           </div>
         </section>
-          {/* Premium animated infographic */}
-          <section className="section-container -mt-8 mb-20">
-            <div className="max-w-5xl mx-auto animate-fade-in">
-              <UniversalOrbitDiagram
-                CenterIcon={ShoppingBag}
-                centerTitle="WooCommerce Store"
-                centerSubtitle="Optimized for Sales"
-                statusLabel="Cart · checkout · ready"
-                metric="A+"
-                badge="PCI Compliant"
-                uid="woocomme"
-                nodes={[
-                  { icon: CreditCard, label: "Payments", angle: 0 },
-                  { icon: Package, label: "Products", angle: 60 },
-                  { icon: Truck, label: "Shipping", angle: 120 },
-                  { icon: Tag, label: "Coupons", angle: 180 },
-                  { icon: Mail, label: "Recovery", angle: 240 },
-                  { icon: BarChart3, label: "Analytics", angle: 300 },
-                ]}
-              />
-            </div>
-          </section>
-
 
         {/* Features */}
         <section className="py-20">

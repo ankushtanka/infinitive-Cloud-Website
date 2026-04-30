@@ -2,10 +2,9 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Database, Globe, HardDrive, Headphones, RefreshCw, Shield, Zap } from "lucide-react";
+import { Zap, Shield, Globe, RefreshCw, HardDrive, Headphones } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import UniversalOrbitDiagram from "@/components/infographics/UniversalOrbitDiagram";
 
 const WordPressHosting = () => {
   const features = [
@@ -57,29 +56,6 @@ const WordPressHosting = () => {
               </div>
             </div>
           </section>
-          {/* Premium animated infographic */}
-          <section className="section-container -mt-8 mb-20">
-            <div className="max-w-5xl mx-auto animate-fade-in">
-              <UniversalOrbitDiagram
-                CenterIcon={Globe}
-                centerTitle="WordPress Core"
-                centerSubtitle="Managed · Optimized"
-                statusLabel="Site · cached · fast"
-                metric="< 0.4s"
-                badge="Auto-Updated"
-                uid="wordpres"
-                nodes={[
-                  { icon: Zap, label: "LiteSpeed", angle: 0 },
-                  { icon: Shield, label: "Security", angle: 60 },
-                  { icon: RefreshCw, label: "Updates", angle: 120 },
-                  { icon: HardDrive, label: "Backups", angle: 180 },
-                  { icon: Database, label: "MySQL", angle: 240 },
-                  { icon: Globe, label: "CDN", angle: 300 },
-                ]}
-              />
-            </div>
-          </section>
-
 
           <section className="section-container mb-16">
             <h2 className="text-center mb-12">Why Choose Our <span className="gradient-text">WordPress Hosting</span></h2>
