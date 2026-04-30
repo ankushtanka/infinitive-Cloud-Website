@@ -52,6 +52,7 @@ const VPSServer = lazy(() => import("./pages/solutions/VPSServer"));
 const EmailSecurity = lazy(() => import("./pages/solutions/EmailSecurity"));
 const N8nHosting = lazy(() => import("./pages/solutions/N8nHosting"));
 const OpenWebUIHosting = lazy(() => import("./pages/solutions/OpenWebUIHosting"));
+const GoogleWorkspace = lazy(() => import("./pages/solutions/GoogleWorkspace"));
 
 const LiveChat = lazy(() => import("./pages/LiveChat"));
 const Cart = lazy(() => import("./pages/Cart"));
