@@ -31,6 +31,7 @@ import {
   Globe,
 } from "lucide-react";
 import openwebuiHero from "@/assets/openwebui-hero-premium.jpg";
+import OpenclawArchitectureDiagram from "@/components/infographics/OpenclawArchitectureDiagram";
 
 const features = [
   { icon: Lock, title: "Private by default", desc: "Self-hosted on a dedicated VPS — your prompts, documents and embeddings never leave your server." },
@@ -240,6 +241,15 @@ const OpenWebUIHosting = () => {
                 ))}
               </div>
             </div>
+          </motion.section>
+
+          {/* ARCHITECTURE INFOGRAPHIC */}
+          <motion.section className="section-container py-16 lg:py-20" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
+            <div className="text-center max-w-3xl mx-auto mb-12">
+              <h2 className="tracking-tight text-3xl lg:text-4xl font-bold mb-4">How your private AI stack stays private</h2>
+              <p className="text-base text-muted-foreground">Encrypted at the edge. Inferenced on your VPS. Never touched by third-party clouds.</p>
+            </div>
+            <OpenclawArchitectureDiagram />
           </motion.section>
 
           {/* FEATURES */}
