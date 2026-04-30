@@ -18,6 +18,7 @@ const serviceLinks = [
       { label: "Reseller Hosting", path: "/solutions/reseller-hosting" },
       { label: "WordPress Hosting", path: "/solutions/wordpress-hosting" },
       { label: "WooCommerce Hosting", path: "/solutions/woocommerce-hosting" },
+      { label: "OpenCart Hosting", path: "/solutions/opencart-hosting" },
       { label: "Node.js Hosting", path: "/solutions/nodejs-hosting" },
     ],
   },

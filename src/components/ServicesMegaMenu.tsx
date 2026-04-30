@@ -35,6 +35,7 @@ const serviceCategories: ServiceCategory[] = [
       { label: "Reseller Hosting", path: "/solutions/reseller-hosting", description: "Start your own hosting business", icon: <Layers className="w-5 h-5" /> },
       { label: "WordPress Hosting", path: "/solutions/wordpress-hosting", description: "Optimized for WordPress sites", icon: <Monitor className="w-5 h-5" />, tag: "Popular", tagColor: "bg-primary" },
       { label: "WooCommerce Hosting", path: "/solutions/woocommerce-hosting", description: "Powerful eCommerce hosting", icon: <ShoppingCart className="w-5 h-5" /> },
+      { label: "OpenCart Hosting", path: "/solutions/opencart-hosting", description: "Premium OpenCart 4.x hosting", icon: <ShoppingCart className="w-5 h-5" />, tag: "New", tagColor: "bg-accent" },
       { label: "Node.js Hosting", path: "/solutions/nodejs-hosting", description: "Deploy Node.js apps easily", icon: <Code className="w-5 h-5" />, tag: "New", tagColor: "bg-accent" },
     ],
   },
