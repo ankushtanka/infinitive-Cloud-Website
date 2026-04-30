@@ -471,38 +471,111 @@ const VPSServer = () => {
           </div>
         </section>
 
-        {/* FINAL CTA */}
-        <section className="py-20 lg:py-24">
+        {/* FINAL CTA — Premium */}
+        <section className="py-20 lg:py-28">
           <div className="container">
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-secondary p-10 md:p-16 text-center">
+            <div className="relative">
+              {/* Outer ambient glow */}
               <div
-                className="absolute inset-0 opacity-20"
                 aria-hidden
-                style={{
-                  backgroundImage:
-                    "radial-gradient(circle at 20% 20%, white 1px, transparent 1px), radial-gradient(circle at 80% 80%, white 1px, transparent 1px)",
-                  backgroundSize: "40px 40px",
-                }}
+                className="absolute -inset-8 bg-gradient-to-br from-primary/40 via-secondary/30 to-primary/20 blur-3xl rounded-[3rem] opacity-60"
               />
-              <div className="relative">
-                <h2 className="text-3xl md:text-5xl font-black text-primary-foreground mb-4 max-w-2xl mx-auto leading-tight">
-                  Ready for a VPS that doesn't let you down?
-                </h2>
-                <p className="text-primary-foreground/90 text-lg mb-8 max-w-xl mx-auto">
-                  Spin up your server in 60 seconds. Cancel any time, full refund within 30 days.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                  <Link to="/cart">
-                    <Button size="lg" className="h-12 px-8 text-base font-semibold bg-background text-foreground hover:bg-background/90">
-                      Start your VPS
-                      <ArrowRight className="ml-2 w-4 h-4" />
-                    </Button>
-                  </Link>
-                  <Link to="/contact">
-                    <Button size="lg" variant="outline" className="h-12 px-8 text-base font-semibold bg-transparent border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10">
-                      Chat with sales
-                    </Button>
-                  </Link>
+
+              {/* Main card */}
+              <div className="relative overflow-hidden rounded-[2rem] border border-primary/20 shadow-2xl shadow-primary/20">
+                {/* Deep gradient base */}
+                <div
+                  aria-hidden
+                  className="absolute inset-0 bg-gradient-to-br from-[hsl(220_60%_8%)] via-[hsl(210_50%_12%)] to-[hsl(200_55%_10%)]"
+                />
+                {/* Aurora glows */}
+                <div
+                  aria-hidden
+                  className="absolute -top-32 -left-32 w-[28rem] h-[28rem] bg-gradient-to-br from-primary/40 to-transparent rounded-full blur-3xl"
+                />
+                <div
+                  aria-hidden
+                  className="absolute -bottom-32 -right-32 w-[28rem] h-[28rem] bg-gradient-to-tl from-secondary/40 to-transparent rounded-full blur-3xl"
+                />
+                {/* Dot grid */}
+                <div
+                  aria-hidden
+                  className="absolute inset-0 opacity-[0.12]"
+                  style={{
+                    backgroundImage:
+                      "radial-gradient(circle, white 1px, transparent 1px)",
+                    backgroundSize: "32px 32px",
+                  }}
+                />
+                {/* Top hairline */}
+                <div
+                  aria-hidden
+                  className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent"
+                />
+                {/* Bottom hairline */}
+                <div
+                  aria-hidden
+                  className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-secondary/60 to-transparent"
+                />
+
+                <div className="relative p-10 md:p-16 lg:p-20 text-center">
+                  {/* Eyebrow chip */}
+                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.06] border border-white/15 backdrop-blur-md text-white/90 text-xs font-semibold mb-7">
+                    <span className="relative flex w-2 h-2">
+                      <span className="absolute inset-0 rounded-full bg-primary animate-ping opacity-75" />
+                      <span className="relative rounded-full bg-primary w-2 h-2" />
+                    </span>
+                    Ready in 60 seconds · No setup fees
+                  </div>
+
+                  <h2 className="text-3xl md:text-5xl lg:text-6xl font-black text-white mb-5 max-w-3xl mx-auto leading-[1.05] tracking-tight">
+                    Ready for a VPS that{" "}
+                    <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent bg-[length:200%_auto] animate-[shimmer_4s_linear_infinite]">
+                      doesn't let you down?
+                    </span>
+                  </h2>
+                  <p className="text-white/70 text-base md:text-lg mb-10 max-w-xl mx-auto leading-relaxed">
+                    Spin up your server in 60 seconds. Free migration, full root access, and engineers on call — round the clock.
+                  </p>
+
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center mb-10">
+                    <Link to="/cart">
+                      <Button
+                        size="lg"
+                        className="group relative h-12 px-8 text-base font-semibold bg-white text-[hsl(220_60%_10%)] hover:bg-white/95 shadow-xl shadow-primary/30 transition-all hover:-translate-y-0.5"
+                      >
+                        Start your VPS
+                        <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+                      </Button>
+                    </Link>
+                    <Link to="/contact">
+                      <Button
+                        size="lg"
+                        variant="outline"
+                        className="h-12 px-8 text-base font-semibold bg-white/[0.04] backdrop-blur-md border-white/20 text-white hover:bg-white/[0.1] hover:border-white/30"
+                      >
+                        Chat with sales
+                      </Button>
+                    </Link>
+                  </div>
+
+                  {/* Trust strip */}
+                  <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs md:text-sm text-white/60">
+                    <div className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-primary" />
+                      30-day money back
+                    </div>
+                    <span aria-hidden className="hidden sm:inline w-1 h-1 rounded-full bg-white/30" />
+                    <div className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-primary" />
+                      Free white-glove migration
+                    </div>
+                    <span aria-hidden className="hidden sm:inline w-1 h-1 rounded-full bg-white/30" />
+                    <div className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-primary" />
+                      99.99% uptime SLA
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
