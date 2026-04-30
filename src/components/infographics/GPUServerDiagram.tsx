@@ -119,20 +119,31 @@ const GPUServerDiagram = () => {
           {/* Iso floor grid */}
           <rect x="0" y="280" width="600" height="180" fill="url(#iso-grid)" opacity="0.6" />
 
-          {/* Floor reflection halo */}
-          <ellipse cx="300" cy="360" rx="240" ry="40" fill="hsl(var(--primary) / 0.25)" filter="url(#soft-glow)" />
+          {/* Floor reflection halo — sways with the hovering server */}
+          <ellipse cx="300" cy="360" rx="240" ry="40" fill="hsl(var(--primary) / 0.25)" filter="url(#soft-glow)">
+            <animate attributeName="rx" values="240;220;240" dur="6s" repeatCount="indefinite" />
+            <animate attributeName="ry" values="40;32;40" dur="6s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.7;0.45;0.7" dur="6s" repeatCount="indefinite" />
+            <animateTransform attributeName="transform" type="translate" values="-12 0; 12 0; -12 0" dur="8s" repeatCount="indefinite" />
+          </ellipse>
 
-          {/* === ISOMETRIC GPU BOARD === */}
+          {/* === ISOMETRIC GPU BOARD (entire rig hovers, tilts and drifts) === */}
           <motion.g
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
             style={{ transformOrigin: "300px 240px" }}
           >
-            {/* Subtle floating animation */}
+            {/* Lateral drift — server sliding side to side */}
+            <g>
+              <animateTransform attributeName="transform" type="translate" values="-10 0; 10 0; -10 0" dur="8s" repeatCount="indefinite" additive="sum" />
+              {/* Tilt sway — gives the iso rig a 3D rocking motion */}
+              <animateTransform attributeName="transform" type="rotate" values="-1.2 300 240; 1.2 300 240; -1.2 300 240" dur="6s" repeatCount="indefinite" additive="sum" />
+            </g>
+            {/* Pronounced floating motion */}
             <motion.g
-              animate={{ y: [0, -6, 0] }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+              animate={{ y: [0, -14, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             >
               {/* Board front (depth) face */}
               <path
