@@ -311,7 +311,8 @@ const OpenWebUIHosting = () => {
                   <Card
                     key={i}
                     className="group border-border/60 bg-card/70 backdrop-blur-sm hover:border-accent/40 hover:shadow-xl hover:-translate-y-1 transition-all"
-               <CardContent className="p-7">
+                  >
+                    <CardContent className="p-7">
                       <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-accent/20 to-primary/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                         <u.icon className="w-7 h-7 text-accent" />
                       </div>
