@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, Cloud, Shield, Clock, Zap, CheckCircle, Headphones } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import CloudMigrationDiagram from "@/components/infographics/CloudMigrationDiagram";
 
 const steps = [
   { step: "01", title: "Assessment & Planning", description: "We analyze your current setup, identify dependencies, and create a detailed migration roadmap with zero downtime strategy." },
@@ -55,6 +56,12 @@ const CloudMigration = () => {
                 <Link to="/contact"><Button className="btn-gradient glow-effect font-bold h-14 px-8">Request Free Migration</Button></Link>
                 <Link to="/contact"><Button variant="outline" className="h-14 px-8 font-semibold">Talk to Migration Team</Button></Link>
               </div>
+            </div>
+          </section>
+
+          <section className="section-container mb-20">
+            <div className="max-w-5xl mx-auto">
+              <CloudMigrationDiagram />
             </div>
           </section>
 
