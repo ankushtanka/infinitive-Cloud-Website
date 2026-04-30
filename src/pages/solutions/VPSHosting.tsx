@@ -1,14 +1,12 @@
 import { Helmet } from "react-helmet";
+import UniversalOrbitDiagram from "@/components/infographics/UniversalOrbitDiagram";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { StructuredData, createServiceSchema, createBreadcrumbSchema, createFAQSchema } from "@/components/StructuredData";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { 
-  Server, HardDrive, Cpu, Shield, Zap, Lock,
-  CheckCircle2, ArrowRight, Network, Settings
-} from "lucide-react";
+import { ArrowRight, CheckCircle2, Cpu, HardDrive, Lock, MemoryStick, Network, Server, Settings, Shield, Terminal, Zap } from "lucide-react";
 
 const VPSHosting = () => {
   const serviceSchema = createServiceSchema(
@@ -154,6 +152,29 @@ const VPSHosting = () => {
               </div>
             </div>
           </section>
+          {/* Premium animated infographic */}
+          <section className="section-container -mt-8 mb-20">
+            <div className="max-w-5xl mx-auto animate-fade-in">
+              <UniversalOrbitDiagram
+                CenterIcon={Server}
+                centerTitle="VPS Instance"
+                centerSubtitle="Dedicated Resources"
+                statusLabel="vCPU · 8 cores · idle 4%"
+                metric="99.99%"
+                badge="KVM Virtualized"
+                uid="vpshosti"
+                nodes={[
+                  { icon: Cpu, label: "vCPU", angle: 0 },
+                  { icon: MemoryStick, label: "RAM", angle: 60 },
+                  { icon: HardDrive, label: "NVMe", angle: 120 },
+                  { icon: Network, label: "1 Gbps", angle: 180 },
+                  { icon: Shield, label: "Firewall", angle: 240 },
+                  { icon: Terminal, label: "Root SSH", angle: 300 },
+                ]}
+              />
+            </div>
+          </section>
+
 
           {/* Features */}
           <section className="section-container mb-20">

@@ -2,9 +2,10 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Check, Server, Shield, Zap, HardDrive, Globe, Headphones } from "lucide-react";
+import { Check, Cpu, Globe, HardDrive, Headphones, MemoryStick, Network, Server, Shield, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import UniversalOrbitDiagram from "@/components/infographics/UniversalOrbitDiagram";
 
 const plans = [
   {
@@ -76,6 +77,29 @@ const DedicatedServers = () => {
               </p>
             </div>
           </section>
+          {/* Premium animated infographic */}
+          <section className="section-container -mt-8 mb-20">
+            <div className="max-w-5xl mx-auto animate-fade-in">
+              <UniversalOrbitDiagram
+                CenterIcon={Server}
+                centerTitle="Dedicated Bare-Metal"
+                centerSubtitle="Single Tenant"
+                statusLabel="Rack · ic-bom-04 · online"
+                metric="100%"
+                badge="Hardware Isolated"
+                uid="dedicate"
+                nodes={[
+                  { icon: Cpu, label: "CPU", angle: 0 },
+                  { icon: HardDrive, label: "Storage", angle: 60 },
+                  { icon: MemoryStick, label: "RAM", angle: 120 },
+                  { icon: Network, label: "Network", angle: 180 },
+                  { icon: Shield, label: "DDoS", angle: 240 },
+                  { icon: Zap, label: "Power", angle: 300 },
+                ]}
+              />
+            </div>
+          </section>
+
 
           <section className="section-container mb-20">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

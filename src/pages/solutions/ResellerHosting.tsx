@@ -2,9 +2,10 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Users, Globe, Shield, Zap, Server, Headphones } from "lucide-react";
+import { CreditCard, Globe, Headphones, HeadphonesIcon, Mail, Server, Shield, Users, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import UniversalOrbitDiagram from "@/components/infographics/UniversalOrbitDiagram";
 
 const ResellerHosting = () => {
   const features = [
@@ -50,6 +51,29 @@ const ResellerHosting = () => {
               </div>
             </div>
           </section>
+          {/* Premium animated infographic */}
+          <section className="section-container -mt-8 mb-20">
+            <div className="max-w-5xl mx-auto animate-fade-in">
+              <UniversalOrbitDiagram
+                CenterIcon={Users}
+                centerTitle="Reseller Panel"
+                centerSubtitle="WHM · Branded"
+                statusLabel="Accounts · provisioning"
+                metric="∞"
+                badge="White Label"
+                uid="reseller"
+                nodes={[
+                  { icon: Server, label: "cPanel", angle: 0 },
+                  { icon: Globe, label: "DNS", angle: 60 },
+                  { icon: CreditCard, label: "Billing", angle: 120 },
+                  { icon: Mail, label: "Email", angle: 180 },
+                  { icon: Shield, label: "Security", angle: 240 },
+                  { icon: HeadphonesIcon, label: "Support", angle: 300 },
+                ]}
+              />
+            </div>
+          </section>
+
 
           <section className="section-container mb-16">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

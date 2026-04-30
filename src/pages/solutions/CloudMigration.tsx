@@ -2,9 +2,10 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight, Cloud, Shield, Clock, Zap, CheckCircle, Headphones } from "lucide-react";
+import { ArrowLeftRight, ArrowRight, CheckCircle, CheckCircle2, Clock, Cloud, Database, Headphones, RefreshCw, Server, Shield, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import UniversalOrbitDiagram from "@/components/infographics/UniversalOrbitDiagram";
 
 const steps = [
   { step: "01", title: "Assessment & Planning", description: "We analyze your current setup, identify dependencies, and create a detailed migration roadmap with zero downtime strategy." },
@@ -57,6 +58,29 @@ const CloudMigration = () => {
               </div>
             </div>
           </section>
+          {/* Premium animated infographic */}
+          <section className="section-container -mt-8 mb-20">
+            <div className="max-w-5xl mx-auto animate-fade-in">
+              <UniversalOrbitDiagram
+                CenterIcon={ArrowLeftRight}
+                centerTitle="Migration Engine"
+                centerSubtitle="Zero Downtime"
+                statusLabel="Pipeline · sync active"
+                metric="0 dt"
+                badge="Live Cutover"
+                uid="cloudmig"
+                nodes={[
+                  { icon: Server, label: "Source", angle: 180 },
+                  { icon: Cloud, label: "Target", angle: 0 },
+                  { icon: Database, label: "Data", angle: 90 },
+                  { icon: Shield, label: "Verify", angle: 270 },
+                  { icon: RefreshCw, label: "Sync", angle: 45 },
+                  { icon: CheckCircle2, label: "Cutover", angle: 315 },
+                ]}
+              />
+            </div>
+          </section>
+
 
           {/* Migration Steps */}
           <section className="section-container mb-20">
