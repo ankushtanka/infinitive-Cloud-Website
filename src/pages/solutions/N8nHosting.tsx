@@ -207,7 +207,7 @@ const N8nHosting = () => {
           </section>
 
           {/* FEATURE GRID */}
-          <motion.section className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
+          <section className="section-container py-20 lg:py-28">
             <div className="text-center max-w-3xl mx-auto mb-16">
               <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">
                 Why self-host n8n with us
