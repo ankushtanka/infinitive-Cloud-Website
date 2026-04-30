@@ -333,6 +333,64 @@ const NodejsHosting = () => {
           </div>
         </section>
 
+        {/* PREMIUM SHOWCASE — Built for engineers */}
+        <section className="py-20 lg:py-28 border-y border-border bg-gradient-to-b from-background via-muted/20 to-background">
+          <div className="container">
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              <div className="relative">
+                <div className="absolute -inset-8 bg-gradient-to-br from-primary/25 via-secondary/15 to-transparent blur-3xl rounded-full" aria-hidden />
+                <div className="relative rounded-3xl overflow-hidden border border-border/60 shadow-2xl ring-1 ring-primary/10">
+                  <img
+                    src={nodejsDeveloperPremium}
+                    alt="Developer writing Node.js code with code reflecting in glasses"
+                    loading="lazy"
+                    width={1400}
+                    height={1120}
+                    className="w-full aspect-[5/4] object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" aria-hidden />
+                </div>
+                <div className="hidden md:flex absolute -bottom-5 -right-5 bg-card/90 backdrop-blur-xl border border-border/60 rounded-2xl p-4 shadow-2xl items-center gap-3 ring-1 ring-primary/10">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary text-primary-foreground flex items-center justify-center">
+                    <Cpu className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="text-xs text-muted-foreground">Sustained throughput</div>
+                    <div className="text-base font-bold text-foreground tracking-tight">80k req/min</div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div className="text-primary text-sm font-semibold mb-3 uppercase tracking-wider">Built for engineers</div>
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-6 leading-[1.1]">
+                  Less yak-shaving.{" "}
+                  <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">More shipping.</span>
+                </h2>
+                <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
+                  We've spent thousands of hours so you don't have to. Auto-tuned Node runtimes, predictable build pipelines, and a dashboard that respects your time — built by engineers who hate ops tickets too.
+                </p>
+                <div className="space-y-4">
+                  {[
+                    { label: "Zero-downtime deploys", desc: "Blue-green by default. Your users never see a hiccup." },
+                    { label: "Live log streaming", desc: "Tail stdout, stderr, and PM2 events from the browser." },
+                    { label: "Instant rollbacks", desc: "Bad deploy? One click reverts to the previous build." },
+                  ].map((item) => (
+                    <div key={item.label} className="flex gap-4 p-4 rounded-2xl bg-card/60 border border-border/60 backdrop-blur">
+                      <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+                        <Check className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <div className="font-bold text-foreground">{item.label}</div>
+                        <div className="text-sm text-muted-foreground">{item.desc}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* PRICING */}
         <section className="py-20 lg:py-28 bg-muted/30 border-y border-border">
           <div className="container">
