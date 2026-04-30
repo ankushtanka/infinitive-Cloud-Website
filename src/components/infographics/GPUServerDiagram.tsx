@@ -368,6 +368,8 @@ const GPUServerDiagram = () => {
               </div>
             </foreignObject>
           </motion.g>
+          </g>
+          {/* === END GPU RIG GROUP === */}
 
           {/* === CUDA DATA STREAMS (left → tensor → right) === */}
           {streams.map((s, i) => {
