@@ -231,7 +231,7 @@ const GoogleWorkspace = () => {
                     </span>
                   </div>
 
-                  <h1 className="font-serif text-5xl lg:text-7xl font-bold tracking-tight leading-[1.05]">
+                  <h1 className="tracking-tight text-5xl lg:text-7xl font-bold tracking-tight leading-[1.05]">
                     Your team's new home —{" "}
                     <span className="bg-gradient-to-r from-[#4285F4] via-[#EA4335] to-[#FBBC04] bg-clip-text text-transparent">
                       powered by Google
@@ -294,7 +294,7 @@ const GoogleWorkspace = () => {
           {/* APPS SHOWCASE */}
           <motion.section className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">
+              <h2 className="tracking-tight text-4xl lg:text-5xl font-bold mb-5">
                 One subscription. Every tool your team will ever need.
               </h2>
               <p className="text-lg text-muted-foreground">
@@ -329,7 +329,7 @@ const GoogleWorkspace = () => {
                   <Award className="w-4 h-4 text-primary" />
                   <span className="text-sm font-medium">Why buy through us</span>
                 </div>
-                <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">
+                <h2 className="tracking-tight text-4xl lg:text-5xl font-bold mb-5">
                   Same Google. Better experience.
                 </h2>
                 <p className="text-lg text-muted-foreground">
@@ -360,7 +360,7 @@ const GoogleWorkspace = () => {
           {/* PRICING */}
           <motion.section id="pricing" className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="text-center max-w-3xl mx-auto mb-12">
-              <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">
+              <h2 className="tracking-tight text-4xl lg:text-5xl font-bold mb-5">
                 Simple, per-user pricing
               </h2>
               <p className="text-lg text-muted-foreground">
@@ -432,13 +432,13 @@ const GoogleWorkspace = () => {
                       <div className="mb-6 min-h-[80px]">
                         {price === null ? (
                           <div>
-                            <div className="text-3xl font-serif font-bold">Custom</div>
+                            <div className="text-3xl tracking-tight font-bold">Custom</div>
                             <p className="text-xs text-muted-foreground mt-1">Tailored for your org</p>
                           </div>
                         ) : (
                           <div>
                             <div className="flex items-baseline gap-1">
-                              <span className="text-4xl font-serif font-bold">₹{formatINR(price)}</span>
+                              <span className="text-4xl tracking-tight font-bold">₹{formatINR(price)}</span>
                               <span className="text-muted-foreground text-sm">/user/mo</span>
                             </div>
                             <p className="text-xs text-muted-foreground mt-1">
@@ -508,7 +508,7 @@ const GoogleWorkspace = () => {
                     <span className="text-sm font-medium">The star feature</span>
                   </div>
 
-                  <h2 className="font-serif text-4xl lg:text-5xl font-bold leading-tight">
+                  <h2 className="tracking-tight text-4xl lg:text-5xl font-bold leading-tight">
                     Your name. Your brand.
                     <br />
                     <span className="bg-gradient-to-r from-[#EA4335] via-[#FBBC04] to-[#34A853] bg-clip-text text-transparent">
@@ -565,7 +565,7 @@ const GoogleWorkspace = () => {
           {/* COLLABORATION */}
           <motion.section className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">
+              <h2 className="tracking-tight text-4xl lg:text-5xl font-bold mb-5">
                 Built for the way your team actually works
               </h2>
               <p className="text-lg text-muted-foreground">
@@ -600,7 +600,7 @@ const GoogleWorkspace = () => {
                   <ShieldCheck className="w-4 h-4 text-primary" />
                   <span className="text-sm font-medium">Security & admin</span>
                 </div>
-                <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">
+                <h2 className="tracking-tight text-4xl lg:text-5xl font-bold mb-5">
                   Enterprise-grade security. Without the enterprise complexity.
                 </h2>
                 <p className="text-lg text-muted-foreground">
@@ -632,7 +632,7 @@ const GoogleWorkspace = () => {
                 <Check className="w-4 h-4 text-emerald-500" />
                 <span className="text-sm font-medium">Free migration assistance</span>
               </div>
-              <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">
+              <h2 className="tracking-tight text-4xl lg:text-5xl font-bold mb-5">
                 Already using another email provider? We'll move everything.
               </h2>
               <p className="text-lg text-muted-foreground">
@@ -645,7 +645,7 @@ const GoogleWorkspace = () => {
                 <div key={i} className="relative">
                   <Card className="border-border/60 bg-card/70 backdrop-blur-sm h-full hover:border-primary/40 transition-all">
                     <CardContent className="p-8">
-                      <div className="text-5xl font-serif font-bold bg-gradient-to-br from-primary to-accent bg-clip-text text-transparent mb-4">
+                      <div className="text-5xl tracking-tight font-bold bg-gradient-to-br from-primary to-accent bg-clip-text text-transparent mb-4">
                         {s.num}
                       </div>
                       <h3 className="text-xl font-semibold mb-3">{s.title}</h3>
@@ -665,7 +665,7 @@ const GoogleWorkspace = () => {
             <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
             <div className="section-container relative">
               <div className="text-center max-w-3xl mx-auto mb-16">
-                <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">
+                <h2 className="tracking-tight text-4xl lg:text-5xl font-bold mb-5">
                   Loved by teams across India
                 </h2>
                 <p className="text-lg text-muted-foreground">
@@ -706,7 +706,7 @@ const GoogleWorkspace = () => {
           <motion.section className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="max-w-3xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">
+                <h2 className="tracking-tight text-4xl lg:text-5xl font-bold mb-5">
                   Frequently asked questions
                 </h2>
                 <p className="text-lg text-muted-foreground">
@@ -745,7 +745,7 @@ const GoogleWorkspace = () => {
                   <span className="text-sm font-medium text-cyan-100">14-day free trial — no card needed</span>
                 </div>
 
-                <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-5">
+                <h2 className="tracking-tight text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-5">
                   Give your team the{" "}
                   <span className="bg-gradient-to-r from-[#4285F4] via-[#FBBC04] to-[#EA4335] bg-clip-text text-transparent">
                     tools they deserve

@@ -143,7 +143,7 @@ const N8nHosting = () => {
                     <span className="text-sm font-medium text-foreground">One-click n8n. Production-ready.</span>
                   </div>
 
-                  <h1 className="font-serif text-5xl lg:text-7xl font-bold tracking-tight leading-[1.05]">
+                  <h1 className="tracking-tight text-5xl lg:text-7xl font-bold tracking-tight leading-[1.05]">
                     Self-Hosted{" "}
                     <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
                       n8n
@@ -209,7 +209,7 @@ const N8nHosting = () => {
           {/* FEATURE GRID */}
           <motion.section className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">
+              <h2 className="tracking-tight text-4xl lg:text-5xl font-bold mb-5">
                 Why self-host n8n with us
               </h2>
               <p className="text-lg text-muted-foreground">
@@ -244,7 +244,7 @@ const N8nHosting = () => {
                   <Zap className="w-4 h-4 text-primary" />
                   <span className="text-sm font-medium">Ready in under 2 minutes</span>
                 </div>
-                <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">One-click deployment</h2>
+                <h2 className="tracking-tight text-4xl lg:text-5xl font-bold mb-5">One-click deployment</h2>
                 <p className="text-lg text-muted-foreground">From zero to running automation faster than your morning coffee.</p>
               </div>
 
@@ -253,7 +253,7 @@ const N8nHosting = () => {
                   <div key={i} className="relative">
                     <Card className="border-border/60 bg-card/70 backdrop-blur-sm h-full hover:border-primary/40 transition-all">
                       <CardContent className="p-8">
-                        <div className="text-5xl font-serif font-bold bg-gradient-to-br from-primary to-accent bg-clip-text text-transparent mb-4">
+                        <div className="text-5xl tracking-tight font-bold bg-gradient-to-br from-primary to-accent bg-clip-text text-transparent mb-4">
                           {s.num}
                         </div>
                         <h3 className="text-xl font-semibold mb-3">{s.title}</h3>
@@ -272,7 +272,7 @@ const N8nHosting = () => {
           {/* PRICING */}
           <motion.section id="pricing" className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">Simple, flat pricing</h2>
+              <h2 className="tracking-tight text-4xl lg:text-5xl font-bold mb-5">Simple, flat pricing</h2>
               <p className="text-lg text-muted-foreground">No per-task fees. No execution caps. Run as many workflows as you want.</p>
             </div>
 
@@ -299,7 +299,7 @@ const N8nHosting = () => {
                     <p className="text-sm text-muted-foreground mb-6">{p.tag}</p>
 
                     <div className="flex items-baseline gap-1 mb-8">
-                      <span className="text-5xl font-serif font-bold">{p.price}</span>
+                      <span className="text-5xl tracking-tight font-bold">{p.price}</span>
                       <span className="text-muted-foreground">{p.period}</span>
                     </div>
 
@@ -331,7 +331,7 @@ const N8nHosting = () => {
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent pointer-events-none" />
             <div className="section-container relative">
               <div className="text-center max-w-3xl mx-auto mb-16">
-                <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">n8n vs Zapier vs Make</h2>
+                <h2 className="tracking-tight text-4xl lg:text-5xl font-bold mb-5">n8n vs Zapier vs Make</h2>
                 <p className="text-lg text-muted-foreground">Why teams move to self-hosted automation.</p>
               </div>
 
@@ -367,7 +367,7 @@ const N8nHosting = () => {
           {/* INTEGRATIONS */}
           <motion.section className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="text-center max-w-3xl mx-auto mb-12">
-              <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">All your favourite apps</h2>
+              <h2 className="tracking-tight text-4xl lg:text-5xl font-bold mb-5">All your favourite apps</h2>
               <p className="text-lg text-muted-foreground">Native integrations to every tool your team already uses — plus webhooks, HTTP nodes and custom code.</p>
             </div>
 
@@ -388,7 +388,7 @@ const N8nHosting = () => {
             <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
             <div className="section-container relative">
               <div className="text-center max-w-3xl mx-auto mb-16">
-                <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">Built for serious teams</h2>
+                <h2 className="tracking-tight text-4xl lg:text-5xl font-bold mb-5">Built for serious teams</h2>
                 <p className="text-lg text-muted-foreground">From solo developers to engineering teams running thousands of workflows.</p>
               </div>
               <div className="grid md:grid-cols-3 gap-6">
@@ -416,7 +416,7 @@ const N8nHosting = () => {
           <motion.section className="section-container pb-20 lg:pb-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="max-w-3xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">Frequently asked questions</h2>
+                <h2 className="tracking-tight text-4xl lg:text-5xl font-bold mb-5">Frequently asked questions</h2>
                 <p className="text-lg text-muted-foreground">Everything teams ask before they switch.</p>
               </div>
 
@@ -451,7 +451,7 @@ const N8nHosting = () => {
                   <span className="text-sm font-medium text-cyan-100">Ready in 60 seconds</span>
                 </div>
 
-                <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-5">
+                <h2 className="tracking-tight text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-5">
                   Start automating on{" "}
                   <span className="bg-gradient-to-r from-cyan-300 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
                     your own terms

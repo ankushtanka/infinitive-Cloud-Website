@@ -153,7 +153,7 @@ const OpenWebUIHosting = () => {
                     <span className="text-sm font-medium text-foreground">Open-source. Self-hosted. Yours.</span>
                   </div>
 
-                  <h1 className="font-serif text-5xl lg:text-7xl font-bold tracking-tight leading-[1.05]">
+                  <h1 className="tracking-tight text-5xl lg:text-7xl font-bold tracking-tight leading-[1.05]">
                     Your private{" "}
                     <span className="bg-gradient-to-r from-accent via-primary to-accent bg-clip-text text-transparent">
                       AI workspace
@@ -217,7 +217,7 @@ const OpenWebUIHosting = () => {
           {/* WHAT IS IT */}
           <motion.section className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-6">What is Openclaw?</h2>
+              <h2 className="tracking-tight text-4xl lg:text-5xl font-bold mb-6">What is Openclaw?</h2>
               <p className="text-lg lg:text-xl text-muted-foreground leading-relaxed mb-12">
                 A complete, open-source AI platform you run on your own VPS. Think of it as a private ChatGPT for your team — except you choose the models, you own the data, and you decide who has access. Connect cloud LLMs, run local models, chat with your documents, and build agents — all from one beautiful interface.
               </p>
@@ -247,7 +247,7 @@ const OpenWebUIHosting = () => {
             <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent pointer-events-none" />
             <div className="section-container relative">
               <div className="text-center max-w-3xl mx-auto mb-16">
-                <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">Everything you need, nothing you don't</h2>
+                <h2 className="tracking-tight text-4xl lg:text-5xl font-bold mb-5">Everything you need, nothing you don't</h2>
                 <p className="text-lg text-muted-foreground">Production features built for real teams — not yet another wrapper around an API.</p>
               </div>
 
@@ -273,7 +273,7 @@ const OpenWebUIHosting = () => {
           {/* HOW IT WORKS */}
           <motion.section id="how-it-works" className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">How it works</h2>
+              <h2 className="tracking-tight text-4xl lg:text-5xl font-bold mb-5">How it works</h2>
               <p className="text-lg text-muted-foreground">Three steps. No DevOps team required.</p>
             </div>
 
@@ -282,7 +282,7 @@ const OpenWebUIHosting = () => {
                 <div key={i} className="relative">
                   <Card className="border-border/60 bg-card/70 backdrop-blur-sm h-full hover:border-accent/40 transition-all">
                     <CardContent className="p-8">
-                      <div className="text-5xl font-serif font-bold bg-gradient-to-br from-accent to-primary bg-clip-text text-transparent mb-4">
+                      <div className="text-5xl tracking-tight font-bold bg-gradient-to-br from-accent to-primary bg-clip-text text-transparent mb-4">
                         {s.num}
                       </div>
                       <h3 className="text-xl font-semibold mb-3">{s.title}</h3>
@@ -302,7 +302,7 @@ const OpenWebUIHosting = () => {
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/5 to-transparent pointer-events-none" />
             <div className="section-container relative">
               <div className="text-center max-w-3xl mx-auto mb-16">
-                <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">Built for the teams who can't compromise on privacy</h2>
+                <h2 className="tracking-tight text-4xl lg:text-5xl font-bold mb-5">Built for the teams who can't compromise on privacy</h2>
                 <p className="text-lg text-muted-foreground">If your data is sensitive, regulated, or just plain valuable — Openclaw is for you.</p>
               </div>
 
@@ -328,7 +328,7 @@ const OpenWebUIHosting = () => {
           {/* PRICING */}
           <motion.section id="pricing" className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">Hosting tailored for AI workloads</h2>
+              <h2 className="tracking-tight text-4xl lg:text-5xl font-bold mb-5">Hosting tailored for AI workloads</h2>
               <p className="text-lg text-muted-foreground">NVMe storage, generous RAM, and an optional GPU upgrade — sized for real model inference.</p>
             </div>
 
@@ -355,7 +355,7 @@ const OpenWebUIHosting = () => {
                     <p className="text-sm text-muted-foreground mb-6">{p.tag}</p>
 
                     <div className="flex items-baseline gap-1 mb-8">
-                      <span className="text-5xl font-serif font-bold">{p.price}</span>
+                      <span className="text-5xl tracking-tight font-bold">{p.price}</span>
                       <span className="text-muted-foreground">{p.period}</span>
                     </div>
 
@@ -391,7 +391,7 @@ const OpenWebUIHosting = () => {
                   <Shield className="w-4 h-4 text-accent" />
                   <span className="text-sm font-medium">Security & compliance</span>
                 </div>
-                <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">Your data, your perimeter</h2>
+                <h2 className="tracking-tight text-4xl lg:text-5xl font-bold mb-5">Your data, your perimeter</h2>
                 <p className="text-lg text-muted-foreground">Built so your security and compliance teams can sign off without a fight.</p>
               </div>
 
@@ -414,7 +414,7 @@ const OpenWebUIHosting = () => {
           {/* TESTIMONIALS */}
           <motion.section className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">Trusted by teams who can't risk leaks</h2>
+              <h2 className="tracking-tight text-4xl lg:text-5xl font-bold mb-5">Trusted by teams who can't risk leaks</h2>
             </div>
 
             <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
@@ -441,7 +441,7 @@ const OpenWebUIHosting = () => {
           <motion.section className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="max-w-3xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">Frequently asked questions</h2>
+                <h2 className="tracking-tight text-4xl lg:text-5xl font-bold mb-5">Frequently asked questions</h2>
               </div>
 
               <Accordion type="single" collapsible className="space-y-3">
@@ -475,7 +475,7 @@ const OpenWebUIHosting = () => {
                   <span className="text-sm font-medium text-amber-100">Live in 2 minutes</span>
                 </div>
 
-                <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-5">
+                <h2 className="tracking-tight text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-5">
                   Deploy Openclaw —{" "}
                   <span className="bg-gradient-to-r from-amber-300 via-amber-400 to-cyan-300 bg-clip-text text-transparent">
                     own your data, own your workflow
