@@ -127,24 +127,25 @@ const GPUServerDiagram = () => {
             <animateTransform attributeName="transform" type="translate" values="-12 0; 12 0; -12 0" dur="8s" repeatCount="indefinite" />
           </ellipse>
 
-          {/* === ISOMETRIC GPU BOARD (entire rig hovers, tilts and drifts) === */}
-          <motion.g
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-            style={{ transformOrigin: "300px 240px" }}
-          >
-            {/* Lateral drift — server sliding side to side */}
-            <g>
-              <animateTransform attributeName="transform" type="translate" values="-10 0; 10 0; -10 0" dur="8s" repeatCount="indefinite" additive="sum" />
-              {/* Tilt sway — gives the iso rig a 3D rocking motion */}
-              <animateTransform attributeName="transform" type="rotate" values="-1.2 300 240; 1.2 300 240; -1.2 300 240" dur="6s" repeatCount="indefinite" additive="sum" />
-            </g>
-            {/* Pronounced floating motion */}
+          {/* === GPU RIG GROUP — drifts laterally and rocks/tilts as one unit === */}
+          <g>
+            {/* Lateral drift — the whole server slides side to side */}
+            <animateTransform attributeName="transform" type="translate" values="-10 0; 10 0; -10 0" dur="8s" repeatCount="indefinite" additive="sum" />
+            {/* 3D rocking tilt around the board's center */}
+            <animateTransform attributeName="transform" type="rotate" values="-1.5 300 240; 1.5 300 240; -1.5 300 240" dur="6s" repeatCount="indefinite" additive="sum" />
+
+            {/* === ISOMETRIC GPU BOARD === */}
             <motion.g
-              animate={{ y: [0, -14, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+              style={{ transformOrigin: "300px 240px" }}
             >
+              {/* Pronounced floating hover */}
+              <motion.g
+                animate={{ y: [0, -14, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              >
               {/* Board front (depth) face */}
               <path
                 d="M 120 290 L 120 310 L 480 310 L 480 290 Z"
