@@ -1,14 +1,12 @@
 import { Helmet } from "react-helmet";
+import UniversalOrbitDiagram from "@/components/infographics/UniversalOrbitDiagram";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { StructuredData, createServiceSchema, createBreadcrumbSchema, createFAQSchema } from "@/components/StructuredData";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { 
-  Smartphone, Apple, Play, Code2, Zap, Users,
-  CheckCircle2, ArrowRight, Layers, Database
-} from "lucide-react";
+import { Apple, ArrowRight, Bell, CheckCircle2, Cloud, Code, Code2, Database, Layers, Lock, Play, Smartphone, Users, Zap } from "lucide-react";
 
 const MobileApps = () => {
   const serviceSchema = createServiceSchema(
@@ -155,6 +153,29 @@ const MobileApps = () => {
               </div>
             </div>
           </section>
+          {{/* Premium animated infographic */}}
+          <section className="section-container -mt-8 mb-20">
+            <div className="max-w-5xl mx-auto animate-fade-in">
+              <UniversalOrbitDiagram
+                CenterIcon={{Smartphone}}
+                centerTitle="Mobile App Core"
+                centerSubtitle="iOS · Android"
+                statusLabel="Build · CI/CD · passing"
+                metric="60 fps"
+                badge="App Store Ready"
+                uid="mobileap"
+                nodes={{[
+                  { icon: Code, label: "Native", angle: 0 },
+                  { icon: Cloud, label: "API", angle: 60 },
+                  { icon: Database, label: "Data", angle: 120 },
+                  { icon: Bell, label: "Push", angle: 180 },
+                  { icon: Lock, label: "Auth", angle: 240 },
+                  { icon: Zap, label: "Realtime", angle: 300 },
+                ]}}
+              />
+            </div>
+          </section>
+
 
           {/* Platforms */}
           <section className="section-container mb-20">

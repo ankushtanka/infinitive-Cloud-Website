@@ -2,9 +2,10 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Check, Server, Shield, Zap, Globe, HardDrive, Headphones, ArrowRight, Loader2 } from "lucide-react";
+import { ArrowRight, Check, Database, Globe, HardDrive, Headphones, Loader2, Mail, Server, Shield, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import UniversalOrbitDiagram from "@/components/infographics/UniversalOrbitDiagram";
 import { useWhmcsProducts } from "@/hooks/use-whmcs-products";
 import { useMemo } from "react";
 
@@ -93,6 +94,29 @@ const SharedHosting = () => {
               </div>
             </div>
           </section>
+          {{/* Premium animated infographic */}}
+          <section className="section-container -mt-8 mb-20">
+            <div className="max-w-5xl mx-auto animate-fade-in">
+              <UniversalOrbitDiagram
+                CenterIcon={{Server}}
+                centerTitle="Shared Hosting"
+                centerSubtitle="LiteSpeed · cPanel"
+                statusLabel="Node · ic-bom-sh-12 · ok"
+                metric="99.9%"
+                badge="NVMe Powered"
+                uid="sharedho"
+                nodes={{[
+                  { icon: HardDrive, label: "NVMe", angle: 0 },
+                  { icon: Zap, label: "LiteSpeed", angle: 60 },
+                  { icon: Shield, label: "Imunify360", angle: 120 },
+                  { icon: Globe, label: "Free SSL", angle: 180 },
+                  { icon: Mail, label: "Email", angle: 240 },
+                  { icon: Database, label: "MySQL", angle: 300 },
+                ]}}
+              />
+            </div>
+          </section>
+
 
           {/* Plans */}
           <section className="section-container mb-20">

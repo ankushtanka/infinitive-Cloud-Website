@@ -1,14 +1,12 @@
 import { Helmet } from "react-helmet";
+import UniversalOrbitDiagram from "@/components/infographics/UniversalOrbitDiagram";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { StructuredData, createServiceSchema, createBreadcrumbSchema, createFAQSchema } from "@/components/StructuredData";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { 
-  Sparkles, Bot, Brain, Zap, BarChart, MessageSquare,
-  CheckCircle2, ArrowRight, Cpu, Settings
-} from "lucide-react";
+import { ArrowRight, BarChart, Bot, Brain, CheckCircle2, Cpu, Database, Lock, MessageSquare, Settings, Sparkles, Workflow, Zap } from "lucide-react";
 
 const AISolutions = () => {
   const serviceSchema = createServiceSchema(
@@ -153,6 +151,29 @@ const AISolutions = () => {
               </div>
             </div>
           </section>
+          {{/* Premium animated infographic */}}
+          <section className="section-container -mt-8 mb-20">
+            <div className="max-w-5xl mx-auto animate-fade-in">
+              <UniversalOrbitDiagram
+                CenterIcon={{Brain}}
+                centerTitle="AI Workbench"
+                centerSubtitle="Models · Agents · Data"
+                statusLabel="Inference · live"
+                metric="ms"
+                badge="Self-Hosted AI"
+                uid="aisoluti"
+                nodes={{[
+                  { icon: Cpu, label: "GPU", angle: 0 },
+                  { icon: Database, label: "Vectors", angle: 60 },
+                  { icon: MessageSquare, label: "Chat", angle: 120 },
+                  { icon: Workflow, label: "Agents", angle: 180 },
+                  { icon: Bot, label: "Models", angle: 240 },
+                  { icon: Lock, label: "Private", angle: 300 },
+                ]}}
+              />
+            </div>
+          </section>
+
 
           {/* Services */}
           <section className="section-container mb-20">

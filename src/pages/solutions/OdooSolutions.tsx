@@ -2,9 +2,10 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Settings, ShoppingCart, BarChart3, Users, Globe, Headphones } from "lucide-react";
+import { BarChart3, Briefcase, Calculator, Globe, Headphones, Package, Settings, ShoppingCart, Truck, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import UniversalOrbitDiagram from "@/components/infographics/UniversalOrbitDiagram";
 
 const OdooSolutions = () => {
   const features = [
@@ -50,6 +51,29 @@ const OdooSolutions = () => {
               </div>
             </div>
           </section>
+          {{/* Premium animated infographic */}}
+          <section className="section-container -mt-8 mb-20">
+            <div className="max-w-5xl mx-auto animate-fade-in">
+              <UniversalOrbitDiagram
+                CenterIcon={{Briefcase}}
+                centerTitle="Odoo ERP Core"
+                centerSubtitle="Unified Business"
+                statusLabel="Modules · 30+ active"
+                metric="ERP"
+                badge="Enterprise Grade"
+                uid="odoosolu"
+                nodes={{[
+                  { icon: ShoppingCart, label: "Sales", angle: 0 },
+                  { icon: Package, label: "Inventory", angle: 60 },
+                  { icon: Users, label: "CRM", angle: 120 },
+                  { icon: Calculator, label: "Accounting", angle: 180 },
+                  { icon: Truck, label: "Logistics", angle: 240 },
+                  { icon: BarChart3, label: "Analytics", angle: 300 },
+                ]}}
+              />
+            </div>
+          </section>
+
 
           <section className="section-container mb-16">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

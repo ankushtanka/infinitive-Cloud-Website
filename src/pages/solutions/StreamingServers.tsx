@@ -2,9 +2,10 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Play, Globe, Zap, Shield, Server, Headphones } from "lucide-react";
+import { Globe, Headphones, Mic, Play, Radio, Server, Shield, Tv, Users, Video, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import UniversalOrbitDiagram from "@/components/infographics/UniversalOrbitDiagram";
 
 const StreamingServers = () => {
   const features = [
@@ -50,6 +51,29 @@ const StreamingServers = () => {
               </div>
             </div>
           </section>
+          {{/* Premium animated infographic */}}
+          <section className="section-container -mt-8 mb-20">
+            <div className="max-w-5xl mx-auto animate-fade-in">
+              <UniversalOrbitDiagram
+                CenterIcon={{Radio}}
+                centerTitle="Stream Engine"
+                centerSubtitle="Low-Latency Edge"
+                statusLabel="Live · 0 packet loss"
+                metric="< 50ms"
+                badge="HLS · RTMP · WebRTC"
+                uid="streamin"
+                nodes={{[
+                  { icon: Video, label: "Encode", angle: 0 },
+                  { icon: Globe, label: "CDN", angle: 60 },
+                  { icon: Users, label: "Viewers", angle: 120 },
+                  { icon: Mic, label: "Audio", angle: 180 },
+                  { icon: Tv, label: "Player", angle: 240 },
+                  { icon: Shield, label: "DRM", angle: 300 },
+                ]}}
+              />
+            </div>
+          </section>
+
 
           <section className="section-container mb-16">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
