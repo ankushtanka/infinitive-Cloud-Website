@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import openwebuiHero from "@/assets/openwebui-hero-premium.jpg";
 import OpenclawArchitectureDiagram from "@/components/infographics/OpenclawArchitectureDiagram";
+import OpenclawHeroDiagram from "@/components/infographics/OpenclawHeroDiagram";
 
 const features = [
   { icon: Lock, title: "Private by default", desc: "Self-hosted on a dedicated VPS — your prompts, documents and embeddings never leave your server." },
@@ -196,20 +197,7 @@ const OpenWebUIHosting = () => {
                 </motion.div>
 
                 <motion.div className="relative" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}>
-                  <div className="absolute inset-0 bg-gradient-to-tr from-accent/30 to-primary/30 blur-3xl opacity-40" />
-                  <div className="relative rounded-3xl overflow-hidden border border-border/50 shadow-2xl">
-                    <img
-                      src={openwebuiHero}
-                      alt="Openclaw self-hosted AI workspace dashboard"
-                      width={1920}
-                      height={1080}
-                      className="w-full h-auto"
-                    />
-                  </div>
-                  <div className="absolute -bottom-6 -right-6 hidden lg:flex items-center gap-3 px-5 py-3 rounded-2xl bg-card/90 backdrop-blur-xl border border-border/50 shadow-xl">
-                    <Shield className="w-5 h-5 text-accent" />
-                    <span className="text-sm font-medium">100% on your VPS</span>
-                  </div>
+                  <OpenclawHeroDiagram />
                 </motion.div>
               </div>
             </div>
