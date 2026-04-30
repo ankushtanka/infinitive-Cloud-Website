@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Check, Server, Shield, Zap, HardDrive, Globe, Headphones } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import DedicatedServerDiagram from "@/components/infographics/DedicatedServerDiagram";
 
 const plans = [
   {
@@ -74,6 +75,12 @@ const DedicatedServers = () => {
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                 Enterprise-grade bare metal servers with full root access, NVMe SSD storage, and 99.99% uptime SLA. Built for high-traffic websites, applications, and compute-intensive workloads.
               </p>
+            </div>
+          </section>
+
+          <section className="section-container mb-20">
+            <div className="max-w-5xl mx-auto">
+              <DedicatedServerDiagram />
             </div>
           </section>
 

@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Zap, Shield, Globe, RefreshCw, HardDrive, Headphones } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import WordPressStackDiagram from "@/components/infographics/WordPressStackDiagram";
 
 const WordPressHosting = () => {
   const features = [
@@ -54,6 +55,12 @@ const WordPressHosting = () => {
                 <Link to="/contact"><Button className="btn-gradient glow-effect font-bold h-14 px-8">Get Started</Button></Link>
                 <Link to="/contact"><Button variant="outline" className="h-14 px-8 font-semibold">Talk to an Expert</Button></Link>
               </div>
+            </div>
+          </section>
+
+          <section className="section-container mb-16">
+            <div className="max-w-5xl mx-auto">
+              <WordPressStackDiagram />
             </div>
           </section>
 

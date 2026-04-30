@@ -5,6 +5,7 @@ import { StructuredData, createServiceSchema, createBreadcrumbSchema, createFAQS
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import CloudHostingDiagram from "@/components/infographics/CloudHostingDiagram";
 import { 
   Cloud, Server, Database, Lock, Zap, Shield, 
   CheckCircle2, ArrowRight, Globe, HardDrive 
@@ -165,6 +166,13 @@ const CloudHosting = () => {
                   </Button>
                 </Link>
               </div>
+            </div>
+          </section>
+
+          {/* Premium architecture diagram */}
+          <section className="section-container mb-20">
+            <div className="max-w-5xl mx-auto">
+              <CloudHostingDiagram />
             </div>
           </section>
 
