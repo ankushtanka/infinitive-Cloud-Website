@@ -37,6 +37,8 @@ const serviceCategories: ServiceCategory[] = [
       { label: "WooCommerce Hosting", path: "/solutions/woocommerce-hosting", description: "Powerful eCommerce hosting", icon: <ShoppingCart className="w-5 h-5" /> },
       
       { label: "Node.js Hosting", path: "/solutions/nodejs-hosting", description: "Deploy Node.js apps easily", icon: <Code className="w-5 h-5" />, tag: "New", tagColor: "bg-accent" },
+      { label: "Self-Hosted n8n", path: "/solutions/n8n-hosting", description: "Pre-installed n8n on your VPS", icon: <Code className="w-5 h-5" />, tag: "New", tagColor: "bg-accent" },
+      { label: "Openclaw", path: "/solutions/openclaw", description: "Private, self-hosted AI workspace", icon: <Code className="w-5 h-5" />, tag: "New", tagColor: "bg-accent" },
     ],
   },
   {

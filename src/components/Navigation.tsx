@@ -20,6 +20,8 @@ const serviceLinks = [
       { label: "WooCommerce Hosting", path: "/solutions/woocommerce-hosting" },
       
       { label: "Node.js Hosting", path: "/solutions/nodejs-hosting" },
+      { label: "Self-Hosted n8n", path: "/solutions/n8n-hosting" },
+      { label: "Openclaw", path: "/solutions/openclaw" },
     ],
   },
   {

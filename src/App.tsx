@@ -50,6 +50,8 @@ const WooCommerceHosting = lazy(() => import("./pages/solutions/WooCommerceHosti
 const NodejsHosting = lazy(() => import("./pages/solutions/NodejsHosting"));
 const VPSServer = lazy(() => import("./pages/solutions/VPSServer"));
 const EmailSecurity = lazy(() => import("./pages/solutions/EmailSecurity"));
+const N8nHosting = lazy(() => import("./pages/solutions/N8nHosting"));
+const OpenWebUIHosting = lazy(() => import("./pages/solutions/OpenWebUIHosting"));
 
 const LiveChat = lazy(() => import("./pages/LiveChat"));
 const Cart = lazy(() => import("./pages/Cart"));
@@ -149,6 +151,8 @@ const App = () => {
                 <Route path="/solutions/nodejs-hosting" element={<NodejsHosting />} />
                 <Route path="/solutions/vps-server" element={<VPSServer />} />
                 <Route path="/solutions/email-security" element={<EmailSecurity />} />
+                <Route path="/solutions/n8n-hosting" element={<N8nHosting />} />
+                <Route path="/solutions/openclaw" element={<OpenWebUIHosting />} />
                 
                 <Route path="/live-chat" element={<LiveChat />} />
                 <Route path="/cart" element={<Cart />} />
