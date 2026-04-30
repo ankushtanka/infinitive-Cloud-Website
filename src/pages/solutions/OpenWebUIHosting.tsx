@@ -209,7 +209,7 @@ const OpenWebUIHosting = () => {
                     <Shield className="w-5 h-5 text-accent" />
                     <span className="text-sm font-medium">100% on your VPS</span>
                   </div>
-                </div>
+                </motion.div>
               </div>
             </div>
           </section>
