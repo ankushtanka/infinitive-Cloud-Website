@@ -177,25 +177,25 @@ const DomainRegistration = () => {
               <p className="text-xs text-muted-foreground">Example: yourbusiness.com, mybrand.in, mywebsite.co.in</p>
             </div>
           </section>
-          {{/* Premium animated infographic */}}
+          {/* Premium animated infographic */}
           <section className="section-container -mt-8 mb-20">
             <div className="max-w-5xl mx-auto animate-fade-in">
               <UniversalOrbitDiagram
-                CenterIcon={{Globe}}
+                CenterIcon={Globe}
                 centerTitle="Your Domain"
                 centerSubtitle="DNS Active"
                 statusLabel="Registrar · ICANN · live"
                 metric="< 60s"
                 badge="Propagated Worldwide"
                 uid="domainre"
-                nodes={{[
+                nodes={[
                   { icon: Search, label: "Search", angle: 180 },
                   { icon: Lock, label: "WHOIS", angle: 240 },
                   { icon: Mail, label: "Email", angle: 300 },
                   { icon: Server, label: "DNS", angle: 0 },
                   { icon: Shield, label: "Privacy", angle: 60 },
                   { icon: RefreshCw, label: "Auto-renew", angle: 120 },
-                ]}}
+                ]}
               />
             </div>
           </section>

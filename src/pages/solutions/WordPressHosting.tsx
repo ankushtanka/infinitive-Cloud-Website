@@ -57,25 +57,25 @@ const WordPressHosting = () => {
               </div>
             </div>
           </section>
-          {{/* Premium animated infographic */}}
+          {/* Premium animated infographic */}
           <section className="section-container -mt-8 mb-20">
             <div className="max-w-5xl mx-auto animate-fade-in">
               <UniversalOrbitDiagram
-                CenterIcon={{Globe}}
+                CenterIcon={Globe}
                 centerTitle="WordPress Core"
                 centerSubtitle="Managed · Optimized"
                 statusLabel="Site · cached · fast"
                 metric="< 0.4s"
                 badge="Auto-Updated"
                 uid="wordpres"
-                nodes={{[
+                nodes={[
                   { icon: Zap, label: "LiteSpeed", angle: 0 },
                   { icon: Shield, label: "Security", angle: 60 },
                   { icon: RefreshCw, label: "Updates", angle: 120 },
                   { icon: HardDrive, label: "Backups", angle: 180 },
                   { icon: Database, label: "MySQL", angle: 240 },
                   { icon: Globe, label: "CDN", angle: 300 },
-                ]}}
+                ]}
               />
             </div>
           </section>

@@ -161,25 +161,25 @@ const WebDevelopment = () => {
               </div>
             </div>
           </section>
-          {{/* Premium animated infographic */}}
+          {/* Premium animated infographic */}
           <section className="section-container -mt-8 mb-20">
             <div className="max-w-5xl mx-auto animate-fade-in">
               <UniversalOrbitDiagram
-                CenterIcon={{Code}}
+                CenterIcon={Code}
                 centerTitle="Engineering Studio"
                 centerSubtitle="Design · Build · Ship"
                 statusLabel="Sprint · in-progress"
                 metric="100/100"
                 badge="Production Ready"
                 uid="webdevel"
-                nodes={{[
+                nodes={[
                   { icon: Figma, label: "Design", angle: 0 },
                   { icon: Code2, label: "Frontend", angle: 60 },
                   { icon: Server, label: "Backend", angle: 120 },
                   { icon: Database, label: "Database", angle: 180 },
                   { icon: TestTube, label: "QA", angle: 240 },
                   { icon: Rocket, label: "Deploy", angle: 300 },
-                ]}}
+                ]}
               />
             </div>
           </section>

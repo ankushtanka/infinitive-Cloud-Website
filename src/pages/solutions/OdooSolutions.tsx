@@ -51,25 +51,25 @@ const OdooSolutions = () => {
               </div>
             </div>
           </section>
-          {{/* Premium animated infographic */}}
+          {/* Premium animated infographic */}
           <section className="section-container -mt-8 mb-20">
             <div className="max-w-5xl mx-auto animate-fade-in">
               <UniversalOrbitDiagram
-                CenterIcon={{Briefcase}}
+                CenterIcon={Briefcase}
                 centerTitle="Odoo ERP Core"
                 centerSubtitle="Unified Business"
                 statusLabel="Modules · 30+ active"
                 metric="ERP"
                 badge="Enterprise Grade"
                 uid="odoosolu"
-                nodes={{[
+                nodes={[
                   { icon: ShoppingCart, label: "Sales", angle: 0 },
                   { icon: Package, label: "Inventory", angle: 60 },
                   { icon: Users, label: "CRM", angle: 120 },
                   { icon: Calculator, label: "Accounting", angle: 180 },
                   { icon: Truck, label: "Logistics", angle: 240 },
                   { icon: BarChart3, label: "Analytics", angle: 300 },
-                ]}}
+                ]}
               />
             </div>
           </section>

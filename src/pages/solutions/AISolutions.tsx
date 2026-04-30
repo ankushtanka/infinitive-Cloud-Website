@@ -151,25 +151,25 @@ const AISolutions = () => {
               </div>
             </div>
           </section>
-          {{/* Premium animated infographic */}}
+          {/* Premium animated infographic */}
           <section className="section-container -mt-8 mb-20">
             <div className="max-w-5xl mx-auto animate-fade-in">
               <UniversalOrbitDiagram
-                CenterIcon={{Brain}}
+                CenterIcon={Brain}
                 centerTitle="AI Workbench"
                 centerSubtitle="Models · Agents · Data"
                 statusLabel="Inference · live"
                 metric="ms"
                 badge="Self-Hosted AI"
                 uid="aisoluti"
-                nodes={{[
+                nodes={[
                   { icon: Cpu, label: "GPU", angle: 0 },
                   { icon: Database, label: "Vectors", angle: 60 },
                   { icon: MessageSquare, label: "Chat", angle: 120 },
                   { icon: Workflow, label: "Agents", angle: 180 },
                   { icon: Bot, label: "Models", angle: 240 },
                   { icon: Lock, label: "Private", angle: 300 },
-                ]}}
+                ]}
               />
             </div>
           </section>

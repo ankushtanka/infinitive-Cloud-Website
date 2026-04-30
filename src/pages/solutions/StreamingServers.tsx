@@ -51,25 +51,25 @@ const StreamingServers = () => {
               </div>
             </div>
           </section>
-          {{/* Premium animated infographic */}}
+          {/* Premium animated infographic */}
           <section className="section-container -mt-8 mb-20">
             <div className="max-w-5xl mx-auto animate-fade-in">
               <UniversalOrbitDiagram
-                CenterIcon={{Radio}}
+                CenterIcon={Radio}
                 centerTitle="Stream Engine"
                 centerSubtitle="Low-Latency Edge"
                 statusLabel="Live · 0 packet loss"
                 metric="< 50ms"
                 badge="HLS · RTMP · WebRTC"
                 uid="streamin"
-                nodes={{[
+                nodes={[
                   { icon: Video, label: "Encode", angle: 0 },
                   { icon: Globe, label: "CDN", angle: 60 },
                   { icon: Users, label: "Viewers", angle: 120 },
                   { icon: Mic, label: "Audio", angle: 180 },
                   { icon: Tv, label: "Player", angle: 240 },
                   { icon: Shield, label: "DRM", angle: 300 },
-                ]}}
+                ]}
               />
             </div>
           </section>

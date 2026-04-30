@@ -152,25 +152,25 @@ const VPSHosting = () => {
               </div>
             </div>
           </section>
-          {{/* Premium animated infographic */}}
+          {/* Premium animated infographic */}
           <section className="section-container -mt-8 mb-20">
             <div className="max-w-5xl mx-auto animate-fade-in">
               <UniversalOrbitDiagram
-                CenterIcon={{Server}}
+                CenterIcon={Server}
                 centerTitle="VPS Instance"
                 centerSubtitle="Dedicated Resources"
                 statusLabel="vCPU · 8 cores · idle 4%"
                 metric="99.99%"
                 badge="KVM Virtualized"
                 uid="vpshosti"
-                nodes={{[
+                nodes={[
                   { icon: Cpu, label: "vCPU", angle: 0 },
                   { icon: MemoryStick, label: "RAM", angle: 60 },
                   { icon: HardDrive, label: "NVMe", angle: 120 },
                   { icon: Network, label: "1 Gbps", angle: 180 },
                   { icon: Shield, label: "Firewall", angle: 240 },
                   { icon: Terminal, label: "Root SSH", angle: 300 },
-                ]}}
+                ]}
               />
             </div>
           </section>

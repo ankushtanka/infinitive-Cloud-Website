@@ -51,25 +51,25 @@ const ServerManagement = () => {
               </div>
             </div>
           </section>
-          {{/* Premium animated infographic */}}
+          {/* Premium animated infographic */}
           <section className="section-container -mt-8 mb-20">
             <div className="max-w-5xl mx-auto animate-fade-in">
               <UniversalOrbitDiagram
-                CenterIcon={{Settings}}
+                CenterIcon={Settings}
                 centerTitle="NOC Operations"
                 centerSubtitle="24×7 Monitoring"
                 statusLabel="Engineers · on-call"
                 metric="24×7"
                 badge="Proactive Care"
                 uid="serverma"
-                nodes={{[
+                nodes={[
                   { icon: Activity, label: "Monitor", angle: 0 },
                   { icon: Shield, label: "Harden", angle: 60 },
                   { icon: RefreshCw, label: "Patch", angle: 120 },
                   { icon: HardDrive, label: "Backup", angle: 180 },
                   { icon: AlertTriangle, label: "Incident", angle: 240 },
                   { icon: BarChart3, label: "Reports", angle: 300 },
-                ]}}
+                ]}
               />
             </div>
           </section>

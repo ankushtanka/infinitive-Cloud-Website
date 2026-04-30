@@ -58,25 +58,25 @@ const WooCommerceHosting = () => {
             </div>
           </div>
         </section>
-          {{/* Premium animated infographic */}}
+          {/* Premium animated infographic */}
           <section className="section-container -mt-8 mb-20">
             <div className="max-w-5xl mx-auto animate-fade-in">
               <UniversalOrbitDiagram
-                CenterIcon={{ShoppingBag}}
+                CenterIcon={ShoppingBag}
                 centerTitle="WooCommerce Store"
                 centerSubtitle="Optimized for Sales"
                 statusLabel="Cart · checkout · ready"
                 metric="A+"
                 badge="PCI Compliant"
                 uid="woocomme"
-                nodes={{[
+                nodes={[
                   { icon: CreditCard, label: "Payments", angle: 0 },
                   { icon: Package, label: "Products", angle: 60 },
                   { icon: Truck, label: "Shipping", angle: 120 },
                   { icon: Tag, label: "Coupons", angle: 180 },
                   { icon: Mail, label: "Recovery", angle: 240 },
                   { icon: BarChart3, label: "Analytics", angle: 300 },
-                ]}}
+                ]}
               />
             </div>
           </section>

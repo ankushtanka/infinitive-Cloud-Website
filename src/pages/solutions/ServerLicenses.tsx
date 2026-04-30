@@ -149,25 +149,25 @@ const ServerLicenses = () => {
             </div>
           </div>
         </section>
-          {{/* Premium animated infographic */}}
+          {/* Premium animated infographic */}
           <section className="section-container -mt-8 mb-20">
             <div className="max-w-5xl mx-auto animate-fade-in">
               <UniversalOrbitDiagram
-                CenterIcon={{KeyRound}}
+                CenterIcon={KeyRound}
                 centerTitle="License Vault"
                 centerSubtitle="Instant Activation"
                 statusLabel="Keys · provisioning"
                 metric="< 1 min"
                 badge="Authorized Reseller"
                 uid="serverli"
-                nodes={{[
+                nodes={[
                   { icon: Server, label: "cPanel", angle: 0 },
                   { icon: Shield, label: "CloudLinux", angle: 60 },
                   { icon: Bug, label: "Imunify360", angle: 120 },
                   { icon: Mail, label: "SitePad", angle: 180 },
                   { icon: Database, label: "JetBackup", angle: 240 },
                   { icon: Zap, label: "LiteSpeed", angle: 300 },
-                ]}}
+                ]}
               />
             </div>
           </section>

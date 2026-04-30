@@ -51,25 +51,25 @@ const ResellerHosting = () => {
               </div>
             </div>
           </section>
-          {{/* Premium animated infographic */}}
+          {/* Premium animated infographic */}
           <section className="section-container -mt-8 mb-20">
             <div className="max-w-5xl mx-auto animate-fade-in">
               <UniversalOrbitDiagram
-                CenterIcon={{Users}}
+                CenterIcon={Users}
                 centerTitle="Reseller Panel"
                 centerSubtitle="WHM · Branded"
                 statusLabel="Accounts · provisioning"
                 metric="∞"
                 badge="White Label"
                 uid="reseller"
-                nodes={{[
+                nodes={[
                   { icon: Server, label: "cPanel", angle: 0 },
                   { icon: Globe, label: "DNS", angle: 60 },
                   { icon: CreditCard, label: "Billing", angle: 120 },
                   { icon: Mail, label: "Email", angle: 180 },
                   { icon: Shield, label: "Security", angle: 240 },
                   { icon: HeadphonesIcon, label: "Support", angle: 300 },
-                ]}}
+                ]}
               />
             </div>
           </section>

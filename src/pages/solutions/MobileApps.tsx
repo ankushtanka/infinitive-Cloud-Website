@@ -153,25 +153,25 @@ const MobileApps = () => {
               </div>
             </div>
           </section>
-          {{/* Premium animated infographic */}}
+          {/* Premium animated infographic */}
           <section className="section-container -mt-8 mb-20">
             <div className="max-w-5xl mx-auto animate-fade-in">
               <UniversalOrbitDiagram
-                CenterIcon={{Smartphone}}
+                CenterIcon={Smartphone}
                 centerTitle="Mobile App Core"
                 centerSubtitle="iOS · Android"
                 statusLabel="Build · CI/CD · passing"
                 metric="60 fps"
                 badge="App Store Ready"
                 uid="mobileap"
-                nodes={{[
+                nodes={[
                   { icon: Code, label: "Native", angle: 0 },
                   { icon: Cloud, label: "API", angle: 60 },
                   { icon: Database, label: "Data", angle: 120 },
                   { icon: Bell, label: "Push", angle: 180 },
                   { icon: Lock, label: "Auth", angle: 240 },
                   { icon: Zap, label: "Realtime", angle: 300 },
-                ]}}
+                ]}
               />
             </div>
           </section>

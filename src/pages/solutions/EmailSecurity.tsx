@@ -86,25 +86,25 @@ const EmailSecurity = () => {
             </p>
           </div>
         </section>
-          {{/* Premium animated infographic */}}
+          {/* Premium animated infographic */}
           <section className="section-container -mt-8 mb-20">
             <div className="max-w-5xl mx-auto animate-fade-in">
               <UniversalOrbitDiagram
-                CenterIcon={{Mail}}
+                CenterIcon={Mail}
                 centerTitle="Email Gateway"
                 centerSubtitle="Threat-Free Inbox"
                 statusLabel="MX · scanning · clean"
                 metric="99.9%"
                 badge="AI Threat Detection"
                 uid="emailsec"
-                nodes={{[
+                nodes={[
                   { icon: Shield, label: "Anti-Spam", angle: 0 },
                   { icon: Lock, label: "Encrypt", angle: 60 },
                   { icon: AlertTriangle, label: "Phishing", angle: 120 },
                   { icon: Bug, label: "Malware", angle: 180 },
                   { icon: Archive, label: "Archive", angle: 240 },
                   { icon: CheckCircle2, label: "Verified", angle: 300 },
-                ]}}
+                ]}
               />
             </div>
           </section>

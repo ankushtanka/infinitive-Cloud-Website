@@ -94,25 +94,25 @@ const SharedHosting = () => {
               </div>
             </div>
           </section>
-          {{/* Premium animated infographic */}}
+          {/* Premium animated infographic */}
           <section className="section-container -mt-8 mb-20">
             <div className="max-w-5xl mx-auto animate-fade-in">
               <UniversalOrbitDiagram
-                CenterIcon={{Server}}
+                CenterIcon={Server}
                 centerTitle="Shared Hosting"
                 centerSubtitle="LiteSpeed · cPanel"
                 statusLabel="Node · ic-bom-sh-12 · ok"
                 metric="99.9%"
                 badge="NVMe Powered"
                 uid="sharedho"
-                nodes={{[
+                nodes={[
                   { icon: HardDrive, label: "NVMe", angle: 0 },
                   { icon: Zap, label: "LiteSpeed", angle: 60 },
                   { icon: Shield, label: "Imunify360", angle: 120 },
                   { icon: Globe, label: "Free SSL", angle: 180 },
                   { icon: Mail, label: "Email", angle: 240 },
                   { icon: Database, label: "MySQL", angle: 300 },
-                ]}}
+                ]}
               />
             </div>
           </section>

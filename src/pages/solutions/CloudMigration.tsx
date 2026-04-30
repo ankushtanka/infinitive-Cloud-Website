@@ -58,25 +58,25 @@ const CloudMigration = () => {
               </div>
             </div>
           </section>
-          {{/* Premium animated infographic */}}
+          {/* Premium animated infographic */}
           <section className="section-container -mt-8 mb-20">
             <div className="max-w-5xl mx-auto animate-fade-in">
               <UniversalOrbitDiagram
-                CenterIcon={{ArrowLeftRight}}
+                CenterIcon={ArrowLeftRight}
                 centerTitle="Migration Engine"
                 centerSubtitle="Zero Downtime"
                 statusLabel="Pipeline · sync active"
                 metric="0 dt"
                 badge="Live Cutover"
                 uid="cloudmig"
-                nodes={{[
+                nodes={[
                   { icon: Server, label: "Source", angle: 180 },
                   { icon: Cloud, label: "Target", angle: 0 },
                   { icon: Database, label: "Data", angle: 90 },
                   { icon: Shield, label: "Verify", angle: 270 },
                   { icon: RefreshCw, label: "Sync", angle: 45 },
                   { icon: CheckCircle2, label: "Cutover", angle: 315 },
-                ]}}
+                ]}
               />
             </div>
           </section>

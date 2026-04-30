@@ -165,25 +165,25 @@ const CloudHosting = () => {
               </div>
             </div>
           </section>
-          {{/* Premium animated infographic */}}
+          {/* Premium animated infographic */}
           <section className="section-container -mt-8 mb-20">
             <div className="max-w-5xl mx-auto animate-fade-in">
               <UniversalOrbitDiagram
-                CenterIcon={{Cloud}}
+                CenterIcon={Cloud}
                 centerTitle="Cloud Platform"
                 centerSubtitle="Auto-scaling Core"
                 statusLabel="Region · IN-BOM-1 · healthy"
                 metric="99.99%"
                 badge="Multi-AZ · Live"
                 uid="cloudhos"
-                nodes={{[
+                nodes={[
                   { icon: Server, label: "Compute", angle: 0 },
                   { icon: Database, label: "Database", angle: 60 },
                   { icon: HardDrive, label: "NVMe SSD", angle: 120 },
                   { icon: Shield, label: "WAF", angle: 180 },
                   { icon: Globe, label: "CDN", angle: 240 },
                   { icon: Lock, label: "SSL", angle: 300 },
-                ]}}
+                ]}
               />
             </div>
           </section>
