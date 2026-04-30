@@ -132,6 +132,10 @@ export default {
             transform: "scale(1)",
           },
         },
+        "shimmer": {
+          "0%": { backgroundPosition: "0% 50%" },
+          "100%": { backgroundPosition: "200% 50%" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 1s ease-out",
@@ -141,6 +145,7 @@ export default {
         "scale-in": "scale-in 1s ease-out",
         "float": "float 6s ease-in-out infinite",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "shimmer": "shimmer 4s linear infinite",
       },
     },
   },
