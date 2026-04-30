@@ -8,6 +8,7 @@ import DomainSearchSection from "@/components/DomainSearchSection";
 import HomePricingSection from "@/components/HomePricingSection";
 import WhatWeDoSection from "@/components/WhatWeDoSection";
 import PremiumVisualSection from "@/components/PremiumVisualSection";
+import PremiumInfographicSection from "@/components/PremiumInfographicSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import WhyTrustUsSection from "@/components/WhyTrustUsSection";
 import ComparisonSection from "@/components/ComparisonSection";
