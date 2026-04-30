@@ -142,12 +142,12 @@ const OpenWebUIHosting = () => {
           {/* HERO */}
           <section className="relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-b from-accent/5 via-background to-background pointer-events-none" />
-            <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-accent/10 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-accent/10 rounded-full blur-3xl pointer-events-none animate-float" />
+            <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] bg-primary/10 rounded-full blur-3xl pointer-events-none animate-float" style={{ animationDelay: "2s" }} />
 
             <div className="section-container relative pt-20 pb-16 lg:pt-28 lg:pb-24">
               <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                <div className="space-y-8">
+                <motion.div className="space-y-8" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/30 bg-accent/5 backdrop-blur-md">
                     <Sparkles className="w-4 h-4 text-accent" />
                     <span className="text-sm font-medium text-foreground">Open-source. Self-hosted. Yours.</span>
