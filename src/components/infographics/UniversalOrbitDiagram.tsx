@@ -173,7 +173,7 @@ const UniversalOrbitDiagram = ({
           />
           <foreignObject x={cx - 90} y={cy - 50} width="180" height="100">
             <div
-              xmlns="http://www.w3.org/1999/xhtml"
+             
               className="flex h-full w-full flex-col items-center justify-center gap-1.5 px-3 text-center"
             >
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent shadow-lg shadow-primary/30">
@@ -228,7 +228,7 @@ const UniversalOrbitDiagram = ({
               </circle>
               <foreignObject x={n.x - 28} y={n.y - 28} width="56" height="56">
                 <div
-                  xmlns="http://www.w3.org/1999/xhtml"
+                 
                   className="flex h-full w-full items-center justify-center"
                 >
                   <Icon className="h-5 w-5 text-primary" strokeWidth={2} />
