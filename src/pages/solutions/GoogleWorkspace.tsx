@@ -44,6 +44,7 @@ import {
   Briefcase,
 } from "lucide-react";
 import workspaceHero from "@/assets/google-workspace-hero-premium.jpg";
+import WorkspaceEcosystemDiagram from "@/components/infographics/WorkspaceEcosystemDiagram";
 
 type BillingCycle = "monthly" | "annual";
 
@@ -318,6 +319,15 @@ const GoogleWorkspace = () => {
                 </Card>
               ))}
             </div>
+          </motion.section>
+
+          {/* ECOSYSTEM INFOGRAPHIC */}
+          <motion.section className="section-container py-16 lg:py-20" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
+            <div className="text-center max-w-3xl mx-auto mb-12">
+              <h2 className="tracking-tight text-3xl lg:text-4xl font-bold mb-4">One workspace. Every Google app. Your domain.</h2>
+              <p className="text-base text-muted-foreground">Mail, Drive, Meet, Docs, Calendar and more — unified under your brand with enterprise security at the core.</p>
+            </div>
+            <WorkspaceEcosystemDiagram />
           </motion.section>
 
           {/* WHY THROUGH US */}
