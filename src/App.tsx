@@ -50,7 +50,7 @@ const WooCommerceHosting = lazy(() => import("./pages/solutions/WooCommerceHosti
 const NodejsHosting = lazy(() => import("./pages/solutions/NodejsHosting"));
 const VPSServer = lazy(() => import("./pages/solutions/VPSServer"));
 const EmailSecurity = lazy(() => import("./pages/solutions/EmailSecurity"));
-const OpenCartHosting = lazy(() => import("./pages/solutions/OpenCartHosting"));
+
 const LiveChat = lazy(() => import("./pages/LiveChat"));
 const Cart = lazy(() => import("./pages/Cart"));
 const OrderConfirmation = lazy(() => import("./pages/OrderConfirmation"));
