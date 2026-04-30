@@ -207,7 +207,7 @@ const N8nHosting = () => {
           </section>
 
           {/* FEATURE GRID */}
-          <section className="section-container py-20 lg:py-28">
+          <motion.section className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="text-center max-w-3xl mx-auto mb-16">
               <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">
                 Why self-host n8n with us
@@ -233,10 +233,10 @@ const N8nHosting = () => {
                 </Card>
               ))}
             </div>
-          </section>
+          </motion.section>
 
           {/* DEPLOY STEPS */}
-          <section className="relative py-20 lg:py-28 overflow-hidden">
+          <motion.section className="relative py-20 lg:py-28 overflow-hidden" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
             <div className="section-container relative">
               <div className="text-center max-w-3xl mx-auto mb-16">
@@ -267,10 +267,10 @@ const N8nHosting = () => {
                 ))}
               </div>
             </div>
-          </section>
+          </motion.section>
 
           {/* PRICING */}
-          <section id="pricing" className="section-container py-20 lg:py-28">
+          <motion.section id="pricing" className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="text-center max-w-3xl mx-auto mb-16">
               <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">Simple, flat pricing</h2>
               <p className="text-lg text-muted-foreground">No per-task fees. No execution caps. Run as many workflows as you want.</p>
@@ -324,10 +324,10 @@ const N8nHosting = () => {
                 </Card>
               ))}
             </div>
-          </section>
+          </motion.section>
 
           {/* COMPARISON */}
-          <section className="relative py-20 lg:py-28 overflow-hidden">
+          <motion.section className="relative py-20 lg:py-28 overflow-hidden" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent pointer-events-none" />
             <div className="section-container relative">
               <div className="text-center max-w-3xl mx-auto mb-16">
@@ -362,10 +362,10 @@ const N8nHosting = () => {
                 </div>
               </Card>
             </div>
-          </section>
+          </motion.section>
 
           {/* INTEGRATIONS */}
-          <section className="section-container py-20 lg:py-28">
+          <motion.section className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="text-center max-w-3xl mx-auto mb-12">
               <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">All your favourite apps</h2>
               <p className="text-lg text-muted-foreground">Native integrations to every tool your team already uses — plus webhooks, HTTP nodes and custom code.</p>
@@ -381,10 +381,10 @@ const N8nHosting = () => {
                 </div>
               ))}
             </div>
-          </section>
+          </motion.section>
 
           {/* TESTIMONIALS */}
-          <section className="relative py-20 lg:py-28 overflow-hidden">
+          <motion.section className="relative py-20 lg:py-28 overflow-hidden" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
             <div className="section-container relative">
               <div className="text-center max-w-3xl mx-auto mb-16">
@@ -410,10 +410,10 @@ const N8nHosting = () => {
                 ))}
               </div>
             </div>
-          </section>
+          </motion.section>
 
           {/* FAQ */}
-          <section className="section-container pb-20 lg:pb-28">
+          <motion.section className="section-container pb-20 lg:pb-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="max-w-3xl mx-auto">
               <div className="text-center mb-12">
                 <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">Frequently asked questions</h2>
@@ -437,10 +437,10 @@ const N8nHosting = () => {
                 ))}
               </Accordion>
             </div>
-          </section>
+          </motion.section>
 
           {/* FINAL CTA */}
-          <section className="section-container pb-20 lg:pb-28">
+          <motion.section className="section-container pb-20 lg:pb-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="relative rounded-3xl border border-cyan-500/30 bg-[#0A1A2F] dark:bg-[#0A1A2F] px-6 py-16 sm:py-20 text-center overflow-hidden">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,0.15),transparent_60%)] pointer-events-none" />
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(198,164,63,0.1),transparent_60%)] pointer-events-none" />
@@ -489,7 +489,7 @@ const N8nHosting = () => {
                 </div>
               </div>
             </div>
-          </section>
+          </motion.section>
         </main>
         <Footer />
       </div>

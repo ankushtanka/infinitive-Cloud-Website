@@ -215,7 +215,7 @@ const OpenWebUIHosting = () => {
           </section>
 
           {/* WHAT IS IT */}
-          <section className="section-container py-20 lg:py-28">
+          <motion.section className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="max-w-4xl mx-auto text-center">
               <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-6">What is Openclaw?</h2>
               <p className="text-lg lg:text-xl text-muted-foreground leading-relaxed mb-12">
@@ -240,10 +240,10 @@ const OpenWebUIHosting = () => {
                 ))}
               </div>
             </div>
-          </section>
+          </motion.section>
 
           {/* FEATURES */}
-          <section className="relative py-20 lg:py-28 overflow-hidden">
+          <motion.section className="relative py-20 lg:py-28 overflow-hidden" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent pointer-events-none" />
             <div className="section-container relative">
               <div className="text-center max-w-3xl mx-auto mb-16">
@@ -268,10 +268,10 @@ const OpenWebUIHosting = () => {
                 ))}
               </div>
             </div>
-          </section>
+          </motion.section>
 
           {/* HOW IT WORKS */}
-          <section id="how-it-works" className="section-container py-20 lg:py-28">
+          <motion.section id="how-it-works" className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="text-center max-w-3xl mx-auto mb-16">
               <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">How it works</h2>
               <p className="text-lg text-muted-foreground">Three steps. No DevOps team required.</p>
@@ -295,10 +295,10 @@ const OpenWebUIHosting = () => {
                 </div>
               ))}
             </div>
-          </section>
+          </motion.section>
 
           {/* USE CASES */}
-          <section className="relative py-20 lg:py-28 overflow-hidden">
+          <motion.section className="relative py-20 lg:py-28 overflow-hidden" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/5 to-transparent pointer-events-none" />
             <div className="section-container relative">
               <div className="text-center max-w-3xl mx-auto mb-16">
@@ -323,10 +323,10 @@ const OpenWebUIHosting = () => {
                 ))}
               </div>
             </div>
-          </section>
+          </motion.section>
 
           {/* PRICING */}
-          <section id="pricing" className="section-container py-20 lg:py-28">
+          <motion.section id="pricing" className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="text-center max-w-3xl mx-auto mb-16">
               <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">Hosting tailored for AI workloads</h2>
               <p className="text-lg text-muted-foreground">NVMe storage, generous RAM, and an optional GPU upgrade — sized for real model inference.</p>
@@ -380,10 +380,10 @@ const OpenWebUIHosting = () => {
                 </Card>
               ))}
             </div>
-          </section>
+          </motion.section>
 
           {/* SECURITY */}
-          <section className="relative py-20 lg:py-28 overflow-hidden">
+          <motion.section className="relative py-20 lg:py-28 overflow-hidden" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent pointer-events-none" />
             <div className="section-container relative">
               <div className="text-center max-w-3xl mx-auto mb-16">
@@ -409,10 +409,10 @@ const OpenWebUIHosting = () => {
                 ))}
               </div>
             </div>
-          </section>
+          </motion.section>
 
           {/* TESTIMONIALS */}
-          <section className="section-container py-20 lg:py-28">
+          <motion.section className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="text-center max-w-3xl mx-auto mb-16">
               <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">Trusted by teams who can't risk leaks</h2>
             </div>
@@ -435,10 +435,10 @@ const OpenWebUIHosting = () => {
                 </Card>
               ))}
             </div>
-          </section>
+          </motion.section>
 
           {/* FAQ */}
-          <section className="section-container py-20 lg:py-28">
+          <motion.section className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="max-w-3xl mx-auto">
               <div className="text-center mb-12">
                 <h2 className="font-serif text-4xl lg:text-5xl font-bold mb-5">Frequently asked questions</h2>
@@ -461,10 +461,10 @@ const OpenWebUIHosting = () => {
                 ))}
               </Accordion>
             </div>
-          </section>
+          </motion.section>
 
           {/* FINAL CTA */}
-          <section className="section-container pb-20 lg:pb-28">
+          <motion.section className="section-container pb-20 lg:pb-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <div className="relative rounded-3xl border border-cyan-500/30 bg-[#0A1A2F] dark:bg-[#0A1A2F] px-6 py-16 sm:py-20 text-center overflow-hidden">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(198,164,63,0.15),transparent_60%)] pointer-events-none" />
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(34,211,238,0.1),transparent_60%)] pointer-events-none" />
@@ -513,7 +513,7 @@ const OpenWebUIHosting = () => {
                 </div>
               </div>
             </div>
-          </section>
+          </motion.section>
         </main>
         <Footer />
       </div>
