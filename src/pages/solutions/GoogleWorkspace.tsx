@@ -694,7 +694,8 @@ const GoogleWorkspace = () => {
                           <div className="font-semibold">{t.name}</div>
                           <div className="text-sm text-muted-foreground">{t.role}</div>
                         </div>
-  </CardContent>
+                      </div>
+                    </CardContent>
                   </Card>
                 ))}
               </div>
