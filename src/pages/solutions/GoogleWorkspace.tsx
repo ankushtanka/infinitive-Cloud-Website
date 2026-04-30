@@ -44,6 +44,7 @@ import {
   Briefcase,
 } from "lucide-react";
 import workspaceHero from "@/assets/google-workspace-hero-premium.jpg";
+import WorkspaceHeroDiagram from "@/components/infographics/WorkspaceHeroDiagram";
 import WorkspaceEcosystemDiagram from "@/components/infographics/WorkspaceEcosystemDiagram";
 
 type BillingCycle = "monthly" | "annual";
@@ -273,20 +274,7 @@ const GoogleWorkspace = () => {
                 </motion.div>
 
                 <motion.div className="relative" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}>
-                  <div className="absolute inset-0 bg-gradient-to-tr from-[#4285F4]/30 via-[#EA4335]/20 to-[#FBBC04]/20 blur-3xl opacity-40" />
-                  <div className="relative rounded-3xl overflow-hidden border border-border/50 shadow-2xl">
-                    <img
-                      src={workspaceHero}
-                      alt="Gmail inbox with custom domain email surrounded by Google Workspace apps"
-                      width={1920}
-                      height={1080}
-                      className="w-full h-auto"
-                    />
-                  </div>
-                  <div className="absolute -bottom-6 -left-6 hidden lg:flex items-center gap-3 px-5 py-3 rounded-2xl bg-card/90 backdrop-blur-xl border border-border/50 shadow-xl">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-sm font-medium">Live: 4,200+ teams onboarded</span>
-                  </div>
+                  <WorkspaceHeroDiagram />
                 </motion.div>
               </div>
             </div>
