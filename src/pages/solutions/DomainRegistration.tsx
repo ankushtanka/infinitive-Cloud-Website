@@ -9,6 +9,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useDomainSearch } from "@/hooks/use-domain-search";
 import DomainResultsGrid from "@/components/DomainResultsGrid";
+import DomainDNSDiagram from "@/components/infographics/DomainDNSDiagram";
 
 const popularExtensions = [
   { ext: ".com", type: "Commercial", price: "₹799", original: "₹1,199", desc: "The world's #1 domain extension", popular: true },
@@ -176,6 +177,15 @@ const DomainRegistration = () => {
               <p className="text-xs text-muted-foreground">Example: yourbusiness.com, mybrand.in, mywebsite.co.in</p>
             </div>
           </section>
+
+          {/* Premium DNS diagram (only when not searching) */}
+          {!searched && (
+            <section className="section-container mb-16">
+              <div className="max-w-5xl mx-auto">
+                <DomainDNSDiagram />
+              </div>
+            </section>
+          )}
 
           {/* Live Search Results */}
           {searched && (

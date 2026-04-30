@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Users, Globe, Shield, Zap, Server, Headphones } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import ResellerDiagram from "@/components/infographics/ResellerDiagram";
 
 const ResellerHosting = () => {
   const features = [
@@ -48,6 +49,12 @@ const ResellerHosting = () => {
                 <Link to="/contact"><Button className="btn-gradient glow-effect font-bold h-14 px-8">Get a Quote</Button></Link>
                 <Link to="/contact"><Button variant="outline" className="h-14 px-8 font-semibold">Talk to an Expert</Button></Link>
               </div>
+            </div>
+          </section>
+
+          <section className="section-container mb-16">
+            <div className="max-w-5xl mx-auto">
+              <ResellerDiagram />
             </div>
           </section>
 
