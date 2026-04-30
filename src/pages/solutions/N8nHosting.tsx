@@ -30,6 +30,7 @@ import {
   Cpu,
 } from "lucide-react";
 import n8nHero from "@/assets/n8n-hero-premium.jpg";
+import N8nWorkflowDiagram from "@/components/infographics/N8nWorkflowDiagram";
 
 const features = [
   { icon: Workflow, title: "Pre-installed n8n", desc: "Latest stable n8n is configured, secured and ready — no Docker, no YAML files, no headaches." },
@@ -205,6 +206,15 @@ const N8nHosting = () => {
               </div>
             </div>
           </section>
+
+          {/* WORKFLOW INFOGRAPHIC */}
+          <motion.section className="section-container py-16 lg:py-20" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
+            <div className="text-center max-w-3xl mx-auto mb-12">
+              <h2 className="tracking-tight text-3xl lg:text-4xl font-bold mb-4">Anatomy of a workflow on your VPS</h2>
+              <p className="text-base text-muted-foreground">From webhook trigger to AI agent to database — every node runs on infrastructure you control.</p>
+            </div>
+            <N8nWorkflowDiagram />
+          </motion.section>
 
           {/* FEATURE GRID */}
           <motion.section className="section-container py-20 lg:py-28" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
