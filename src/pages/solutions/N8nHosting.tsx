@@ -201,7 +201,7 @@ const N8nHosting = () => {
                     <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                     <span className="text-sm font-medium">Live: 12,847 workflows running</span>
                   </div>
-                </div>
+                </motion.div>
               </div>
             </div>
           </section>
