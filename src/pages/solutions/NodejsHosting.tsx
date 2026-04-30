@@ -9,6 +9,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import nodejsHeroPremium from "@/assets/nodejs-hero-premium.jpg";
+import nodejsDeveloperPremium from "@/assets/nodejs-developer-premium.jpg";
 import { Link } from "react-router-dom";
 import {
   Code2,
@@ -184,29 +186,47 @@ const NodejsHosting = () => {
                 </div>
               </div>
 
-              {/* Code/terminal visual */}
+              {/* Premium hero visual: image + floating terminal */}
               <div className="relative animate-fade-in">
-                <div className="absolute -inset-6 bg-gradient-to-tr from-primary/20 via-secondary/10 to-transparent blur-3xl rounded-full" aria-hidden />
-                <div className="relative rounded-2xl overflow-hidden border border-border shadow-2xl bg-card">
-                  <div className="flex items-center gap-2 px-4 py-3 bg-muted/50 border-b border-border">
+                <div className="absolute -inset-10 bg-gradient-to-tr from-primary/30 via-secondary/20 to-transparent blur-[80px] rounded-full" aria-hidden />
+                <div className="absolute -inset-4 bg-gradient-to-bl from-secondary/20 to-primary/10 blur-2xl rounded-3xl opacity-70" aria-hidden />
+
+                {/* Background premium image */}
+                <div className="relative rounded-3xl overflow-hidden border border-border/60 shadow-2xl ring-1 ring-primary/10">
+                  <img
+                    src={nodejsHeroPremium}
+                    alt="Premium Node.js development visualization"
+                    loading="eager"
+                    width={1600}
+                    height={1200}
+                    className="w-full h-auto object-cover aspect-[4/3]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-background/10 to-transparent" aria-hidden />
+                </div>
+
+                {/* Floating glass terminal */}
+                <div className="absolute inset-x-4 md:inset-x-6 bottom-4 md:bottom-6 rounded-2xl overflow-hidden border border-border/60 shadow-2xl bg-card/85 backdrop-blur-xl ring-1 ring-primary/10">
+                  <div className="flex items-center gap-2 px-4 py-2.5 bg-muted/60 border-b border-border/60">
                     <div className="flex gap-1.5">
-                      <span className="w-3 h-3 rounded-full bg-destructive/60" />
-                      <span className="w-3 h-3 rounded-full bg-primary/60" />
-                      <span className="w-3 h-3 rounded-full bg-secondary/60" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-destructive/60" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-primary/60" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-secondary/60" />
                     </div>
-                    <div className="text-xs text-muted-foreground font-mono ml-2">~ deploy.sh</div>
+                    <div className="text-[11px] text-muted-foreground font-mono ml-2">~ deploy.sh</div>
                   </div>
-                  <pre className="p-5 md:p-6 text-xs md:text-sm font-mono text-foreground leading-relaxed overflow-x-auto bg-card">
+                  <pre className="p-4 md:p-5 text-[11px] md:text-xs font-mono text-foreground leading-relaxed overflow-x-auto">
                     <code>{codeSnippet}</code>
                   </pre>
                 </div>
-                <div className="hidden md:flex absolute -bottom-6 -right-6 bg-card border border-border rounded-2xl p-4 shadow-xl items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                    <Zap className="w-5 h-5 text-primary" />
+
+                {/* Floating deploy time pill */}
+                <div className="hidden md:flex absolute -top-5 -right-5 bg-card/90 backdrop-blur-xl border border-border/60 rounded-2xl p-4 shadow-2xl items-center gap-3 ring-1 ring-primary/10">
+                  <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary text-primary-foreground flex items-center justify-center">
+                    <Zap className="w-5 h-5" />
                   </div>
                   <div>
-                    <div className="text-xs text-muted-foreground">Avg deploy time</div>
-                    <div className="text-base font-bold text-foreground">38 seconds</div>
+                    <div className="text-xs text-muted-foreground">Avg deploy</div>
+                    <div className="text-base font-bold text-foreground tracking-tight">38 seconds</div>
                   </div>
                 </div>
               </div>
@@ -313,6 +333,64 @@ const NodejsHosting = () => {
           </div>
         </section>
 
+        {/* PREMIUM SHOWCASE — Built for engineers */}
+        <section className="py-20 lg:py-28 border-y border-border bg-gradient-to-b from-background via-muted/20 to-background">
+          <div className="container">
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              <div className="relative">
+                <div className="absolute -inset-8 bg-gradient-to-br from-primary/25 via-secondary/15 to-transparent blur-3xl rounded-full" aria-hidden />
+                <div className="relative rounded-3xl overflow-hidden border border-border/60 shadow-2xl ring-1 ring-primary/10">
+                  <img
+                    src={nodejsDeveloperPremium}
+                    alt="Developer writing Node.js code with code reflecting in glasses"
+                    loading="lazy"
+                    width={1400}
+                    height={1120}
+                    className="w-full aspect-[5/4] object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" aria-hidden />
+                </div>
+                <div className="hidden md:flex absolute -bottom-5 -right-5 bg-card/90 backdrop-blur-xl border border-border/60 rounded-2xl p-4 shadow-2xl items-center gap-3 ring-1 ring-primary/10">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary text-primary-foreground flex items-center justify-center">
+                    <Cpu className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="text-xs text-muted-foreground">Sustained throughput</div>
+                    <div className="text-base font-bold text-foreground tracking-tight">80k req/min</div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div className="text-primary text-sm font-semibold mb-3 uppercase tracking-wider">Built for engineers</div>
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-6 leading-[1.1]">
+                  Less yak-shaving.{" "}
+                  <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">More shipping.</span>
+                </h2>
+                <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
+                  We've spent thousands of hours so you don't have to. Auto-tuned Node runtimes, predictable build pipelines, and a dashboard that respects your time — built by engineers who hate ops tickets too.
+                </p>
+                <div className="space-y-4">
+                  {[
+                    { label: "Zero-downtime deploys", desc: "Blue-green by default. Your users never see a hiccup." },
+                    { label: "Live log streaming", desc: "Tail stdout, stderr, and PM2 events from the browser." },
+                    { label: "Instant rollbacks", desc: "Bad deploy? One click reverts to the previous build." },
+                  ].map((item) => (
+                    <div key={item.label} className="flex gap-4 p-4 rounded-2xl bg-card/60 border border-border/60 backdrop-blur">
+                      <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+                        <Check className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <div className="font-bold text-foreground">{item.label}</div>
+                        <div className="text-sm text-muted-foreground">{item.desc}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* PRICING */}
         <section className="py-20 lg:py-28 bg-muted/30 border-y border-border">
           <div className="container">
@@ -323,50 +401,67 @@ const NodejsHosting = () => {
             </div>
             <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
               {plans.map((plan) => (
-                <Card
-                  key={plan.name}
-                  className={`relative transition-all duration-300 hover:-translate-y-1 ${
-                    plan.highlight
-                      ? "border-primary shadow-xl shadow-primary/10 ring-1 ring-primary/30"
-                      : "hover:shadow-lg"
-                  }`}
-                >
+                <div key={plan.name} className="relative group">
                   {plan.highlight && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-secondary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full shadow-md">
-                      Recommended
-                    </div>
+                    <div
+                      aria-hidden
+                      className="absolute -inset-0.5 rounded-2xl bg-gradient-to-br from-primary via-secondary to-primary opacity-70 blur-md group-hover:opacity-100 transition-opacity"
+                    />
                   )}
-                  <CardContent className="p-8">
-                    <div className="mb-6">
-                      <h3 className="text-xl font-bold text-foreground mb-1">{plan.name}</h3>
-                      <p className="text-sm text-muted-foreground">{plan.tag}</p>
-                    </div>
-                    <div className="flex items-baseline gap-1 mb-6">
-                      <span className="text-5xl font-black text-foreground">{plan.price}</span>
-                      <span className="text-muted-foreground">{plan.period}</span>
-                    </div>
-                    <Link to="/cart" className="block mb-8">
-                      <Button
-                        className={`w-full h-11 font-semibold ${
-                          plan.highlight
-                            ? "bg-gradient-to-r from-primary to-secondary text-primary-foreground hover:opacity-90"
-                            : ""
-                        }`}
-                        variant={plan.highlight ? "default" : "outline"}
-                      >
-                        Choose {plan.name}
-                      </Button>
-                    </Link>
-                    <ul className="space-y-3">
-                      {plan.specs.map((s) => (
-                        <li key={s} className="flex items-start gap-2.5 text-sm text-foreground">
-                          <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                          <span>{s}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
+                  <Card
+                    className={`relative h-full transition-all duration-300 hover:-translate-y-1 rounded-2xl overflow-hidden ${
+                      plan.highlight
+                        ? "border-primary/40 shadow-2xl shadow-primary/20 bg-gradient-to-b from-card via-card to-primary/[0.03]"
+                        : "hover:shadow-xl hover:border-primary/30"
+                    }`}
+                  >
+                    {plan.highlight && (
+                      <>
+                        <div
+                          aria-hidden
+                          className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary to-transparent"
+                        />
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-secondary text-primary-foreground text-[11px] font-bold px-3 py-1 rounded-full shadow-lg shadow-primary/30 uppercase tracking-wider">
+                          Recommended
+                        </div>
+                      </>
+                    )}
+                    <CardContent className="p-8">
+                      <div className="mb-6">
+                        <h3 className="text-xl font-bold text-foreground mb-1">{plan.name}</h3>
+                        <p className="text-sm text-muted-foreground">{plan.tag}</p>
+                      </div>
+                      <div className="flex items-baseline gap-1 mb-6">
+                        <span className={`text-5xl font-black tracking-tight ${plan.highlight ? "bg-gradient-to-br from-primary to-secondary bg-clip-text text-transparent" : "text-foreground"}`}>
+                          {plan.price}
+                        </span>
+                        <span className="text-muted-foreground">{plan.period}</span>
+                      </div>
+                      <Link to="/cart" className="block mb-8">
+                        <Button
+                          className={`w-full h-11 font-semibold ${
+                            plan.highlight
+                              ? "bg-gradient-to-r from-primary to-secondary text-primary-foreground hover:opacity-90 shadow-lg shadow-primary/20"
+                              : ""
+                          }`}
+                          variant={plan.highlight ? "default" : "outline"}
+                        >
+                          Choose {plan.name}
+                        </Button>
+                      </Link>
+                      <ul className="space-y-3">
+                        {plan.specs.map((s) => (
+                          <li key={s} className="flex items-start gap-2.5 text-sm text-foreground">
+                            <span className="mt-0.5 flex-shrink-0 w-4 h-4 rounded-full bg-primary/10 flex items-center justify-center">
+                              <Check className="w-3 h-3 text-primary" />
+                            </span>
+                            <span>{s}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                </div>
               ))}
             </div>
           </div>

@@ -3,6 +3,8 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import vpsHeroPremium from "@/assets/vps-hero-premium.jpg";
+import vpsDatacenterPremium from "@/assets/vps-datacenter-premium.jpg";
 import {
   Accordion,
   AccordionContent,
@@ -173,24 +175,50 @@ const VPSServer = () => {
               </div>
 
               <div className="relative animate-fade-in">
-                <div className="absolute -inset-6 bg-gradient-to-tr from-primary/20 via-secondary/10 to-transparent blur-3xl rounded-full" aria-hidden />
-                <div className="relative rounded-2xl overflow-hidden border border-border shadow-2xl">
+                {/* Multi-layer premium glow */}
+                <div className="absolute -inset-10 bg-gradient-to-tr from-primary/30 via-secondary/20 to-transparent blur-[80px] rounded-full" aria-hidden />
+                <div className="absolute -inset-4 bg-gradient-to-bl from-secondary/20 to-primary/10 blur-2xl rounded-3xl opacity-70" aria-hidden />
+
+                <div className="relative rounded-3xl overflow-hidden border border-border/60 shadow-2xl ring-1 ring-primary/10">
                   <img
-                    src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&h=900&fit=crop&q=80"
-                    alt="Modern data center with illuminated server racks"
+                    src={vpsHeroPremium}
+                    alt="Premium VPS server with glowing circuit lines"
                     loading="eager"
+                    width={1600}
+                    height={1200}
                     className="w-full h-auto object-cover aspect-[4/3]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" aria-hidden />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/30 via-transparent to-transparent" aria-hidden />
+                  {/* Subtle grid overlay */}
+                  <div
+                    className="absolute inset-0 opacity-[0.07] mix-blend-overlay"
+                    aria-hidden
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(hsl(var(--foreground)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--foreground)) 1px, transparent 1px)",
+                      backgroundSize: "32px 32px",
+                    }}
+                  />
                 </div>
-                {/* Floating spec card */}
-                <div className="hidden md:flex absolute -bottom-6 -left-6 bg-card border border-border rounded-2xl p-4 shadow-xl items-center gap-3 backdrop-blur">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+
+                {/* Floating live-uptime card */}
+                <div className="hidden md:flex absolute -bottom-6 -left-6 bg-card/90 backdrop-blur-xl border border-border/60 rounded-2xl p-4 shadow-2xl items-center gap-3 ring-1 ring-primary/10">
+                  <div className="relative w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
                     <Activity className="w-5 h-5 text-primary" />
+                    <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-primary animate-pulse ring-2 ring-card" />
                   </div>
                   <div>
                     <div className="text-xs text-muted-foreground">Live uptime</div>
-                    <div className="text-base font-bold text-foreground">99.998% (last 90d)</div>
+                    <div className="text-base font-bold text-foreground tracking-tight">99.998%<span className="text-xs text-muted-foreground font-medium ml-1">(90d)</span></div>
+                  </div>
+                </div>
+
+                {/* Floating perf chip */}
+                <div className="hidden md:flex absolute -top-5 -right-5 bg-card/90 backdrop-blur-xl border border-border/60 rounded-2xl px-4 py-3 shadow-2xl items-center gap-2.5 ring-1 ring-primary/10">
+                  <Zap className="w-4 h-4 text-primary" />
+                  <div className="text-xs">
+                    <span className="font-bold text-foreground">NVMe SSD</span>
+                    <span className="text-muted-foreground"> · 10 Gbps</span>
                   </div>
                 </div>
               </div>
@@ -199,16 +227,24 @@ const VPSServer = () => {
         </section>
 
         {/* STATS */}
-        <section className="py-12 border-y border-border bg-muted/30">
-          <div className="container">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <section className="relative py-14 border-y border-border bg-gradient-to-b from-muted/40 via-muted/20 to-muted/40 overflow-hidden">
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--primary)/0.08),transparent_60%)]"
+          />
+          <div className="container relative">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-border/50 rounded-2xl overflow-hidden border border-border/60 shadow-sm">
               {stats.map((s) => {
                 const Icon = s.icon;
                 return (
-                  <div key={s.label} className="text-center">
-                    <Icon className="w-6 h-6 text-primary mx-auto mb-2" />
-                    <div className="text-3xl md:text-4xl font-black text-foreground tracking-tight">{s.value}</div>
-                    <div className="text-sm text-muted-foreground mt-1">{s.label}</div>
+                  <div key={s.label} className="bg-background/60 backdrop-blur p-6 md:p-8 text-center hover:bg-background transition-colors">
+                    <div className="inline-flex w-10 h-10 rounded-xl bg-primary/10 text-primary items-center justify-center mb-3">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <div className="text-3xl md:text-4xl font-black text-foreground tracking-tight bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text">
+                      {s.value}
+                    </div>
+                    <div className="text-xs md:text-sm text-muted-foreground mt-1.5 font-medium uppercase tracking-wider">{s.label}</div>
                   </div>
                 );
               })}
@@ -226,50 +262,67 @@ const VPSServer = () => {
             </div>
             <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
               {plans.map((plan) => (
-                <Card
-                  key={plan.name}
-                  className={`relative transition-all duration-300 hover:-translate-y-1 ${
-                    plan.highlight
-                      ? "border-primary shadow-xl shadow-primary/10 ring-1 ring-primary/30"
-                      : "hover:shadow-lg"
-                  }`}
-                >
+                <div key={plan.name} className="relative group">
                   {plan.highlight && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-secondary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full shadow-md">
-                      Recommended
-                    </div>
+                    <div
+                      aria-hidden
+                      className="absolute -inset-0.5 rounded-2xl bg-gradient-to-br from-primary via-secondary to-primary opacity-70 blur-md group-hover:opacity-100 transition-opacity"
+                    />
                   )}
-                  <CardContent className="p-8">
-                    <div className="mb-6">
-                      <h3 className="text-xl font-bold text-foreground mb-1">{plan.name}</h3>
-                      <p className="text-sm text-muted-foreground">{plan.tag}</p>
-                    </div>
-                    <div className="flex items-baseline gap-1 mb-6">
-                      <span className="text-5xl font-black text-foreground">{plan.price}</span>
-                      <span className="text-muted-foreground">{plan.period}</span>
-                    </div>
-                    <Link to="/cart" className="block mb-8">
-                      <Button
-                        className={`w-full h-11 font-semibold ${
-                          plan.highlight
-                            ? "bg-gradient-to-r from-primary to-secondary text-primary-foreground hover:opacity-90"
-                            : ""
-                        }`}
-                        variant={plan.highlight ? "default" : "outline"}
-                      >
-                        Choose {plan.name}
-                      </Button>
-                    </Link>
-                    <ul className="space-y-3">
-                      {plan.specs.map((s) => (
-                        <li key={s} className="flex items-start gap-2.5 text-sm text-foreground">
-                          <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                          <span>{s}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
+                  <Card
+                    className={`relative h-full transition-all duration-300 hover:-translate-y-1 rounded-2xl overflow-hidden ${
+                      plan.highlight
+                        ? "border-primary/40 shadow-2xl shadow-primary/20 bg-gradient-to-b from-card via-card to-primary/[0.03]"
+                        : "hover:shadow-xl hover:border-primary/30"
+                    }`}
+                  >
+                    {plan.highlight && (
+                      <>
+                        <div
+                          aria-hidden
+                          className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary to-transparent"
+                        />
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-secondary text-primary-foreground text-[11px] font-bold px-3 py-1 rounded-full shadow-lg shadow-primary/30 uppercase tracking-wider">
+                          Recommended
+                        </div>
+                      </>
+                    )}
+                    <CardContent className="p-8">
+                      <div className="mb-6">
+                        <h3 className="text-xl font-bold text-foreground mb-1">{plan.name}</h3>
+                        <p className="text-sm text-muted-foreground">{plan.tag}</p>
+                      </div>
+                      <div className="flex items-baseline gap-1 mb-6">
+                        <span className={`text-5xl font-black tracking-tight ${plan.highlight ? "bg-gradient-to-br from-primary to-secondary bg-clip-text text-transparent" : "text-foreground"}`}>
+                          {plan.price}
+                        </span>
+                        <span className="text-muted-foreground">{plan.period}</span>
+                      </div>
+                      <Link to="/cart" className="block mb-8">
+                        <Button
+                          className={`w-full h-11 font-semibold ${
+                            plan.highlight
+                              ? "bg-gradient-to-r from-primary to-secondary text-primary-foreground hover:opacity-90 shadow-lg shadow-primary/20"
+                              : ""
+                          }`}
+                          variant={plan.highlight ? "default" : "outline"}
+                        >
+                          Choose {plan.name}
+                        </Button>
+                      </Link>
+                      <ul className="space-y-3">
+                        {plan.specs.map((s) => (
+                          <li key={s} className="flex items-start gap-2.5 text-sm text-foreground">
+                            <span className="mt-0.5 flex-shrink-0 w-4 h-4 rounded-full bg-primary/10 flex items-center justify-center">
+                              <Check className="w-3 h-3 text-primary" />
+                            </span>
+                            <span>{s}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                </div>
               ))}
             </div>
           </div>
@@ -308,13 +361,28 @@ const VPSServer = () => {
           <div className="container">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div className="relative order-2 lg:order-1">
-                <div className="absolute -inset-4 bg-gradient-to-br from-primary/20 to-transparent blur-2xl rounded-full" aria-hidden />
-                <img
-                  src="https://images.unsplash.com/photo-1573164713988-8665fc963095?w=1000&h=800&fit=crop&q=80"
-                  alt="Engineer monitoring server performance dashboards"
-                  loading="lazy"
-                  className="relative rounded-2xl border border-border shadow-xl w-full aspect-[5/4] object-cover"
-                />
+                <div className="absolute -inset-8 bg-gradient-to-br from-primary/25 via-secondary/15 to-transparent blur-3xl rounded-full" aria-hidden />
+                <div className="relative rounded-3xl overflow-hidden border border-border/60 shadow-2xl ring-1 ring-primary/10">
+                  <img
+                    src={vpsDatacenterPremium}
+                    alt="Premium illuminated data center corridor with cyan accent lighting"
+                    loading="lazy"
+                    width={1600}
+                    height={1280}
+                    className="w-full aspect-[5/4] object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" aria-hidden />
+                </div>
+                {/* Floating metric pill */}
+                <div className="hidden md:flex absolute -bottom-5 -right-5 bg-card/90 backdrop-blur-xl border border-border/60 rounded-2xl p-4 shadow-2xl items-center gap-3 ring-1 ring-primary/10">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary text-primary-foreground flex items-center justify-center">
+                    <Gauge className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="text-xs text-muted-foreground">Avg latency</div>
+                    <div className="text-base font-bold text-foreground tracking-tight">&lt; 8 ms</div>
+                  </div>
+                </div>
               </div>
               <div className="order-1 lg:order-2">
                 <div className="text-primary text-sm font-semibold mb-3">Why teams choose us</div>
