@@ -198,8 +198,7 @@ const GPUServerDiagram = () => {
                 <animateTransform attributeName="transform" type="rotate"
                   from="0 0 0" to="360 0 0" dur="14s" repeatCount="indefinite" additive="sum" />
                 <circle r="58" fill="none" stroke="hsl(var(--primary)/0.5)" strokeWidth="1" strokeDasharray="3 6" />
-                <circle r="58" cx="0" cy="0" r="3" fill="hsl(var(--primary))" filter="url(#soft-glow)"
-                  transform="translate(58 0)" />
+                <circle cx="58" cy="0" r="3" fill="hsl(var(--primary))" filter="url(#soft-glow)" />
               </g>
               {/* Middle counter-rotating ring */}
               <g transform="translate(400 140)">
