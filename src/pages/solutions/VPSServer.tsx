@@ -364,11 +364,9 @@ const VPSServer = () => {
                 <div className="absolute -inset-8 bg-gradient-to-br from-primary/25 via-secondary/15 to-transparent blur-3xl rounded-full" aria-hidden />
                 <div className="relative rounded-3xl overflow-hidden border border-border/60 shadow-2xl ring-1 ring-primary/10">
                   <img
-                    src={vpsDatacenterPremium}
-                    alt="Premium illuminated data center corridor with cyan accent lighting"
+                    src="https://images.unsplash.com/photo-1573164713988-8665fc963095?w=1000&h=800&fit=crop&q=80"
+                    alt="Engineer monitoring server performance dashboards"
                     loading="lazy"
-                    width={1600}
-                    height={1280}
                     className="w-full aspect-[5/4] object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" aria-hidden />
