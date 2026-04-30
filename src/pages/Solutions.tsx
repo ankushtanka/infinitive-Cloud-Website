@@ -128,26 +128,33 @@ const Solutions = () => {
           </div>
 
           <section className="section-container mt-20">
-            <Card className="bg-gradient-to-br from-primary/10 via-accent/10 to-background border-2 border-primary/20">
-              <CardContent className="pt-12 pb-12 text-center">
-                <h2 className="mb-4">Not Sure Which Solution Is Right for You?</h2>
-                <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-                  Our hosting experts will recommend the perfect plan based on your needs and budget.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link to="/contact">
-                    <Button size="lg" className="btn-gradient glow-effect font-bold h-14 px-8">
-                      Talk to an Expert
-                    </Button>
-                  </Link>
-                  <Link to="/contact">
-                    <Button size="lg" variant="outline" className="h-14 px-8 font-semibold">
-                      Start Free Trial
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="relative rounded-2xl border border-cyan-500/30 bg-[#0A1A2F] px-6 py-16 sm:py-20 text-center overflow-hidden">
+              <h2 className="mb-5 text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white">
+                Not Sure Which Solution Is Right for You?
+              </h2>
+              <p className="text-lg sm:text-xl text-slate-400 mb-10 max-w-2xl mx-auto">
+                Our hosting experts will recommend the perfect plan based on your needs and budget.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link to="/contact">
+                  <Button
+                    size="lg"
+                    className="h-14 px-8 font-semibold text-white border-0 bg-gradient-to-r from-cyan-400 to-blue-600 hover:from-cyan-300 hover:to-blue-500 shadow-[0_8px_30px_-8px_rgba(34,211,238,0.5)]"
+                  >
+                    Talk to an Expert
+                  </Button>
+                </Link>
+                <Link to="/contact">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="h-14 px-8 font-semibold bg-transparent text-white border-slate-700 hover:bg-slate-800/60 hover:text-white"
+                  >
+                    Start Free Trial
+                  </Button>
+                </Link>
+              </div>
+            </div>
           </section>
         </main>
         <Footer />
