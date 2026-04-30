@@ -343,50 +343,67 @@ const NodejsHosting = () => {
             </div>
             <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
               {plans.map((plan) => (
-                <Card
-                  key={plan.name}
-                  className={`relative transition-all duration-300 hover:-translate-y-1 ${
-                    plan.highlight
-                      ? "border-primary shadow-xl shadow-primary/10 ring-1 ring-primary/30"
-                      : "hover:shadow-lg"
-                  }`}
-                >
+                <div key={plan.name} className="relative group">
                   {plan.highlight && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-secondary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full shadow-md">
-                      Recommended
-                    </div>
+                    <div
+                      aria-hidden
+                      className="absolute -inset-0.5 rounded-2xl bg-gradient-to-br from-primary via-secondary to-primary opacity-70 blur-md group-hover:opacity-100 transition-opacity"
+                    />
                   )}
-                  <CardContent className="p-8">
-                    <div className="mb-6">
-                      <h3 className="text-xl font-bold text-foreground mb-1">{plan.name}</h3>
-                      <p className="text-sm text-muted-foreground">{plan.tag}</p>
-                    </div>
-                    <div className="flex items-baseline gap-1 mb-6">
-                      <span className="text-5xl font-black text-foreground">{plan.price}</span>
-                      <span className="text-muted-foreground">{plan.period}</span>
-                    </div>
-                    <Link to="/cart" className="block mb-8">
-                      <Button
-                        className={`w-full h-11 font-semibold ${
-                          plan.highlight
-                            ? "bg-gradient-to-r from-primary to-secondary text-primary-foreground hover:opacity-90"
-                            : ""
-                        }`}
-                        variant={plan.highlight ? "default" : "outline"}
-                      >
-                        Choose {plan.name}
-                      </Button>
-                    </Link>
-                    <ul className="space-y-3">
-                      {plan.specs.map((s) => (
-                        <li key={s} className="flex items-start gap-2.5 text-sm text-foreground">
-                          <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                          <span>{s}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
+                  <Card
+                    className={`relative h-full transition-all duration-300 hover:-translate-y-1 rounded-2xl overflow-hidden ${
+                      plan.highlight
+                        ? "border-primary/40 shadow-2xl shadow-primary/20 bg-gradient-to-b from-card via-card to-primary/[0.03]"
+                        : "hover:shadow-xl hover:border-primary/30"
+                    }`}
+                  >
+                    {plan.highlight && (
+                      <>
+                        <div
+                          aria-hidden
+                          className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary to-transparent"
+                        />
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-secondary text-primary-foreground text-[11px] font-bold px-3 py-1 rounded-full shadow-lg shadow-primary/30 uppercase tracking-wider">
+                          Recommended
+                        </div>
+                      </>
+                    )}
+                    <CardContent className="p-8">
+                      <div className="mb-6">
+                        <h3 className="text-xl font-bold text-foreground mb-1">{plan.name}</h3>
+                        <p className="text-sm text-muted-foreground">{plan.tag}</p>
+                      </div>
+                      <div className="flex items-baseline gap-1 mb-6">
+                        <span className={`text-5xl font-black tracking-tight ${plan.highlight ? "bg-gradient-to-br from-primary to-secondary bg-clip-text text-transparent" : "text-foreground"}`}>
+                          {plan.price}
+                        </span>
+                        <span className="text-muted-foreground">{plan.period}</span>
+                      </div>
+                      <Link to="/cart" className="block mb-8">
+                        <Button
+                          className={`w-full h-11 font-semibold ${
+                            plan.highlight
+                              ? "bg-gradient-to-r from-primary to-secondary text-primary-foreground hover:opacity-90 shadow-lg shadow-primary/20"
+                              : ""
+                          }`}
+                          variant={plan.highlight ? "default" : "outline"}
+                        >
+                          Choose {plan.name}
+                        </Button>
+                      </Link>
+                      <ul className="space-y-3">
+                        {plan.specs.map((s) => (
+                          <li key={s} className="flex items-start gap-2.5 text-sm text-foreground">
+                            <span className="mt-0.5 flex-shrink-0 w-4 h-4 rounded-full bg-primary/10 flex items-center justify-center">
+                              <Check className="w-3 h-3 text-primary" />
+                            </span>
+                            <span>{s}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                </div>
               ))}
             </div>
           </div>
