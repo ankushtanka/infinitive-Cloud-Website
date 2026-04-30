@@ -3,110 +3,442 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Link } from "react-router-dom";
-import { HardDrive, Zap, Shield, Clock, Server, Globe, ArrowRight, Check } from "lucide-react";
+import {
+  HardDrive,
+  Zap,
+  Shield,
+  Clock,
+  Server,
+  Globe,
+  ArrowRight,
+  Check,
+  Cpu,
+  Lock,
+  Activity,
+  Gauge,
+  Headphones,
+  Star,
+  TrendingUp,
+  Sparkles,
+} from "lucide-react";
 
 const features = [
-  { icon: HardDrive, title: "Full Root Access", desc: "Complete control with root SSH access and custom OS choices" },
-  { icon: Zap, title: "NVMe SSD Storage", desc: "Ultra-fast NVMe drives for maximum I/O performance" },
-  { icon: Shield, title: "DDoS Protection", desc: "Enterprise-grade DDoS mitigation included free" },
-  { icon: Clock, title: "Instant Provisioning", desc: "Your VPS is ready within minutes of order" },
-  { icon: Server, title: "Dedicated Resources", desc: "Guaranteed CPU, RAM & bandwidth — no overselling" },
-  { icon: Globe, title: "Multiple Locations", desc: "Data centers in India, US, Europe & Singapore" },
+  { icon: Cpu, title: "Dedicated vCPU Cores", desc: "Guaranteed compute power. No noisy neighbours, no shared bottlenecks." },
+  { icon: HardDrive, title: "NVMe SSD Storage", desc: "Up to 10× faster than SATA SSDs for blazing fast database & app performance." },
+  { icon: Lock, title: "Full Root Access", desc: "Complete control with SSH root access. Install anything, configure everything." },
+  { icon: Shield, title: "Enterprise DDoS Shield", desc: "Always-on protection up to 1 Tbps mitigation, included free with every plan." },
+  { icon: Globe, title: "Global Data Centers", desc: "Deploy in India, US, Europe & Singapore. Pick the region closest to your users." },
+  { icon: Activity, title: "99.99% Uptime SLA", desc: "Backed by a written guarantee with monthly credits if we ever fall short." },
+  { icon: Zap, title: "Instant Provisioning", desc: "Your VPS is ready in 60 seconds. No paperwork, no waiting." },
+  { icon: Headphones, title: "24/7 Expert Support", desc: "Real engineers on chat & ticket — average first response under 3 minutes." },
 ];
 
 const plans = [
-  { name: "VPS 1", price: "₹499", period: "/mo", ram: "2 GB RAM", cpu: "1 vCPU", storage: "40 GB NVMe", bandwidth: "1 TB", highlight: false },
-  { name: "VPS 2", price: "₹999", period: "/mo", ram: "4 GB RAM", cpu: "2 vCPU", storage: "80 GB NVMe", bandwidth: "2 TB", highlight: true },
-  { name: "VPS 3", price: "₹1,999", period: "/mo", ram: "8 GB RAM", cpu: "4 vCPU", storage: "160 GB NVMe", bandwidth: "4 TB", highlight: false },
-  { name: "VPS 4", price: "₹3,999", period: "/mo", ram: "16 GB RAM", cpu: "8 vCPU", storage: "320 GB NVMe", bandwidth: "8 TB", highlight: false },
+  {
+    name: "Starter",
+    tag: "Best for side projects",
+    price: "₹499",
+    period: "/mo",
+    specs: ["2 GB RAM", "1 vCPU Core", "40 GB NVMe SSD", "1 TB Bandwidth", "1 Dedicated IPv4", "Free SSL & Backups", "DDoS Protection", "24/7 Support"],
+    highlight: false,
+  },
+  {
+    name: "Business",
+    tag: "Most teams pick this",
+    price: "₹999",
+    period: "/mo",
+    specs: ["4 GB RAM", "2 vCPU Cores", "80 GB NVMe SSD", "2 TB Bandwidth", "1 Dedicated IPv4", "Free SSL & Daily Backups", "DDoS Protection", "Priority Support"],
+    highlight: true,
+  },
+  {
+    name: "Enterprise",
+    tag: "For high-traffic apps",
+    price: "₹3,999",
+    period: "/mo",
+    specs: ["16 GB RAM", "8 vCPU Cores", "320 GB NVMe SSD", "8 TB Bandwidth", "2 Dedicated IPv4", "Snapshot Backups", "Advanced DDoS Shield", "Dedicated Account Manager"],
+    highlight: false,
+  },
+];
+
+const stats = [
+  { value: "99.99%", label: "Uptime SLA", icon: Activity },
+  { value: "<10 ms", label: "Avg Response", icon: Gauge },
+  { value: "60 s", label: "Provisioning", icon: Zap },
+  { value: "10 Gbps", label: "Network Port", icon: TrendingUp },
+];
+
+const whyUs = [
+  { icon: Server, title: "Built on Latest AMD EPYC", desc: "Modern processors deliver up to 3× better performance per core than older Xeon hardware." },
+  { icon: Shield, title: "Hardened by Default", desc: "Firewall rules, fail2ban, and brute-force protection enabled out of the box." },
+  { icon: Sparkles, title: "Zero Hidden Fees", desc: "What you see is what you pay. No setup fees, no overage surprises." },
+  { icon: Clock, title: "30-Day Money Back", desc: "Try us risk-free. Not happy? Get a full refund — no questions asked." },
+];
+
+const testimonials = [
+  {
+    quote: "We migrated 14 production sites to Infinitive Cloud VPS. Page loads dropped from 2.1s to 480ms. Support actually knows their stuff.",
+    name: "Rohan Kapoor",
+    role: "CTO, Studio Mint",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop&crop=faces",
+  },
+  {
+    quote: "After two outages with our previous host, we moved to Infinitive. Six months in — zero downtime, predictable billing, friendly humans.",
+    name: "Aisha Verma",
+    role: "Founder, ledgerly.in",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop&crop=faces",
+  },
+  {
+    quote: "The NVMe disks are absurdly fast. Our Postgres queries run 4× quicker. Honestly the best price/performance we've found in India.",
+    name: "Karthik Iyer",
+    role: "Lead Engineer, FreightHQ",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop&crop=faces",
+  },
+];
+
+const faqs = [
+  { q: "Can I upgrade or downgrade my plan later?", a: "Absolutely. You can scale up or down at any time from your dashboard with zero downtime — we handle the migration in seconds." },
+  { q: "Do I get full root / administrator access?", a: "Yes. Every VPS comes with full root SSH access on Linux distros (Ubuntu, Debian, AlmaLinux, Rocky) and Administrator on Windows Server." },
+  { q: "What's included in the 24/7 support?", a: "Real human engineers respond on chat, email and tickets — typically within 3 minutes. We help with server setup, troubleshooting, and migrations free of charge." },
+  { q: "Is there a money-back guarantee?", a: "Yes. We offer a 30-day no-questions-asked refund if you're not satisfied for any reason." },
+  { q: "Will you help me migrate from my current host?", a: "Yes — free white-glove migration. Our team copies your sites, databases, emails and DNS at no extra cost." },
+  { q: "What if I exceed my bandwidth?", a: "We'll never cut you off. We'll send a friendly heads-up and help you upgrade to a better-fit plan with prorated billing." },
 ];
 
 const VPSServer = () => {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       <Helmet>
-        <title>VPS Server India | Managed VPS Hosting | Infinitive Cloud</title>
-        <meta name="description" content="High-performance VPS servers with full root access, NVMe SSD, DDoS protection & 99.99% uptime. Starting at ₹499/mo. Infinitive Cloud." />
+        <title>VPS Server Hosting India | NVMe SSD & Root Access | Infinitive Cloud</title>
+        <meta
+          name="description"
+          content="Premium VPS hosting with full root access, NVMe SSD, dedicated resources, free DDoS protection and 99.99% uptime SLA. Starting at ₹499/mo."
+        />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/vps-server" />
       </Helmet>
 
       <Navigation />
 
       <main>
-        <section className="pt-32 pb-20 bg-gradient-to-b from-muted/50 to-background">
-          <div className="section-container text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-bold mb-6">
-              <HardDrive className="w-4 h-4" /> VPS Server
-            </div>
-            <h1 className="text-4xl md:text-5xl font-black mb-6">
-              Powerful <span className="gradient-text">VPS Servers</span> with Full Control
-            </h1>
-            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Enterprise-grade virtual private servers with dedicated resources, NVMe SSD, root access, and 99.99% uptime guarantee. Scale your business with confidence.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/contact">
-                <Button size="lg" className="btn-gradient text-white font-bold px-8">
-                  Start 14-Day Free Trial <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-              </Link>
-              <Link to="/pricing">
-                <Button size="lg" variant="outline" className="font-bold px-8">Compare Plans</Button>
-              </Link>
+        {/* HERO */}
+        <section className="relative overflow-hidden pt-32 pb-24 lg:pt-40 lg:pb-32">
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.12),transparent_55%)]"
+          />
+          <div
+            aria-hidden
+            className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"
+          />
+          <div className="container relative">
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              <div className="animate-fade-in-up">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold mb-6">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  New AMD EPYC servers — now live in Mumbai
+                </div>
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-foreground mb-6 leading-[1.05]">
+                  VPS hosting that just{" "}
+                  <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                    works.
+                  </span>
+                </h1>
+                <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl leading-relaxed">
+                  Dedicated resources, NVMe SSD, full root access and 99.99% uptime — backed by engineers who actually pick up the phone.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 mb-10">
+                  <Link to="/cart">
+                    <Button size="lg" className="h-12 px-7 text-base font-semibold bg-gradient-to-r from-primary to-secondary text-primary-foreground hover:opacity-90 shadow-lg shadow-primary/20">
+                      Get started — ₹499/mo
+                      <ArrowRight className="ml-2 w-4 h-4" />
+                    </Button>
+                  </Link>
+                  <Link to="/contact">
+                    <Button size="lg" variant="outline" className="h-12 px-7 text-base font-semibold">
+                      Talk to an expert
+                    </Button>
+                  </Link>
+                </div>
+                <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" />30-day money back</div>
+                  <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" />Free migration</div>
+                  <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" />No setup fees</div>
+                </div>
+              </div>
+
+              <div className="relative animate-fade-in">
+                <div className="absolute -inset-6 bg-gradient-to-tr from-primary/20 via-secondary/10 to-transparent blur-3xl rounded-full" aria-hidden />
+                <div className="relative rounded-2xl overflow-hidden border border-border shadow-2xl">
+                  <img
+                    src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&h=900&fit=crop&q=80"
+                    alt="Modern data center with illuminated server racks"
+                    loading="eager"
+                    className="w-full h-auto object-cover aspect-[4/3]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" aria-hidden />
+                </div>
+                {/* Floating spec card */}
+                <div className="hidden md:flex absolute -bottom-6 -left-6 bg-card border border-border rounded-2xl p-4 shadow-xl items-center gap-3 backdrop-blur">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <Activity className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <div className="text-xs text-muted-foreground">Live uptime</div>
+                    <div className="text-base font-bold text-foreground">99.998% (last 90d)</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        <section className="py-20">
-          <div className="section-container">
-            <h2 className="text-3xl font-black text-center mb-12">Why Our VPS Servers?</h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              {features.map((f) => {
-                const Icon = f.icon;
+        {/* STATS */}
+        <section className="py-12 border-y border-border bg-muted/30">
+          <div className="container">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {stats.map((s) => {
+                const Icon = s.icon;
                 return (
-                  <Card key={f.title} className="card-hover">
-                    <CardContent className="pt-6">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-4">
-                        <Icon className="w-6 h-6 text-white" />
-                      </div>
-                      <h3 className="text-lg font-bold mb-2">{f.title}</h3>
-                      <p className="text-muted-foreground text-sm">{f.desc}</p>
-                    </CardContent>
-                  </Card>
+                  <div key={s.label} className="text-center">
+                    <Icon className="w-6 h-6 text-primary mx-auto mb-2" />
+                    <div className="text-3xl md:text-4xl font-black text-foreground tracking-tight">{s.value}</div>
+                    <div className="text-sm text-muted-foreground mt-1">{s.label}</div>
+                  </div>
                 );
               })}
             </div>
           </div>
         </section>
 
-        <section className="py-20 bg-muted/30">
-          <div className="section-container">
-            <h2 className="text-3xl font-black text-center mb-12">VPS Server Plans</h2>
-            <div className="grid md:grid-cols-4 gap-5 max-w-6xl mx-auto">
+        {/* PRICING */}
+        <section className="py-20 lg:py-28">
+          <div className="container">
+            <div className="text-center max-w-2xl mx-auto mb-14">
+              <div className="inline-block text-primary text-sm font-semibold mb-3">Pricing</div>
+              <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">Simple plans, serious power.</h2>
+              <p className="text-muted-foreground text-lg">No hidden fees, no contracts. Switch or cancel any time.</p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
               {plans.map((plan) => (
-                <Card key={plan.name} className={`relative ${plan.highlight ? "border-primary shadow-lg scale-105" : ""}`}>
+                <Card
+                  key={plan.name}
+                  className={`relative transition-all duration-300 hover:-translate-y-1 ${
+                    plan.highlight
+                      ? "border-primary shadow-xl shadow-primary/10 ring-1 ring-primary/30"
+                      : "hover:shadow-lg"
+                  }`}
+                >
                   {plan.highlight && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-bold px-4 py-1 rounded-full">
-                      Best Value
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-secondary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full shadow-md">
+                      Recommended
                     </div>
                   )}
-                  <CardContent className="pt-8 text-center">
-                    <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
-                    <div className="text-3xl font-black text-primary mb-1">{plan.price}<span className="text-sm font-normal text-muted-foreground">{plan.period}</span></div>
-                    <div className="space-y-2.5 mt-6 text-sm text-left">
-                      {[plan.ram, plan.cpu, plan.storage, `${plan.bandwidth} Bandwidth`, "Free SSL", "DDoS Protection", "24/7 Support"].map((f) => (
-                        <div key={f} className="flex items-center gap-2"><Check className="w-4 h-4 text-primary flex-shrink-0" />{f}</div>
-                      ))}
+                  <CardContent className="p-8">
+                    <div className="mb-6">
+                      <h3 className="text-xl font-bold text-foreground mb-1">{plan.name}</h3>
+                      <p className="text-sm text-muted-foreground">{plan.tag}</p>
                     </div>
-                    <Link to="/contact" className="block mt-6">
-                      <Button className={`w-full font-bold ${plan.highlight ? "btn-gradient" : ""}`} variant={plan.highlight ? "default" : "outline"}>
-                        Get Started
+                    <div className="flex items-baseline gap-1 mb-6">
+                      <span className="text-5xl font-black text-foreground">{plan.price}</span>
+                      <span className="text-muted-foreground">{plan.period}</span>
+                    </div>
+                    <Link to="/cart" className="block mb-8">
+                      <Button
+                        className={`w-full h-11 font-semibold ${
+                          plan.highlight
+                            ? "bg-gradient-to-r from-primary to-secondary text-primary-foreground hover:opacity-90"
+                            : ""
+                        }`}
+                        variant={plan.highlight ? "default" : "outline"}
+                      >
+                        Choose {plan.name}
                       </Button>
                     </Link>
+                    <ul className="space-y-3">
+                      {plan.specs.map((s) => (
+                        <li key={s} className="flex items-start gap-2.5 text-sm text-foreground">
+                          <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                          <span>{s}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </CardContent>
                 </Card>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* FEATURES */}
+        <section className="py-20 lg:py-28 bg-muted/30 border-y border-border">
+          <div className="container">
+            <div className="text-center max-w-2xl mx-auto mb-14">
+              <div className="inline-block text-primary text-sm font-semibold mb-3">Features</div>
+              <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">Everything you need. Nothing you don't.</h2>
+              <p className="text-muted-foreground text-lg">A thoughtful set of features that genuinely move the needle for your apps.</p>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {features.map((f) => {
+                const Icon = f.icon;
+                return (
+                  <div
+                    key={f.title}
+                    className="group p-6 rounded-2xl bg-card border border-border hover:border-primary/40 hover:shadow-lg transition-all duration-300"
+                  >
+                    <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <h3 className="font-bold text-foreground mb-2">{f.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* PERFORMANCE / WHY US */}
+        <section className="py-20 lg:py-28">
+          <div className="container">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div className="relative order-2 lg:order-1">
+                <div className="absolute -inset-4 bg-gradient-to-br from-primary/20 to-transparent blur-2xl rounded-full" aria-hidden />
+                <img
+                  src="https://images.unsplash.com/photo-1573164713988-8665fc963095?w=1000&h=800&fit=crop&q=80"
+                  alt="Engineer monitoring server performance dashboards"
+                  loading="lazy"
+                  className="relative rounded-2xl border border-border shadow-xl w-full aspect-[5/4] object-cover"
+                />
+              </div>
+              <div className="order-1 lg:order-2">
+                <div className="text-primary text-sm font-semibold mb-3">Why teams choose us</div>
+                <h2 className="text-3xl md:text-4xl font-black text-foreground mb-6 leading-tight">
+                  Built by engineers, for engineers.
+                </h2>
+                <p className="text-muted-foreground text-lg mb-8">
+                  We obsess over the details so you can ship faster. From the silicon to the support inbox — every layer is tuned for performance and trust.
+                </p>
+                <div className="space-y-5">
+                  {whyUs.map((w) => {
+                    const Icon = w.icon;
+                    return (
+                      <div key={w.title} className="flex gap-4">
+                        <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+                          <Icon className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-foreground mb-1">{w.title}</h3>
+                          <p className="text-sm text-muted-foreground leading-relaxed">{w.desc}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* TESTIMONIALS */}
+        <section className="py-20 lg:py-28 bg-muted/30 border-y border-border">
+          <div className="container">
+            <div className="text-center max-w-2xl mx-auto mb-14">
+              <div className="inline-block text-primary text-sm font-semibold mb-3">Loved by 12,000+ teams</div>
+              <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">Real words from real customers.</h2>
+            </div>
+            <div className="grid md:grid-cols-3 gap-6">
+              {testimonials.map((t) => (
+                <div
+                  key={t.name}
+                  className="p-7 rounded-2xl bg-card border border-border hover:shadow-lg transition-all"
+                >
+                  <div className="flex gap-1 mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-primary text-primary" />
+                    ))}
+                  </div>
+                  <p className="text-foreground leading-relaxed mb-6">"{t.quote}"</p>
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={t.avatar}
+                      alt={t.name}
+                      loading="lazy"
+                      className="w-10 h-10 rounded-full object-cover border border-border"
+                    />
+                    <div>
+                      <div className="font-semibold text-foreground text-sm">{t.name}</div>
+                      <div className="text-xs text-muted-foreground">{t.role}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section className="py-20 lg:py-28">
+          <div className="container max-w-3xl">
+            <div className="text-center mb-12">
+              <div className="inline-block text-primary text-sm font-semibold mb-3">FAQ</div>
+              <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">Questions, answered.</h2>
+              <p className="text-muted-foreground text-lg">Still curious? Our team is one click away.</p>
+            </div>
+            <Accordion type="single" collapsible className="w-full">
+              {faqs.map((f, i) => (
+                <AccordionItem key={i} value={`item-${i}`} className="border-border">
+                  <AccordionTrigger className="text-left font-semibold text-foreground hover:no-underline py-5">
+                    {f.q}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground leading-relaxed pb-5">
+                    {f.a}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        </section>
+
+        {/* FINAL CTA */}
+        <section className="py-20 lg:py-24">
+          <div className="container">
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-secondary p-10 md:p-16 text-center">
+              <div
+                className="absolute inset-0 opacity-20"
+                aria-hidden
+                style={{
+                  backgroundImage:
+                    "radial-gradient(circle at 20% 20%, white 1px, transparent 1px), radial-gradient(circle at 80% 80%, white 1px, transparent 1px)",
+                  backgroundSize: "40px 40px",
+                }}
+              />
+              <div className="relative">
+                <h2 className="text-3xl md:text-5xl font-black text-primary-foreground mb-4 max-w-2xl mx-auto leading-tight">
+                  Ready for a VPS that doesn't let you down?
+                </h2>
+                <p className="text-primary-foreground/90 text-lg mb-8 max-w-xl mx-auto">
+                  Spin up your server in 60 seconds. Cancel any time, full refund within 30 days.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <Link to="/cart">
+                    <Button size="lg" className="h-12 px-8 text-base font-semibold bg-background text-foreground hover:bg-background/90">
+                      Start your VPS
+                      <ArrowRight className="ml-2 w-4 h-4" />
+                    </Button>
+                  </Link>
+                  <Link to="/contact">
+                    <Button size="lg" variant="outline" className="h-12 px-8 text-base font-semibold bg-transparent border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10">
+                      Chat with sales
+                    </Button>
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </section>
