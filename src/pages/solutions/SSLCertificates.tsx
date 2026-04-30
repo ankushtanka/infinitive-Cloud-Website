@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Check, Shield, Lock, Globe, Zap, Award, ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import SSLHandshakeDiagram from "@/components/infographics/SSLHandshakeDiagram";
 
 const plans = [
   {
