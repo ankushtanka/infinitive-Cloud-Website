@@ -149,7 +149,7 @@ const App = () => {
                 <Route path="/solutions/nodejs-hosting" element={<NodejsHosting />} />
                 <Route path="/solutions/vps-server" element={<VPSServer />} />
                 <Route path="/solutions/email-security" element={<EmailSecurity />} />
-                <Route path="/solutions/opencart-hosting" element={<OpenCartHosting />} />
+                
                 <Route path="/live-chat" element={<LiveChat />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/order-confirmation" element={<OrderConfirmation />} />
