@@ -6,9 +6,9 @@ const ThemeToggle = () => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("ic_theme");
       if (saved) return saved === "dark";
-      return true; // Default to dark theme
+      return false; // Default to light theme
     }
-    return true;
+    return false;
   });
 
   useEffect(() => {
