@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
 import GPUServerDiagram from "@/components/infographics/GPUServerDiagram";
+import LazyVisible from "@/components/LazyVisible";
 
 const GPUDedicatedServer = () => {
   const features = [
@@ -93,7 +94,7 @@ const GPUDedicatedServer = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <GPUServerDiagram />
+                  <LazyVisible minHeight={400}><GPUServerDiagram /></LazyVisible>
                 </motion.div>
               </div>
             </div>

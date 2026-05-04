@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import CloudHostingDiagram from "@/components/infographics/CloudHostingDiagram";
 import { 
+import LazyVisible from "@/components/LazyVisible";
   Cloud, Server, Database, Lock, Zap, Shield, 
   CheckCircle2, ArrowRight, Globe, HardDrive 
 } from "lucide-react";
@@ -172,7 +173,7 @@ const CloudHosting = () => {
           {/* Premium architecture diagram */}
           <section className="section-container mb-20">
             <div className="max-w-5xl mx-auto">
-              <CloudHostingDiagram />
+              <LazyVisible minHeight={400}><CloudHostingDiagram /></LazyVisible>
             </div>
           </section>
 

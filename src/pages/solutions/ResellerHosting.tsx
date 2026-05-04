@@ -6,6 +6,7 @@ import { Users, Globe, Shield, Zap, Server, Headphones } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import ResellerDiagram from "@/components/infographics/ResellerDiagram";
+import LazyVisible from "@/components/LazyVisible";
 
 const ResellerHosting = () => {
   const features = [
@@ -54,7 +55,7 @@ const ResellerHosting = () => {
 
           <section className="section-container mb-16">
             <div className="max-w-5xl mx-auto">
-              <ResellerDiagram />
+              <LazyVisible minHeight={400}><ResellerDiagram /></LazyVisible>
             </div>
           </section>
 

@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import n8nHero from "@/assets/n8n-hero-premium.jpg";
 import N8nWorkflowDiagram from "@/components/infographics/N8nWorkflowDiagram";
+import LazyVisible from "@/components/LazyVisible";
 
 const features = [
   { icon: Workflow, title: "Pre-installed n8n", desc: "Latest stable n8n is configured, secured and ready — no Docker, no YAML files, no headaches." },
@@ -213,7 +214,7 @@ const N8nHosting = () => {
               <h2 className="tracking-tight text-3xl lg:text-4xl font-bold mb-4">Anatomy of a workflow on your VPS</h2>
               <p className="text-base text-muted-foreground">From webhook trigger to AI agent to database — every node runs on infrastructure you control.</p>
             </div>
-            <N8nWorkflowDiagram />
+            <LazyVisible minHeight={400}><N8nWorkflowDiagram /></LazyVisible>
           </motion.section>
 
           {/* FEATURE GRID */}

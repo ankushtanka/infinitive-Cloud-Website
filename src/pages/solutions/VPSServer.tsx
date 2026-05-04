@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/accordion";
 import { Link } from "react-router-dom";
 import {
+import LazyVisible from "@/components/LazyVisible";
   HardDrive,
   Zap,
   Shield,
@@ -180,7 +181,7 @@ const VPSServer = () => {
                 <div className="absolute -inset-4 bg-gradient-to-bl from-secondary/20 to-primary/10 blur-2xl rounded-3xl opacity-70" aria-hidden />
 
                 <div className="relative">
-                  <PremiumServerDiagram />
+                  <LazyVisible minHeight={400}><PremiumServerDiagram /></LazyVisible>
                 </div>
 
                 {/* Floating live-uptime card */}

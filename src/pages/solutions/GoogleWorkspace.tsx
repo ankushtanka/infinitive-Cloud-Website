@@ -46,6 +46,7 @@ import {
 import workspaceHero from "@/assets/google-workspace-hero-premium.jpg";
 import WorkspaceHeroDiagram from "@/components/infographics/WorkspaceHeroDiagram";
 import WorkspaceEcosystemDiagram from "@/components/infographics/WorkspaceEcosystemDiagram";
+import LazyVisible from "@/components/LazyVisible";
 
 type BillingCycle = "monthly" | "annual";
 
@@ -274,7 +275,7 @@ const GoogleWorkspace = () => {
                 </motion.div>
 
                 <motion.div className="relative" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}>
-                  <WorkspaceHeroDiagram />
+                  <LazyVisible minHeight={400}><WorkspaceHeroDiagram /></LazyVisible>
                 </motion.div>
               </div>
             </div>
@@ -315,7 +316,7 @@ const GoogleWorkspace = () => {
               <h2 className="tracking-tight text-3xl lg:text-4xl font-bold mb-4">One workspace. Every Google app. Your domain.</h2>
               <p className="text-base text-muted-foreground">Mail, Drive, Meet, Docs, Calendar and more — unified under your brand with enterprise security at the core.</p>
             </div>
-            <WorkspaceEcosystemDiagram />
+            <LazyVisible minHeight={400}><WorkspaceEcosystemDiagram /></LazyVisible>
           </motion.section>
 
           {/* WHY THROUGH US */}

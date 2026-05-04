@@ -6,6 +6,7 @@ import { ArrowRight, Cloud, Shield, Clock, Zap, CheckCircle, Headphones } from "
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import CloudMigrationDiagram from "@/components/infographics/CloudMigrationDiagram";
+import LazyVisible from "@/components/LazyVisible";
 
 const steps = [
   { step: "01", title: "Assessment & Planning", description: "We analyze your current setup, identify dependencies, and create a detailed migration roadmap with zero downtime strategy." },
@@ -61,7 +62,7 @@ const CloudMigration = () => {
 
           <section className="section-container mb-20">
             <div className="max-w-5xl mx-auto">
-              <CloudMigrationDiagram />
+              <LazyVisible minHeight={400}><CloudMigrationDiagram /></LazyVisible>
             </div>
           </section>
 
