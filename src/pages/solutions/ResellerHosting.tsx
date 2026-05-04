@@ -1,3 +1,4 @@
+import LazyVisible from "@/components/LazyVisible";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -6,7 +7,6 @@ import { Users, Globe, Shield, Zap, Server, Headphones } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import ResellerDiagram from "@/components/infographics/ResellerDiagram";
-import LazyVisible from "@/components/LazyVisible";
 
 const ResellerHosting = () => {
   const features = [

@@ -1,3 +1,4 @@
+import LazyVisible from "@/components/LazyVisible";
 import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -46,7 +47,6 @@ import {
 import workspaceHero from "@/assets/google-workspace-hero-premium.jpg";
 import WorkspaceHeroDiagram from "@/components/infographics/WorkspaceHeroDiagram";
 import WorkspaceEcosystemDiagram from "@/components/infographics/WorkspaceEcosystemDiagram";
-import LazyVisible from "@/components/LazyVisible";
 
 type BillingCycle = "monthly" | "annual";
 

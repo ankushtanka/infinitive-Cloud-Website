@@ -1,3 +1,4 @@
+import LazyVisible from "@/components/LazyVisible";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -6,7 +7,6 @@ import { ArrowRight, Cloud, Shield, Clock, Zap, CheckCircle, Headphones } from "
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import CloudMigrationDiagram from "@/components/infographics/CloudMigrationDiagram";
-import LazyVisible from "@/components/LazyVisible";
 
 const steps = [
   { step: "01", title: "Assessment & Planning", description: "We analyze your current setup, identify dependencies, and create a detailed migration roadmap with zero downtime strategy." },

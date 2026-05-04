@@ -1,3 +1,4 @@
+import LazyVisible from "@/components/LazyVisible";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,6 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
 import NOCMonitoringDiagram from "@/components/infographics/NOCMonitoringDiagram";
-import LazyVisible from "@/components/LazyVisible";
 
 const services = [
   { icon: Settings, title: "Server Setup & Configuration", description: "OS provisioning, kernel tuning, firewall, fail2ban, and a CIS-aligned hardening baseline applied on day zero." },

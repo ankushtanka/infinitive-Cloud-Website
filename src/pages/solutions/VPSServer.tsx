@@ -1,3 +1,4 @@
+import LazyVisible from "@/components/LazyVisible";
 import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -13,7 +14,6 @@ import {
 } from "@/components/ui/accordion";
 import { Link } from "react-router-dom";
 import {
-import LazyVisible from "@/components/LazyVisible";
   HardDrive,
   Zap,
   Shield,
