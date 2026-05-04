@@ -1,41 +1,54 @@
 import { useEffect, useRef, useState, ReactNode } from "react";
 
 /**
- * Renders children only once they scroll into the viewport.
- * Massive perf win for heavy SVG infographics with SMIL <animate> loops,
- * which otherwise consume CPU even when off-screen.
+ * Renders children only while they are near/in the viewport. When the
+ * element scrolls far away, children are unmounted so heavy SVG SMIL
+ * animations / framer-motion loops stop consuming CPU.
+ *
+ * Big perf win for infographic-heavy solution pages.
  */
 interface Props {
   children: ReactNode;
   /** Min height while not yet mounted, prevents layout shift. */
   minHeight?: number | string;
-  /** rootMargin for the observer. Default: 200px before entering viewport. */
+  /** rootMargin for the observer. Default mounts ~300px before entry. */
   rootMargin?: string;
+  /** If true, once mounted stay mounted (skip unmount on exit). */
+  keepMounted?: boolean;
   className?: string;
 }
 
-const LazyVisible = ({ children, minHeight = 320, rootMargin = "200px", className }: Props) => {
+const LazyVisible = ({
+  children,
+  minHeight = 320,
+  rootMargin = "300px",
+  keepMounted = false,
+  className,
+}: Props) => {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (!ref.current || visible) return;
+    if (!ref.current) return;
     if (typeof IntersectionObserver === "undefined") {
       setVisible(true);
       return;
     }
     const io = new IntersectionObserver(
       (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
+        const inView = entries.some((e) => e.isIntersecting);
+        if (inView) {
           setVisible(true);
-          io.disconnect();
+          if (keepMounted) io.disconnect();
+        } else if (!keepMounted) {
+          setVisible(false);
         }
       },
       { rootMargin }
     );
     io.observe(ref.current);
     return () => io.disconnect();
-  }, [visible, rootMargin]);
+  }, [rootMargin, keepMounted]);
 
   return (
     <div
