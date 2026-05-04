@@ -6,6 +6,7 @@ import { Check, Server, Shield, Zap, HardDrive, Globe, Headphones } from "lucide
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import DedicatedServerDiagram from "@/components/infographics/DedicatedServerDiagram";
+import LazyVisible from "@/components/LazyVisible";
 
 const plans = [
   {
@@ -80,7 +81,7 @@ const DedicatedServers = () => {
 
           <section className="section-container mb-20">
             <div className="max-w-5xl mx-auto">
-              <DedicatedServerDiagram />
+              <LazyVisible minHeight={400}><DedicatedServerDiagram /></LazyVisible>
             </div>
           </section>
 

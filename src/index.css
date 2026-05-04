@@ -294,3 +294,34 @@ All colors MUST be HSL.
 @keyframes border-rotate {
   to { --border-angle: 360deg; }
 }
+
+/* ----------------------------------------------------------------
+   Performance: pause animations when content is off-screen via
+   content-visibility:auto, and respect prefers-reduced-motion.
+   ---------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Disable the heaviest decorative loops on small screens — they cause
+   continuous repaints with blur filters and crush mobile performance. */
+@media (max-width: 768px) {
+  .animate-float,
+  .animate-pulse-slow,
+  .animate-spin-slow {
+    animation: none !important;
+  }
+}
+
+/* GPU hint for elements that animate transform/opacity continuously. */
+.animate-float,
+.animate-pulse-slow {
+  will-change: transform, opacity;
+}

@@ -6,6 +6,7 @@ import { Check, Shield, Lock, Globe, Zap, Award, ShieldCheck } from "lucide-reac
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import SSLHandshakeDiagram from "@/components/infographics/SSLHandshakeDiagram";
+import LazyVisible from "@/components/LazyVisible";
 
 const plans = [
   {
@@ -84,7 +85,7 @@ const SSLCertificates = () => {
                 </div>
               </div>
               <div className="animate-fade-in">
-                <SSLHandshakeDiagram />
+                <LazyVisible minHeight={400}><SSLHandshakeDiagram /></LazyVisible>
               </div>
             </div>
           </section>

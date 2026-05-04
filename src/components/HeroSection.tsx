@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Shield, Headphones, Server, Cloud, Zap, CheckCircle2 } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 
 const useCountUp = (end: number, duration: number = 2000, suffix: string = "") => {
   const [count, setCount] = useState(0);
@@ -36,10 +36,6 @@ const useCountUp = (end: number, duration: number = 2000, suffix: string = "") =
 
 const HeroSection = () => {
   const [activeOffer, setActiveOffer] = useState(0);
-  const { scrollY } = useScroll();
-  const tickerOpacity = useTransform(scrollY, [0, 120], [1, 0]);
-  const tickerScale = useTransform(scrollY, [0, 120], [1, 0.95]);
-  const tickerY = useTransform(scrollY, [0, 120], [0, -20]);
 
   const offers = [
     { text: "🔥 Limited Time: Get 50% OFF on first 3 months", code: "WELCOME50" },
@@ -59,19 +55,14 @@ const HeroSection = () => {
 
   return (
     <section className="relative w-full flex flex-col items-center justify-center overflow-hidden bg-background pt-16 lg:pt-24 min-h-[85vh] md:min-h-screen">
-      {/* Animated gradient background */}
-      <div className="absolute inset-0">
+      {/* Static gradient background — heavy animated blur blobs removed for perf */}
+      <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-br from-background via-muted/30 to-background" />
         <div className="absolute inset-0" style={{ background: "var(--gradient-glow)" }} />
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-float hidden md:block" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-secondary/5 rounded-full blur-3xl animate-float hidden md:block" style={{ animationDelay: "3s" }} />
       </div>
 
-      {/* Top offer ticker - hides on scroll */}
-      <motion.div 
-        style={{ opacity: tickerOpacity, scale: tickerScale, y: tickerY }}
-        className="relative z-10 w-full max-w-4xl mx-auto px-3 sm:px-4 mt-2 md:mt-4 mb-4 md:mb-8 will-change-transform"
-      >
+      {/* Top offer ticker */}
+      <div className="relative z-10 w-full max-w-4xl mx-auto px-3 sm:px-4 mt-2 md:mt-4 mb-4 md:mb-8">
         <Link to="/contact" className="block">
           <div className="overflow-hidden rounded-xl sm:rounded-2xl md:rounded-full bg-gradient-to-r from-primary/10 via-accent/10 to-secondary/10 border border-primary/20 hover:border-primary/40 transition-all cursor-pointer backdrop-blur-sm shadow-[0_0_20px_hsl(var(--primary)/0.1)]">
             <div className="flex items-center justify-center min-h-[40px] sm:min-h-[48px] md:h-12 px-3 sm:px-5 md:px-6 py-1.5 md:py-0">
@@ -94,7 +85,7 @@ const HeroSection = () => {
             </div>
           </div>
         </Link>
-      </motion.div>
+      </div>
 
       {/* Main hero content */}
       <div className="section-container w-full relative z-10 flex flex-col items-center justify-center flex-1">

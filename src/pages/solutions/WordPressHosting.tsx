@@ -6,6 +6,7 @@ import { Zap, Shield, Globe, RefreshCw, HardDrive, Headphones } from "lucide-rea
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import WordPressStackDiagram from "@/components/infographics/WordPressStackDiagram";
+import LazyVisible from "@/components/LazyVisible";
 
 const WordPressHosting = () => {
   const features = [
@@ -60,7 +61,7 @@ const WordPressHosting = () => {
 
           <section className="section-container mb-16">
             <div className="max-w-5xl mx-auto">
-              <WordPressStackDiagram />
+              <LazyVisible minHeight={400}><WordPressStackDiagram /></LazyVisible>
             </div>
           </section>
 

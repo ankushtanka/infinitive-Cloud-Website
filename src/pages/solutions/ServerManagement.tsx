@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
 import NOCMonitoringDiagram from "@/components/infographics/NOCMonitoringDiagram";
+import LazyVisible from "@/components/LazyVisible";
 
 const services = [
   { icon: Settings, title: "Server Setup & Configuration", description: "OS provisioning, kernel tuning, firewall, fail2ban, and a CIS-aligned hardening baseline applied on day zero." },
@@ -127,7 +128,7 @@ const ServerManagement = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <NOCMonitoringDiagram />
+                  <LazyVisible minHeight={400}><NOCMonitoringDiagram /></LazyVisible>
                 </motion.div>
               </div>
             </div>
