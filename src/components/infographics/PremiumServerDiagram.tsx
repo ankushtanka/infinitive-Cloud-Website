@@ -94,6 +94,37 @@ const PremiumServerDiagram = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 + i * 0.07, ease: [0.22, 1, 0.36, 1] }}
           >
+            {/* Outer glow halo */}
+            <rect
+              x={vm.x - 6}
+              y={vm.y - 6}
+              width="152"
+              height="102"
+              rx="14"
+              fill="hsl(var(--primary))"
+              opacity="0.18"
+              filter="url(#vps-glow)"
+            >
+              <animate
+                attributeName="opacity"
+                values="0.12;0.28;0.12"
+                dur={`${3 + i * 0.25}s`}
+                repeatCount="indefinite"
+              />
+            </rect>
+
+            {/* Accent corner gradient backdrop */}
+            <rect
+              x={vm.x - 1}
+              y={vm.y - 1}
+              width="142"
+              height="92"
+              rx="11"
+              fill="none"
+              stroke="hsl(var(--primary) / 0.5)"
+              strokeWidth="1.2"
+            />
+
             {/* VM container */}
             <rect
               x={vm.x}
@@ -102,18 +133,37 @@ const PremiumServerDiagram = () => {
               height="90"
               rx="10"
               fill="url(#vps-vm)"
-              stroke="hsl(var(--border))"
-              strokeWidth="1"
+              stroke="hsl(var(--primary) / 0.7)"
+              strokeWidth="1.2"
             />
-            {/* Inner highlight */}
+
+            {/* Top accent bar (gradient) */}
             <rect
               x={vm.x + 1}
               y={vm.y + 1}
               width="138"
-              height="2"
-              rx="1"
-              fill="hsl(var(--primary) / 0.5)"
+              height="3"
+              rx="1.5"
+              fill="url(#vps-hyper)"
             />
+
+            {/* Animated scanning shimmer */}
+            <rect
+              x={vm.x + 4}
+              y={vm.y + 6}
+              width="20"
+              height="78"
+              rx="6"
+              fill="hsl(var(--primary))"
+              opacity="0.08"
+            >
+              <animate
+                attributeName="x"
+                values={`${vm.x + 4};${vm.x + 116};${vm.x + 4}`}
+                dur={`${5 + i * 0.4}s`}
+                repeatCount="indefinite"
+              />
+            </rect>
 
             {/* Window dots */}
             <circle cx={vm.x + 12} cy={vm.y + 14} r="2.5" fill="hsl(var(--destructive) / 0.5)" />
