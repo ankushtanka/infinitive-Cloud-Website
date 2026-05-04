@@ -1,3 +1,4 @@
+import LazyVisible from "@/components/LazyVisible";
 import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -7,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import CloudHostingDiagram from "@/components/infographics/CloudHostingDiagram";
 import { 
-import LazyVisible from "@/components/LazyVisible";
   Cloud, Server, Database, Lock, Zap, Shield, 
   CheckCircle2, ArrowRight, Globe, HardDrive 
 } from "lucide-react";

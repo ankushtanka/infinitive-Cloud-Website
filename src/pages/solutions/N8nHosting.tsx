@@ -1,3 +1,4 @@
+import LazyVisible from "@/components/LazyVisible";
 import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
@@ -31,7 +32,6 @@ import {
 } from "lucide-react";
 import n8nHero from "@/assets/n8n-hero-premium.jpg";
 import N8nWorkflowDiagram from "@/components/infographics/N8nWorkflowDiagram";
-import LazyVisible from "@/components/LazyVisible";
 
 const features = [
   { icon: Workflow, title: "Pre-installed n8n", desc: "Latest stable n8n is configured, secured and ready — no Docker, no YAML files, no headaches." },

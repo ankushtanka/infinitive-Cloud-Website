@@ -1,3 +1,4 @@
+import LazyVisible from "@/components/LazyVisible";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -6,7 +7,6 @@ import { Zap, Shield, Globe, RefreshCw, HardDrive, Headphones } from "lucide-rea
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import WordPressStackDiagram from "@/components/infographics/WordPressStackDiagram";
-import LazyVisible from "@/components/LazyVisible";
 
 const WordPressHosting = () => {
   const features = [

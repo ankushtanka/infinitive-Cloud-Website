@@ -1,3 +1,4 @@
+import LazyVisible from "@/components/LazyVisible";
 import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
@@ -33,7 +34,6 @@ import {
 import openwebuiHero from "@/assets/openwebui-hero-premium.jpg";
 import OpenclawArchitectureDiagram from "@/components/infographics/OpenclawArchitectureDiagram";
 import OpenclawHeroDiagram from "@/components/infographics/OpenclawHeroDiagram";
-import LazyVisible from "@/components/LazyVisible";
 
 const features = [
   { icon: Lock, title: "Private by default", desc: "Self-hosted on a dedicated VPS — your prompts, documents and embeddings never leave your server." },

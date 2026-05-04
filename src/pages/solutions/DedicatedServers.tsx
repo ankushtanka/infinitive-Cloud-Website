@@ -1,3 +1,4 @@
+import LazyVisible from "@/components/LazyVisible";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -6,7 +7,6 @@ import { Check, Server, Shield, Zap, HardDrive, Globe, Headphones } from "lucide
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import DedicatedServerDiagram from "@/components/infographics/DedicatedServerDiagram";
-import LazyVisible from "@/components/LazyVisible";
 
 const plans = [
   {
