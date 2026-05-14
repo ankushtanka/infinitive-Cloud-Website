@@ -266,14 +266,18 @@ const SharedHosting = () => {
 
                     <CardContent className="p-6 pt-7 flex flex-col flex-1">
 
-                      {/* Popular badge */}
-                      {plan.popular && (
-                        <div className="text-center mb-3">
-                          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                            Most popular
+                      {/* Popular badge — always reserves space for alignment */}
+                      <div className="text-center mb-3 h-4">
+                        {plan.popular ? (
+                          <span className="text-[10px] font-bold text-primary uppercase tracking-wider">
+                            ★ Most popular
                           </span>
-                        </div>
-                      )}
+                        ) : (
+                          <span className="text-[10px] font-bold uppercase tracking-wider invisible">
+                            placeholder
+                          </span>
+                        )}
+                      </div>
 
                       {/* Plan name & tagline */}
                       <h3 className="text-xl font-bold text-foreground">{plan.name}</h3>
@@ -336,17 +340,35 @@ const SharedHosting = () => {
                       {/* Divider */}
                       <div className="border-t border-border mb-4" />
 
-                      {/* Feature list */}
-                      <ul className="space-y-2.5 flex-1">
-                        {plan.features.map((f) => (
-                          <li key={f.label} className="flex items-start gap-2.5">
-                            <FeatureIcon type={f.type} />
-                            <span className={`text-sm leading-snug ${f.type === "cross" ? "text-muted-foreground/50" : "text-foreground/80"}`}>
-                              {f.label}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
+                      {/* Feature list (collapsed by default) */}
+                      {(() => {
+                        const isOpen = !!expanded[plan.id];
+                        const visible = isOpen ? plan.features : plan.features.slice(0, VISIBLE_COUNT);
+                        const hiddenCount = plan.features.length - VISIBLE_COUNT;
+                        return (
+                          <div className="flex-1 flex flex-col">
+                            <ul className="space-y-2.5">
+                              {visible.map((f) => (
+                                <li key={f.label} className="flex items-start gap-2.5">
+                                  <FeatureIcon type={f.type} />
+                                  <span className={`text-sm leading-snug ${f.type === "cross" ? "text-muted-foreground/50" : "text-foreground/80"}`}>
+                                    {f.label}
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                            {hiddenCount > 0 && (
+                              <button
+                                type="button"
+                                onClick={() => setExpanded((s) => ({ ...s, [plan.id]: !isOpen }))}
+                                className="mt-4 text-xs font-semibold text-primary hover:underline self-start"
+                              >
+                                {isOpen ? "Show less" : `More details (+${hiddenCount})`}
+                              </button>
+                            )}
+                          </div>
+                        );
+                      })()}
 
                     </CardContent>
                   </Card>
