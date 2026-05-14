@@ -83,8 +83,8 @@ const DomainManagement = () => {
   });
 
   useEffect(() => {
-    if (whoisData?.Registrant || whoisData?.registrant) {
-      const reg = whoisData.Registrant || whoisData.registrant || {};
+    if ((whoisData as any)?.Registrant || (whoisData as any)?.registrant) {
+      const reg: any = (whoisData as any).Registrant || (whoisData as any).registrant || {};
       setWhoisForm({
         'First Name': reg['First Name'] || reg.firstname || '',
         'Last Name': reg['Last Name'] || reg.lastname || '',
@@ -175,7 +175,7 @@ const DomainManagement = () => {
                       No domains found for this email.
                     </div>
                   )}
-                  {domains.map((d, i) => {
+                  {domains.map((d: any, i) => {
                     const name = d.domainname || d.domain;
                     const isSelected = (selectedDomain?.domainname || selectedDomain?.domain) === name;
                     return (
@@ -194,7 +194,7 @@ const DomainManagement = () => {
                             {d.status || 'Active'}
                           </span>
                         </div>
-                        {d.expirydate && <p className="text-[10px] text-muted-foreground mt-0.5">Expires: {d.expirydate}</p>}
+                        {d.expirydate && <p className="text-[10px] text-muted-foreground mt-0.5">Expires: {String(d.expirydate)}</p>}
                       </button>
                     );
                   })}

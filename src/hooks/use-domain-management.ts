@@ -87,8 +87,8 @@ export function useNameservers() {
     setLoading(true);
     setError(null);
     try {
-      const res = await callDomainApi({ action: 'GetNameservers', domain });
-      const ns = [res.ns1, res.ns2, res.ns3, res.ns4, res.ns5].filter(Boolean);
+      const res: any = await callDomainApi({ action: 'GetNameservers', domain });
+      const ns: string[] = [res.ns1, res.ns2, res.ns3, res.ns4, res.ns5].filter(Boolean);
       setNameservers(ns);
       return ns;
     } catch (e: any) {
@@ -194,7 +194,7 @@ export function useTLDPricing() {
   const fetchPricing = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await callDomainApi({ action: 'GetTLDPricing' });
+      const res: any = await callDomainApi({ action: 'GetTLDPricing' });
       setPricing(res.pricing || res);
       return res;
     } catch {
@@ -216,7 +216,7 @@ export function useClientDomains() {
     setLoading(true);
     setError(null);
     try {
-      const res = await callDomainApi({ action: 'GetClientDomains', email });
+      const res: any = await callDomainApi({ action: 'GetClientDomains', email });
       const domainList = res.domains?.domain || [];
       setDomains(Array.isArray(domainList) ? domainList : [domainList]);
       return res;

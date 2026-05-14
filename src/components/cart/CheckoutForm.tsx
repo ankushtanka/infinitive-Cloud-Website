@@ -667,7 +667,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
                       <div className="space-y-1 max-h-32 overflow-y-auto">
                         {loggedInUser.domains.map((d, i: number) => (
                           <div key={i} className="text-sm text-muted-foreground flex items-center justify-between">
-                            <span>{d.domainname || d.domain || d}</span>
+                            <span>{(d as any)?.domainname || (d as any)?.domain || String(d)}</span>
                             <span className="text-xs capitalize px-2 py-0.5 rounded bg-primary/10 text-primary">{d.status || "Active"}</span>
                           </div>
                         ))}
