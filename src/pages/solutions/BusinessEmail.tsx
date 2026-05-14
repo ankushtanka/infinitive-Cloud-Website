@@ -11,7 +11,7 @@ const PERIODS = [
   { key: "1" as Period, label: "1 month" },
   { key: "12" as Period, label: "12 months" },
   { key: "24" as Period, label: "24 months" },
-  { key: "48" as Period, label: "48 months", badge: "Best value", icon: "⭐" },
+  { key: "48" as Period, label: "48 months — Best value" },
 ];
 
 type FeatureType = "check" | "cross" | "star";

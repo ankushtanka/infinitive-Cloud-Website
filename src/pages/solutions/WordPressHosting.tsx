@@ -130,11 +130,11 @@ const PLANS: Plan[] = [
   },
 ];
 
-const PERIODS: { key: Period; label: string; badge?: string; icon?: string }[] = [
+const PERIODS: { key: Period; label: string }[] = [
   { key: "1",  label: "1 month" },
   { key: "12", label: "12 months" },
   { key: "24", label: "24 months" },
-  { key: "48", label: "48 months", badge: "Best value", icon: "⭐" },
+  { key: "48", label: "48 months — Best value" },
 ];
 
 const FeatureIcon = ({ type }: { type: FeatureType }) => {
