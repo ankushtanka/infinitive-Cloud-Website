@@ -17,6 +17,34 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+
+  const handleGoogleSignIn = async () => {
+    setGoogleLoading(true);
+    try {
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin + "/dashboard",
+      });
+      if (result.error) {
+        toast({
+          title: "Google Sign-In Failed",
+          description: result.error.message || "Please try again.",
+          variant: "destructive",
+        });
+        setGoogleLoading(false);
+        return;
+      }
+      if (result.redirected) return;
+      navigate("/dashboard");
+    } catch (e) {
+      toast({
+        title: "Google Sign-In Failed",
+        description: e instanceof Error ? e.message : "Please try again.",
+        variant: "destructive",
+      });
+      setGoogleLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
