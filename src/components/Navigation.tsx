@@ -101,6 +101,7 @@ const Navigation = () => {
 
   const navLinks = [
     { label: "Pricing", path: "/pricing" },
+    { label: "Our Company", path: "/our-company" },
     { label: "About", path: "/about" },
     { label: "Contact", path: "/contact" },
   ];
