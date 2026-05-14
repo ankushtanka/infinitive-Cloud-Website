@@ -8,7 +8,6 @@ import DomainSearchSection from "@/components/DomainSearchSection";
 import HomePricingSection from "@/components/HomePricingSection";
 import WhatWeDoSection from "@/components/WhatWeDoSection";
 import PremiumInfographicSection from "@/components/PremiumInfographicSection";
-import ServerRackAnimation from "@/components/ServerRackAnimation";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import WhyTrustUsSection from "@/components/WhyTrustUsSection";
 import ComparisonSection from "@/components/ComparisonSection";
@@ -67,7 +66,6 @@ const Index = () => {
         <DomainSearchSection />
         <HomePricingSection />
         <WhatWeDoSection />
-        <ServerRackAnimation />
         <PremiumInfographicSection />
         <HowItWorksSection />
         <DomainPriceComparison />
