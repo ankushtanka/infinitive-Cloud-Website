@@ -134,11 +134,11 @@ const Navigation = () => {
               <CurrencyLanguageDropdown />
               <ThemeToggle />
               <div className="h-4 w-px bg-border/50 mx-1" />
-              <a href={WHMCS_LOGIN} target="_blank" rel="noopener noreferrer">
+              <Link to="/login">
                 <Button variant="ghost" size="sm" className="gap-1.5 text-sm font-medium">
                   <User className="w-4 h-4" /> Login
                 </Button>
-              </a>
+              </Link>
             </div>
           </div>
         </div>
