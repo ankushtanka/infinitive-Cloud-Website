@@ -9,9 +9,9 @@ type Period = "1" | "12" | "24" | "48";
 
 const PERIODS = [
   { key: "1" as Period, label: "1 month" },
-  { key: "12" as Period, label: "12 months", badge: "Best value" },
+  { key: "12" as Period, label: "12 months" },
   { key: "24" as Period, label: "24 months" },
-  { key: "48" as Period, label: "48 months", icon: "⭐" },
+  { key: "48" as Period, label: "48 months", badge: "Best value", icon: "⭐" },
 ];
 
 type FeatureType = "check" | "cross" | "star";
@@ -127,7 +127,7 @@ const FeatureIcon = ({ type }: { type: FeatureType }) => {
 };
 
 const BusinessEmail = () => {
-  const [period, setPeriod] = useState<Period>("12");
+  const [period, setPeriod] = useState<Period>("48");
 
   return (
     <div className="min-h-screen bg-background">

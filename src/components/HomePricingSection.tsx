@@ -12,12 +12,14 @@ const fallbackPlans = [
   { pid: 3, name: "Enterprise", price_monthly: 399, price_annually: 3990, popular: false, features: ["Unlimited Websites", "100 GB NVMe Storage", "Dedicated Resources", "Real-time Backups", "White-glove Onboarding", "99.99% Uptime SLA"] },
 ];
 
+type Billing = "monthly" | "annually" | "4year";
+
 const planIcons = [Sparkles, Crown, Zap];
 
 const HomePricingSection = () => {
   const [plans, setPlans] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [billing, setBilling] = useState<"monthly" | "annually">("monthly");
+  const [billing, setBilling] = useState<Billing>("4year");
 
   useEffect(() => {
     let cancelled = false;
@@ -78,7 +80,7 @@ const HomePricingSection = () => {
           </p>
 
           {/* Premium billing toggle */}
-          <div className="inline-flex items-center gap-1 mt-8 p-1 rounded-2xl border border-border/60 bg-card/60 backdrop-blur-md shadow-lg">
+          <div className="inline-flex items-center gap-1 mt-8 p-1 rounded-2xl border border-border/60 bg-card/60 backdrop-blur-md shadow-lg flex-wrap justify-center">
             <button
               onClick={() => setBilling("monthly")}
               className={`px-5 py-2.5 rounded-xl text-xs md:text-sm font-semibold transition-all duration-300 ${
@@ -100,6 +102,17 @@ const HomePricingSection = () => {
               Annually
               <span className="text-[9px] md:text-[10px] font-bold bg-emerald-500/20 text-emerald-500 px-2 py-0.5 rounded-full tracking-wide">SAVE 20%</span>
             </button>
+            <button
+              onClick={() => setBilling("4year")}
+              className={`relative px-5 py-2.5 rounded-xl text-xs md:text-sm font-semibold transition-all duration-300 inline-flex items-center gap-2 ${
+                billing === "4year"
+                  ? "bg-foreground text-background shadow-md"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              4 Years
+              <span className="text-[9px] md:text-[10px] font-bold bg-primary/20 text-primary px-2 py-0.5 rounded-full tracking-wide">BEST VALUE</span>
+            </button>
           </div>
         </div>
 
@@ -120,7 +133,12 @@ const HomePricingSection = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 max-w-6xl mx-auto">
             {plans.map((plan, index) => {
               const Icon = planIcons[index % planIcons.length];
-              const price = billing === "annually" ? plan.price_annually : plan.price_monthly;
+              const price =
+                billing === "4year"
+                  ? plan.price_annually ? Math.round((plan.price_annually * 0.65) / 12) : null
+                  : billing === "annually"
+                  ? plan.price_annually
+                  : plan.price_monthly;
               const displayPrice = formatPrice(price);
               const period = billing === "annually" ? "/yr" : "/mo";
               const isPopular = plan.popular;
@@ -189,7 +207,7 @@ const HomePricingSection = () => {
                           <span className="text-base text-muted-foreground font-medium">{period}</span>
                         </div>
                         <p className="text-[11px] md:text-xs text-primary font-semibold mt-2 tracking-wide">
-                          ✦ 14-DAY FREE TRIAL · 30-DAY MONEY-BACK
+                          {billing === "4year" ? "✦ BILLED EVERY 4 YEARS · BEST VALUE" : "✦ 14-DAY FREE TRIAL · 30-DAY MONEY-BACK"}
                         </p>
                       </div>
 
@@ -209,7 +227,7 @@ const HomePricingSection = () => {
 
                       {/* CTA */}
                       <Link
-                        to={plan.pid ? `/cart?product=${plan.pid}&name=${encodeURIComponent(plan.name)}&type=shared-hosting&price=${plan.price_monthly || ''}&annualPrice=${plan.price_annually || ''}` : "/contact"}
+                        to={plan.pid ? `/cart?product=${plan.pid}&name=${encodeURIComponent(plan.name)}&type=shared-hosting&period=${billing === "4year" ? "48" : billing === "annually" ? "12" : "1"}&price=${plan.price_monthly || ''}&annualPrice=${plan.price_annually || ''}` : "/contact"}
                       >
                         <Button
                           className={`w-full h-12 text-sm font-bold rounded-xl group/btn transition-all ${

@@ -132,9 +132,9 @@ const PLANS: Plan[] = [
 
 const PERIODS: { key: Period; label: string; badge?: string; icon?: string }[] = [
   { key: "1",  label: "1 month" },
-  { key: "12", label: "12 months", badge: "Best value" },
+  { key: "12", label: "12 months" },
   { key: "24", label: "24 months" },
-  { key: "48", label: "48 months", icon: "⭐" },
+  { key: "48", label: "48 months", badge: "Best value", icon: "⭐" },
 ];
 
 const FeatureIcon = ({ type }: { type: FeatureType }) => {
@@ -145,7 +145,7 @@ const FeatureIcon = ({ type }: { type: FeatureType }) => {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 const WordPressHosting = () => {
-  const [period, setPeriod] = useState<Period>("12");
+  const [period, setPeriod] = useState<Period>("48");
 
   return (
     <>
