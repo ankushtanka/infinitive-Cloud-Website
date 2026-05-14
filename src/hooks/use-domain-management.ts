@@ -87,8 +87,8 @@ export function useNameservers() {
     setLoading(true);
     setError(null);
     try {
-      const res = await callDomainApi({ action: 'GetNameservers', domain });
-      const ns = [res.ns1, res.ns2, res.ns3, res.ns4, res.ns5].filter(Boolean);
+      const res: any = await callDomainApi({ action: 'GetNameservers', domain });
+      const ns: string[] = [res.ns1, res.ns2, res.ns3, res.ns4, res.ns5].filter(Boolean);
       setNameservers(ns);
       return ns;
     } catch (e: any) {
