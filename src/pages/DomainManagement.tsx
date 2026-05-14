@@ -175,7 +175,7 @@ const DomainManagement = () => {
                       No domains found for this email.
                     </div>
                   )}
-                  {domains.map((d, i) => {
+                  {domains.map((d: any, i) => {
                     const name = d.domainname || d.domain;
                     const isSelected = (selectedDomain?.domainname || selectedDomain?.domain) === name;
                     return (
