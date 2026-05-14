@@ -224,7 +224,6 @@ const WordPressHosting = () => {
                 </select>
               </div>
             </div>
-            </div>
 
             {/* Plan cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-6xl mx-auto">

@@ -366,7 +366,6 @@ const CloudHosting = () => {
                 </select>
               </div>
             </div>
-            </div>
 
             {/* Info note */}
             <div className="flex items-start gap-2 mb-8 text-sm text-muted-foreground max-w-3xl">
