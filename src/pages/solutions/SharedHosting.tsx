@@ -181,8 +181,6 @@ const FeatureIcon = ({ type }: { type: FeatureType }) => {
 // ─── Component ───────────────────────────────────────────────────────────────
 const SharedHosting = () => {
   const [period, setPeriod] = useState<Period>("48");
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
-  const VISIBLE_COUNT = 4;
 
   return (
     <>
