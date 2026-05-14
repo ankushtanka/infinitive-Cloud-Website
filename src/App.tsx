@@ -16,8 +16,6 @@ import Index from "./pages/Index";
 
 // Lazy load non-critical pages
 const About = lazy(() => import("./pages/About"));
-const OurCompany = lazy(() => import("./pages/OurCompany"));
-const CloudExperience = lazy(() => import("./pages/CloudExperience"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const Careers = lazy(() => import("./pages/Careers"));
 const Blog = lazy(() => import("./pages/Blog"));
@@ -139,8 +137,6 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/about" element={<About />} />
-                <Route path="/our-company" element={<OurCompany />} />
-                <Route path="/experience" element={<CloudExperience />} />
                 <Route path="/pricing" element={<Pricing />} />
                 <Route path="/careers" element={<Careers />} />
                 <Route path="/blog" element={<Blog />} />

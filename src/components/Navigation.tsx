@@ -101,7 +101,6 @@ const Navigation = () => {
 
   const navLinks = [
     { label: "Pricing", path: "/pricing" },
-    { label: "Our Company", path: "/our-company" },
     { label: "About", path: "/about" },
     { label: "Contact", path: "/contact" },
   ];
@@ -135,11 +134,11 @@ const Navigation = () => {
               <CurrencyLanguageDropdown />
               <ThemeToggle />
               <div className="h-4 w-px bg-border/50 mx-1" />
-              <Link to="/login">
+              <a href={WHMCS_LOGIN} target="_blank" rel="noopener noreferrer">
                 <Button variant="ghost" size="sm" className="gap-1.5 text-sm font-medium">
                   <User className="w-4 h-4" /> Login
                 </Button>
-              </Link>
+              </a>
             </div>
           </div>
         </div>
