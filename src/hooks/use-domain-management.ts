@@ -216,7 +216,7 @@ export function useClientDomains() {
     setLoading(true);
     setError(null);
     try {
-      const res = await callDomainApi({ action: 'GetClientDomains', email });
+      const res: any = await callDomainApi({ action: 'GetClientDomains', email });
       const domainList = res.domains?.domain || [];
       setDomains(Array.isArray(domainList) ? domainList : [domainList]);
       return res;
