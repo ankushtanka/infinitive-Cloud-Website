@@ -61,7 +61,7 @@ const PLANS: Plan[] = [
     features: [
       { label: "1 website",                  type: "check" },
       { label: "10 GB NVMe SSD",             type: "check" },
-      { label: "1 official cPanel",          type: "check" },
+      { label: "1 official cPanel license", type: "check" },
       { label: "Free SSL certificate",       type: "check" },
       { label: "2 email accounts",           type: "check" },
       { label: "LiteSpeed web server",       type: "check" },
@@ -90,7 +90,7 @@ const PLANS: Plan[] = [
     features: [
       { label: "5 websites",                 type: "check" },
       { label: "30 GB NVMe SSD",             type: "check" },
-      { label: "1 official cPanel",          type: "check" },
+      { label: "1 official cPanel license", type: "check" },
       { label: "Free SSL certificate",       type: "check" },
       { label: "25 email accounts",          type: "check" },
       { label: "LiteSpeed web server",       type: "check" },
@@ -119,7 +119,7 @@ const PLANS: Plan[] = [
     features: [
       { label: "Unlimited websites",         type: "check" },
       { label: "100 GB NVMe SSD",            type: "check" },
-      { label: "1 official cPanel",          type: "check" },
+      { label: "1 official cPanel license", type: "check" },
       { label: "Free SSL certificate",       type: "check" },
       { label: "Unlimited email accounts",   type: "check" },
       { label: "LiteSpeed web server",       type: "check" },
@@ -148,7 +148,7 @@ const PLANS: Plan[] = [
     features: [
       { label: "Unlimited websites",         type: "check" },
       { label: "Unlimited NVMe SSD",         type: "check" },
-      { label: "1 official cPanel",          type: "check" },
+      { label: "1 official cPanel license", type: "check" },
       { label: "Free SSL certificate",       type: "check" },
       { label: "Unlimited email accounts",   type: "check" },
       { label: "LiteSpeed web server",       type: "check" },
@@ -181,8 +181,6 @@ const FeatureIcon = ({ type }: { type: FeatureType }) => {
 // ─── Component ───────────────────────────────────────────────────────────────
 const SharedHosting = () => {
   const [period, setPeriod] = useState<Period>("48");
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
-  const VISIBLE_COUNT = 4;
 
   return (
     <>
@@ -340,35 +338,19 @@ const SharedHosting = () => {
                       {/* Divider */}
                       <div className="border-t border-border mb-4" />
 
-                      {/* Feature list (collapsed by default) */}
-                      {(() => {
-                        const isOpen = !!expanded[plan.id];
-                        const visible = isOpen ? plan.features : plan.features.slice(0, VISIBLE_COUNT);
-                        const hiddenCount = plan.features.length - VISIBLE_COUNT;
-                        return (
-                          <div className="flex-1 flex flex-col">
-                            <ul className="space-y-2.5">
-                              {visible.map((f) => (
-                                <li key={f.label} className="flex items-start gap-2.5">
-                                  <FeatureIcon type={f.type} />
-                                  <span className={`text-sm leading-snug ${f.type === "cross" ? "text-muted-foreground/50" : "text-foreground/80"}`}>
-                                    {f.label}
-                                  </span>
-                                </li>
-                              ))}
-                            </ul>
-                            {hiddenCount > 0 && (
-                              <button
-                                type="button"
-                                onClick={() => setExpanded((s) => ({ ...s, [plan.id]: !isOpen }))}
-                                className="mt-4 text-xs font-semibold text-primary hover:underline self-start"
-                              >
-                                {isOpen ? "Show less" : `More details (+${hiddenCount})`}
-                              </button>
-                            )}
-                          </div>
-                        );
-                      })()}
+                      {/* Feature list */}
+                      <div className="flex-1 flex flex-col">
+                        <ul className="space-y-2.5">
+                          {plan.features.map((f) => (
+                            <li key={f.label} className="flex items-start gap-2.5">
+                              <FeatureIcon type={f.type} />
+                              <span className={`text-sm leading-snug ${f.type === "cross" ? "text-muted-foreground/50" : "text-foreground/80"}`}>
+                                {f.label}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
 
                     </CardContent>
                   </Card>
