@@ -1,0 +1,38 @@
+/* Custom futuristic cursor for the cloud experience */
+.ce-cursor {
+  width: 32px;
+  height: 32px;
+  transition: transform 80ms linear;
+  will-change: transform;
+}
+.ce-cursor-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 9999px;
+  background: #22d3ee;
+  box-shadow: 0 0 12px #22d3ee, 0 0 28px #22d3ee;
+}
+.ce-cursor-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 1px solid rgba(34, 211, 238, 0.55);
+  box-shadow: 0 0 20px rgba(34, 211, 238, 0.4), inset 0 0 12px rgba(168, 85, 247, 0.3);
+  animation: ce-pulse 2.4s ease-in-out infinite;
+}
+@keyframes ce-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50%      { transform: scale(1.25); opacity: 0.5; }
+}
+
+/* Hide native cursor across the experience on desktop */
+@media (min-width: 768px) {
+  .cursor-none-area,
+  .cursor-none-area * {
+    cursor: none !important;
+  }
+}
