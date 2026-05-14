@@ -1,11 +1,12 @@
-import { Check, Crown, TrendingDown, ArrowRight } from "lucide-react";
+import { Check, Crown, TrendingDown, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
+import { useDomainPricing } from "@/hooks/use-domain-pricing";
 
-const domainPrices = [
+const staticDomainPrices = [
   { tld: ".com", infinitive: 799, godaddy: 1399, hostinger: 1099, namecheap: 999, bigrock: 899 },
   { tld: ".in", infinitive: 449, godaddy: 749, hostinger: 599, namecheap: 699, bigrock: 549 },
   { tld: ".net", infinitive: 899, godaddy: 1499, hostinger: 1199, namecheap: 1099, bigrock: 999 },
@@ -13,6 +14,8 @@ const domainPrices = [
   { tld: ".online", infinitive: 199, godaddy: 999, hostinger: 499, namecheap: 399, bigrock: 599 },
   { tld: ".xyz", infinitive: 99, godaddy: 599, hostinger: 299, namecheap: 199, bigrock: 349 },
 ];
+
+const TLD_LIST = staticDomainPrices.map((d) => d.tld);
 
 const competitors = [
   { key: "godaddy" as const, name: "GoDaddy" },
@@ -24,8 +27,17 @@ const competitors = [
 const DomainPriceComparison = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const { prices, loading: pricesLoading } = useDomainPricing(TLD_LIST);
 
-  const formatPrice = (price: number) => `₹${price}`;
+  const domainPrices = useMemo(() =>
+    staticDomainPrices.map((row) => ({
+      ...row,
+      infinitive: prices[row.tld]?.register ?? row.infinitive,
+    })),
+    [prices]
+  );
+
+  const formatPrice = (price: number) => `₹${price.toLocaleString("en-IN")}`;
 
   const getSavingsPercent = (ours: number, theirs: number) => {
     return Math.round(((theirs - ours) / theirs) * 100);
@@ -51,7 +63,11 @@ const DomainPriceComparison = () => {
           className="text-center mb-8 md:mb-14"
         >
           <div className="inline-flex items-center gap-2 bg-primary/10 text-primary font-semibold text-xs sm:text-base px-4 md:px-5 py-1.5 md:py-2 rounded-full mb-3 md:mb-5">
-            <TrendingDown className="w-4 h-4 sm:w-5 sm:h-5" />
+            {pricesLoading ? (
+              <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+            ) : (
+              <TrendingDown className="w-4 h-4 sm:w-5 sm:h-5" />
+            )}
             Save up to {avgSavings}% on Domains
           </div>
           <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-3 md:mb-5 px-2">

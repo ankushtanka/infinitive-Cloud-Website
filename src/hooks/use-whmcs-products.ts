@@ -119,7 +119,7 @@ export function useWhmcsProducts(productIds: number[]): UseWhmcsProductsResult {
     } else {
       fetchProducts();
     }
-  }, [cacheKey]);
+  }, [cacheKey, fetchProducts]);
 
   // Auto-refresh on window focus (stale-while-revalidate)
   useEffect(() => {

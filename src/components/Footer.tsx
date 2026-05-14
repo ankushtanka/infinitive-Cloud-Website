@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin } from "lucide-react";
-import logo from "/favicon.png";
+import logo from "@/assets/logo.png";
+import { CONTACT } from "@/config/contact";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -64,25 +65,25 @@ const Footer = () => {
               Premium cloud & web hosting solutions built for speed, security, and scale. Trusted by 1,000+ businesses across India.
             </p>
             <div className="space-y-1 text-xs text-foreground/60 mb-4">
-              <p><span className="font-semibold text-foreground/80">GSTIN:</span> 08AAICI5380A1ZP</p>
-              <p><span className="font-semibold text-foreground/80">CIN:</span> U62020RJ2025PTC109151</p>
+              <p><span className="font-semibold text-foreground/80">GSTIN:</span> {CONTACT.gstin}</p>
+              <p><span className="font-semibold text-foreground/80">CIN:</span> {CONTACT.cin}</p>
             </div>
             <div className="space-y-2.5 text-sm text-foreground/75">
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-primary" />
-                <a href="tel:+918690393087" className="hover:text-primary transition-colors font-medium">+91 8690393087</a>
+                <a href={`tel:${CONTACT.phone}`} className="hover:text-primary transition-colors font-medium">{CONTACT.phoneDisplay}</a>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-primary" />
-                <a href="mailto:info@infinitivecloud.com" className="hover:text-primary transition-colors">info@infinitivecloud.com</a>
+                <a href={`mailto:${CONTACT.email.info}`} className="hover:text-primary transition-colors">{CONTACT.email.info}</a>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-primary" />
-                <a href="mailto:sales@infinitivecloud.com" className="hover:text-primary transition-colors">sales@infinitivecloud.com</a>
+                <a href={`mailto:${CONTACT.email.sales}`} className="hover:text-primary transition-colors">{CONTACT.email.sales}</a>
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-primary" />
-                <span>Navrangpura, Ahmedabad, India</span>
+                <span>{CONTACT.address}</span>
               </div>
             </div>
           </div>

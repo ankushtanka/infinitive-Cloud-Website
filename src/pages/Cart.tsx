@@ -74,11 +74,28 @@ const Cart = () => {
     { id: "privacy", icon: Lock, name: "Domain Privacy Protection", desc: "Hide your personal info from WHOIS", price: 199 },
   ];
 
-  const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
-  const [billingCycle, setBillingCycle] = useState<"monthly" | "annually">("monthly");
+  const [selectedAddons, setSelectedAddons] = useState<string[]>(() => {
+    try { return JSON.parse(sessionStorage.getItem("cart_addons") || "[]"); } catch { return []; }
+  });
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "annually">(() => {
+    const saved = sessionStorage.getItem("cart_billing_cycle");
+    return (saved === "annually" ? "annually" : "monthly");
+  });
+
+  const handleSetAddons = (fn: (prev: string[]) => string[]) => {
+    setSelectedAddons((prev) => {
+      const next = fn(prev);
+      sessionStorage.setItem("cart_addons", JSON.stringify(next));
+      return next;
+    });
+  };
+  const handleSetBillingCycle = (val: "monthly" | "annually") => {
+    sessionStorage.setItem("cart_billing_cycle", val);
+    setBillingCycle(val);
+  };
 
   const toggleAddon = (id: string) => {
-    setSelectedAddons((prev) =>
+    handleSetAddons((prev) =>
       prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]
     );
   };
@@ -227,14 +244,14 @@ const Cart = () => {
                             <div className="flex items-center bg-muted rounded-lg p-1">
                               <button
                                 type="button"
-                                onClick={() => setBillingCycle("monthly")}
+                                onClick={() => handleSetBillingCycle("monthly")}
                                 className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${billingCycle === "monthly" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
                               >
                                 Monthly
                               </button>
                               <button
                                 type="button"
-                                onClick={() => setBillingCycle("annually")}
+                                onClick={() => handleSetBillingCycle("annually")}
                                 className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${billingCycle === "annually" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
                               >
                                 Annually

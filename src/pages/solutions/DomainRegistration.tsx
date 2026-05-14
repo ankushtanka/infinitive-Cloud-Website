@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -9,21 +9,24 @@ import { Link, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useDomainSearch } from "@/hooks/use-domain-search";
 import DomainResultsGrid from "@/components/DomainResultsGrid";
+import { useDomainPricing } from "@/hooks/use-domain-pricing";
 
-const popularExtensions = [
-  { ext: ".com", type: "Commercial", price: "₹799", original: "₹1,199", desc: "The world's #1 domain extension", popular: true },
-  { ext: ".in", type: "India", price: "₹449", original: "₹699", desc: "Perfect for Indian businesses", popular: true },
-  { ext: ".co.in", type: "Company India", price: "₹299", original: "₹499", desc: "Indian company identity", popular: false },
-  { ext: ".net", type: "Network", price: "₹899", original: "₹1,299", desc: "Great for tech & networking", popular: false },
-  { ext: ".org", type: "Organization", price: "₹749", original: "₹1,099", desc: "Ideal for non-profits & communities", popular: false },
-  { ext: ".online", type: "Online Business", price: "₹199", original: "₹599", desc: "Modern & affordable", popular: true },
-  { ext: ".site", type: "Website", price: "₹199", original: "₹499", desc: "Simple & recognizable", popular: false },
-  { ext: ".xyz", type: "Universal", price: "₹99", original: "₹299", desc: "The next generation domain", popular: true },
-  { ext: ".store", type: "E-Commerce", price: "₹299", original: "₹699", desc: "Built for online stores", popular: false },
-  { ext: ".tech", type: "Technology", price: "₹399", original: "₹799", desc: "For tech companies & startups", popular: false },
-  { ext: ".io", type: "Tech / SaaS", price: "₹2,499", original: "₹3,499", desc: "Startup & developer favourite", popular: true },
-  { ext: ".dev", type: "Developer", price: "₹999", original: "₹1,499", desc: "For developers & portfolios", popular: false },
+const staticExtensions = [
+  { ext: ".com", type: "Commercial", price: 799, original: "₹1,199", desc: "The world's #1 domain extension", popular: true },
+  { ext: ".in", type: "India", price: 449, original: "₹699", desc: "Perfect for Indian businesses", popular: true },
+  { ext: ".co.in", type: "Company India", price: 299, original: "₹499", desc: "Indian company identity", popular: false },
+  { ext: ".net", type: "Network", price: 899, original: "₹1,299", desc: "Great for tech & networking", popular: false },
+  { ext: ".org", type: "Organization", price: 749, original: "₹1,099", desc: "Ideal for non-profits & communities", popular: false },
+  { ext: ".online", type: "Online Business", price: 199, original: "₹599", desc: "Modern & affordable", popular: true },
+  { ext: ".site", type: "Website", price: 199, original: "₹499", desc: "Simple & recognizable", popular: false },
+  { ext: ".xyz", type: "Universal", price: 99, original: "₹299", desc: "The next generation domain", popular: true },
+  { ext: ".store", type: "E-Commerce", price: 299, original: "₹699", desc: "Built for online stores", popular: false },
+  { ext: ".tech", type: "Technology", price: 399, original: "₹799", desc: "For tech companies & startups", popular: false },
+  { ext: ".io", type: "Tech / SaaS", price: 2499, original: "₹3,499", desc: "Startup & developer favourite", popular: true },
+  { ext: ".dev", type: "Developer", price: 999, original: "₹1,499", desc: "For developers & portfolios", popular: false },
 ];
+
+const EXTENSION_TLDS = staticExtensions.map((e) => e.ext);
 
 const bulkPricing = [
   { years: "1 Year", discount: "0%", note: "Standard pricing" },
@@ -69,6 +72,15 @@ const DomainRegistration = () => {
   const isDeletingRef = useRef(false);
   const { loading, results, suggestions, searched, checkTime, search, reset } = useDomainSearch();
   const hasAutoSearched = useRef(false);
+  const { prices: livePrices, loading: pricesLoading } = useDomainPricing(EXTENSION_TLDS);
+
+  const popularExtensions = useMemo(() =>
+    staticExtensions.map((e) => ({
+      ...e,
+      price: `₹${(livePrices[e.ext]?.register ?? e.price).toLocaleString("en-IN")}`,
+    })),
+    [livePrices]
+  );
 
   // Auto-search if ?search= param is present
   useEffect(() => {
@@ -225,13 +237,27 @@ const DomainRegistration = () => {
                     <p className="text-[11px] text-muted-foreground/70 mb-3">{d.desc}</p>
                     <div>
                       <span className="text-xs text-muted-foreground line-through block">{d.original}/yr</span>
-                      <span className="text-xl font-black text-foreground">{d.price}<span className="text-sm font-medium text-muted-foreground">/yr</span></span>
+                      {pricesLoading ? (
+                        <span className="inline-block h-7 w-20 rounded bg-muted animate-pulse" />
+                      ) : (
+                        <span className="text-xl font-black text-foreground">{d.price}<span className="text-sm font-medium text-muted-foreground">/yr</span></span>
+                      )}
                     </div>
-                    <Link to="/contact">
-                      <Button variant="outline" size="sm" className="mt-3 w-full text-xs font-bold">
-                        Register
-                      </Button>
-                    </Link>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="mt-3 w-full text-xs font-bold"
+                      onClick={() => {
+                        const rawPrice = livePrices[d.ext]?.register ?? staticExtensions.find(e => e.ext === d.ext)?.price ?? 0;
+                        const params = new URLSearchParams({
+                          domain: `yourdomain${d.ext}`,
+                          price: String(rawPrice),
+                        });
+                        window.location.href = `/cart?${params.toString()}`;
+                      }}
+                    >
+                      Register
+                    </Button>
                   </CardContent>
                 </Card>
               ))}

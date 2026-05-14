@@ -67,6 +67,7 @@ const serviceCategories: ServiceCategory[] = [
     icon: <ShieldCheck className="w-6 h-6" />,
     description: "Secure email & SSL solutions",
     links: [
+      { label: "Business Email", path: "/solutions/business-email", description: "Custom domain business email", icon: <Mail className="w-5 h-5" />, tag: "New", tagColor: "bg-accent" },
       { label: "Zoho Email", path: "/solutions/email-security#zoho", description: "Professional email by Zoho", icon: <Mail className="w-5 h-5" /> },
       { label: "Microsoft 365", path: "/solutions/email-security#office365", description: "Productivity suite by Microsoft", icon: <Monitor className="w-5 h-5" />, tag: "Popular", tagColor: "bg-primary" },
       { label: "Google Workspace", path: "/solutions/google-workspace", description: "Business tools by Google", icon: <Zap className="w-5 h-5" /> },

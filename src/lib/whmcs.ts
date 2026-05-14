@@ -3,7 +3,7 @@
 // Direct calls to middleware — no edge function proxy needed
 // ============================================================
 
-const MIDDLEWARE_URL = 'https://client.infinitivecloud.com/middleware/domainMiddleware.php';
+export const MIDDLEWARE_URL = import.meta.env.VITE_MIDDLEWARE_URL || 'https://client.infinitivecloud.com/middleware/domainMiddleware.php';
 
 // ============================================================
 // TYPES
@@ -248,11 +248,10 @@ async function api(action: string, body: Record<string, any> = {}, retries = 2):
         body: JSON.stringify({ action, ...body }),
       });
       const text = await res.text();
-      let data: any;
+      let data: Record<string, unknown>;
       try {
         data = JSON.parse(text);
       } catch {
-        console.error(`Middleware ${action} attempt ${attempt + 1} returned non-JSON (${res.status}):`, text.substring(0, 500));
         if (attempt < retries) {
           await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
           continue;
@@ -260,17 +259,17 @@ async function api(action: string, body: Record<string, any> = {}, retries = 2):
         throw new Error(`Server returned an unexpected response. Please try again.`);
       }
       if (!res.ok) {
-        console.error(`Middleware ${action} failed (${res.status}):`, data);
         throw new Error(data?.message || `HTTP ${res.status}: order failed`);
       }
       return data;
-    } catch (err: any) {
-      if (err.message?.includes('HTTP') || err.message?.includes('Server returned')) throw err;
+    } catch (err: unknown) {
+      const e = err as Error;
+      if (e.message?.includes('HTTP') || e.message?.includes('Server returned')) throw e;
       if (attempt < retries) {
         await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
         continue;
       }
-      throw err;
+      throw e;
     }
   }
 }
@@ -306,6 +305,7 @@ export async function getInvoices(clientid: number) {
 export async function getTldPricing(tld: string) {
   return api('get_tld_pricing', { tld });
 }
+
 
 /** Get single invoice details with line items */
 export async function getInvoiceDetails(invoiceid: number) {

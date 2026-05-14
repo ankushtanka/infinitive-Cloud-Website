@@ -1,9 +1,28 @@
 import { useState, useCallback } from "react";
-import { supabase } from "@/integrations/supabase/client";
+
+interface DomainApiResponse {
+  success?: boolean;
+  result?: string;
+  error?: string;
+  message?: string;
+  [key: string]: unknown;
+}
+
+interface WhoisData {
+  [key: string]: unknown;
+}
+
+interface ClientDomain {
+  domainname?: string;
+  domain?: string;
+  status?: string;
+  nextduedate?: string;
+  [key: string]: unknown;
+}
 
 const FUNC_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/domain-management`;
 
-async function callDomainApi(body: Record<string, any>) {
+async function callDomainApi(body: Record<string, unknown>): Promise<DomainApiResponse> {
   const res = await fetch(FUNC_URL, {
     method: 'POST',
     headers: {
@@ -12,13 +31,14 @@ async function callDomainApi(body: Record<string, any>) {
     },
     body: JSON.stringify(body),
   });
+  if (!res.ok) throw new Error(`Domain API error: HTTP ${res.status} ${res.statusText}`);
   return res.json();
 }
 
 export function useDomainTransfer() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<DomainApiResponse | null>(null);
 
   const transfer = useCallback(async (data: {
     domain: string;
@@ -103,7 +123,7 @@ export function useNameservers() {
 
 export function useWhoisInfo() {
   const [loading, setLoading] = useState(false);
-  const [whoisData, setWhoisData] = useState<any>(null);
+  const [whoisData, setWhoisData] = useState<WhoisData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const getWhois = useCallback(async (domain: string) => {
@@ -121,7 +141,7 @@ export function useWhoisInfo() {
     }
   }, []);
 
-  const updateWhois = useCallback(async (domain: string, contactdetails: any) => {
+  const updateWhois = useCallback(async (domain: string, contactdetails: Record<string, unknown>) => {
     setLoading(true);
     setError(null);
     try {
@@ -169,7 +189,7 @@ export function useDomainRenewal() {
 
 export function useTLDPricing() {
   const [loading, setLoading] = useState(false);
-  const [pricing, setPricing] = useState<any>(null);
+  const [pricing, setPricing] = useState<Record<string, unknown> | null>(null);
 
   const fetchPricing = useCallback(async () => {
     setLoading(true);
@@ -189,7 +209,7 @@ export function useTLDPricing() {
 
 export function useClientDomains() {
   const [loading, setLoading] = useState(false);
-  const [domains, setDomains] = useState<any[]>([]);
+  const [domains, setDomains] = useState<ClientDomain[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const fetchDomains = useCallback(async (email: string) => {

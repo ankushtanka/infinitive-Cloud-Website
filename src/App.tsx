@@ -10,6 +10,7 @@ import SupportWidget from "@/components/SupportWidget";
 import useThemeFavicon from "@/hooks/use-theme-favicon";
 
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { AdminProvider } from "@/contexts/AdminContext";
 import PageTranslator from "@/components/PageTranslator";
 import Index from "./pages/Index";
 
@@ -53,6 +54,7 @@ const EmailSecurity = lazy(() => import("./pages/solutions/EmailSecurity"));
 const N8nHosting = lazy(() => import("./pages/solutions/N8nHosting"));
 const OpenWebUIHosting = lazy(() => import("./pages/solutions/OpenWebUIHosting"));
 const GoogleWorkspace = lazy(() => import("./pages/solutions/GoogleWorkspace"));
+const BusinessEmail = lazy(() => import("./pages/solutions/BusinessEmail"));
 
 const LiveChat = lazy(() => import("./pages/LiveChat"));
 const Cart = lazy(() => import("./pages/Cart"));
@@ -61,6 +63,18 @@ const DomainTransfer = lazy(() => import("./pages/DomainTransfer"));
 const DomainManagement = lazy(() => import("./pages/DomainManagement"));
 const Login = lazy(() => import("./pages/Login"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
+const FreeTrial = lazy(() => import("./pages/FreeTrial"));
+
+// Admin pages
+const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
+const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const AdminOrders = lazy(() => import("./pages/admin/AdminOrders"));
+const AdminPricing = lazy(() => import("./pages/admin/AdminPricing"));
+const AdminContent = lazy(() => import("./pages/admin/AdminContent"));
+const AdminSettings = lazy(() => import("./pages/admin/AdminSettings"));
+const AdminPages = lazy(() => import("./pages/admin/AdminPages"));
+const AdminPageEditor = lazy(() => import("./pages/admin/AdminPageEditor"));
 
 const queryClient = new QueryClient();
 
@@ -107,14 +121,19 @@ const App = () => {
   useThemeFavicon();
   return (
     <QueryClientProvider client={queryClient}>
+      <AdminProvider>
       <LanguageProvider>
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
+        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <LenisProvider>
             <ScrollToTop />
-            <Suspense fallback={<div className="min-h-screen" />}>
+            <Suspense fallback={
+              <div className="min-h-screen flex items-center justify-center bg-background">
+                <div className="w-10 h-10 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
+              </div>
+            }>
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/about" element={<About />} />
@@ -155,6 +174,7 @@ const App = () => {
                 <Route path="/solutions/n8n-hosting" element={<N8nHosting />} />
                 <Route path="/solutions/openclaw" element={<OpenWebUIHosting />} />
                 <Route path="/solutions/google-workspace" element={<GoogleWorkspace />} />
+                <Route path="/solutions/business-email" element={<BusinessEmail />} />
                 
                 <Route path="/live-chat" element={<LiveChat />} />
                 <Route path="/cart" element={<Cart />} />
@@ -163,18 +183,33 @@ const App = () => {
                 <Route path="/domain-management" element={<DomainManagement />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/free-trial" element={<FreeTrial />} />
+
+                {/* Admin routes */}
+                <Route path="/admin/login" element={<AdminLogin />} />
+                <Route path="/admin" element={<AdminLayout />}>
+                  <Route index element={<AdminDashboard />} />
+                  <Route path="dashboard" element={<AdminDashboard />} />
+                  <Route path="orders" element={<AdminOrders />} />
+                  <Route path="pricing" element={<AdminPricing />} />
+                  <Route path="content" element={<AdminContent />} />
+                  <Route path="settings" element={<AdminSettings />} />
+                  <Route path="pages" element={<AdminPages />} />
+                  <Route path="pages/edit/:pageKey" element={<AdminPageEditor />} />
+                </Route>
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
             <SupportWidget />
-            
+
             <PageTranslator />
           </LenisProvider>
         </BrowserRouter>
       </TooltipProvider>
       </LanguageProvider>
+      </AdminProvider>
     </QueryClientProvider>
   );
 };

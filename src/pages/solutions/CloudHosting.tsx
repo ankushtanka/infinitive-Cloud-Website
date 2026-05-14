@@ -1,3 +1,4 @@
+import { useState } from "react";
 import LazyVisible from "@/components/LazyVisible";
 import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
@@ -7,12 +8,133 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import CloudHostingDiagram from "@/components/infographics/CloudHostingDiagram";
-import { 
-  Cloud, Server, Database, Lock, Zap, Shield, 
-  CheckCircle2, ArrowRight, Globe, HardDrive 
+import {
+  Cloud, Server, Database, Lock, Zap, Shield,
+  CheckCircle2, ArrowRight, Globe, Check, X, Star, Info
 } from "lucide-react";
 
+// ─── Pricing types ────────────────────────────────────────────────────────────
+type Period = "1" | "12" | "24" | "48";
+type FeatureType = "check" | "star";
+
+interface PeriodData {
+  price: number;
+  originalPrice?: number;
+  saving?: string;
+  upfront?: number;
+  noCommit?: boolean;
+  renewsAt: number;
+}
+
+interface CloudPlan {
+  id: string;
+  name: string;
+  tagline: string;
+  popular?: boolean;
+  specs: { ram: string; nvme: string; vcpu: string; bw: string };
+  periods: Record<Period, PeriodData>;
+  features: { label: string; type: FeatureType }[];
+}
+
+const CLOUD_PLANS: CloudPlan[] = [
+  {
+    id: "cloud-starter",
+    name: "Cloud Starter",
+    tagline: "Dedicated resources for your site",
+    popular: false,
+    specs: { ram: "2 GB dedicated", nvme: "50 GB NVMe", vcpu: "2 vCPUs dedicated", bw: "Unmetered BW" },
+    periods: {
+      "1":  { price: 599,  noCommit: true, renewsAt: 599 },
+      "12": { price: 349,  originalPrice: 599,  saving: "Save 42% vs monthly", upfront: 4188,  renewsAt: 599  },
+      "24": { price: 299,  originalPrice: 599,  saving: "Save 50% vs monthly", upfront: 7176,  renewsAt: 599  },
+      "48": { price: 199,  originalPrice: 599,  saving: "Save 67% vs monthly", upfront: 9552,  renewsAt: 599  },
+    },
+    features: [
+      { label: "Unlimited websites",          type: "check" },
+      { label: "50 GB NVMe SSD",              type: "check" },
+      { label: "Unlimited email accounts",    type: "check" },
+      { label: "2 GB dedicated RAM",          type: "check" },
+      { label: "2 vCPUs dedicated",           type: "check" },
+      { label: "Free SSL + CDN",              type: "check" },
+      { label: "Daily automatic backups",     type: "check" },
+      { label: "Imunify360 + DDoS shield",    type: "check" },
+      { label: "Free domain (1 yr)",          type: "check" },
+      { label: "Custom nameservers",          type: "check" },
+      { label: "Free migrations",             type: "check" },
+      { label: "24/7 support",               type: "star"  },
+    ],
+  },
+  {
+    id: "cloud-business",
+    name: "Cloud Business",
+    tagline: "Best performance for businesses",
+    popular: true,
+    specs: { ram: "2 GB dedicated", nvme: "100 GB NVMe", vcpu: "2 vCPUs dedicated", bw: "Unmetered BW" },
+    periods: {
+      "1":  { price: 1099, noCommit: true, renewsAt: 1099 },
+      "12": { price: 699,  originalPrice: 1099, saving: "Save 36% vs monthly", upfront: 8388,  renewsAt: 1099 },
+      "24": { price: 549,  originalPrice: 1099, saving: "Save 50% vs monthly", upfront: 13176, renewsAt: 1099 },
+      "48": { price: 349,  originalPrice: 1099, saving: "Save 68% vs monthly", upfront: 16752, renewsAt: 1099 },
+    },
+    features: [
+      { label: "Unlimited websites",          type: "check" },
+      { label: "100 GB NVMe SSD",             type: "check" },
+      { label: "Unlimited email accounts",    type: "check" },
+      { label: "2 GB dedicated RAM",          type: "check" },
+      { label: "2 vCPUs dedicated",           type: "check" },
+      { label: "Free SSL + CDN",              type: "check" },
+      { label: "Daily automatic backups",     type: "check" },
+      { label: "Imunify360 + DDoS shield",    type: "check" },
+      { label: "Free domain (1 yr)",          type: "check" },
+      { label: "Custom nameservers",          type: "check" },
+      { label: "Free migrations",             type: "check" },
+      { label: "24/7 priority support",      type: "star"  },
+    ],
+  },
+  {
+    id: "cloud-pro",
+    name: "Cloud Pro",
+    tagline: "For agencies & ecommerce stores",
+    popular: false,
+    specs: { ram: "2 GB dedicated", nvme: "200 GB NVMe", vcpu: "2 vCPUs dedicated", bw: "Unmetered BW" },
+    periods: {
+      "1":  { price: 2199, noCommit: true, renewsAt: 2199 },
+      "12": { price: 1399, originalPrice: 2199, saving: "Save 36% vs monthly", upfront: 16788, renewsAt: 2199 },
+      "24": { price: 1099, originalPrice: 2199, saving: "Save 50% vs monthly", upfront: 26376, renewsAt: 2199 },
+      "48": { price: 649,  originalPrice: 2199, saving: "Save 70% vs monthly", upfront: 31152, renewsAt: 2199 },
+    },
+    features: [
+      { label: "Unlimited websites",                   type: "check" },
+      { label: "200 GB NVMe SSD",                      type: "check" },
+      { label: "Unlimited email accounts",             type: "check" },
+      { label: "2 GB dedicated RAM",                   type: "check" },
+      { label: "2 vCPUs dedicated",                    type: "check" },
+      { label: "Free SSL + CDN",                       type: "check" },
+      { label: "Priority daily backups",               type: "check" },
+      { label: "Advanced DDoS + Imunify360",           type: "check" },
+      { label: "Free domain (1 yr)",                   type: "check" },
+      { label: "Custom nameservers",                   type: "check" },
+      { label: "Free migrations",                      type: "check" },
+      { label: "24/7 priority support + account manager", type: "star" },
+    ],
+  },
+];
+
+const PERIODS: { key: Period; label: string; badge?: string; icon?: string }[] = [
+  { key: "1",  label: "1 month" },
+  { key: "12", label: "12 months", badge: "Best value" },
+  { key: "24", label: "24 months" },
+  { key: "48", label: "48 months", icon: "⭐" },
+];
+
+const FeatureIcon = ({ type }: { type: FeatureType }) => {
+  if (type === "star") return <Star className="w-4 h-4 text-yellow-500 fill-yellow-500 flex-shrink-0 mt-0.5" />;
+  return <Check className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />;
+};
+
 const CloudHosting = () => {
+  const [period, setPeriod] = useState<Period>("12");
+
   const serviceSchema = createServiceSchema(
     "Enterprise Cloud Hosting Services India",
     "Premium cloud hosting with 99.99% uptime SLA, auto-scaling servers, enterprise security, SSD NVMe storage, and 24/7 expert support. Best cloud infrastructure for businesses in India.",
@@ -211,48 +333,141 @@ const CloudHosting = () => {
 
           {/* Pricing Plans */}
           <section className="section-container mb-20">
-            <div className="text-center mb-12">
+            <div className="text-center mb-10">
               <h2 className="mb-4">
                 Cloud Hosting <span className="gradient-text">Plans</span>
               </h2>
               <p className="text-lg text-foreground/70 max-w-2xl mx-auto">
-                Choose the perfect cloud hosting plan for your business needs.
+                Choose the perfect cloud hosting plan for your business needs. Save more with longer commitment.
               </p>
             </div>
-            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-              {plans.map((plan, index) => (
-                <Card 
-                  key={index}
-                  className={`card-hover relative ${plan.popular ? 'border-2 border-primary shadow-xl' : ''}`}
-                >
-                  {plan.popular && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-badge rounded-full">
-                      <span className="text-[9px] md:text-[10px] font-bold text-badge-foreground uppercase tracking-wider">Most Popular</span>
-                    </div>
-                  )}
-                  <CardContent className="pt-8">
-                    <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                    <div className="mb-6">
-                      <span className="text-4xl font-black gradient-text">{plan.price}</span>
-                      <span className="text-foreground/70">/month</span>
-                    </div>
-                    <ul className="space-y-3 mb-6">
-                      {plan.features.map((feature, i) => (
-                        <li key={i} className="flex items-center gap-2">
-                          <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0" />
-                          <span className="text-foreground/80">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <Link to="/contact">
-                      <Button className={`w-full h-12 font-bold ${plan.popular ? 'btn-gradient' : ''}`}>
-                        Get Started
-                      </Button>
-                    </Link>
-                  </CardContent>
-                </Card>
-              ))}
+
+            {/* Commitment period selector */}
+            <div className="mb-8">
+              <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">
+                Commitment Period
+              </p>
+              <div className="flex flex-wrap gap-2 items-center">
+                {PERIODS.map((p) => (
+                  <button
+                    key={p.key}
+                    onClick={() => setPeriod(p.key)}
+                    className={`relative px-5 py-2 rounded-lg text-sm font-semibold border transition-all duration-200 ${
+                      period === p.key
+                        ? "bg-foreground text-background border-foreground"
+                        : "bg-transparent text-foreground border-border hover:border-foreground/40"
+                    }`}
+                  >
+                    {p.badge && (
+                      <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 text-[10px] font-bold text-primary whitespace-nowrap">
+                        {p.badge}
+                      </span>
+                    )}
+                    {p.label}{p.icon ? ` ${p.icon}` : ""}
+                  </button>
+                ))}
+              </div>
             </div>
+
+            {/* Info note */}
+            <div className="flex items-start gap-2 mb-8 text-sm text-muted-foreground max-w-3xl">
+              <Info className="w-4 h-4 flex-shrink-0 mt-0.5 text-primary" />
+              <span>Every cloud plan gives your customer a fully dedicated cPanel — 2 GB RAM + 2 vCPUs guaranteed to them alone, never shared.</span>
+            </div>
+
+            {/* Plan cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-6xl mx-auto">
+              {CLOUD_PLANS.map((plan) => {
+                const pd = plan.periods[period];
+                return (
+                  <Card
+                    key={plan.id}
+                    className={`relative flex flex-col overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${
+                      plan.popular
+                        ? "border-primary/50 ring-2 ring-primary/20 shadow-lg shadow-primary/10"
+                        : "border-border"
+                    }`}
+                  >
+                    {plan.popular && (
+                      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-accent" />
+                    )}
+                    <CardContent className="p-6 pt-7 flex flex-col flex-1">
+                      {plan.popular && (
+                        <div className="text-center mb-3">
+                          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Most popular</span>
+                        </div>
+                      )}
+
+                      <h3 className="text-xl font-bold text-foreground">{plan.name}</h3>
+                      <p className="text-sm text-muted-foreground mb-4">{plan.tagline}</p>
+
+                      <div className="grid grid-cols-2 gap-x-4 gap-y-1 mb-5 text-xs text-muted-foreground">
+                        <span>{plan.specs.ram}</span>
+                        <span>{plan.specs.vcpu}</span>
+                        <span>{plan.specs.nvme}</span>
+                        <span>{plan.specs.bw}</span>
+                      </div>
+
+                      <div className="mb-1">
+                        {pd.originalPrice && (
+                          <span className="text-sm text-muted-foreground line-through">
+                            ₹{pd.originalPrice.toLocaleString("en-IN")}/mo
+                          </span>
+                        )}
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-4xl font-black text-foreground">₹{pd.price.toLocaleString("en-IN")}</span>
+                          <span className="text-sm text-muted-foreground">/month</span>
+                        </div>
+                      </div>
+
+                      <div className="min-h-[56px] mb-4 text-sm">
+                        {pd.noCommit ? (
+                          <p className="text-muted-foreground text-xs">
+                            No commitment · cancel anytime<br />
+                            <em>Renews at ₹{pd.renewsAt.toLocaleString("en-IN")}/mo</em>
+                          </p>
+                        ) : (
+                          <>
+                            <p className="text-green-600 dark:text-green-400 font-medium text-xs">{pd.saving}</p>
+                            <p className="text-muted-foreground text-xs">
+                              Pay ₹{pd.upfront?.toLocaleString("en-IN")} upfront · {period} months<br />
+                              <em>Renews at ₹{pd.renewsAt.toLocaleString("en-IN")}/mo</em>
+                            </p>
+                          </>
+                        )}
+                      </div>
+
+                      <Link
+                        to={`/cart?product=${plan.id}&period=${period}&name=${encodeURIComponent(plan.name)}&type=cloud-hosting`}
+                        className="mb-6"
+                      >
+                        <Button
+                          className={`w-full h-10 font-bold ${plan.popular ? "btn-gradient" : ""}`}
+                          variant={plan.popular ? "default" : "outline"}
+                        >
+                          Get started <ArrowRight className="w-4 h-4 ml-1.5" />
+                        </Button>
+                      </Link>
+
+                      <div className="border-t border-border mb-4" />
+
+                      <ul className="space-y-2.5 flex-1">
+                        {plan.features.map((f) => (
+                          <li key={f.label} className="flex items-start gap-2.5">
+                            <FeatureIcon type={f.type} />
+                            <span className="text-sm text-foreground/80 leading-snug">{f.label}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+
+            <p className="text-xs text-center text-muted-foreground mt-6">
+              All prices are in INR. Taxes may apply. Plans renew at regular monthly rate after commitment period.
+            </p>
           </section>
 
           {/* Benefits Section */}

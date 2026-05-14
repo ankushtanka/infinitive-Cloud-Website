@@ -1,3 +1,5 @@
+import { CONTACT } from "@/config/contact";
+
 /**
  * Generates a PDF invoice using jsPDF
  */
@@ -152,7 +154,8 @@ export async function generateInvoicePdf(data: InvoiceData) {
   y += 7;
 
   doc.setTextColor(muted[0], muted[1], muted[2]);
-  doc.text("GST @ 18%", totalsX, y);
+  const gstRate = pretaxTotal > 0 ? Math.round((data.gst / pretaxTotal) * 100) : 18;
+  doc.text(`GST @ ${gstRate}%`, totalsX, y);
   doc.setTextColor(dark[0], dark[1], dark[2]);
   doc.text(`₹${data.gst.toLocaleString("en-IN")}`, pageW - margin - 4, y, { align: "right" });
   y += 7;
@@ -178,8 +181,8 @@ export async function generateInvoicePdf(data: InvoiceData) {
   doc.setTextColor(muted[0], muted[1], muted[2]);
   doc.setFontSize(8);
   doc.setFont("helvetica", "normal");
-  doc.text("Infinitive Cloud Private Limited | GSTIN: 07AAQCI1234A1ZX", margin, footerY + 6);
-  doc.text("support@infinitivecloud.com | +91-8800-123-456", margin, footerY + 11);
+  doc.text(`${CONTACT.company} | GSTIN: ${CONTACT.gstin}`, margin, footerY + 6);
+  doc.text(`${CONTACT.email.support} | ${CONTACT.phone}`, margin, footerY + 11);
   doc.text("This is a computer-generated invoice. No signature required.", pageW - margin, footerY + 6, { align: "right" });
 
   // Save

@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { BILLING } from "@/config/contact";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -37,6 +38,8 @@ import {
   Loader2,
   Copy,
   AlertTriangle,
+  Clock,
+  Zap,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { placeOrder, validateLogin, type OrderPayload } from "@/lib/whmcs";
@@ -55,7 +58,10 @@ const newCustomerSchema = z.object({
   state: z.string().trim().min(1, "State is required").max(100),
   postcode: z.string().trim().min(1, "Postcode is required").max(10),
   country: z.string().min(1, "Country is required"),
-  gstNumber: z.string().trim().max(20).optional(),
+  gstNumber: z.string().trim().toUpperCase()
+    .refine((val) => val === "" || /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(val), {
+      message: "Invalid GSTIN format (e.g. 08AAICI5380A1ZP)",
+    }).optional(),
   hostingDomain: z.string().trim().max(255).optional(),
 });
 
@@ -102,10 +108,11 @@ interface OrderConfirmation {
   clientId?: number;
   isNewClient?: boolean;
   password?: string;
-  items?: any[];
+  items?: import("@/lib/whmcs").OrderItem[];
   total?: string;
   paymentId?: string;
   paymentCancelled?: boolean;
+  isFree?: boolean;
 }
 
 const indianStates = [
@@ -127,7 +134,7 @@ type WhmcsSessionUser = {
 };
 
 const persistWhmcsUser = (user: WhmcsSessionUser) => {
-  localStorage.setItem("whmcs_user", JSON.stringify(user));
+  try { localStorage.setItem("whmcs_user", JSON.stringify(user)); } catch { /* private browsing */ }
 };
 
 const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onBack, billingCycle = "monthly" }: CheckoutFormProps) => {
@@ -138,10 +145,10 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [loggedInUser, setLoggedInUser] = useState<{ clientid?: number; email: string; firstName: string; lastName: string; phone: string; companyName: string; address1: string; address2: string; city: string; state: string; postcode: string; country: string; domains: any[] } | null>(null);
+  const [loggedInUser, setLoggedInUser] = useState<{ clientid?: number; email: string; firstName: string; lastName: string; phone: string; companyName: string; address1: string; address2: string; city: string; state: string; postcode: string; country: string; domains: { domain?: string; domainname?: string; status?: string }[] } | null>(null);
   const [orderConfirmation, setOrderConfirmation] = useState<OrderConfirmation | null>(null);
 
-  const gstRate = 0.18;
+  const gstRate = BILLING.gstRate;
   const gstAmount = Math.round(total * gstRate);
   const grandTotal = total + gstAmount;
 
@@ -209,14 +216,11 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
     whmcsRequestKeyRef.current = requestKey;
     whmcsRequestPromiseRef.current = (async () => {
       try {
-        console.log("Placing order via middleware:", payload);
         const result = await placeOrder(payload);
 
         if (result.result !== "success") {
           throw new Error(result.message || "Failed to create order");
         }
-
-        console.log("Order placed successfully:", result);
         const submission = {
           success: true,
           requestKey,
@@ -288,8 +292,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
         });
       }
 
-      // Show confirmation panel immediately
-      const confirmation: OrderConfirmation = {
+      const pendingConfirmation: OrderConfirmation = {
         orderId: whmcsResult.orderId,
         orderNum: whmcsResult.orderNum,
         invoiceId: whmcsResult.invoiceId,
@@ -299,13 +302,18 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
         items: whmcsResult.items,
         total: whmcsResult.total,
       };
-      setOrderConfirmation(confirmation);
 
-      // Trigger Razorpay if available
+      // Free trial — no payment needed, show confirmation directly
+      if (grandTotal === 0) {
+        setOrderConfirmation({ ...pendingConfirmation, isFree: true });
+        return;
+      }
+
+      // Open Razorpay payment gateway — show confirmation only after payment result
       if (paymentMethod === "razorpay" && whmcsResult.razorpay && window.Razorpay) {
         const rzpData = whmcsResult.razorpay;
         const rzpOptions: Record<string, any> = {
-          key: "rzp_test_IvJdQ7DM2voWE5",
+          key: import.meta.env.VITE_RAZORPAY_KEY_ID || "",
           amount: rzpData.amount,
           currency: rzpData.currency || "INR",
           name: "Infinitive Cloud",
@@ -318,12 +326,12 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
           notes: rzpData.notes || {},
           theme: { color: "#2563eb" },
           handler: (response: any) => {
-            setOrderConfirmation((prev) => prev ? { ...prev, paymentId: response.razorpay_payment_id, paymentCancelled: false } : prev);
+            setOrderConfirmation({ ...pendingConfirmation, paymentId: response.razorpay_payment_id, paymentCancelled: false });
             toast({ title: "Payment Successful!", description: `Payment ID: ${response.razorpay_payment_id}` });
           },
           modal: {
             ondismiss: () => {
-              setOrderConfirmation((prev) => prev ? { ...prev, paymentCancelled: true } : prev);
+              setOrderConfirmation({ ...pendingConfirmation, paymentCancelled: true });
             },
           },
         };
@@ -334,13 +342,17 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
 
         const rzp = new window.Razorpay(rzpOptions);
         rzp.on("payment.failed", (response: any) => {
-          setOrderConfirmation((prev) => prev ? { ...prev, paymentCancelled: true } : prev);
+          setOrderConfirmation({ ...pendingConfirmation, paymentCancelled: true });
           toast({ title: "Payment Failed", description: response?.error?.description || "Please try again.", variant: "destructive" });
         });
         rzp.open();
+      } else {
+        // For UPI / Bank Transfer or if Razorpay is unavailable, show confirmation directly
+        setOrderConfirmation(pendingConfirmation);
       }
-    } catch (err: any) {
-      toast({ title: "Order Error", description: err.message || "Could not process your order. Please try again.", variant: "destructive" });
+    } catch (err: unknown) {
+      const error = err instanceof Error ? err : new Error(String(err));
+      toast({ title: "Order Error", description: error.message || "Could not process your order. Please try again.", variant: "destructive" });
     } finally {
       setIsProcessing(false);
     }
@@ -425,16 +437,44 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
 
   // ===== ORDER CONFIRMATION VIEW =====
   if (orderConfirmation) {
+    const isPaid = !!orderConfirmation.paymentId;
+    const isFree = !!orderConfirmation.isFree;
+    const isCancelled = orderConfirmation.paymentCancelled && !isPaid && !isFree;
+
     return (
       <div className="max-w-2xl mx-auto space-y-6">
-        {/* Success Header */}
-        <Card>
+        {/* Header — changes based on payment status */}
+        <Card className={isCancelled ? "border-amber-500/40" : ""}>
           <CardContent className="p-8 text-center">
-            <div className="w-20 h-20 rounded-full bg-emerald-500/15 flex items-center justify-center mx-auto mb-4">
-              <CheckCircle2 className="w-10 h-10 text-emerald-500" />
+            <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 ${
+              isCancelled ? "bg-amber-500/15" : isFree ? "bg-primary/10" : "bg-emerald-500/15"
+            }`}>
+              {isCancelled
+                ? <AlertTriangle className="w-10 h-10 text-amber-500" />
+                : isFree
+                ? <Zap className="w-10 h-10 text-primary" />
+                : <CheckCircle2 className="w-10 h-10 text-emerald-500" />
+              }
             </div>
-            <h2 className="text-2xl font-bold text-foreground mb-2">Order Successful!</h2>
-            <p className="text-muted-foreground">Your order has been created and is being processed.</p>
+
+            {isCancelled ? (
+              <>
+                <h2 className="text-2xl font-bold text-foreground mb-2">Payment Cancelled</h2>
+                <p className="text-muted-foreground">
+                  Your order is saved but payment was not completed. You can pay from your dashboard later.
+                </p>
+              </>
+            ) : isFree ? (
+              <>
+                <h2 className="text-2xl font-bold text-foreground mb-2">🎉 Free Trial Activated!</h2>
+                <p className="text-muted-foreground">Your 30-day free trial has started. No payment needed.</p>
+              </>
+            ) : (
+              <>
+                <h2 className="text-2xl font-bold text-foreground mb-2">Order Successful!</h2>
+                <p className="text-muted-foreground">Your payment is confirmed and order is being processed.</p>
+              </>
+            )}
 
             <div className="flex flex-wrap justify-center gap-4 mt-4 text-sm">
               {(orderConfirmation.orderNum || orderConfirmation.orderId) && (
@@ -444,44 +484,65 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
                 </div>
               )}
               {orderConfirmation.invoiceId && (
-                <div className="px-3 py-1.5 rounded-lg bg-muted">
+                <div className={`px-3 py-1.5 rounded-lg ${isCancelled ? "bg-amber-500/10" : "bg-muted"}`}>
                   <span className="text-muted-foreground">Invoice:</span>{" "}
                   <span className="font-bold text-foreground">#{orderConfirmation.invoiceId}</span>
                 </div>
               )}
-              {orderConfirmation.paymentId && (
+              {isPaid && (
                 <div className="px-3 py-1.5 rounded-lg bg-emerald-500/10">
                   <span className="text-muted-foreground">Payment ID:</span>{" "}
                   <span className="font-bold text-emerald-600">{orderConfirmation.paymentId}</span>
                 </div>
               )}
             </div>
+
+            {isCancelled && (
+              <p className="text-xs text-amber-600 dark:text-amber-400 mt-4 font-medium">
+                Invoice #{orderConfirmation.invoiceId} — complete payment from your dashboard to activate services.
+              </p>
+            )}
           </CardContent>
         </Card>
 
-        {/* Payment Cancelled Warning */}
-        {orderConfirmation.paymentCancelled && !orderConfirmation.paymentId && (
-          <Card className="border-amber-500/30 bg-amber-500/5">
-            <CardContent className="p-4 flex items-start gap-3">
-              <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
-              <div>
-                <p className="font-semibold text-foreground text-sm">Payment cancelled</p>
-                <p className="text-sm text-muted-foreground">
-                  Your order is saved. Invoice ID: #{orderConfirmation.invoiceId} — you can pay later from your dashboard.
-                </p>
+        {/* 30-Day Free Trial Progress */}
+        {isFree && (
+          <Card className="border-primary/30 bg-primary/5">
+            <CardContent className="p-5">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <Clock className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <p className="font-bold text-foreground text-sm">Your 30-Day Free Trial</p>
+                  <p className="text-xs text-muted-foreground">Trial started today — enjoy full access</p>
+                </div>
+                <span className="ml-auto text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded-full">
+                  30 days left
+                </span>
               </div>
+              <div className="w-full h-3 bg-muted rounded-full overflow-hidden">
+                <div className="h-full w-0 rounded-full bg-primary" />
+              </div>
+              <div className="flex justify-between mt-1.5 text-[11px] text-muted-foreground">
+                <span>0 of 30 days used</span>
+                <span>0% used</span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-3 text-center">
+                Upgrade to <strong>Pro</strong> or <strong>Max</strong> anytime to keep your services running after trial ends.
+              </p>
             </CardContent>
           </Card>
         )}
 
-        {/* New Client Password */}
-        {orderConfirmation.isNewClient && orderConfirmation.password && (
+        {/* New Client Password — only show on successful payment */}
+        {(isPaid || isFree) && orderConfirmation.isNewClient && orderConfirmation.password && (
           <Card className="border-emerald-500/30 bg-emerald-500/5">
             <CardContent className="p-4">
               <p className="font-semibold text-foreground text-sm mb-2">
                 🎉 Your account has been created — save your password:
               </p>
-              <p className="text-xs text-muted-foreground mb-2">Use this same password to log in to your account later.</p>
+              <p className="text-xs text-muted-foreground mb-2">Use this to log in to your client area.</p>
               <div className="flex items-center gap-2">
                 <code className="flex-1 px-3 py-2 rounded-lg bg-muted font-mono text-sm text-foreground">
                   {orderConfirmation.password}
@@ -490,6 +551,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
                   type="button"
                   variant="outline"
                   size="sm"
+                  aria-label="Copy password to clipboard"
                   onClick={() => copyToClipboard(orderConfirmation.password!)}
                 >
                   <Copy className="w-4 h-4" />
@@ -505,7 +567,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
             <CardContent className="p-6">
               <h3 className="text-lg font-bold text-foreground mb-4">Order Items</h3>
               <div className="space-y-3">
-                {orderConfirmation.items.map((item: any, idx: number) => (
+                {orderConfirmation.items.map((item, idx: number) => (
                   <div key={idx} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
                     <span className="text-2xl shrink-0">
                       {item.icon === "globe" || item.category === "domain" ? "🌐" : "🖥️"}
@@ -524,8 +586,10 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
               <Separator className="my-4" />
 
               <div className="flex justify-between items-center">
-                <span className="text-lg font-bold text-foreground">Total Paid</span>
-                <span className="text-xl font-black text-primary">
+                <span className="text-lg font-bold text-foreground">
+                  {isCancelled ? "Amount Due" : "Total Paid"}
+                </span>
+                <span className={`text-xl font-black ${isCancelled ? "text-amber-600 dark:text-amber-400" : "text-primary"}`}>
                   ₹{Number(orderConfirmation.total || 0).toFixed(2)}
                 </span>
               </div>
@@ -536,7 +600,9 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
         {/* Actions */}
         <div className="flex flex-wrap gap-3 justify-center">
           <a href="/dashboard">
-            <Button variant="outline">Go to Dashboard</Button>
+            <Button variant={isCancelled ? "default" : "outline"} className={isCancelled ? "btn-gradient" : ""}>
+              {isCancelled ? "Pay Now from Dashboard" : "Go to Dashboard"}
+            </Button>
           </a>
           <a href="/">
             <Button variant="ghost">Back to Home</Button>
@@ -599,7 +665,7 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
                         <Globe className="w-4 h-4 text-primary" />Your Domains ({loggedInUser.domains.length})
                       </p>
                       <div className="space-y-1 max-h-32 overflow-y-auto">
-                        {loggedInUser.domains.map((d: any, i: number) => (
+                        {loggedInUser.domains.map((d, i: number) => (
                           <div key={i} className="text-sm text-muted-foreground flex items-center justify-between">
                             <span>{d.domainname || d.domain || d}</span>
                             <span className="text-xs capitalize px-2 py-0.5 rounded bg-primary/10 text-primary">{d.status || "Active"}</span>

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { MessageCircle, X, Phone, Headset, ArrowUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { CONTACT, INTEGRATIONS } from "@/config/contact";
 
 const TooltipContent = ({ label, isHovered }: { label: string; isHovered: boolean }) => (
   <AnimatePresence mode="popLayout">
@@ -71,10 +72,9 @@ const ActionButton = ({
   );
 };
 
-const WHATSAPP_NUMBER = "918690393087";
-const PHONE_NUMBER = "+918690393087";
-
-const TAWK_CHAT_URL = "https://tawk.to/chat/68fb0774603401195169c6da/1j8a9a8jf";
+const WHATSAPP_NUMBER = CONTACT.whatsapp;
+const PHONE_NUMBER = CONTACT.phone;
+const TAWK_CHAT_URL = INTEGRATIONS.tawkChatUrl;
 
 const SupportWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -129,7 +129,15 @@ const SupportWidget = () => {
         t.hideWidget();
       }
     }, 1000);
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      // Clean up Tawk event handlers to prevent stale closures
+      const t = (window as any).Tawk_API;
+      if (t) {
+        t.onChatMessageAgent = undefined;
+        t.onChatMaximized = undefined;
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -169,7 +177,7 @@ const SupportWidget = () => {
           const s = document.createElement("script");
           s.type = "text/javascript";
           s.async = true;
-          s.src = `https://embed.tawk.to/68fb0774603401195169c6da/1j8a9a8jf`;
+          s.src = `https://embed.tawk.to/${INTEGRATIONS.tawkEmbedId}/${INTEGRATIONS.tawkWidgetId}`;
           s.charset = "UTF-8";
           s.setAttribute("crossorigin", "*");
           document.head.appendChild(s);

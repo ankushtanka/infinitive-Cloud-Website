@@ -41,12 +41,20 @@ const DomainManagement = () => {
     await getWhois(domainName);
   };
 
+  const isValidNameserver = (ns: string) =>
+    /^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/.test(ns);
+
   const handleUpdateNs = async () => {
     const domainName = selectedDomain?.domainname || selectedDomain?.domain;
     if (!domainName) return;
     const filtered = nsForm.filter(Boolean);
     if (filtered.length < 2) {
       toast({ title: "At least 2 nameservers required", variant: "destructive" });
+      return;
+    }
+    const invalid = filtered.filter((ns) => !isValidNameserver(ns));
+    if (invalid.length > 0) {
+      toast({ title: "Invalid nameserver format", description: `Fix: ${invalid.join(", ")}`, variant: "destructive" });
       return;
     }
     const res = await updateNameservers(domainName, filtered);

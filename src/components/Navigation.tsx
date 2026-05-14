@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown, User, Globe, Server, ShieldCheck, Search, Phone, Mail } from "lucide-react";
@@ -6,8 +6,9 @@ import logo from "@/assets/logo-icon.png";
 import ServicesMegaMenu from "@/components/ServicesMegaMenu";
 import CurrencyLanguageDropdown from "@/components/CurrencyLanguageDropdown";
 import ThemeToggle from "@/components/ThemeToggle";
+import { CONTACT, INTEGRATIONS } from "@/config/contact";
 
-const WHMCS_LOGIN = "https://billing.infinitivecloud.com";
+const WHMCS_LOGIN = "https://client.infinitivecloud.com";
 
 const serviceLinks = [
   {
@@ -18,7 +19,6 @@ const serviceLinks = [
       { label: "Reseller Hosting", path: "/solutions/reseller-hosting" },
       { label: "WordPress Hosting", path: "/solutions/wordpress-hosting" },
       { label: "WooCommerce Hosting", path: "/solutions/woocommerce-hosting" },
-      
       { label: "Node.js Hosting", path: "/solutions/nodejs-hosting" },
       { label: "Self-Hosted n8n", path: "/solutions/n8n-hosting" },
       { label: "Openclaw", path: "/solutions/openclaw" },
@@ -53,7 +53,6 @@ const serviceLinks = [
   },
 ];
 
-// Quick product links shown directly in the nav bar
 const productQuickLinks = [
   { label: "Hosting", icon: Globe, category: "Hosting" },
   { label: "Servers", icon: Server, category: "Servers" },
@@ -69,7 +68,6 @@ const Navigation = () => {
   const [mobileServiceOpen, setMobileServiceOpen] = useState(false);
   const [mobileSubDropdown, setMobileSubDropdown] = useState<string | null>(null);
   const [topBarVisible, setTopBarVisible] = useState(true);
-  
 
   useEffect(() => {
     const onScroll = () => setTopBarVisible(window.scrollY < 50);
@@ -92,7 +90,7 @@ const Navigation = () => {
     if (!servicesOpen) return;
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      if (!target.closest('[data-mega-menu]') && !target.closest('[data-product-trigger]')) {
+      if (!target.closest('[data-mega-menu]') && !target.closest('[data-product-trigger]') && !target.closest('[data-services-trigger]')) {
         setServicesOpen(false);
         setMegaMenuCategory(undefined);
       }
@@ -102,26 +100,22 @@ const Navigation = () => {
   }, [servicesOpen]);
 
   const navLinks = [
-    { label: "Home", path: "/" },
     { label: "Pricing", path: "/pricing" },
     { label: "About", path: "/about" },
     { label: "Contact", path: "/contact" },
   ];
 
-  const isHome = location.pathname === "/";
-
-  const handleCloseMenus = () => {
+  const handleCloseMenus = useCallback(() => {
     setIsOpen(false);
     setServicesOpen(false);
     setMegaMenuCategory(undefined);
     setMobileServiceOpen(false);
     setMobileSubDropdown(null);
-  };
+  }, []);
 
   useEffect(() => {
     handleCloseMenus();
-    // eslint-disable-next-line
-  }, [location.pathname, location.hash]);
+  }, [location.pathname, location.hash, handleCloseMenus]);
 
   return (
     <>
@@ -133,18 +127,18 @@ const Navigation = () => {
         <div className="section-container">
           <div className="flex items-center justify-between h-9">
             <div className="flex items-center gap-4 text-xs text-foreground font-medium">
-              <span className="flex items-center gap-1.5"><Phone className="w-3 h-3 text-primary" /> +91 8690393087</span>
-              <span className="flex items-center gap-1.5"><Mail className="w-3 h-3 text-primary" /> support@infinitivecloud.com</span>
+              <span className="flex items-center gap-1.5"><Phone className="w-3 h-3 text-primary" /> {CONTACT.phoneDisplay}</span>
+              <span className="flex items-center gap-1.5"><Mail className="w-3 h-3 text-primary" /> {CONTACT.email.support}</span>
             </div>
             <div className="flex items-center gap-2">
               <CurrencyLanguageDropdown />
               <ThemeToggle />
               <div className="h-4 w-px bg-border/50 mx-1" />
-              <Link to="/login">
+              <a href={WHMCS_LOGIN} target="_blank" rel="noopener noreferrer">
                 <Button variant="ghost" size="sm" className="gap-1.5 text-sm font-medium">
                   <User className="w-4 h-4" /> Login
                 </Button>
-              </Link>
+              </a>
             </div>
           </div>
         </div>
@@ -156,7 +150,7 @@ const Navigation = () => {
       >
         <div className="section-container">
           <div className="flex items-center justify-between h-16 lg:h-14">
-            {/* Logo - prominent and clear */}
+            {/* Logo */}
             <Link to="/" className="flex items-center gap-2.5 group flex-shrink-0" onClick={handleCloseMenus}>
               <img src={logo} alt="Infinitive Cloud Logo" className="h-11 lg:h-13 w-auto group-hover:scale-105 transition-transform duration-300" />
               <div className="flex flex-col leading-none">
@@ -167,7 +161,7 @@ const Navigation = () => {
               </div>
             </Link>
 
-            {/* Desktop Navigation - centered */}
+            {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-0.5">
               {/* Product quick links */}
               {productQuickLinks.map((product) => {
@@ -177,8 +171,8 @@ const Navigation = () => {
                     key={product.label}
                     data-product-trigger
                     className={`relative px-3 py-2 font-bold text-sm flex items-center gap-1.5 group transition-all duration-200 rounded-lg ${
-                      servicesOpen && megaMenuCategory === product.category 
-                        ? "text-primary bg-primary/10" 
+                      servicesOpen && megaMenuCategory === product.category
+                        ? "text-primary bg-primary/10"
                         : "text-foreground hover:text-primary hover:bg-muted/50"
                     }`}
                     onClick={() => handleProductClick(product.category)}
@@ -192,7 +186,7 @@ const Navigation = () => {
 
               <div className="h-5 w-px bg-border/40 mx-1" />
 
-              {navLinks.filter(l => l.label !== "Home").map((link) => (
+              {navLinks.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
@@ -206,7 +200,7 @@ const Navigation = () => {
 
             {/* Right side CTA */}
             <div className="hidden lg:flex items-center gap-2 flex-shrink-0">
-              <Link to="/contact" onClick={handleCloseMenus}>
+              <Link to="/free-trial" onClick={handleCloseMenus}>
                 <Button className="btn-gradient glow-effect shadow-medium text-sm px-6 h-9 font-bold">
                   Start Free Trial
                 </Button>
@@ -229,7 +223,7 @@ const Navigation = () => {
         </div>
       </nav>
 
-      {/* Desktop Mega Menu */}
+      {/* Desktop Mega Menu (existing full menu) */}
       {servicesOpen && (
         <ServicesMegaMenu
           onClose={() => { setServicesOpen(false); setMegaMenuCategory(undefined); }}
@@ -253,7 +247,7 @@ const Navigation = () => {
               >
                 <span className="flex items-center gap-2">
                   <Globe className="w-5 h-5 text-primary" />
-                  Products & Services
+                  Services
                 </span>
                 <ChevronDown className={`w-5 h-5 ml-1 transition-transform duration-200 ${mobileServiceOpen ? "rotate-180" : ""}`} />
               </button>
@@ -292,7 +286,8 @@ const Navigation = () => {
                 </div>
               )}
             </div>
-            {navLinks.map(link => (
+
+            {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
@@ -309,7 +304,7 @@ const Navigation = () => {
               <span className="text-foreground font-bold text-lg">Dark Mode</span>
               <ThemeToggle />
             </div>
-            <Link to="/contact" onClick={handleCloseMenus} className="mt-4">
+            <Link to="/free-trial" onClick={handleCloseMenus} className="mt-4">
               <Button className="btn-gradient glow-effect w-full h-14 text-lg">
                 Start Free Trial
               </Button>

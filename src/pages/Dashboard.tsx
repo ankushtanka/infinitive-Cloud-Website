@@ -14,9 +14,121 @@ import {
   ExternalLink,
   Search,
   Globe,
+  Server,
+  CheckCircle2,
+  Clock,
+  ArrowRight,
+  Zap,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { getInvoices, getInvoiceDetails } from "@/lib/whmcs";
+
+interface TrialInfo {
+  plan: "shared" | "vps";
+  planName: string;
+  domain: string;
+  startDate: string;
+  orderId?: number;
+  pending?: boolean;
+}
+
+const TRIAL_DAYS = 30;
+
+function getTrialDaysLeft(startDate: string): number {
+  const diff = Math.floor(
+    (Date.now() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24)
+  );
+  return Math.max(0, TRIAL_DAYS - diff);
+}
+
+const TrialStatusCard = ({ trial }: { trial: TrialInfo }) => {
+  const daysLeft = getTrialDaysLeft(trial.startDate);
+  const daysUsed = TRIAL_DAYS - daysLeft;
+  const pct = Math.round((daysUsed / TRIAL_DAYS) * 100);
+  const barColor =
+    pct >= 80 ? "bg-red-500" : pct >= 50 ? "bg-amber-500" : "bg-emerald-500";
+
+  return (
+    <Card className="mb-6 border-primary/20 relative overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-cyan-400" />
+      <CardContent className="p-5">
+        <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+          <div className="p-3 rounded-xl bg-primary/10 shrink-0 w-fit">
+            <Server className="w-6 h-6 text-primary" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex flex-wrap items-center gap-2 mb-1">
+              <h3 className="font-bold text-foreground">{trial.planName} — Free Trial</h3>
+              <Badge
+                className={
+                  trial.pending
+                    ? "bg-amber-500/10 text-amber-600 border-amber-500/30"
+                    : "bg-emerald-500/10 text-emerald-600 border-emerald-500/30"
+                }
+                variant="outline"
+              >
+                {trial.pending ? "Provisioning" : "Active"}
+              </Badge>
+            </div>
+            <p className="text-sm text-muted-foreground mb-3 font-mono">{trial.domain}</p>
+
+            {/* Progress bar */}
+            <div className="mb-3">
+              <div className="flex items-center justify-between mb-1 text-xs">
+                <span className="text-muted-foreground">{daysUsed} of {TRIAL_DAYS} days used</span>
+                <span className="font-bold text-foreground">{daysLeft} days left</span>
+              </div>
+              <div className="w-full h-2.5 bg-muted rounded-full overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all duration-700 ${barColor}`}
+                  style={{ width: `${pct}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Feature chips */}
+            <div className="flex flex-wrap gap-1.5 mb-4">
+              {(trial.plan === "vps"
+                ? ["50 GB SSD", "2 CPU / 4 GB RAM", "Full Root Access", "99.99% Uptime"]
+                : ["10 GB SSD", "1 CPU / 1 GB RAM", "cPanel Access", "99.9% Uptime"]
+              ).map((f) => (
+                <span
+                  key={f}
+                  className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground"
+                >
+                  <CheckCircle2 className="w-3 h-3 text-primary" />
+                  {f}
+                </span>
+              ))}
+            </div>
+
+            {daysLeft <= 7 && (
+              <div className="flex items-center gap-2 text-xs text-amber-600 dark:text-amber-400 bg-amber-500/10 rounded-lg px-3 py-2 mb-3">
+                <Clock className="w-3.5 h-3.5 shrink-0" />
+                Trial expiring soon — upgrade to keep your hosting active.
+              </div>
+            )}
+
+            <div className="flex gap-2">
+              <Link to="/pricing">
+                <Button className="btn-gradient h-9 text-sm gap-1.5 font-bold">
+                  <Zap className="w-3.5 h-3.5" />
+                  Upgrade Plan
+                </Button>
+              </Link>
+              <a href="https://client.infinitivecloud.com" target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" size="sm" className="h-9 text-sm gap-1.5">
+                  Manage Hosting
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Button>
+              </a>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
 
 interface WhmcsUser {
   clientid: number;
@@ -53,14 +165,23 @@ const Dashboard = () => {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [invoiceItems, setInvoiceItems] = useState<Record<number, InvoiceItemDetail[]>>({});
   const [loading, setLoading] = useState(true);
+  const [trialInfo, setTrialInfo] = useState<TrialInfo | null>(null);
 
   useEffect(() => {
-    const stored = localStorage.getItem("whmcs_user");
+    try {
+      const trial = localStorage.getItem("ic_trial");
+      if (trial) setTrialInfo(JSON.parse(trial));
+    } catch { /* ignore */ }
+
+    let stored: string | null = null;
+    try { stored = localStorage.getItem("whmcs_user"); } catch { /* private browsing */ }
     if (!stored) {
       navigate("/login");
       return;
     }
-    const parsed: WhmcsUser = JSON.parse(stored);
+    let parsed: WhmcsUser;
+    try { parsed = JSON.parse(stored); }
+    catch { navigate("/login"); return; }
     setUser(parsed);
 
     (async () => {
@@ -94,7 +215,7 @@ const Dashboard = () => {
   }, [navigate]);
 
   const logout = () => {
-    localStorage.removeItem("whmcs_user");
+    try { localStorage.removeItem("whmcs_user"); } catch { /* private browsing */ }
     toast({ title: "Logged out" });
     navigate("/");
   };
@@ -133,6 +254,9 @@ const Dashboard = () => {
               </Button>
             </div>
           </div>
+
+          {/* Free Trial Hosting Status */}
+          {trialInfo && <TrialStatusCard trial={trialInfo} />}
 
           {/* Quick Actions */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">

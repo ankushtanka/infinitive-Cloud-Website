@@ -118,7 +118,7 @@ const HeroSection = () => {
 
           {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center w-full mb-6 md:mb-10 px-2">
-            <Link to="/contact">
+            <Link to="/free-trial">
               <Button
                 size="lg"
                 className="btn-gradient glow-effect text-base md:text-xl px-8 md:px-12 h-12 md:h-16 rounded-xl md:rounded-2xl group font-bold shadow-lg hover:shadow-xl transition-all w-full sm:w-auto"

@@ -58,7 +58,7 @@ const FreeTrialSection = () => {
               ))}
             </div>
 
-            <Link to="/contact">
+            <Link to="/free-trial">
               <Button
                 size="lg"
                 className="btn-gradient glow-effect text-sm md:text-lg px-8 md:px-12 h-12 md:h-16 rounded-xl group font-bold"

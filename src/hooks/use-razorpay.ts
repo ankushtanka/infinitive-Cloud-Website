@@ -1,9 +1,33 @@
 import { useCallback, useEffect, useRef } from "react";
 
+interface RazorpayInstance {
+  open: () => void;
+  on: (event: string, handler: (response: RazorpayFailureResponse) => void) => void;
+}
+
+interface RazorpayConstructor {
+  new (options: Record<string, unknown>): RazorpayInstance;
+}
+
 declare global {
   interface Window {
-    Razorpay: any;
+    Razorpay: RazorpayConstructor;
   }
+}
+
+export interface RazorpaySuccessResponse {
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
+}
+
+export interface RazorpayFailureResponse {
+  description?: string;
+  code?: string;
+  reason?: string;
+  step?: string;
+  source?: string;
+  metadata?: Record<string, unknown>;
 }
 
 interface RazorpayOptions {
@@ -15,9 +39,9 @@ interface RazorpayOptions {
   email: string;
   phone: string;
   description?: string;
-  notes?: Record<string, any>;
-  onSuccess: (response: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) => void;
-  onFailure: (error: any) => void;
+  notes?: Record<string, string>;
+  onSuccess: (response: RazorpaySuccessResponse) => void;
+  onFailure: (error: RazorpayFailureResponse) => void;
 }
 
 interface CreateRazorpayOrderOptions {
@@ -31,22 +55,25 @@ export function useRazorpay() {
   const scriptLoaded = useRef(false);
 
   useEffect(() => {
-    if (scriptLoaded.current || document.getElementById("razorpay-sdk")) return;
+    if (document.getElementById("razorpay-sdk")) {
+      scriptLoaded.current = !!window.Razorpay;
+      return;
+    }
     const script = document.createElement("script");
     script.id = "razorpay-sdk";
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.async = true;
+    script.onload = () => { scriptLoaded.current = true; };
     document.body.appendChild(script);
-    scriptLoaded.current = true;
   }, []);
 
   const openCheckout = useCallback((opts: RazorpayOptions) => {
     if (!window.Razorpay) {
-      opts.onFailure({ description: "Razorpay SDK not loaded. Please try again." });
+      opts.onFailure({ description: "Payment is still loading. Please wait a moment and try again." });
       return;
     }
 
-    const razorpayOptions: Record<string, any> = {
+    const razorpayOptions: Record<string, unknown> = {
       key: opts.keyId,
       amount: opts.amount,
       currency: opts.currency,
@@ -71,8 +98,8 @@ export function useRazorpay() {
 
     const rzp = new window.Razorpay(razorpayOptions);
 
-    rzp.on("payment.failed", (response: any) => {
-      opts.onFailure(response.error);
+    rzp.on("payment.failed", (response: RazorpayFailureResponse) => {
+      opts.onFailure(response);
     });
 
     rzp.open();
@@ -80,6 +107,7 @@ export function useRazorpay() {
 
   const createOrder = useCallback(async ({ amount, currency = "INR", receipt, notes }: CreateRazorpayOrderOptions) => {
     const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+    if (!projectId) throw new Error("Missing VITE_SUPABASE_PROJECT_ID in environment variables.");
     const res = await fetch(
       `https://${projectId}.supabase.co/functions/v1/create-razorpay-order`,
       {

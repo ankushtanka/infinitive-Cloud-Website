@@ -67,23 +67,27 @@ const OrderConfirmation = () => {
   };
 
   const handleDownloadInvoice = async () => {
-    const subtotal = orderItems.reduce((s, i) => s + (i.amount || 0), 0);
-    await generateInvoicePdf({
-      orderId,
-      date: new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }),
-      name,
-      email,
-      itemName: orderItems[0]?.name || "Service",
-      itemType: orderItems[0]?.category || "hosting",
-      itemLabel: orderItems[0]?.label || "Service",
-      itemPeriod: orderItems[0]?.period || "",
-      subtotal,
-      gst: 0,
-      total: parseFloat(totalStr),
-      paymentMethod: payment,
-      addons: [],
-    });
-    toast({ title: "Invoice Downloaded", description: "Your invoice PDF has been saved." });
+    try {
+      const subtotal = orderItems.reduce((s, i) => s + (i.amount || 0), 0);
+      await generateInvoicePdf({
+        orderId,
+        date: new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }),
+        name,
+        email,
+        itemName: orderItems[0]?.name || "Service",
+        itemType: orderItems[0]?.category || "hosting",
+        itemLabel: orderItems[0]?.label || "Service",
+        itemPeriod: orderItems[0]?.period || "",
+        subtotal,
+        gst: Math.max(0, parseFloat(totalStr) - subtotal),
+        total: parseFloat(totalStr),
+        paymentMethod: payment,
+        addons: [],
+      });
+      toast({ title: "Invoice Downloaded", description: "Your invoice PDF has been saved." });
+    } catch {
+      toast({ title: "Download Failed", description: "Could not generate invoice. Please try again.", variant: "destructive" });
+    }
   };
 
   return (

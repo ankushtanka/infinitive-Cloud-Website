@@ -14,12 +14,13 @@ export const useLanguage = () => useContext(LanguageContext);
 
 export const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
   const [language, setLanguageState] = useState(() => {
-    return localStorage.getItem("ic_language") || "en";
+    try { return localStorage.getItem("ic_language") || "en"; }
+    catch { return "en"; }
   });
 
   const setLanguage = useCallback((lang: string) => {
     setLanguageState(lang);
-    localStorage.setItem("ic_language", lang);
+    try { localStorage.setItem("ic_language", lang); } catch { /* private browsing */ }
   }, []);
 
   return (

@@ -6,17 +6,20 @@ import { Search, Globe, ArrowRight, Shield, Zap, Clock, Lock, Loader2 } from "lu
 import { Link } from "react-router-dom";
 import { useDomainSearch } from "@/hooks/use-domain-search";
 import DomainResultsGrid from "@/components/DomainResultsGrid";
+import { useDomainPricing } from "@/hooks/use-domain-pricing";
 
 const fallbackTlds = [
-  { ext: ".com", price: "₹799", original: "₹1,199", tag: "Most Popular", color: "from-primary to-accent" },
-  { ext: ".in", price: "₹449", original: "₹699", tag: "India #1", color: "from-emerald-500 to-teal-500" },
-  { ext: ".co.in", price: "₹299", original: "₹499", tag: null, color: "from-slate-500 to-slate-600" },
-  { ext: ".net", price: "₹899", original: "₹1,299", tag: null, color: "from-blue-500 to-indigo-500" },
-  { ext: ".org", price: "₹749", original: "₹1,099", tag: null, color: "from-violet-500 to-purple-500" },
-  { ext: ".online", price: "₹199", original: "₹599", tag: "Best Value", color: "from-orange-500 to-amber-500" },
-  { ext: ".site", price: "₹199", original: "₹499", tag: null, color: "from-pink-500 to-rose-500" },
-  { ext: ".xyz", price: "₹99", original: "₹299", tag: "Cheapest", color: "from-cyan-500 to-sky-500" },
+  { ext: ".com", price: 799, original: "₹1,199", tag: "Most Popular", color: "from-primary to-accent" },
+  { ext: ".in", price: 449, original: "₹699", tag: "India #1", color: "from-emerald-500 to-teal-500" },
+  { ext: ".co.in", price: 299, original: "₹499", tag: null, color: "from-slate-500 to-slate-600" },
+  { ext: ".net", price: 899, original: "₹1,299", tag: null, color: "from-blue-500 to-indigo-500" },
+  { ext: ".org", price: 749, original: "₹1,099", tag: null, color: "from-violet-500 to-purple-500" },
+  { ext: ".online", price: 199, original: "₹599", tag: "Best Value", color: "from-orange-500 to-amber-500" },
+  { ext: ".site", price: 199, original: "₹499", tag: null, color: "from-pink-500 to-rose-500" },
+  { ext: ".xyz", price: 99, original: "₹299", tag: "Cheapest", color: "from-cyan-500 to-sky-500" },
 ];
+
+const TLD_KEYS = fallbackTlds.map((t) => t.ext);
 
 const perks = [
   { icon: Shield, label: "Free WHOIS Privacy" },
@@ -44,6 +47,7 @@ const DomainSearchSection: React.FC = () => {
   const charIndexRef = useRef(0);
   const isDeletingRef = useRef(false);
   const { loading, results, suggestions, searched, checkTime, search, reset } = useDomainSearch();
+  const { prices: livePrices, loading: pricesLoading } = useDomainPricing(TLD_KEYS);
 
   useEffect(() => {
     if (domain || inputFocused) return;
@@ -255,19 +259,20 @@ const DomainSearchSection: React.FC = () => {
                   />
                   <div>
                     <span className="text-xs md:text-sm text-muted-foreground line-through block mb-0.5">
-                      <span className="font-mono tabular-nums">
-                        {tld.original}
-                      </span>
-                      /yr
+                      <span className="font-mono tabular-nums">{tld.original}</span>/yr
                     </span>
-                    <span className="text-2xl md:text-4xl font-black gradient-text">
-                      <span className="font-mono tabular-nums">
-                        {tld.price}
-                      </span>
-                    </span>
-                    <span className="text-xs md:text-base text-muted-foreground">
-                      /yr
-                    </span>
+                    {pricesLoading ? (
+                      <span className="inline-block h-9 w-24 rounded-lg bg-muted animate-pulse mt-1" />
+                    ) : (
+                      <>
+                        <span className="text-2xl md:text-4xl font-black gradient-text">
+                          <span className="font-mono tabular-nums">
+                            ₹{(livePrices[tld.ext]?.register ?? tld.price).toLocaleString("en-IN")}
+                          </span>
+                        </span>
+                        <span className="text-xs md:text-base text-muted-foreground">/yr</span>
+                      </>
+                    )}
                   </div>
                   <Button
                     variant="outline"
@@ -275,7 +280,9 @@ const DomainSearchSection: React.FC = () => {
                     className="mt-4 md:mt-5 w-full font-semibold text-xs md:text-sm border-primary/20 hover:bg-primary hover:text-primary-foreground transition-colors rounded-lg"
                     onClick={(e) => {
                       e.stopPropagation();
-                      window.location.href = `/cart?domain=yourdomain${tld.ext}&price=${tld.price.replace('₹', '').replace(',', '')}&renewPrice=`;
+                      const safePrice = livePrices[tld.ext]?.register ?? tld.price;
+                      const params = new URLSearchParams({ domain: `yourdomain${tld.ext}`, price: String(safePrice) });
+                      window.location.href = `/cart?${params.toString()}`;
                     }}
                   >
                     Register

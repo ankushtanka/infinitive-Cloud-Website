@@ -1,16 +1,14 @@
+import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Check, Server, Shield, Zap, Globe, HardDrive, Headphones, ArrowRight, Loader2 } from "lucide-react";
+import { Check, X, Star, Server, Shield, Zap, Globe, HardDrive, Headphones, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import { useWhmcsProducts } from "@/hooks/use-whmcs-products";
-import { useMemo } from "react";
 
-const SHARED_HOSTING_PIDS = [1, 2, 3];
-
-const features = [
+// ─── Features section ────────────────────────────────────────────────────────
+const whyFeatures = [
   { icon: HardDrive, title: "NVMe SSD Storage", description: "Lightning-fast NVMe drives deliver up to 10x faster read/write speeds for superior website performance." },
   { icon: Zap, title: "LiteSpeed Web Server", description: "Industry-leading LiteSpeed technology with built-in caching for maximum page load speed and better SEO." },
   { icon: Shield, title: "Imunify360 Security", description: "Enterprise-level protection with automated malware scanning, DDoS protection, and real-time threat detection." },
@@ -19,63 +17,185 @@ const features = [
   { icon: Headphones, title: "24/7 Expert Support", description: "Our dedicated support team is available around the clock to help with any technical issues or questions." },
 ];
 
-// Fallback plans if API fails
-const fallbackPlans = [
+// ─── Pricing data ────────────────────────────────────────────────────────────
+type Period = "1" | "12" | "24" | "48";
+type FeatureType = "check" | "cross" | "star";
+
+interface PeriodData {
+  price: number;
+  originalPrice?: number;
+  saving?: string;
+  upfront?: number;
+  noCommit?: boolean;
+  renewsAt: number;
+}
+
+interface PlanFeature {
+  label: string;
+  type: FeatureType;
+}
+
+interface Plan {
+  id: string;
+  name: string;
+  tagline: string;
+  popular?: boolean;
+  specs: { ram: string; nvme: string; vcpu: string; bw: string };
+  periods: Record<Period, PeriodData>;
+  features: PlanFeature[];
+}
+
+const PLANS: Plan[] = [
   {
-    pid: 1, name: "Starter", popular: false,
-    features: ["1 Website", "10 GB SSD Storage", "Free SSL Certificate", "Free Domain (1 yr)", "Weekly Backups", "99.99% Uptime SLA"],
-    monthlyPrice: "₹79", annualPrice: "₹799",
+    id: "starter",
+    name: "Starter",
+    tagline: "Perfect for beginners & portfolios",
+    popular: false,
+    specs: { ram: "512 MB RAM", nvme: "10 GB NVMe", vcpu: "0.5 vCPU", bw: "Unmetered BW" },
+    periods: {
+      "1":  { price: 199, noCommit: true, renewsAt: 199 },
+      "12": { price: 119, originalPrice: 199, saving: "Save 40% vs monthly", upfront: 1428, renewsAt: 199 },
+      "24": { price: 89,  originalPrice: 199, saving: "Save 55% vs monthly", upfront: 2136, renewsAt: 199 },
+      "48": { price: 49,  originalPrice: 199, saving: "Save 75% vs monthly", upfront: 2352, renewsAt: 199 },
+    },
+    features: [
+      { label: "1 website",                  type: "check" },
+      { label: "10 GB NVMe SSD",             type: "check" },
+      { label: "2 email accounts",           type: "check" },
+      { label: "Free SSL certificate",       type: "check" },
+      { label: "LiteSpeed web server",       type: "check" },
+      { label: "Imunify360 malware scanner", type: "check" },
+      { label: "Daily automatic backups",    type: "check" },
+      { label: "Custom nameservers",         type: "check" },
+      { label: "Free migrations",            type: "check" },
+      { label: "24/7 support",               type: "star"  },
+      { label: "Free domain",                type: "cross" },
+      { label: "CDN",                        type: "cross" },
+      { label: "Staging",                    type: "cross" },
+    ],
   },
   {
-    pid: 2, name: "Business", popular: true,
-    features: ["Unlimited Websites", "50 GB NVMe Storage", "Free SSL & CDN", "Free Domain (1 yr)", "Daily Backups", "cPanel Control Panel"],
-    monthlyPrice: "₹199", annualPrice: "₹1,999",
+    id: "premium",
+    name: "Premium",
+    tagline: "Best for growing websites & blogs",
+    popular: true,
+    specs: { ram: "1 GB RAM", nvme: "30 GB NVMe", vcpu: "1 vCPU", bw: "Unmetered BW" },
+    periods: {
+      "1":  { price: 349, noCommit: true, renewsAt: 349 },
+      "12": { price: 219, originalPrice: 349, saving: "Save 37% vs monthly", upfront: 2628, renewsAt: 349 },
+      "24": { price: 169, originalPrice: 349, saving: "Save 52% vs monthly", upfront: 4056, renewsAt: 349 },
+      "48": { price: 99,  originalPrice: 349, saving: "Save 72% vs monthly", upfront: 4752, renewsAt: 349 },
+    },
+    features: [
+      { label: "5 websites",                 type: "check" },
+      { label: "30 GB NVMe SSD",             type: "check" },
+      { label: "25 email accounts",          type: "check" },
+      { label: "Free SSL certificate",       type: "check" },
+      { label: "LiteSpeed web server",       type: "check" },
+      { label: "Imunify360 malware scanner", type: "check" },
+      { label: "Daily automatic backups",    type: "check" },
+      { label: "Custom nameservers",         type: "check" },
+      { label: "Free migrations",            type: "check" },
+      { label: "24/7 support",               type: "star"  },
+      { label: "Free domain (1 yr)",         type: "check" },
+      { label: "Free CDN",                   type: "check" },
+      { label: "Staging",                    type: "cross" },
+    ],
   },
   {
-    pid: 3, name: "Enterprise", popular: false,
-    features: ["Unlimited Websites", "100 GB NVMe Storage", "Free SSL, CDN & IP", "Priority Support", "Real-time Backups", "Staging Environment"],
-    monthlyPrice: "₹399", annualPrice: "₹3,999",
+    id: "business",
+    name: "Business",
+    tagline: "For professionals & small businesses",
+    popular: false,
+    specs: { ram: "2 GB RAM", nvme: "100 GB NVMe", vcpu: "2 vCPUs", bw: "Unmetered BW" },
+    periods: {
+      "1":  { price: 549, noCommit: true, renewsAt: 549 },
+      "12": { price: 349, originalPrice: 549, saving: "Save 36% vs monthly", upfront: 4188, renewsAt: 549 },
+      "24": { price: 279, originalPrice: 549, saving: "Save 49% vs monthly", upfront: 6696, renewsAt: 549 },
+      "48": { price: 169, originalPrice: 549, saving: "Save 69% vs monthly", upfront: 8112, renewsAt: 549 },
+    },
+    features: [
+      { label: "Unlimited websites",         type: "check" },
+      { label: "100 GB NVMe SSD",            type: "check" },
+      { label: "Unlimited email accounts",   type: "check" },
+      { label: "Free SSL certificate",       type: "check" },
+      { label: "LiteSpeed web server",       type: "check" },
+      { label: "Imunify360 malware scanner", type: "check" },
+      { label: "Daily automatic backups",    type: "check" },
+      { label: "Custom nameservers",         type: "check" },
+      { label: "Free migrations",            type: "check" },
+      { label: "24/7 priority support",      type: "star"  },
+      { label: "Free domain (1 yr)",         type: "check" },
+      { label: "Free CDN",                   type: "check" },
+      { label: "Staging environment",        type: "check" },
+    ],
+  },
+  {
+    id: "enterprise",
+    name: "Enterprise",
+    tagline: "For agencies & high-traffic sites",
+    popular: false,
+    specs: { ram: "2 GB RAM", nvme: "Unlimited NVMe", vcpu: "2 vCPUs", bw: "Unmetered BW" },
+    periods: {
+      "1":  { price: 799, noCommit: true, renewsAt: 799 },
+      "12": { price: 499, originalPrice: 799, saving: "Save 38% vs monthly", upfront: 5988, renewsAt: 799 },
+      "24": { price: 399, originalPrice: 799, saving: "Save 50% vs monthly", upfront: 9576, renewsAt: 799 },
+      "48": { price: 249, originalPrice: 799, saving: "Save 69% vs monthly", upfront: 11952, renewsAt: 799 },
+    },
+    features: [
+      { label: "Unlimited websites",         type: "check" },
+      { label: "Unlimited NVMe SSD",         type: "check" },
+      { label: "Unlimited email accounts",   type: "check" },
+      { label: "Free SSL certificate",       type: "check" },
+      { label: "LiteSpeed web server",       type: "check" },
+      { label: "Imunify360 malware scanner", type: "check" },
+      { label: "Daily automatic backups",    type: "check" },
+      { label: "Custom nameservers",         type: "check" },
+      { label: "Free migrations",            type: "check" },
+      { label: "24/7 priority support",      type: "star"  },
+      { label: "Free domain (1 yr)",         type: "check" },
+      { label: "Free CDN",                   type: "check" },
+      { label: "Staging environment",        type: "check" },
+    ],
   },
 ];
 
+const PERIODS: { key: Period; label: string; badge?: string; icon?: string }[] = [
+  { key: "1",  label: "1 month" },
+  { key: "12", label: "12 months", badge: "Best value" },
+  { key: "24", label: "24 months" },
+  { key: "48", label: "48 months", icon: "⭐" },
+];
+
+// ─── Feature icon ─────────────────────────────────────────────────────────────
+const FeatureIcon = ({ type }: { type: FeatureType }) => {
+  if (type === "check") return <Check className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />;
+  if (type === "cross") return <X className="w-4 h-4 text-muted-foreground/40 flex-shrink-0 mt-0.5" />;
+  return <Star className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5 fill-yellow-500" />;
+};
+
+// ─── Component ───────────────────────────────────────────────────────────────
 const SharedHosting = () => {
-  const { products, loading, error } = useWhmcsProducts(SHARED_HOSTING_PIDS);
-
-  const plans = useMemo(() => {
-    if (!products.length) return fallbackPlans;
-
-    return products.map((p) => {
-      const inr = p.pricing?.INR;
-      const monthly = inr ? `₹${parseFloat(inr.monthly).toLocaleString('en-IN')}` : '—';
-      const annually = inr ? `₹${parseFloat(inr.annually).toLocaleString('en-IN')}` : '—';
-
-      return {
-        pid: p.pid,
-        name: p.name,
-        popular: p.pid === 2,
-        features: p.features,
-        monthlyPrice: monthly,
-        annualPrice: annually,
-      };
-    });
-  }, [products]);
+  const [period, setPeriod] = useState<Period>("12");
 
   return (
     <>
       <Helmet>
-        <title>Shared Hosting India | Affordable cPanel Hosting from ₹79/mo - Infinitive Cloud</title>
-        <meta name="description" content="Best shared hosting plans in India starting at ₹79/mo. NVMe SSD, free SSL, LiteSpeed servers, cPanel, and 99.99% uptime. Perfect for WordPress, blogs, and business websites." />
+        <title>Shared Hosting India | Affordable cPanel Hosting from ₹49/mo - Infinitive Cloud</title>
+        <meta name="description" content="Best shared hosting plans in India starting at ₹49/mo. NVMe SSD, free SSL, LiteSpeed servers, cPanel, and 99.99% uptime. Perfect for WordPress, blogs, and business websites." />
         <meta name="keywords" content="shared hosting India, cheap web hosting, cPanel hosting, NVMe hosting, LiteSpeed hosting, WordPress hosting India, affordable hosting" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/shared-hosting" />
-        <meta property="og:title" content="Shared Hosting India | cPanel Hosting from ₹79/mo" />
+        <meta property="og:title" content="Shared Hosting India | cPanel Hosting from ₹49/mo" />
         <meta property="og:description" content="Best shared hosting in India. NVMe SSD, free SSL, LiteSpeed, cPanel, 99.99% uptime." />
         <meta property="og:url" content="https://infinitivecloud.com/solutions/shared-hosting" />
         <meta property="og:type" content="website" />
       </Helmet>
+
       <div className="min-h-screen">
         <Navigation />
         <main className="pt-24 pb-20">
-          {/* Hero */}
+
+          {/* ── Hero ── */}
           <section className="section-container mb-16">
             <div className="max-w-4xl mx-auto text-center animate-fade-in">
               <h1 className="mb-6">
@@ -85,83 +205,166 @@ const SharedHosting = () => {
                 Affordable, reliable, and blazing-fast shared hosting powered by NVMe SSD and LiteSpeed technology. Perfect for personal websites, blogs, small businesses, and WordPress sites.
               </p>
               <div className="flex flex-wrap gap-4 justify-center mt-6 text-sm font-semibold text-primary">
-                <span className="flex items-center gap-1"><Check className="w-4 h-4" /> Free SSL</span>
-                <span className="flex items-center gap-1"><Check className="w-4 h-4" /> NVMe SSD</span>
-                <span className="flex items-center gap-1"><Check className="w-4 h-4" /> LiteSpeed</span>
-                <span className="flex items-center gap-1"><Check className="w-4 h-4" /> cPanel</span>
-                <span className="flex items-center gap-1"><Check className="w-4 h-4" /> 99.99% Uptime</span>
+                {["Free SSL", "NVMe SSD", "LiteSpeed", "cPanel", "99.99% Uptime"].map((t) => (
+                  <span key={t} className="flex items-center gap-1"><Check className="w-4 h-4" /> {t}</span>
+                ))}
               </div>
             </div>
           </section>
 
-          {/* Plans */}
+          {/* ── Pricing ── */}
           <section className="section-container mb-20">
-            {loading ? (
-              <div className="flex items-center justify-center py-20">
-                <Loader2 className="w-8 h-8 animate-spin text-primary" />
-                <span className="ml-3 text-muted-foreground">Loading plans...</span>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-                {plans.map((plan, i) => (
-                  <Card
-                    key={plan.pid}
-                    className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-up ${
-                      plan.popular ? "border-primary/50 shadow-primary/10 shadow-lg ring-2 ring-primary/20 scale-[1.02]" : ""
+
+            {/* Commitment period selector */}
+            <div className="mb-10">
+              <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">
+                Commitment Period
+              </p>
+              <div className="flex flex-wrap gap-2 items-center">
+                {PERIODS.map((p) => (
+                  <button
+                    key={p.key}
+                    onClick={() => setPeriod(p.key)}
+                    className={`relative px-5 py-2 rounded-lg text-sm font-semibold border transition-all duration-200 ${
+                      period === p.key
+                        ? "bg-foreground text-background border-foreground"
+                        : "bg-transparent text-foreground border-border hover:border-foreground/40"
                     }`}
-                    style={{ animationDelay: `${i * 0.1}s` }}
                   >
-                    {plan.popular && (
-                      <>
-                        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary to-accent" />
-                        <div className="absolute top-4 right-4">
-                          <span className="text-[9px] md:text-[10px] font-bold bg-badge text-badge-foreground px-2 py-0.5 rounded-full uppercase tracking-wider">Most Popular</span>
-                        </div>
-                      </>
+                    {p.badge && (
+                      <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 text-[10px] font-bold text-primary whitespace-nowrap">
+                        {p.badge}
+                      </span>
                     )}
-                    <CardContent className="p-8 pt-10">
-                      <h3 className="text-xl font-bold mb-1">{plan.name}</h3>
-                      <div className="mb-6">
-                        <div className="flex items-baseline gap-1">
-                          <span className="text-4xl font-black gradient-text">{plan.monthlyPrice}</span>
-                          <span className="text-base text-muted-foreground">/mo</span>
+                    {p.label}{p.icon ? ` ${p.icon}` : ""}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Plan cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+              {PLANS.map((plan) => {
+                const pd = plan.periods[period];
+                return (
+                  <Card
+                    key={plan.id}
+                    className={`relative flex flex-col overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${
+                      plan.popular
+                        ? "border-primary/50 ring-2 ring-primary/20 shadow-lg shadow-primary/10"
+                        : "border-border"
+                    }`}
+                  >
+                    {/* Popular gradient bar */}
+                    {plan.popular && (
+                      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-accent" />
+                    )}
+
+                    <CardContent className="p-6 pt-7 flex flex-col flex-1">
+
+                      {/* Popular badge */}
+                      {plan.popular && (
+                        <div className="text-center mb-3">
+                          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                            Most popular
+                          </span>
                         </div>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          or {plan.annualPrice}/yr
-                        </p>
-                        <p className="text-xs text-primary font-medium mt-1">14 Days Free Trial</p>
+                      )}
+
+                      {/* Plan name & tagline */}
+                      <h3 className="text-xl font-bold text-foreground">{plan.name}</h3>
+                      <p className="text-sm text-muted-foreground mb-4">{plan.tagline}</p>
+
+                      {/* Specs */}
+                      <div className="grid grid-cols-2 gap-x-4 gap-y-1 mb-5 text-xs text-muted-foreground">
+                        <span>{plan.specs.ram}</span>
+                        <span>{plan.specs.vcpu}</span>
+                        <span>{plan.specs.nvme}</span>
+                        <span>{plan.specs.bw}</span>
                       </div>
-                      <ul className="space-y-3 mb-8">
-                        {plan.features.map((f, j) => (
-                          <li key={j} className="flex items-center gap-3">
-                            <Check className="w-4 h-4 text-primary flex-shrink-0" />
-                            <span className="text-sm text-muted-foreground">{f}</span>
+
+                      {/* Price */}
+                      <div className="mb-1">
+                        {pd.originalPrice && (
+                          <span className="text-sm text-muted-foreground line-through">
+                            ₹{pd.originalPrice}/mo
+                          </span>
+                        )}
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-4xl font-black text-foreground">₹{pd.price}</span>
+                          <span className="text-sm text-muted-foreground">/month</span>
+                        </div>
+                      </div>
+
+                      {/* Saving / upfront info */}
+                      <div className="min-h-[56px] mb-4 text-sm">
+                        {pd.noCommit ? (
+                          <p className="text-muted-foreground text-xs">
+                            No commitment · cancel anytime
+                            <br />
+                            <em>Renews at ₹{pd.renewsAt}/mo</em>
+                          </p>
+                        ) : (
+                          <>
+                            <p className="text-green-600 dark:text-green-400 font-medium text-xs">{pd.saving}</p>
+                            <p className="text-muted-foreground text-xs">
+                              Pay ₹{pd.upfront?.toLocaleString("en-IN")} upfront · {period} months
+                              <br />
+                              <em>Renews at ₹{pd.renewsAt}/mo</em>
+                            </p>
+                          </>
+                        )}
+                      </div>
+
+                      {/* CTA */}
+                      <Link
+                        to={`/cart?product=${plan.id}&period=${period}&name=${encodeURIComponent(plan.name)}&type=shared-hosting`}
+                        className="mb-6"
+                      >
+                        <Button
+                          className={`w-full h-10 font-bold ${plan.popular ? "btn-gradient" : ""}`}
+                          variant={plan.popular ? "default" : "outline"}
+                        >
+                          Get started <ArrowRight className="w-4 h-4 ml-1.5" />
+                        </Button>
+                      </Link>
+
+                      {/* Divider */}
+                      <div className="border-t border-border mb-4" />
+
+                      {/* Feature list */}
+                      <ul className="space-y-2.5 flex-1">
+                        {plan.features.map((f) => (
+                          <li key={f.label} className="flex items-start gap-2.5">
+                            <FeatureIcon type={f.type} />
+                            <span className={`text-sm leading-snug ${f.type === "cross" ? "text-muted-foreground/50" : "text-foreground/80"}`}>
+                              {f.label}
+                            </span>
                           </li>
                         ))}
                       </ul>
-                      <Link to={`/cart?product=${plan.pid}&name=${encodeURIComponent(plan.name)}&type=shared-hosting`}>
-                        <Button className={`w-full h-12 font-bold ${plan.popular ? "btn-gradient" : ""}`} variant={plan.popular ? "default" : "outline"}>
-                          Get Started <ArrowRight className="w-4 h-4 ml-2" />
-                        </Button>
-                      </Link>
+
                     </CardContent>
                   </Card>
-                ))}
-              </div>
-            )}
-            {error && !loading && (
-              <p className="text-center text-xs text-muted-foreground mt-4">Showing cached pricing. Live prices will update shortly.</p>
-            )}
+                );
+              })}
+            </div>
+
+            <p className="text-xs text-center text-muted-foreground mt-6">
+              All prices are in INR. Taxes may apply. Plans renew at regular monthly rate after commitment period.
+            </p>
           </section>
 
-          {/* Features */}
+          {/* ── Why Choose ── */}
           <section className="section-container mb-20">
-            <h2 className="text-center mb-4">Why Choose Our <span className="gradient-text">Shared Hosting</span></h2>
+            <h2 className="text-center mb-4">
+              Why Choose Our <span className="gradient-text">Shared Hosting</span>
+            </h2>
             <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
               Enterprise-grade features at the most affordable prices. Every plan is designed for speed, security, and reliability.
             </p>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {features.map((f, i) => {
+              {whyFeatures.map((f, i) => {
                 const Icon = f.icon;
                 return (
                   <Card key={f.title} className="card-hover animate-fade-in-up" style={{ animationDelay: `${i * 0.1}s` }}>
@@ -178,7 +381,7 @@ const SharedHosting = () => {
             </div>
           </section>
 
-          {/* CTA */}
+          {/* ── CTA ── */}
           <section className="section-container">
             <Card className="bg-gradient-to-br from-primary/10 via-accent/10 to-background border-2 border-primary/20">
               <CardContent className="py-12 text-center">
@@ -187,12 +390,17 @@ const SharedHosting = () => {
                   Try any shared hosting plan free for 14 days. No credit card required.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link to="/cart?product=1&name=Starter&type=shared-hosting"><Button className="btn-gradient glow-effect font-bold h-14 px-8">Start Free Trial</Button></Link>
-                  <Link to="/contact"><Button variant="outline" className="h-14 px-8 font-semibold">Talk to Sales</Button></Link>
+                  <Link to="/cart?product=starter&period=12&name=Starter&type=shared-hosting">
+                    <Button className="btn-gradient glow-effect font-bold h-14 px-8">Start Free Trial</Button>
+                  </Link>
+                  <Link to="/contact">
+                    <Button variant="outline" className="h-14 px-8 font-semibold">Talk to Sales</Button>
+                  </Link>
                 </div>
               </CardContent>
             </Card>
           </section>
+
         </main>
         <Footer />
       </div>

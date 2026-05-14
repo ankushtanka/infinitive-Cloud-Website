@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { bulkDomainSearch, type WhmcsDomainResult } from "@/lib/whmcs";
+import { bulkDomainSearch, MIDDLEWARE_URL, type WhmcsDomainResult } from "@/lib/whmcs";
 
 export interface DomainResult {
   domain: string;
@@ -87,7 +87,7 @@ export function useDomainSearch() {
     const query = domainInput.trim();
     if (!query) return;
 
-    const match = query.match(/^([a-zA-Z0-9-]+)(\.[a-zA-Z0-9-.]+)?$/);
+    const match = query.match(/^([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)(\.[a-zA-Z0-9-.]+)?$/);
     const baseName = (match ? match[1] : query.replace(/[^a-zA-Z0-9-]/g, '')).toLowerCase();
     if (!baseName) return;
 
@@ -112,7 +112,7 @@ export function useDomainSearch() {
 
     try {
       const res = await fetch(
-        'https://client.infinitivecloud.com/middleware/domainMiddleware.php',
+        MIDDLEWARE_URL,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
