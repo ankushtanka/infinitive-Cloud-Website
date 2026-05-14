@@ -61,7 +61,7 @@ const PLANS: Plan[] = [
     features: [
       { label: "1 website",                  type: "check" },
       { label: "10 GB NVMe SSD",             type: "check" },
-      { label: "Free cPanel license",        type: "check" },
+      { label: "1 official cPanel",          type: "check" },
       { label: "Free SSL certificate",       type: "check" },
       { label: "2 email accounts",           type: "check" },
       { label: "LiteSpeed web server",       type: "check" },
