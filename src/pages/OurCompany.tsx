@@ -1,16 +1,16 @@
 import { Helmet } from "react-helmet";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, ReactNode } from "react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, ChevronLeft, ChevronRight, Sparkles, Cpu, Globe2, Zap } from "lucide-react";
+import { ArrowUpRight, ChevronDown, Cpu, Globe2, Sparkles, Zap } from "lucide-react";
 
 /**
- * "Our Company" — a cinematic, scroll-driven brand page.
- * Visual direction inspired by creative-studio sites: dark canvas, oversized
- * editorial type, animated gradient orb, marquee, project carousel and a bold
- * contact close. All content is original to INFINITIVE CLOUD.
+ * "Our Company" — cinematic, scroll-driven, scene-by-scene experience.
+ * Each section is a full-viewport "scene" that snaps into view. As the
+ * user scrolls, the previous scene fades / scales out and the next one
+ * dissolves in with parallax + blur — like a film cut between pages.
  */
 
 const projects = [
@@ -18,380 +18,548 @@ const projects = [
     title: "GeoCore Datalake",
     tag: "Private Cloud · Bare-metal",
     blurb: "Petabyte-scale analytics platform migrated to our Mumbai region with sub-ms storage fabric.",
-    accent: "from-amber-300/40 via-rose-300/20 to-transparent",
+    hue: "from-amber-400/30 via-rose-400/15 to-transparent",
+    accent: "hsla(38, 90%, 60%, 0.35)",
   },
   {
     title: "Atlas Commerce",
     tag: "Managed Hosting · Edge",
     blurb: "Headless commerce stack serving 14M sessions/month across India, EU and APAC edges.",
-    accent: "from-sky-300/40 via-indigo-300/20 to-transparent",
+    hue: "from-sky-400/30 via-indigo-400/15 to-transparent",
+    accent: "hsla(210, 90%, 60%, 0.35)",
   },
   {
     title: "Northwind AI",
     tag: "GPU Cluster · LLM Ops",
     blurb: "H100 cluster with private model serving, observability and fine-tune pipelines.",
-    accent: "from-emerald-300/40 via-teal-300/20 to-transparent",
+    hue: "from-emerald-400/30 via-teal-400/15 to-transparent",
+    accent: "hsla(160, 90%, 55%, 0.35)",
   },
   {
     title: "Sigma Trade Desk",
     tag: "Low-latency · FinOps",
     blurb: "Co-located trading infra with deterministic networking and 24×7 NOC handover.",
-    accent: "from-fuchsia-300/40 via-purple-300/20 to-transparent",
+    hue: "from-fuchsia-400/30 via-purple-400/15 to-transparent",
+    accent: "hsla(300, 90%, 65%, 0.35)",
   },
 ];
 
 const capabilities = [
-  { icon: Cpu, label: "Private Cloud Engineering" },
-  { icon: Globe2, label: "Global Edge Delivery" },
-  { icon: Sparkles, label: "AI & GPU Infrastructure" },
-  { icon: Zap, label: "Performance & Reliability" },
+  { icon: Cpu, label: "Private Cloud Engineering", desc: "Bare-metal, hypervisors, storage fabrics." },
+  { icon: Globe2, label: "Global Edge Delivery", desc: "12+ PoPs, anycast, smart routing." },
+  { icon: Sparkles, label: "AI & GPU Infrastructure", desc: "H100 clusters, private LLM ops." },
+  { icon: Zap, label: "Performance & Reliability", desc: "99.99% SLA, 24×7 NOC, deterministic." },
 ];
 
-const Reveal = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => {
+/**
+ * Cinematic scene wrapper: tracks its own scroll progress and drives
+ * opacity / scale / blur / translate for a film-cut feel.
+ */
+const Scene = ({
+  children,
+  index,
+  total,
+  className = "",
+  bg,
+}: {
+  children: (p: { progress: number; entering: number; leaving: number }) => ReactNode;
+  index: number;
+  total: number;
+  className?: string;
+  bg?: ReactNode;
+}) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [shown, setShown] = useState(false);
+  const [progress, setProgress] = useState(0); // 0 -> 1 across scene
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setShown(true);
-          io.disconnect();
-        }
-      },
-      { threshold: 0.15 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
+    let raf = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const r = el.getBoundingClientRect();
+        const vh = window.innerHeight;
+        // 0 when section just enters bottom, 1 when it exits top
+        const p = 1 - (r.top + r.height) / (vh + r.height);
+        setProgress(Math.min(1, Math.max(0, p)));
+      });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      cancelAnimationFrame(raf);
+    };
   }, []);
 
+  // Entering: 0 -> 1 in first 35% of scroll. Leaving: 0 -> 1 in last 35%.
+  const entering = Math.min(1, Math.max(0, progress / 0.35));
+  const leaving = Math.min(1, Math.max(0, (progress - 0.65) / 0.35));
+  const visible = entering * (1 - leaving);
+
   return (
-    <div
+    <section
       ref={ref}
-      style={{ transitionDelay: `${delay}ms` }}
-      className={`transition-all duration-[900ms] ease-out ${
-        shown ? "opacity-100 translate-y-0 blur-0" : "opacity-0 translate-y-8 blur-[6px]"
-      }`}
+      className={`relative h-screen w-full snap-start overflow-hidden ${className}`}
+      data-scene={index}
     >
-      {children}
-    </div>
+      {bg}
+      <div
+        className="absolute inset-0 will-change-transform"
+        style={{
+          opacity: visible,
+          transform: `scale(${0.94 + visible * 0.06}) translateY(${(1 - entering) * 40 - leaving * 40}px)`,
+          filter: `blur(${(1 - visible) * 8}px)`,
+          transition: "opacity 120ms linear",
+        }}
+      >
+        {children({ progress, entering, leaving })}
+      </div>
+      {/* film-cut vignette during transitions */}
+      <div
+        className="pointer-events-none absolute inset-0 bg-black"
+        style={{ opacity: leaving * 0.85 }}
+      />
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[10px] tracking-[0.4em] text-white/30 uppercase">
+        {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+      </div>
+    </section>
   );
 };
 
 const OurCompany = () => {
-  const [active, setActive] = useState(0);
   const [mouse, setMouse] = useState({ x: 0.5, y: 0.5 });
+  const [scrollHint, setScrollHint] = useState(true);
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
       setMouse({ x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight });
     };
+    const onScroll = () => setScrollHint(window.scrollY < 200);
     window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
-  const next = () => setActive((i) => (i + 1) % projects.length);
-  const prev = () => setActive((i) => (i - 1 + projects.length) % projects.length);
+  // total scenes for counter
+  const total = 4 + projects.length; // hero, manifesto, capabilities, stats, projects, contact... compute below
+  const scenes: Array<{ kind: string; data?: any }> = [
+    { kind: "hero" },
+    { kind: "manifesto" },
+    ...projects.map((p) => ({ kind: "project", data: p })),
+    { kind: "capabilities" },
+    { kind: "stats" },
+    { kind: "contact" },
+  ];
 
   return (
-    <div className="min-h-screen bg-[#0A0A0B] text-white overflow-hidden">
+    <div className="bg-[#070708] text-white">
       <Helmet>
         <title>Our Company — INFINITIVE CLOUD | Infrastructure for the Ambitious</title>
         <meta
           name="description"
-          content="Meet INFINITIVE CLOUD — a private-cloud and infrastructure studio engineering high-performance hosting, edge delivery and AI platforms for ambitious teams."
+          content="Step into INFINITIVE CLOUD — a cinematic tour of the private-cloud, edge and AI studio engineering platforms for ambitious teams."
         />
         <link rel="canonical" href="https://infinitivecloud.com/our-company" />
       </Helmet>
 
       <Navigation />
 
-      {/* ===================== HERO ===================== */}
-      <section className="relative min-h-screen flex items-center pt-32 pb-24">
-        {/* animated gradient orb */}
+      {/* Cinematic scroll container with snap */}
+      <main
+        className="relative h-screen overflow-y-scroll overflow-x-hidden snap-y snap-mandatory scroll-smooth"
+        style={{ scrollSnapType: "y mandatory" }}
+      >
+        {/* Persistent grain + cursor orb across all scenes */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 -z-10"
+          className="pointer-events-none fixed inset-0 z-0"
           style={{
-            background: `radial-gradient(60rem 60rem at ${mouse.x * 100}% ${mouse.y * 100}%, hsla(38, 70%, 55%, 0.18), transparent 60%), radial-gradient(40rem 40rem at 80% 20%, hsla(220, 80%, 50%, 0.18), transparent 60%), #0A0A0B`,
-            transition: "background 600ms ease",
+            background: `radial-gradient(50rem 50rem at ${mouse.x * 100}% ${mouse.y * 100}%, hsla(38, 70%, 55%, 0.12), transparent 60%)`,
+            transition: "background 500ms ease",
           }}
         />
-        {/* grain */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 -z-10 opacity-[0.06] mix-blend-overlay"
+          className="pointer-events-none fixed inset-0 z-0 opacity-[0.05] mix-blend-overlay"
           style={{
             backgroundImage:
               "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")",
           }}
         />
 
-        <div className="section-container relative z-10">
-          <Reveal>
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-white/70 backdrop-blur">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-300 animate-pulse" />
-              Our Company
-            </div>
-          </Reveal>
-
-          <Reveal delay={120}>
-            <h1
-              className="mt-8 font-serif font-light leading-[0.95] tracking-tight text-white"
-              style={{ fontSize: "clamp(3rem, 9vw, 9rem)" }}
-            >
-              An infrastructure studio,
-              <br />
-              <span className="italic text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-rose-200 to-sky-200">
-                engineered for the ambitious.
-              </span>
-            </h1>
-          </Reveal>
-
-          <Reveal delay={260}>
-            <p className="mt-10 max-w-2xl text-lg md:text-xl text-white/70 leading-relaxed">
-              We build private cloud, edge and AI platforms for teams that refuse to compromise on
-              performance. Serious engineering, calm operations, and a craft mindset behind every rack.
-            </p>
-          </Reveal>
-
-          <Reveal delay={380}>
-            <div className="mt-12 flex flex-wrap items-center gap-4">
-              <Link to="/contact">
-                <Button size="lg" className="rounded-full bg-white text-black hover:bg-white/90 px-7 h-12 font-bold">
-                  Start a project <ArrowUpRight className="w-4 h-4" />
-                </Button>
-              </Link>
-              <Link to="/solutions">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="rounded-full border-white/25 text-white bg-transparent hover:bg-white/10 hover:text-white px-7 h-12 font-bold"
-                >
-                  Explore capabilities
-                </Button>
-              </Link>
-            </div>
-          </Reveal>
-        </div>
-
-        <div className="absolute bottom-8 left-0 right-0 flex justify-center text-[10px] uppercase tracking-[0.4em] text-white/40">
-          Scroll to explore
-        </div>
-      </section>
-
-      {/* ===================== MARQUEE ===================== */}
-      <section className="relative border-y border-white/10 bg-white/[0.02] py-6 overflow-hidden">
-        <div className="flex gap-16 animate-[marquee_40s_linear_infinite] whitespace-nowrap text-white/40 text-sm uppercase tracking-[0.3em]">
-          {[...Array(2)].map((_, r) => (
-            <div key={r} className="flex gap-16 shrink-0">
-              {[
-                "Private Cloud",
-                "Bare-metal",
-                "GPU Clusters",
-                "Edge CDN",
-                "Managed Kubernetes",
-                "24×7 NOC",
-                "ISO 27001",
-                "Tier-IV DC",
-                "Zero-downtime",
-                "FinOps",
-              ].map((t) => (
-                <span key={t + r} className="flex items-center gap-16">
-                  {t}
-                  <span className="w-1 h-1 rounded-full bg-amber-300/60" />
-                </span>
-              ))}
-            </div>
-          ))}
-        </div>
-        <style>{`@keyframes marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }`}</style>
-      </section>
-
-      {/* ===================== SELECTED WORK ===================== */}
-      <section className="relative py-32">
-        <div className="section-container">
-          <Reveal>
-            <div className="flex items-end justify-between flex-wrap gap-6 mb-16">
-              <div>
-                <div className="text-xs uppercase tracking-[0.3em] text-white/50 mb-4">Selected Work</div>
-                <h2 className="font-serif font-light text-5xl md:text-7xl leading-[1] max-w-3xl">
-                  Quiet platforms behind <span className="italic">loud</span> businesses.
-                </h2>
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={prev}
-                  className="w-12 h-12 rounded-full border border-white/20 hover:bg-white hover:text-black transition flex items-center justify-center"
-                  aria-label="Previous project"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                <button
-                  onClick={next}
-                  className="w-12 h-12 rounded-full border border-white/20 hover:bg-white hover:text-black transition flex items-center justify-center"
-                  aria-label="Next project"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
-          </Reveal>
-
-          <Reveal delay={120}>
-            <div className="relative h-[60vh] min-h-[420px] rounded-3xl border border-white/10 overflow-hidden bg-white/[0.02]">
-              {projects.map((p, i) => (
-                <div
-                  key={p.title}
-                  className={`absolute inset-0 transition-all duration-[900ms] ease-out ${
-                    i === active ? "opacity-100 scale-100" : "opacity-0 scale-[1.04] pointer-events-none"
-                  }`}
-                >
-                  <div className={`absolute inset-0 bg-gradient-to-br ${p.accent}`} />
+        {scenes.map((scene, i) => {
+          if (scene.kind === "hero") {
+            return (
+              <Scene
+                key={i}
+                index={i}
+                total={scenes.length}
+                bg={
                   <div
                     aria-hidden
-                    className="absolute inset-0 opacity-20"
+                    className="absolute inset-0"
                     style={{
-                      backgroundImage:
-                        "linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.06) 1px, transparent 1px)",
-                      backgroundSize: "48px 48px",
+                      background:
+                        "radial-gradient(60rem 60rem at 50% 60%, hsla(38, 80%, 55%, 0.18), transparent 60%), #070708",
                     }}
                   />
-                  <div className="relative h-full flex flex-col justify-end p-8 md:p-14">
-                    <div className="text-xs uppercase tracking-[0.3em] text-white/60 mb-3">{p.tag}</div>
-                    <h3 className="font-serif text-4xl md:text-6xl font-light leading-tight mb-4">{p.title}</h3>
-                    <p className="max-w-xl text-white/70 text-base md:text-lg">{p.blurb}</p>
+                }
+              >
+                {({ entering }) => (
+                  <div className="relative z-10 h-full flex flex-col justify-center section-container">
+                    <div
+                      className="inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-white/70 backdrop-blur"
+                      style={{ opacity: entering, transform: `translateY(${(1 - entering) * 20}px)` }}
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-300 animate-pulse" />
+                      Our Company
+                    </div>
+                    <h1
+                      className="mt-8 font-serif font-light leading-[0.95] tracking-tight"
+                      style={{
+                        fontSize: "clamp(3rem, 9vw, 9rem)",
+                        opacity: entering,
+                        transform: `translateY(${(1 - entering) * 60}px)`,
+                        textShadow: "0 0 80px hsla(38, 90%, 60%, 0.25)",
+                      }}
+                    >
+                      An infrastructure studio,
+                      <br />
+                      <span className="italic text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-rose-200 to-sky-200">
+                        engineered for the ambitious.
+                      </span>
+                    </h1>
+                    <p
+                      className="mt-10 max-w-2xl text-lg md:text-xl text-white/70 leading-relaxed"
+                      style={{ opacity: entering * 0.9, transform: `translateY(${(1 - entering) * 40}px)` }}
+                    >
+                      Scroll. Each section is a scene — private cloud, edge, AI, the people behind the racks.
+                    </p>
                   </div>
-                </div>
-              ))}
-              <div className="absolute top-6 right-6 text-xs tracking-[0.3em] text-white/50">
-                {String(active + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
-              </div>
-            </div>
-          </Reveal>
+                )}
+              </Scene>
+            );
+          }
 
-          <div className="mt-6 flex gap-2">
-            {projects.map((_, i) => (
-              <button
+          if (scene.kind === "manifesto") {
+            return (
+              <Scene
                 key={i}
-                onClick={() => setActive(i)}
-                className={`h-1 rounded-full transition-all ${i === active ? "w-12 bg-white" : "w-6 bg-white/20"}`}
-                aria-label={`Project ${i + 1}`}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ===================== MANIFESTO ===================== */}
-      <section className="relative py-32 border-t border-white/10">
-        <div className="section-container max-w-5xl">
-          <Reveal>
-            <div className="text-xs uppercase tracking-[0.3em] text-white/50 mb-8">What we believe</div>
-          </Reveal>
-          <Reveal delay={120}>
-            <p className="font-serif font-light text-3xl md:text-5xl leading-[1.15] text-white/90">
-              Infrastructure should disappear. The best platforms are the ones nobody talks about —
-              they just keep working, year after year, while the product team ships.
-              <br />
-              <br />
-              We obsess over the boring parts: redundancy, latency budgets, cost models, runbooks.
-              We treat hardware like a craft and software like a discipline. We answer the phone at
-              <span className="italic"> 3 a.m.</span> because that's the job.
-            </p>
-          </Reveal>
-
-          <Reveal delay={260}>
-            <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8">
-              {capabilities.map(({ icon: Icon, label }) => (
-                <div key={label} className="group">
-                  <div className="w-12 h-12 rounded-xl border border-white/15 flex items-center justify-center mb-4 group-hover:border-amber-300/60 transition">
-                    <Icon className="w-5 h-5 text-amber-200" />
+                index={i}
+                total={scenes.length}
+                bg={
+                  <div
+                    aria-hidden
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "radial-gradient(50rem 50rem at 20% 30%, hsla(220, 80%, 50%, 0.15), transparent 60%), #07080d",
+                    }}
+                  />
+                }
+              >
+                {({ entering, progress }) => (
+                  <div className="relative z-10 h-full flex items-center section-container max-w-5xl">
+                    <div>
+                      <div
+                        className="text-xs uppercase tracking-[0.3em] text-white/50 mb-8"
+                        style={{ opacity: entering }}
+                      >
+                        What we believe
+                      </div>
+                      <p
+                        className="font-serif font-light text-3xl md:text-5xl leading-[1.15] text-white/90"
+                        style={{
+                          opacity: entering,
+                          transform: `translateY(${(1 - entering) * 40}px) translateX(${progress * -20}px)`,
+                        }}
+                      >
+                        Infrastructure should disappear. The best platforms are the ones nobody talks
+                        about — they just keep working, year after year, while the product team ships.
+                      </p>
+                    </div>
                   </div>
-                  <div className="text-sm font-semibold text-white/80">{label}</div>
-                </div>
-              ))}
-            </div>
-          </Reveal>
-        </div>
-      </section>
+                )}
+              </Scene>
+            );
+          }
 
-      {/* ===================== STATS ===================== */}
-      <section className="relative py-24 border-t border-white/10 bg-white/[0.02]">
-        <div className="section-container grid grid-cols-2 md:grid-cols-4 gap-8">
-          {[
-            { k: "99.99%", v: "Uptime SLA" },
-            { k: "12+", v: "Global PoPs" },
-            { k: "<30s", v: "NOC response" },
-            { k: "10y+", v: "Engineering craft" },
-          ].map((s, i) => (
-            <Reveal key={s.k} delay={i * 90}>
-              <div>
-                <div className="font-serif font-light text-5xl md:text-6xl text-white">{s.k}</div>
-                <div className="mt-2 text-xs uppercase tracking-[0.3em] text-white/50">{s.v}</div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
+          if (scene.kind === "project") {
+            const p = scene.data;
+            return (
+              <Scene
+                key={i}
+                index={i}
+                total={scenes.length}
+                bg={
+                  <>
+                    <div
+                      aria-hidden
+                      className="absolute inset-0"
+                      style={{
+                        background: `radial-gradient(60rem 60rem at 70% 50%, ${p.accent}, transparent 60%), #070708`,
+                      }}
+                    />
+                    <div
+                      aria-hidden
+                      className={`absolute inset-0 bg-gradient-to-br ${p.hue} opacity-60`}
+                    />
+                    <div
+                      aria-hidden
+                      className="absolute inset-0 opacity-[0.08]"
+                      style={{
+                        backgroundImage:
+                          "linear-gradient(to right, rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.5) 1px, transparent 1px)",
+                        backgroundSize: "56px 56px",
+                      }}
+                    />
+                  </>
+                }
+              >
+                {({ entering, progress }) => (
+                  <div className="relative z-10 h-full flex items-end section-container pb-32">
+                    <div>
+                      <div
+                        className="text-xs uppercase tracking-[0.3em] text-white/60 mb-4"
+                        style={{ opacity: entering }}
+                      >
+                        {p.tag}
+                      </div>
+                      <h3
+                        className="font-serif font-light leading-[0.95]"
+                        style={{
+                          fontSize: "clamp(3rem, 8vw, 8rem)",
+                          opacity: entering,
+                          transform: `translateY(${(1 - entering) * 80}px) scale(${0.95 + entering * 0.05})`,
+                          textShadow: `0 0 60px ${p.accent}`,
+                        }}
+                      >
+                        {p.title}
+                      </h3>
+                      <p
+                        className="mt-6 max-w-xl text-white/80 text-lg md:text-xl"
+                        style={{
+                          opacity: entering * 0.9,
+                          transform: `translateY(${(1 - entering) * 40}px)`,
+                        }}
+                      >
+                        {p.blurb}
+                      </p>
+                    </div>
+                    {/* parallax floating tag */}
+                    <div
+                      className="absolute top-10 right-10 text-white/30 text-[10px] tracking-[0.4em] uppercase"
+                      style={{ transform: `translateY(${progress * -40}px)` }}
+                    >
+                      Selected work
+                    </div>
+                  </div>
+                )}
+              </Scene>
+            );
+          }
 
-      {/* ===================== CONTACT ===================== */}
-      <section className="relative py-40 border-t border-white/10">
-        <div className="section-container max-w-5xl">
-          <Reveal>
-            <div className="text-xs uppercase tracking-[0.3em] text-white/50 mb-8">Let's interface</div>
-          </Reveal>
-          <Reveal delay={120}>
-            <h2
-              className="font-serif font-light leading-[0.95] tracking-tight"
-              style={{ fontSize: "clamp(3rem, 8vw, 8rem)" }}
+          if (scene.kind === "capabilities") {
+            return (
+              <Scene
+                key={i}
+                index={i}
+                total={scenes.length}
+                bg={
+                  <div
+                    aria-hidden
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "radial-gradient(60rem 60rem at 50% 50%, hsla(160, 70%, 40%, 0.12), transparent 60%), #070a09",
+                    }}
+                  />
+                }
+              >
+                {({ entering }) => (
+                  <div className="relative z-10 h-full flex items-center section-container">
+                    <div className="w-full">
+                      <div
+                        className="text-xs uppercase tracking-[0.3em] text-white/50 mb-6"
+                        style={{ opacity: entering }}
+                      >
+                        Capabilities
+                      </div>
+                      <h2
+                        className="font-serif font-light text-5xl md:text-7xl leading-[1] mb-16 max-w-3xl"
+                        style={{
+                          opacity: entering,
+                          transform: `translateY(${(1 - entering) * 50}px)`,
+                        }}
+                      >
+                        Quiet platforms behind <span className="italic">loud</span> businesses.
+                      </h2>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                        {capabilities.map(({ icon: Icon, label, desc }, idx) => (
+                          <div
+                            key={label}
+                            style={{
+                              opacity: Math.min(1, entering * 1.2 - idx * 0.1),
+                              transform: `translateY(${Math.max(0, 60 - entering * 80 + idx * 10)}px)`,
+                              transition: "opacity 200ms",
+                            }}
+                          >
+                            <div className="w-12 h-12 rounded-xl border border-white/15 flex items-center justify-center mb-4">
+                              <Icon className="w-5 h-5 text-amber-200" />
+                            </div>
+                            <div className="text-sm font-semibold text-white/90 mb-2">{label}</div>
+                            <div className="text-xs text-white/50 leading-relaxed">{desc}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </Scene>
+            );
+          }
+
+          if (scene.kind === "stats") {
+            const stats = [
+              { k: "99.99%", v: "Uptime SLA" },
+              { k: "12+", v: "Global PoPs" },
+              { k: "<30s", v: "NOC response" },
+              { k: "10y+", v: "Engineering craft" },
+            ];
+            return (
+              <Scene
+                key={i}
+                index={i}
+                total={scenes.length}
+                bg={
+                  <div
+                    aria-hidden
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "radial-gradient(50rem 50rem at 80% 70%, hsla(38, 80%, 50%, 0.12), transparent 60%), #08080a",
+                    }}
+                  />
+                }
+              >
+                {({ entering }) => (
+                  <div className="relative z-10 h-full flex items-center section-container">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-12 w-full">
+                      {stats.map((s, idx) => (
+                        <div
+                          key={s.k}
+                          style={{
+                            opacity: Math.min(1, entering * 1.3 - idx * 0.15),
+                            transform: `translateY(${Math.max(0, 80 - entering * 100 + idx * 12)}px)`,
+                          }}
+                        >
+                          <div
+                            className="font-serif font-light text-6xl md:text-8xl"
+                            style={{ textShadow: "0 0 60px hsla(38, 90%, 60%, 0.3)" }}
+                          >
+                            {s.k}
+                          </div>
+                          <div className="mt-3 text-xs uppercase tracking-[0.3em] text-white/50">
+                            {s.v}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </Scene>
+            );
+          }
+
+          // contact
+          return (
+            <Scene
+              key={i}
+              index={i}
+              total={scenes.length}
+              bg={
+                <div
+                  aria-hidden
+                  className="absolute inset-0"
+                  style={{
+                    background:
+                      "radial-gradient(60rem 60rem at 50% 100%, hsla(20, 90%, 55%, 0.18), transparent 60%), #060608",
+                  }}
+                />
+              }
             >
-              Bring us the
-              <br />
-              <span className="italic text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-rose-200">
-                hard problems.
-              </span>
-            </h2>
-          </Reveal>
-          <Reveal delay={260}>
-            <div className="mt-14 grid md:grid-cols-2 gap-10 text-white/70">
-              <div>
-                <div className="text-xs uppercase tracking-[0.3em] text-white/40 mb-3">New business</div>
-                <a href="mailto:hello@infinitivecloud.com" className="text-2xl text-white hover:text-amber-200 transition">
-                  hello@infinitivecloud.com
-                </a>
-              </div>
-              <div>
-                <div className="text-xs uppercase tracking-[0.3em] text-white/40 mb-3">Visit us</div>
-                <p className="text-lg text-white">INFINITIVE CLOUD PVT LTD</p>
-                <p>India · Global operations</p>
-              </div>
-            </div>
-          </Reveal>
-          <Reveal delay={380}>
-            <div className="mt-14 flex flex-wrap gap-4">
-              <Link to="/contact">
-                <Button size="lg" className="rounded-full bg-white text-black hover:bg-white/90 px-7 h-12 font-bold">
-                  Book a call <ArrowUpRight className="w-4 h-4" />
-                </Button>
-              </Link>
-              <Link to="/quote">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="rounded-full border-white/25 text-white bg-transparent hover:bg-white/10 hover:text-white px-7 h-12 font-bold"
-                >
-                  Request a quote
-                </Button>
-              </Link>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+              {({ entering }) => (
+                <div className="relative z-10 h-full flex items-center section-container max-w-5xl">
+                  <div>
+                    <div
+                      className="text-xs uppercase tracking-[0.3em] text-white/50 mb-8"
+                      style={{ opacity: entering }}
+                    >
+                      Let's interface
+                    </div>
+                    <h2
+                      className="font-serif font-light leading-[0.95] tracking-tight"
+                      style={{
+                        fontSize: "clamp(3rem, 8vw, 8rem)",
+                        opacity: entering,
+                        transform: `translateY(${(1 - entering) * 60}px)`,
+                        textShadow: "0 0 80px hsla(20, 90%, 60%, 0.3)",
+                      }}
+                    >
+                      Bring us the
+                      <br />
+                      <span className="italic text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-rose-200">
+                        hard problems.
+                      </span>
+                    </h2>
+                    <div
+                      className="mt-12 flex flex-wrap gap-4"
+                      style={{ opacity: entering, transform: `translateY(${(1 - entering) * 30}px)` }}
+                    >
+                      <Link to="/contact">
+                        <Button size="lg" className="rounded-full bg-white text-black hover:bg-white/90 px-7 h-12 font-bold">
+                          Book a call <ArrowUpRight className="w-4 h-4" />
+                        </Button>
+                      </Link>
+                      <Link to="/quote">
+                        <Button
+                          size="lg"
+                          variant="outline"
+                          className="rounded-full border-white/25 text-white bg-transparent hover:bg-white/10 hover:text-white px-7 h-12 font-bold"
+                        >
+                          Request a quote
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </Scene>
+          );
+        })}
 
-      <Footer />
+        {/* Footer rendered as a final non-snap section so it doesn't break flow */}
+        <div className="snap-start">
+          <Footer />
+        </div>
+      </main>
+
+      {/* Persistent scroll hint */}
+      <div
+        className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-2 text-[10px] uppercase tracking-[0.4em] text-white/50 transition-opacity duration-500 pointer-events-none ${
+          scrollHint ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        Scroll to enter the next scene
+        <ChevronDown className="w-4 h-4 animate-bounce" />
+      </div>
     </div>
   );
 };
