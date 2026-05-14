@@ -61,7 +61,7 @@ const PLANS: Plan[] = [
     features: [
       { label: "1 website",                  type: "check" },
       { label: "10 GB NVMe SSD",             type: "check" },
-      { label: "Free cPanel license",        type: "check" },
+      { label: "1 official cPanel",          type: "check" },
       { label: "Free SSL certificate",       type: "check" },
       { label: "2 email accounts",           type: "check" },
       { label: "LiteSpeed web server",       type: "check" },
@@ -90,7 +90,7 @@ const PLANS: Plan[] = [
     features: [
       { label: "5 websites",                 type: "check" },
       { label: "30 GB NVMe SSD",             type: "check" },
-      { label: "Free cPanel license",        type: "check" },
+      { label: "1 official cPanel",          type: "check" },
       { label: "Free SSL certificate",       type: "check" },
       { label: "25 email accounts",          type: "check" },
       { label: "LiteSpeed web server",       type: "check" },
@@ -119,7 +119,7 @@ const PLANS: Plan[] = [
     features: [
       { label: "Unlimited websites",         type: "check" },
       { label: "100 GB NVMe SSD",            type: "check" },
-      { label: "Free cPanel license",        type: "check" },
+      { label: "1 official cPanel",          type: "check" },
       { label: "Free SSL certificate",       type: "check" },
       { label: "Unlimited email accounts",   type: "check" },
       { label: "LiteSpeed web server",       type: "check" },
@@ -148,7 +148,7 @@ const PLANS: Plan[] = [
     features: [
       { label: "Unlimited websites",         type: "check" },
       { label: "Unlimited NVMe SSD",         type: "check" },
-      { label: "Free cPanel license",        type: "check" },
+      { label: "1 official cPanel",          type: "check" },
       { label: "Free SSL certificate",       type: "check" },
       { label: "Unlimited email accounts",   type: "check" },
       { label: "LiteSpeed web server",       type: "check" },
