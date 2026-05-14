@@ -194,7 +194,7 @@ export function useTLDPricing() {
   const fetchPricing = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await callDomainApi({ action: 'GetTLDPricing' });
+      const res: any = await callDomainApi({ action: 'GetTLDPricing' });
       setPricing(res.pricing || res);
       return res;
     } catch {
