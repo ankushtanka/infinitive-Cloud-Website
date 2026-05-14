@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { LogIn, Mail, Lock, Loader2, ArrowRight } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { validateLogin } from "@/lib/whmcs";
+import { lovable } from "@/integrations/lovable";
 
 const Login = () => {
   const navigate = useNavigate();
