@@ -90,8 +90,9 @@ const PLANS: Plan[] = [
     features: [
       { label: "5 websites",                 type: "check" },
       { label: "30 GB NVMe SSD",             type: "check" },
-      { label: "25 email accounts",          type: "check" },
+      { label: "Free cPanel license",        type: "check" },
       { label: "Free SSL certificate",       type: "check" },
+      { label: "25 email accounts",          type: "check" },
       { label: "LiteSpeed web server",       type: "check" },
       { label: "Imunify360 malware scanner", type: "check" },
       { label: "Daily automatic backups",    type: "check" },
