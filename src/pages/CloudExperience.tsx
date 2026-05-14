@@ -1,11 +1,9 @@
-import { Suspense, useEffect, useRef, useState, useMemo } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Stars, Float, Environment, Sparkles, Html, Instances, Instance } from "@react-three/drei";
-import * as THREE from "three";
+import { Canvas } from "@react-three/fiber";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowRight, Cpu, Database, Globe2, Shield, Zap, Activity, Cloud, Lock, ServerIcon } from "lucide-react";
 import Scene3D from "@/components/cloud-experience/Scene3D";
 import "@/components/cloud-experience/cursor.css";
