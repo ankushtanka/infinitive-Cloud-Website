@@ -67,7 +67,7 @@ const DomainTransfer = () => {
               <p className="text-muted-foreground mb-2">
                 Your domain <strong>{form.domain}</strong> transfer has been submitted.
               </p>
-              <p className="text-muted-foreground mb-2">Order ID: <strong>{result.orderId}</strong></p>
+              <p className="text-muted-foreground mb-2">Order ID: <strong>{String(result.orderId ?? '')}</strong></p>
               <p className="text-sm text-muted-foreground">
                 You'll receive a confirmation email shortly. Please approve the transfer at your current registrar to complete the process.
               </p>
