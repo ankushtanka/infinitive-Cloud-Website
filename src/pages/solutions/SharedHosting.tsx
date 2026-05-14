@@ -220,26 +220,25 @@ const SharedHosting = () => {
               <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">
                 Commitment Period
               </p>
-              <div className="flex flex-wrap gap-2 items-center">
-                {PERIODS.map((p) => (
-                  <button
-                    key={p.key}
-                    onClick={() => setPeriod(p.key)}
-                    className={`relative px-5 py-2 rounded-lg text-sm font-semibold border transition-all duration-200 ${
-                      period === p.key
-                        ? "bg-foreground text-background border-foreground"
-                        : "bg-transparent text-foreground border-border hover:border-foreground/40"
-                    }`}
-                  >
-                    {p.badge && (
-                      <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 text-[10px] font-bold text-primary whitespace-nowrap">
-                        {p.badge}
-                      </span>
-                    )}
-                    {p.label}{p.icon ? ` ${p.icon}` : ""}
-                  </button>
-                ))}
+              <div className="relative max-w-xs">
+                <select
+                  value={period}
+                  onChange={(e) => setPeriod(e.target.value as Period)}
+                  className="w-full h-11 pl-4 pr-10 rounded-xl border border-border/60 bg-card/60 backdrop-blur-md text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none cursor-pointer"
+                  style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "right 12px center",
+                  }}
+                >
+                  {PERIODS.map((p) => (
+                    <option key={p.key} value={p.key}>
+                      {p.label}
+                    </option>
+                  ))}
+                </select>
               </div>
+            </div>
             </div>
 
             {/* Plan cards */}

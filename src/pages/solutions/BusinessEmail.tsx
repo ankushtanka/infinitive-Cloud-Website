@@ -162,30 +162,28 @@ const BusinessEmail = () => {
       {/* Pricing */}
       <section className="py-16">
         <div className="section-container">
-          {/* Period tabs */}
+          {/* Period selector */}
           <div className="mb-10">
             <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-3">Commitment Period</p>
-            <div className="flex flex-wrap gap-2">
-              {PERIODS.map((p) => (
-                <button
-                  key={p.key}
-                  onClick={() => setPeriod(p.key)}
-                  className={`relative px-5 py-2 rounded-full font-bold text-sm border transition-all duration-200 ${
-                    period === p.key
-                      ? "bg-primary text-primary-foreground border-primary shadow-md"
-                      : "bg-background text-foreground border-border hover:border-primary/50"
-                  }`}
-                >
-                  {p.label}
-                  {p.badge && (
-                    <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-green-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full whitespace-nowrap">
-                      {p.badge}
-                    </span>
-                  )}
-                  {p.icon && <span className="ml-1">{p.icon}</span>}
-                </button>
-              ))}
+            <div className="relative max-w-xs">
+              <select
+                value={period}
+                onChange={(e) => setPeriod(e.target.value as Period)}
+                className="w-full h-11 pl-4 pr-10 rounded-xl border border-border/60 bg-card/60 backdrop-blur-md text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none cursor-pointer"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "right 12px center",
+                }}
+              >
+                {PERIODS.map((p) => (
+                  <option key={p.key} value={p.key}>
+                    {p.label}
+                  </option>
+                ))}
+              </select>
             </div>
+          </div>
           </div>
 
           {/* Plan cards */}
