@@ -259,7 +259,7 @@ async function api(action: string, body: Record<string, any> = {}, retries = 2):
         throw new Error(`Server returned an unexpected response. Please try again.`);
       }
       if (!res.ok) {
-        throw new Error(data?.message || `HTTP ${res.status}: order failed`);
+        throw new Error((data?.message as string) || `HTTP ${res.status}: order failed`);
       }
       return data;
     } catch (err: unknown) {
