@@ -194,7 +194,7 @@ const DomainManagement = () => {
                             {d.status || 'Active'}
                           </span>
                         </div>
-                        {d.expirydate && <p className="text-[10px] text-muted-foreground mt-0.5">Expires: {d.expirydate}</p>}
+                        {d.expirydate && <p className="text-[10px] text-muted-foreground mt-0.5">Expires: {String(d.expirydate)}</p>}
                       </button>
                     );
                   })}
