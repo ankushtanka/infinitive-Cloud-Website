@@ -83,8 +83,8 @@ const DomainManagement = () => {
   });
 
   useEffect(() => {
-    if (whoisData?.Registrant || whoisData?.registrant) {
-      const reg = whoisData.Registrant || whoisData.registrant || {};
+    if ((whoisData as any)?.Registrant || (whoisData as any)?.registrant) {
+      const reg: any = (whoisData as any).Registrant || (whoisData as any).registrant || {};
       setWhoisForm({
         'First Name': reg['First Name'] || reg.firstname || '',
         'Last Name': reg['Last Name'] || reg.lastname || '',
