@@ -1,201 +1,365 @@
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Shield, Headphones, Server, Cloud, Zap, CheckCircle2 } from "lucide-react";
-import { useEffect, useState, useRef } from "react";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "motion/react";
+import { useRef } from "react";
+import {
+  Server,
+  Cloud,
+  Shield,
+  Zap,
+  Database,
+  Users,
+  Lock,
+  Globe,
+  Check,
+  ChevronRight,
+} from "lucide-react";
 
-const useCountUp = (end: number, duration: number = 2000, suffix: string = "") => {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
-  const started = useRef(false);
+export default function App() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !started.current) {
-          started.current = true;
-          const startTime = performance.now();
-          const animate = (now: number) => {
-            const elapsed = now - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const eased = 1 - Math.pow(1 - progress, 3);
-            setCount(Math.floor(eased * end));
-            if (progress < 1) requestAnimationFrame(animate);
-          };
-          requestAnimationFrame(animate);
-        }
-      },
-      { threshold: 0.3 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [end, duration]);
-
-  return { ref, value: count, suffix };
-};
-
-const HeroSection = () => {
-  const [activeOffer, setActiveOffer] = useState(0);
-
-  const offers = [
-    { text: "🔥 Limited Time: Get 50% OFF on first 3 months", code: "WELCOME50" },
-    { text: "🚀 Start your 14-day Free Trial — No credit card required", code: null },
-    { text: "⚡ Hosting starting at just ₹79/mo — Launch today!", code: null },
-  ];
-
-  useEffect(() => {
-    const timer = setInterval(() => setActiveOffer((p) => (p + 1) % offers.length), 3500);
-    return () => clearInterval(timer);
-  }, []);
-
-  const stat1 = useCountUp(50, 2500, "+");
-  const stat2 = useCountUp(99, 2000, ".9%");
-  const stat3 = useCountUp(5, 1500, "x");
-  const stat4 = useCountUp(100, 1500, "%");
-
+  const rotateY = useTransform(scrollYProgress, [0, 1], [0, 360]);
+  const rotateX = useTransform(scrollYProgress, [0, 1], [15, -15]);
   return (
-    <section className="relative w-full flex flex-col items-center justify-center overflow-hidden bg-background pt-16 lg:pt-24 min-h-[85vh] md:min-h-screen">
-      {/* Static gradient background — heavy animated blur blobs removed for perf */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-muted/30 to-background" />
-        <div className="absolute inset-0" style={{ background: "var(--gradient-glow)" }} />
+    <div ref={containerRef} className="min-h-screen bg-slate-950 text-white overflow-x-hidden">
+      {/* Background effects */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px]" />
+        <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-cyan-600/20 rounded-full blur-[120px]" />
       </div>
 
-      {/* Top offer ticker */}
-      <div className="relative z-10 w-full max-w-4xl mx-auto px-3 sm:px-4 mt-2 md:mt-4 mb-4 md:mb-8">
-        <Link to="/contact" className="block">
-          <div className="overflow-hidden rounded-xl sm:rounded-2xl md:rounded-full bg-gradient-to-r from-primary/10 via-accent/10 to-secondary/10 border border-primary/20 hover:border-primary/40 transition-all cursor-pointer backdrop-blur-sm shadow-[0_0_20px_hsl(var(--primary)/0.1)]">
-            <div className="flex items-center justify-center min-h-[40px] sm:min-h-[48px] md:h-12 px-3 sm:px-5 md:px-6 py-1.5 md:py-0">
-              <motion.div
-                key={activeOffer}
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -20, opacity: 0 }}
-                transition={{ duration: 0.4 }}
-                className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 md:gap-3 text-[11px] sm:text-xs md:text-base font-semibold text-center leading-snug"
-              >
-                <span className="text-foreground">{offers[activeOffer].text}</span>
-                {offers[activeOffer].code && (
-                  <span className="font-mono px-2 sm:px-3 py-0.5 rounded-full bg-primary text-primary-foreground text-[10px] sm:text-xs font-bold whitespace-nowrap">
-                    {offers[activeOffer].code}
-                  </span>
-                )}
-                <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary flex-shrink-0" />
-              </motion.div>
-            </div>
-          </div>
-        </Link>
-      </div>
-
-      {/* Main hero content */}
-      <div className="section-container w-full relative z-10 flex flex-col items-center justify-center flex-1">
-        <div className="max-w-5xl w-full flex flex-col items-center text-center">
-          <h1 className="mb-4 md:mb-6 font-extrabold leading-[1.3] md:leading-[1.35] text-2xl sm:text-3xl md:text-[clamp(2.5rem,4.5vw,4.5rem)] tracking-tight">
-            <span className="whitespace-nowrap">Premium{" "}
-            <span className="gradient-text">Cloud & Web Hosting</span></span>
-            <br />
-            <span className="text-primary">Built for Speed & Scale</span>
-          </h1>
-
-          <p className="text-sm sm:text-base md:text-xl lg:text-2xl text-muted-foreground mb-4 md:mb-6 max-w-3xl mx-auto leading-relaxed px-2">
-            Managed VPS, dedicated servers, shared hosting & enterprise infrastructure — powered by NVMe SSD, LiteSpeed, and 24/7 expert support.
-          </p>
-
-          {/* Feature pills - hidden on mobile */}
-          <div className="hidden sm:flex flex-wrap items-center justify-center gap-3 mb-10">
-            {[
-              "NVMe SSD Storage",
-              "Free SSL & CDN",
-              "cPanel Included",
-              "Free Migration",
-            ].map((feature) => (
-              <div key={feature} className="flex items-center gap-1.5 text-sm font-medium text-foreground/80 bg-muted/50 px-3 py-1.5 rounded-full border border-border/50">
-                <CheckCircle2 className="w-3.5 h-3.5 text-primary" />
-                {feature}
+      {/* Hero Section */}
+      <section className="relative min-h-[calc(100vh-4rem)] pt-24 pb-24 md:pt-28 md:pb-28 lg:min-h-[calc(100vh-5.75rem)] lg:pt-[7.5rem] lg:pb-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            {/* Left Content */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full mb-6">
+                <Zap className="w-4 h-4 text-blue-400" />
+                <span className="text-sm text-blue-300">Powered by Enterprise Technology</span>
               </div>
-            ))}
-          </div>
 
-          {/* CTA buttons */}
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center w-full mb-6 md:mb-10 px-2">
-            <Link to="/free-trial">
-              <Button
-                size="lg"
-                className="btn-gradient glow-effect text-base md:text-xl px-8 md:px-12 h-12 md:h-16 rounded-xl md:rounded-2xl group font-bold shadow-lg hover:shadow-xl transition-all w-full sm:w-auto"
-                style={{ boxShadow: "var(--shadow-medium)" }}
-              >
-                Start Free Trial
-                <ArrowRight className="ml-2 w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
-            <Link to="/pricing">
-              <Button
-                size="lg"
-                variant="outline"
-                className="text-base md:text-xl px-8 md:px-12 h-12 md:h-16 rounded-xl md:rounded-2xl border-2 border-foreground/20 hover:border-primary hover:bg-primary/10 transition-all font-semibold w-full sm:w-auto"
-              >
-                View Plans — From ₹79/mo
-              </Button>
-            </Link>
-          </div>
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+                Next-Gen Cloud Infrastructure,{" "}
+                <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  Built for Performance
+                </span>
+              </h1>
 
-          {/* Trust badges - compact on mobile, only show 3 */}
-          <div className="flex flex-wrap items-center justify-center gap-3 md:gap-6 text-xs md:text-base text-muted-foreground mb-6 md:mb-10">
-            <div className="flex items-center gap-1.5 md:gap-2">
-              <Shield className="w-4 h-4 md:w-5 md:h-5 text-primary" />
-              <span className="font-medium">99.99% Uptime</span>
-            </div>
-            <div className="flex items-center gap-1.5 md:gap-2">
-              <Headphones className="w-4 h-4 md:w-5 md:h-5 text-primary" />
-              <span className="font-medium">24/7 Support</span>
-            </div>
-            <div className="flex items-center gap-1.5 md:gap-2">
-              <Cloud className="w-4 h-4 md:w-5 md:h-5 text-primary" />
-              <span className="font-medium">14-Day Free Trial</span>
-            </div>
-            <div className="hidden sm:flex items-center gap-2">
-              <Server className="w-5 h-5 text-primary" />
-              <span className="font-medium">Free Migration</span>
-            </div>
-            <div className="hidden sm:flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-primary" />
-              <span className="font-medium">30-Day Money-Back</span>
-            </div>
+              <p className="text-xl text-slate-400 mb-8 leading-relaxed">
+                Deploy faster with ultra-reliable cloud servers. Get 99.99% uptime,
+                lightning-fast speeds, and enterprise-grade security.
+              </p>
+
+              <div className="flex flex-wrap gap-4 mb-10">
+                <button className="px-6 py-3.5 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition-all flex items-center gap-2 group">
+                  Start Free Trial
+                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </button>
+                <button className="px-6 py-3.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg font-medium transition-all">
+                  View Pricing
+                </button>
+              </div>
+
+              <div className="flex items-center gap-8">
+                <div className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-emerald-400" />
+                  <span className="text-sm text-slate-300">No credit card required</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-emerald-400" />
+                  <span className="text-sm text-slate-300">Free migration support</span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Right - 3D Server Visualization */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
+              className="relative h-[600px]"
+              style={{ perspective: "1200px" }}
+            >
+              {/* Central Server Stack */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                <motion.div
+                  animate={{
+                    y: [0, -20, 0],
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  className="relative"
+                  style={{
+                    transformStyle: "preserve-3d",
+                  }}
+                >
+                  {/* Glow effect */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-blue-500/40 via-purple-500/40 to-transparent blur-3xl rounded-full scale-150" />
+
+                  {/* 3D Server Container with scroll rotation */}
+                  <motion.div
+                    className="relative w-64 h-80"
+                    style={{
+                      transformStyle: "preserve-3d",
+                      rotateY,
+                      rotateX,
+                    }}
+                  >
+                    {/* Front face */}
+                    <div
+                      className="absolute inset-0 bg-gradient-to-b from-slate-800 to-slate-900 rounded-2xl border border-slate-700 shadow-2xl overflow-hidden"
+                      style={{
+                        transform: "translateZ(40px)",
+                        transformStyle: "preserve-3d",
+                      }}
+                    >
+                      {/* Server panels */}
+                      {[...Array(5)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: i * 0.1 }}
+                          className="h-16 border-b border-slate-700 px-4 flex items-center gap-3"
+                        >
+                          <div className="flex gap-1.5">
+                            <motion.div
+                              animate={{
+                                backgroundColor: ["#3b82f6", "#8b5cf6", "#3b82f6"],
+                              }}
+                              transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                delay: i * 0.2,
+                              }}
+                              className="w-2 h-2 rounded-full"
+                            />
+                            <div className="w-2 h-2 bg-slate-600 rounded-full" />
+                            <div className="w-2 h-2 bg-slate-600 rounded-full" />
+                          </div>
+                          <div className="flex-1 flex gap-1">
+                            {[...Array(8)].map((_, j) => (
+                              <div
+                                key={j}
+                                className="flex-1 h-1.5 bg-slate-700 rounded"
+                              />
+                            ))}
+                          </div>
+                        </motion.div>
+                      ))}
+                      <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-blue-500/30 to-transparent" />
+                    </div>
+
+                    {/* Back face */}
+                    <div
+                      className="absolute inset-0 bg-gradient-to-b from-slate-900 to-slate-950 rounded-2xl border border-slate-700 shadow-2xl overflow-hidden"
+                      style={{
+                        transform: "translateZ(-40px) rotateY(180deg)",
+                      }}
+                    >
+                      {[...Array(5)].map((_, i) => (
+                        <div
+                          key={i}
+                          className="h-16 border-b border-slate-700 px-4 flex items-center justify-center"
+                        >
+                          <div className="flex gap-2">
+                            {[...Array(12)].map((_, j) => (
+                              <div
+                                key={j}
+                                className="w-1 h-8 bg-slate-700 rounded-full"
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                      <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-purple-500/30 to-transparent" />
+                    </div>
+
+                    {/* Left face */}
+                    <div
+                      className="absolute inset-0 bg-gradient-to-b from-slate-850 to-slate-900 rounded-l-2xl border-l border-slate-700 shadow-2xl overflow-hidden"
+                      style={{
+                        transform: "rotateY(-90deg) translateZ(40px)",
+                        width: "80px",
+                      }}
+                    >
+                      {[...Array(5)].map((_, i) => (
+                        <div
+                          key={i}
+                          className="h-16 border-b border-slate-700 flex items-center justify-center"
+                        >
+                          <div className="w-2 h-2 bg-slate-700 rounded-full" />
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Right face */}
+                    <div
+                      className="absolute inset-0 bg-gradient-to-b from-slate-850 to-slate-900 rounded-r-2xl border-r border-slate-700 shadow-2xl overflow-hidden"
+                      style={{
+                        transform: "rotateY(90deg) translateZ(224px)",
+                        width: "80px",
+                      }}
+                    >
+                      {[...Array(5)].map((_, i) => (
+                        <div
+                          key={i}
+                          className="h-16 border-b border-slate-700 flex items-center justify-center"
+                        >
+                          <div className="w-2 h-2 bg-slate-700 rounded-full" />
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Top face */}
+                    <div
+                      className="absolute inset-0 bg-gradient-to-br from-slate-700 to-slate-800 rounded-t-2xl border-t border-slate-600 shadow-2xl"
+                      style={{
+                        transform: "rotateX(90deg) translateZ(0px)",
+                        height: "80px",
+                      }}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20" />
+                    </div>
+
+                    {/* Bottom face */}
+                    <div
+                      className="absolute inset-0 bg-gradient-to-br from-slate-900 to-slate-950 rounded-b-2xl border-b border-slate-800 shadow-2xl"
+                      style={{
+                        transform: "rotateX(-90deg) translateZ(320px)",
+                        height: "80px",
+                      }}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/30 to-purple-500/30" />
+                    </div>
+
+                    {/* Orbiting elements - adjusted to work with 3D rotation */}
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                      className="absolute inset-0"
+                      style={{
+                        transformStyle: "preserve-3d",
+                        transform: "translateZ(80px)",
+                      }}
+                    >
+                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-12 h-12 bg-blue-500/20 backdrop-blur-sm border border-blue-500/30 rounded-xl flex items-center justify-center">
+                        <Shield className="w-6 h-6 text-blue-400" />
+                      </div>
+                    </motion.div>
+
+                    <motion.div
+                      animate={{ rotate: -360 }}
+                      transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                      className="absolute inset-0"
+                      style={{
+                        transformStyle: "preserve-3d",
+                        transform: "translateZ(80px)",
+                      }}
+                    >
+                      <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-12 h-12 bg-purple-500/20 backdrop-blur-sm border border-purple-500/30 rounded-xl flex items-center justify-center">
+                        <Database className="w-6 h-6 text-purple-400" />
+                      </div>
+                    </motion.div>
+
+                    {/* Additional orbiting icons */}
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                      className="absolute inset-0"
+                      style={{
+                        transformStyle: "preserve-3d",
+                        transform: "translateZ(80px)",
+                      }}
+                    >
+                      <div className="absolute top-1/2 -left-12 -translate-y-1/2 w-10 h-10 bg-cyan-500/20 backdrop-blur-sm border border-cyan-500/30 rounded-lg flex items-center justify-center">
+                        <Zap className="w-5 h-5 text-cyan-400" />
+                      </div>
+                    </motion.div>
+
+                    <motion.div
+                      animate={{ rotate: -360 }}
+                      transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+                      className="absolute inset-0"
+                      style={{
+                        transformStyle: "preserve-3d",
+                        transform: "translateZ(80px)",
+                      }}
+                    >
+                      <div className="absolute top-1/2 -right-12 -translate-y-1/2 w-10 h-10 bg-pink-500/20 backdrop-blur-sm border border-pink-500/30 rounded-lg flex items-center justify-center">
+                        <Lock className="w-5 h-5 text-pink-400" />
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                </motion.div>
+              </div>
+
+              {/* Floating stat cards */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.4 }}
+                className="absolute top-20 left-0 bg-slate-800/50 backdrop-blur-md border border-slate-700 rounded-xl p-4 w-48"
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 bg-emerald-500/20 rounded-lg flex items-center justify-center">
+                    <Zap className="w-5 h-5 text-emerald-400" />
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold">99.99%</div>
+                    <div className="text-xs text-slate-400">Uptime</div>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.6 }}
+                className="absolute top-32 right-0 bg-slate-800/50 backdrop-blur-md border border-slate-700 rounded-xl p-4 w-48"
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                    <Globe className="w-5 h-5 text-blue-400" />
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold">35+</div>
+                    <div className="text-xs text-slate-400">Data Centers</div>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
+                className="absolute bottom-20 left-8 bg-slate-800/50 backdrop-blur-md border border-slate-700 rounded-xl p-4 w-48"
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                    <Lock className="w-5 h-5 text-purple-400" />
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold">DDoS</div>
+                    <div className="text-xs text-slate-400">Protection</div>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
           </div>
         </div>
-
-        {/* Animated stats counter */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.7 }}
-          className="w-full max-w-4xl grid grid-cols-4 gap-2 sm:gap-4 md:gap-6 mb-6 md:mb-8 px-1 sm:px-0"
-        >
-          {[
-            { ...stat1, label: "Data Centers", fullLabel: "Global Data Centers", icon: "🌍" },
-            { ...stat2, label: "Satisfaction", fullLabel: "Client Satisfaction", icon: "⭐" },
-            { ...stat3, label: "Faster Speed", fullLabel: "Faster Load Speeds", icon: "⚡" },
-            { ...stat4, label: "Free SSL", fullLabel: "Free SSL & Security", icon: "🔒" },
-          ].map((stat, i) => (
-            <div
-              key={i}
-              ref={stat.ref}
-              className="relative group bg-card/80 border border-border/50 rounded-lg sm:rounded-2xl p-2 sm:p-5 md:p-6 text-center hover:border-primary/30 transition-all hover:shadow-lg"
-            >
-              <div className="text-sm sm:text-2xl mb-0.5 sm:mb-2">{stat.icon}</div>
-              <div className="text-base sm:text-3xl md:text-4xl font-black gradient-text tabular-nums leading-tight">
-                {stat.value}{stat.suffix}
-              </div>
-              <div className="text-[8px] sm:text-sm text-muted-foreground font-medium mt-0.5 sm:mt-1 leading-tight">
-                <span className="sm:hidden">{stat.label}</span>
-                <span className="hidden sm:inline">{stat.fullLabel}</span>
-              </div>
-            </div>
-          ))}
-        </motion.div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
-};
-
-export default HeroSection;
+}
