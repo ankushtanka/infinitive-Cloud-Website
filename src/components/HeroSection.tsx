@@ -3,6 +3,7 @@ import { ArrowRight, Shield, Headphones, Server, Cloud, Zap, CheckCircle2 } from
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import FuturisticBackground from "@/components/FuturisticBackground";
 
 const useCountUp = (end: number, duration: number = 2000, suffix: string = "") => {
   const [count, setCount] = useState(0);
