@@ -3,7 +3,6 @@ import { ArrowRight, Shield, Headphones, Server, Cloud, Zap, CheckCircle2 } from
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import FuturisticBackground from "@/components/FuturisticBackground";
 
 const useCountUp = (end: number, duration: number = 2000, suffix: string = "") => {
   const [count, setCount] = useState(0);
@@ -56,12 +55,11 @@ const HeroSection = () => {
 
   return (
     <section className="relative w-full flex flex-col items-center justify-center overflow-hidden bg-background pt-16 lg:pt-24 min-h-[85vh] md:min-h-screen">
-      {/* Futuristic animated background */}
+      {/* Static gradient background — heavy animated blur blobs removed for perf */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-br from-background via-muted/30 to-background" />
         <div className="absolute inset-0" style={{ background: "var(--gradient-glow)" }} />
       </div>
-      <FuturisticBackground />
 
       {/* Top offer ticker */}
       <div className="relative z-10 w-full max-w-4xl mx-auto px-3 sm:px-4 mt-2 md:mt-4 mb-4 md:mb-8">
