@@ -3,6 +3,7 @@ import Navigation from "@/components/Navigation";
 import DomainPriceComparison from "@/components/DomainPriceComparison";
 import Footer from "@/components/Footer";
 import HeroSection from "@/components/HeroSection";
+import ServerCloudAnimation from "@/components/ServerCloudAnimation";
 import TechLogosSection from "@/components/TechLogosSection";
 import DomainSearchSection from "@/components/DomainSearchSection";
 import HomePricingSection from "@/components/HomePricingSection";
@@ -62,6 +63,7 @@ const Index = () => {
       <Navigation />
       <main id="main-content">
         <HeroSection />
+        <ServerCloudAnimation />
         <TechLogosSection />
         <DomainSearchSection />
         <HomePricingSection />
