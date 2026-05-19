@@ -175,7 +175,7 @@ const HomePricingSection = () => {
                       <div className="flex items-start justify-between mb-6">
                         <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${
                           isPopular
-                            ? "bg-gradient-to-br from-primary to-accent text-white shadow-lg shadow-primary/30"
+                            ? "bg-gradient-to-br from-primary to-accent text-primary-foreground shadow-lg shadow-primary/30"
                             : "bg-primary/10 text-primary"
                         }`}>
                           <Icon className="w-5 h-5" strokeWidth={2.2} />
