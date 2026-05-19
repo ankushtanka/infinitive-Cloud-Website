@@ -100,7 +100,7 @@ const HomePricingSection = () => {
               }`}
             >
               Annually
-              <span className="text-[9px] md:text-[10px] font-bold bg-emerald-500/20 text-emerald-500 px-2 py-0.5 rounded-full tracking-wide">SAVE 20%</span>
+              <span className="text-[9px] md:text-[10px] font-bold bg-accent/20 text-accent px-2 py-0.5 rounded-full tracking-wide">SAVE 20%</span>
             </button>
             <button
               onClick={() => setBilling("4year")}
