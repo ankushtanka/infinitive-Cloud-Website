@@ -139,9 +139,10 @@ const PremiumInfographicSection = () => {
                   type="rotate"
                   from="0 400 250"
                   to="360 400 250"
-                  dur="90s"
+                  dur={`${slow(90)}s`}
                   repeatCount="indefinite"
                 />
+
               </g>
 
               {/* Slow rotating outer ring */}
