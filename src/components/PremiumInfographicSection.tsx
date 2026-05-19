@@ -161,7 +161,7 @@ const PremiumInfographicSection = () => {
                     type="rotate"
                     from="0 400 250"
                     to="360 400 250"
-                    dur="40s"
+                    dur={`${slow(40)}s`}
                     repeatCount="indefinite"
                   />
                 </circle>
