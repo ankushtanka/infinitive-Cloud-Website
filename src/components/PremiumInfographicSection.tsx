@@ -228,13 +228,13 @@ const PremiumInfographicSection = () => {
                       <animate
                         attributeName="r"
                         values="6;18;6"
-                        dur={`${2.4 + (i % 3) * 0.4}s`}
+                        dur={`${slow(2.4 + (i % 3) * 0.4)}s`}
                         repeatCount="indefinite"
                       />
                       <animate
                         attributeName="opacity"
                         values="0.6;0;0.6"
-                        dur={`${2.4 + (i % 3) * 0.4}s`}
+                        dur={`${slow(2.4 + (i % 3) * 0.4)}s`}
                         repeatCount="indefinite"
                       />
                     </circle>
