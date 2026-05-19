@@ -12,14 +12,14 @@ import { Globe2, Zap, Shield, Activity } from "lucide-react";
 const PremiumInfographicSection = () => {
   // Points of Presence (relative coords on viewBox 800x500)
   const pops = [
-    { x: 160, y: 220, label: "USA" },
-    { x: 320, y: 170, label: "Europe" },
-    { x: 360, y: 240, label: "India" },
-    { x: 440, y: 220, label: "Singapore" },
-    { x: 560, y: 180, label: "Tokyo" },
-    { x: 240, y: 320, label: "São Paulo" },
-    { x: 380, y: 340, label: "Johannesburg" },
-    { x: 600, y: 310, label: "Sydney" },
+    { x: 240, y: 220, label: "USA" },
+    { x: 340, y: 170, label: "Europe" },
+    { x: 380, y: 240, label: "India" },
+    { x: 450, y: 230, label: "Singapore" },
+    { x: 540, y: 190, label: "Tokyo" },
+    { x: 260, y: 330, label: "São Paulo" },
+    { x: 390, y: 340, label: "Johannesburg" },
+    { x: 560, y: 330, label: "Sydney" },
   ];
 
   // Edges between PoPs (sparse for minimalism)
