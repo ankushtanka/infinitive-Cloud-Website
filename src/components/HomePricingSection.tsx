@@ -201,7 +201,7 @@ const HomePricingSection = () => {
                       {/* Price */}
                       <div className="mb-6 pb-6 border-b border-border/60">
                         <div className="flex items-baseline gap-1.5">
-                          <span className={`text-5xl md:text-6xl font-bold tracking-tight ${isPopular ? "gradient-text" : "text-foreground"}`}>
+                          <span className="font-serif text-5xl md:text-6xl font-bold tracking-tight gradient-text">
                             {displayPrice}
                           </span>
                           <span className="text-base text-muted-foreground font-medium">{period}</span>
