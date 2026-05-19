@@ -100,7 +100,7 @@ const HomePricingSection = () => {
               }`}
             >
               Annually
-              <span className="text-[9px] md:text-[10px] font-bold bg-emerald-500/20 text-emerald-500 px-2 py-0.5 rounded-full tracking-wide">SAVE 20%</span>
+              <span className="text-[9px] md:text-[10px] font-bold bg-accent/20 text-accent px-2 py-0.5 rounded-full tracking-wide">SAVE 20%</span>
             </button>
             <button
               onClick={() => setBilling("4year")}
@@ -175,7 +175,7 @@ const HomePricingSection = () => {
                       <div className="flex items-start justify-between mb-6">
                         <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${
                           isPopular
-                            ? "bg-gradient-to-br from-primary to-accent text-white shadow-lg shadow-primary/30"
+                            ? "bg-gradient-to-br from-primary to-accent text-primary-foreground shadow-lg shadow-primary/30"
                             : "bg-primary/10 text-primary"
                         }`}>
                           <Icon className="w-5 h-5" strokeWidth={2.2} />
@@ -218,7 +218,7 @@ const HomePricingSection = () => {
                             <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
                               isPopular ? "bg-gradient-to-br from-primary to-accent" : "bg-primary/15"
                             }`}>
-                              <Check className={`w-3 h-3 ${isPopular ? "text-white" : "text-primary"}`} strokeWidth={3} />
+                              <Check className={`w-3 h-3 ${isPopular ? "text-primary-foreground" : "text-primary"}`} strokeWidth={3} />
                             </div>
                             <span className="text-sm text-foreground/90 leading-snug">{feature}</span>
                           </li>
