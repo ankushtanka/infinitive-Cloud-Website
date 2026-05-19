@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { Globe2, Zap, Shield, Activity } from "lucide-react";
 
 /**
@@ -11,11 +11,6 @@ import { Globe2, Zap, Shield, Activity } from "lucide-react";
  */
 const PremiumInfographicSection = () => {
   // Points of Presence (relative coords on viewBox 800x500)
-  const prefersReducedMotion = useReducedMotion();
-  // Slow durations down dramatically (or effectively pause) when the user
-  // prefers reduced motion. SVG SMIL doesn't react to CSS, so we scale dur values.
-  const slow = (s: number) => (prefersReducedMotion ? s * 8 : s);
-
   const pops = [
     { x: 240, y: 220, label: "USA" },
     { x: 340, y: 170, label: "Europe" },
@@ -129,20 +124,11 @@ const PremiumInfographicSection = () => {
                 <ellipse cx="400" cy="250" rx="190" ry="120" opacity="0.4" />
                 <ellipse cx="400" cy="250" rx="190" ry="170" opacity="0.3" />
               </g>
-              {/* Longitude lines — slowly rotating to suggest globe spin */}
+              {/* Longitude lines */}
               <g stroke="hsl(var(--primary) / 0.18)" fill="none" strokeWidth="1">
                 <ellipse cx="400" cy="250" rx="60" ry="190" />
                 <ellipse cx="400" cy="250" rx="120" ry="190" opacity="0.7" />
                 <ellipse cx="400" cy="250" rx="170" ry="190" opacity="0.4" />
-                <animateTransform
-                  attributeName="transform"
-                  type="rotate"
-                  from="0 400 250"
-                  to="360 400 250"
-                  dur={`${slow(90)}s`}
-                  repeatCount="indefinite"
-                />
-
               </g>
 
               {/* Slow rotating outer ring */}
@@ -161,7 +147,7 @@ const PremiumInfographicSection = () => {
                     type="rotate"
                     from="0 400 250"
                     to="360 400 250"
-                    dur={`${slow(40)}s`}
+                    dur="40s"
                     repeatCount="indefinite"
                   />
                 </circle>
@@ -179,7 +165,7 @@ const PremiumInfographicSection = () => {
                     type="rotate"
                     from="360 400 250"
                     to="0 400 250"
-                    dur={`${slow(60)}s`}
+                    dur="60s"
                     repeatCount="indefinite"
                   />
                 </circle>
@@ -196,11 +182,11 @@ const PremiumInfographicSection = () => {
                   <g key={i}>
                     <path d={path} fill="none" stroke="url(#infg-edge)" strokeWidth="1.2" opacity="0.7" />
                     <circle r="2.5" fill="hsl(var(--primary))">
-                      <animateMotion dur={`${slow(3 + (i % 3) * 0.6)}s`} repeatCount="indefinite" path={path} />
+                      <animateMotion dur={`${3 + (i % 3) * 0.6}s`} repeatCount="indefinite" path={path} />
                       <animate
                         attributeName="opacity"
                         values="0;1;1;0"
-                        dur={`${slow(3 + (i % 3) * 0.6)}s`}
+                        dur={`${3 + (i % 3) * 0.6}s`}
                         repeatCount="indefinite"
                       />
                     </circle>
@@ -228,13 +214,13 @@ const PremiumInfographicSection = () => {
                       <animate
                         attributeName="r"
                         values="6;18;6"
-                        dur={`${slow(2.4 + (i % 3) * 0.4)}s`}
+                        dur={`${2.4 + (i % 3) * 0.4}s`}
                         repeatCount="indefinite"
                       />
                       <animate
                         attributeName="opacity"
                         values="0.6;0;0.6"
-                        dur={`${slow(2.4 + (i % 3) * 0.4)}s`}
+                        dur={`${2.4 + (i % 3) * 0.4}s`}
                         repeatCount="indefinite"
                       />
                     </circle>
