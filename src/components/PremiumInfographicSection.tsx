@@ -195,47 +195,54 @@ const PremiumInfographicSection = () => {
               })}
 
               {/* PoP nodes */}
-              {pops.map((p, i) => (
-                <motion.g
-                  key={p.label}
-                  initial={{ opacity: 0, scale: 0.6 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.1 + i * 0.06, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  {/* Pulsing halo */}
-                  <circle cx={p.x} cy={p.y} r="14" fill="hsl(var(--primary) / 0.18)">
-                    <animate
-                      attributeName="r"
-                      values="6;18;6"
-                      dur={`${2.4 + (i % 3) * 0.4}s`}
-                      repeatCount="indefinite"
-                    />
-                    <animate
-                      attributeName="opacity"
-                      values="0.6;0;0.6"
-                      dur={`${2.4 + (i % 3) * 0.4}s`}
-                      repeatCount="indefinite"
-                    />
-                  </circle>
-                  {/* Outer ring */}
-                  <circle cx={p.x} cy={p.y} r="6" fill="none" stroke="hsl(var(--primary) / 0.55)" strokeWidth="1" />
-                  {/* Core dot */}
-                  <circle cx={p.x} cy={p.y} r="3" fill="hsl(var(--primary))" />
-                  {/* Label */}
-                  <text
-                    x={p.x}
-                    y={p.y - 14}
-                    textAnchor="middle"
-                    className="fill-foreground"
-                    fontSize="10"
-                    fontWeight="600"
-                    letterSpacing="0.5"
+              {pops.map((p, i) => {
+                // Anchor labels inward for edge nodes so they stay aligned within the globe
+                const dx = p.x - 400;
+                const anchor = dx < -120 ? "start" : dx > 120 ? "end" : "middle";
+                const labelX = anchor === "start" ? p.x + 10 : anchor === "end" ? p.x - 10 : p.x;
+                const labelY = p.y - 14;
+                return (
+                  <motion.g
+                    key={p.label}
+                    initial={{ opacity: 0, scale: 0.6 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.1 + i * 0.06, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    {p.label}
-                  </text>
-                </motion.g>
-              ))}
+                    {/* Pulsing halo */}
+                    <circle cx={p.x} cy={p.y} r="14" fill="hsl(var(--primary) / 0.18)">
+                      <animate
+                        attributeName="r"
+                        values="6;18;6"
+                        dur={`${2.4 + (i % 3) * 0.4}s`}
+                        repeatCount="indefinite"
+                      />
+                      <animate
+                        attributeName="opacity"
+                        values="0.6;0;0.6"
+                        dur={`${2.4 + (i % 3) * 0.4}s`}
+                        repeatCount="indefinite"
+                      />
+                    </circle>
+                    {/* Outer ring */}
+                    <circle cx={p.x} cy={p.y} r="6" fill="none" stroke="hsl(var(--primary) / 0.55)" strokeWidth="1" />
+                    {/* Core dot */}
+                    <circle cx={p.x} cy={p.y} r="3" fill="hsl(var(--primary))" />
+                    {/* Label */}
+                    <text
+                      x={labelX}
+                      y={labelY}
+                      textAnchor={anchor}
+                      className="fill-foreground"
+                      fontSize="10"
+                      fontWeight="600"
+                      letterSpacing="0.5"
+                    >
+                      {p.label}
+                    </text>
+                  </motion.g>
+                );
+              })}
 
               {/* Subtle center wordmark */}
               <text
