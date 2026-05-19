@@ -11,6 +11,11 @@ import { Globe2, Zap, Shield, Activity } from "lucide-react";
  */
 const PremiumInfographicSection = () => {
   // Points of Presence (relative coords on viewBox 800x500)
+  const prefersReducedMotion = useReducedMotion();
+  // Slow durations down dramatically (or effectively pause) when the user
+  // prefers reduced motion. SVG SMIL doesn't react to CSS, so we scale dur values.
+  const slow = (s: number) => (prefersReducedMotion ? s * 8 : s);
+
   const pops = [
     { x: 240, y: 220, label: "USA" },
     { x: 340, y: 170, label: "Europe" },
