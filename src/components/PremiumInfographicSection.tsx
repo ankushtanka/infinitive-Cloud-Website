@@ -196,11 +196,11 @@ const PremiumInfographicSection = () => {
                   <g key={i}>
                     <path d={path} fill="none" stroke="url(#infg-edge)" strokeWidth="1.2" opacity="0.7" />
                     <circle r="2.5" fill="hsl(var(--primary))">
-                      <animateMotion dur={`${3 + (i % 3) * 0.6}s`} repeatCount="indefinite" path={path} />
+                      <animateMotion dur={`${slow(3 + (i % 3) * 0.6)}s`} repeatCount="indefinite" path={path} />
                       <animate
                         attributeName="opacity"
                         values="0;1;1;0"
-                        dur={`${3 + (i % 3) * 0.6}s`}
+                        dur={`${slow(3 + (i % 3) * 0.6)}s`}
                         repeatCount="indefinite"
                       />
                     </circle>
