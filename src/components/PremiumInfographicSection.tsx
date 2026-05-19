@@ -124,11 +124,19 @@ const PremiumInfographicSection = () => {
                 <ellipse cx="400" cy="250" rx="190" ry="120" opacity="0.4" />
                 <ellipse cx="400" cy="250" rx="190" ry="170" opacity="0.3" />
               </g>
-              {/* Longitude lines */}
+              {/* Longitude lines — slowly rotating to suggest globe spin */}
               <g stroke="hsl(var(--primary) / 0.18)" fill="none" strokeWidth="1">
                 <ellipse cx="400" cy="250" rx="60" ry="190" />
                 <ellipse cx="400" cy="250" rx="120" ry="190" opacity="0.7" />
                 <ellipse cx="400" cy="250" rx="170" ry="190" opacity="0.4" />
+                <animateTransform
+                  attributeName="transform"
+                  type="rotate"
+                  from="0 400 250"
+                  to="360 400 250"
+                  dur="90s"
+                  repeatCount="indefinite"
+                />
               </g>
 
               {/* Slow rotating outer ring */}
