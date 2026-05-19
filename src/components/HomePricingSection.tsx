@@ -218,7 +218,7 @@ const HomePricingSection = () => {
                             <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
                               isPopular ? "bg-gradient-to-br from-primary to-accent" : "bg-primary/15"
                             }`}>
-                              <Check className={`w-3 h-3 ${isPopular ? "text-white" : "text-primary"}`} strokeWidth={3} />
+                              <Check className={`w-3 h-3 ${isPopular ? "text-primary-foreground" : "text-primary"}`} strokeWidth={3} />
                             </div>
                             <span className="text-sm text-foreground/90 leading-snug">{feature}</span>
                           </li>
