@@ -27,7 +27,14 @@ const HomePricingSection = () => {
       try {
         const res = await fetchProducts();
         if (!cancelled && res.result === "success" && Array.isArray(res.products) && res.products.length > 0) {
-          const mapped = res.products.map((p: Product, i: number) => ({
+          // Only show web hosting plans (exclude domains, licenses, dedicated, etc.)
+          const webHostingProducts = res.products.filter((p: Product) =>
+            p.groupname?.toLowerCase().includes("hosting") ||
+            p.groupname?.toLowerCase().includes("email") ||
+            [1, 2, 3].includes(p.pid)
+          );
+          const productsToShow = webHostingProducts.length > 0 ? webHostingProducts : res.products;
+          const mapped = productsToShow.map((p: Product, i: number) => ({
             pid: p.pid,
             name: p.name,
             tagline: (p as any).tagline || "",
