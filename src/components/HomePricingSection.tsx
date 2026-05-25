@@ -150,11 +150,11 @@ const PLANS: Plan[] = [
   },
 ];
 
-const PERIODS: { key: Period; label: string }[] = [
-  { key: "1",  label: "1 month" },
-  { key: "12", label: "12 months" },
-  { key: "24", label: "24 months" },
-  { key: "48", label: "48 months — Best value" },
+const PERIODS: { key: Period; label: string; maxSave?: string; best?: boolean }[] = [
+  { key: "1",  label: "Monthly" },
+  { key: "12", label: "12 Months", maxSave: "40%" },
+  { key: "24", label: "24 Months", maxSave: "55%" },
+  { key: "48", label: "48 Months", maxSave: "75%", best: true },
 ];
 
 const FeatureIcon = ({ type }: { type: FeatureType }) => {
@@ -188,28 +188,39 @@ const HomePricingSection = () => {
           </p>
         </div>
 
-        {/* Commitment period selector */}
-        <div className="mb-8">
-          <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">
-            Commitment Period
+        {/* Commitment period selector — pill tabs */}
+        <div className="mb-10 flex flex-col items-center gap-2">
+          <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+            Choose your plan duration
           </p>
-          <div className="relative max-w-xs">
-            <select
-              value={period}
-              onChange={(e) => setPeriod(e.target.value as Period)}
-              className="w-full h-11 pl-4 pr-10 rounded-xl border border-border/60 bg-card/60 backdrop-blur-md text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none cursor-pointer"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "right 12px center",
-              }}
-            >
-              {PERIODS.map((p) => (
-                <option key={p.key} value={p.key}>
-                  {p.label}
-                </option>
-              ))}
-            </select>
+          <div className="inline-flex flex-wrap justify-center gap-2 p-1.5 rounded-2xl bg-muted/50 border border-border/60 backdrop-blur-sm">
+            {PERIODS.map((p) => (
+              <button
+                key={p.key}
+                onClick={() => setPeriod(p.key)}
+                className={`relative flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer ${
+                  period === p.key
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                }`}
+              >
+                {p.best && (
+                  <span className="absolute -top-2.5 -right-1 text-[9px] font-extrabold bg-orange-500 text-white px-1.5 py-0.5 rounded-full leading-none">
+                    BEST
+                  </span>
+                )}
+                {p.label}
+                {p.maxSave && (
+                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                    period === p.key
+                      ? "bg-white/20 text-white"
+                      : "bg-green-500/15 text-green-600 dark:text-green-400"
+                  }`}>
+                    -{p.maxSave}
+                  </span>
+                )}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -230,12 +241,21 @@ const HomePricingSection = () => {
                   <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-accent" />
                 )}
 
+                {/* Savings badge — top right */}
+                {!pd.noCommit && pd.saving && (
+                  <div className="absolute top-4 right-4 z-10">
+                    <span className="bg-green-500 text-white text-[10px] font-extrabold px-2 py-1 rounded-full shadow-sm leading-none">
+                      {pd.saving.match(/Save (\d+)%/)?.[1]}% OFF
+                    </span>
+                  </div>
+                )}
+
                 <CardContent className="p-6 pt-7 flex flex-col flex-1">
 
                   {/* Popular badge */}
-                  <div className="text-center mb-3 h-4">
+                  <div className="text-center mb-3 h-5">
                     {plan.popular ? (
-                      <span className="text-[10px] font-bold text-primary uppercase tracking-wider">
+                      <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-primary uppercase tracking-wider bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
                         ★ Most popular
                       </span>
                     ) : (
@@ -324,7 +344,31 @@ const HomePricingSection = () => {
           })}
         </div>
 
-        <p className="text-xs text-center text-muted-foreground mt-6">
+        {/* All plans include bar — inspired by Hostinger */}
+        <div className="mt-10 py-5 px-6 rounded-2xl bg-muted/30 border border-border/50 backdrop-blur-sm">
+          <p className="text-[11px] font-bold uppercase tracking-widest text-center text-muted-foreground mb-4">
+            Every plan includes
+          </p>
+          <div className="flex flex-wrap justify-center gap-x-5 gap-y-2.5">
+            {[
+              "Free SSL Certificate",
+              "LiteSpeed Web Server",
+              "cPanel Control Panel",
+              "Free Website Migration",
+              "99.99% Uptime SLA",
+              "24/7 Expert Support",
+              "Daily Automatic Backups",
+              "Imunify360 Security",
+            ].map((feature) => (
+              <span key={feature} className="flex items-center gap-1.5 text-xs text-foreground/70 font-medium">
+                <Check className="w-3.5 h-3.5 text-green-500 flex-shrink-0" />
+                {feature}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <p className="text-xs text-center text-muted-foreground mt-4">
           All prices are in INR. Taxes may apply. Plans renew at regular monthly rate after commitment period.
         </p>
 
