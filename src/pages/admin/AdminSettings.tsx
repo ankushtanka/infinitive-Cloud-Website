@@ -10,7 +10,7 @@ const AdminSettings = () => {
     <div className="space-y-6 max-w-2xl">
       <div>
         <h1 className="text-2xl font-black text-white">Settings</h1>
-        <p className="text-slate-400 text-sm mt-1">Admin account aur quick links</p>
+        <p className="text-slate-400 text-sm mt-1">Admin account and quick links</p>
       </div>
 
       {/* Account Info */}
@@ -25,8 +25,12 @@ const AdminSettings = () => {
           <div className="bg-slate-700/40 border border-slate-600 rounded-xl p-4 flex gap-3">
             <Info className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" />
             <div className="text-slate-300 text-sm leading-relaxed">
-              Admin ID aur Password tumhare project ke <code className="bg-slate-800 px-1 rounded text-blue-300">.env</code> file mein store hai.<br />
-              Password change karne ke liye <code className="bg-slate-800 px-1 rounded text-blue-300">VITE_ADMIN_PASSWORD</code> update karo aur server restart karo.
+              Your admin ID and password are stored in your project's{" "}
+              <code className="bg-slate-800 px-1 rounded text-blue-300">.env</code>{" "}
+              file.<br />
+              To change the password, update{" "}
+              <code className="bg-slate-800 px-1 rounded text-blue-300">VITE_ADMIN_PASSWORD</code>{" "}
+              and restart your server.
             </div>
           </div>
 
@@ -45,15 +49,25 @@ const AdminSettings = () => {
         <CardHeader>
           <CardTitle className="text-white text-base flex items-center gap-2">
             <KeyRound className="w-4 h-4 text-primary" />
-            Password / ID Kaise Badle
+            How to Change Password / ID
           </CardTitle>
         </CardHeader>
         <CardContent>
           <ol className="space-y-2 text-sm text-slate-300 list-decimal list-inside leading-relaxed">
-            <li>Project folder mein <code className="bg-slate-800 px-1 rounded">.env</code> file open karo</li>
-            <li><code className="bg-slate-800 px-1 rounded">VITE_ADMIN_ID</code> mein apna naya ID likho</li>
-            <li><code className="bg-slate-800 px-1 rounded">VITE_ADMIN_PASSWORD</code> mein naya password likho</li>
-            <li>File save karo aur dev server restart karo (<code className="bg-slate-800 px-1 rounded">bun run dev</code>)</li>
+            <li>
+              Open the <code className="bg-slate-800 px-1 rounded">.env</code> file in your project folder
+            </li>
+            <li>
+              Enter your new ID in <code className="bg-slate-800 px-1 rounded">VITE_ADMIN_ID</code>
+            </li>
+            <li>
+              Enter your new password in{" "}
+              <code className="bg-slate-800 px-1 rounded">VITE_ADMIN_PASSWORD</code>
+            </li>
+            <li>
+              Save the file and restart the dev server (
+              <code className="bg-slate-800 px-1 rounded">bun run dev</code>)
+            </li>
           </ol>
         </CardContent>
       </Card>

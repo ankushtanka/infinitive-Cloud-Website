@@ -3,402 +3,173 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Check, ArrowRight, Star, Zap, Shield, Globe, Server, Cpu, Mail, Palette } from "lucide-react";
+import { Check, ArrowRight, Star, Zap, Globe, Server, Cpu, Mail, Palette } from "lucide-react";
 import { Link } from "react-router-dom";
 import { StructuredData, createBreadcrumbSchema } from "@/components/StructuredData";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useWhmcsProducts, WhmcsProduct } from "@/hooks/use-whmcs-products";
+import { PRODUCT_CATEGORIES, PlanConfig } from "@/config/whmcs-products";
 
-type Plan = {
-  name: string;
-  originalPrice: string;
-  price: string;
-  period: string;
-  popular?: boolean;
-  features: string[];
-  specs?: string[];
+const CATEGORY_ICONS: Record<string, React.ElementType> = {
+  "web-hosting": Globe,
+  "cloud-hosting": Zap,
+  "vps-hosting": Server,
+  "wordpress-hosting": Palette,
+  "email-hosting": Mail,
+  "reseller-hosting": Cpu,
 };
 
-type Category = {
-  id: string;
-  icon: React.ElementType;
-  title: string;
-  description: string;
-  plans: Plan[];
-};
+function getWhmcsMonthlyPrice(product: WhmcsProduct | undefined): number | null {
+  const raw = product?.pricing?.INR?.monthly;
+  const n = parseFloat(raw ?? "");
+  return Number.isFinite(n) && n > 0 ? Math.round(n) : null;
+}
 
-const sharedHostingRouteMap: Record<string, string> = {
-  Premium: "/cart?product=1&name=Starter&type=shared-hosting",
-  Business: "/cart?product=2&name=Business&type=shared-hosting",
-  "Cloud Startup": "/cart?product=3&name=Enterprise&type=shared-hosting",
-};
+function getWhmcsAnnualPrice(product: WhmcsProduct | undefined): number | null {
+  const raw = product?.pricing?.INR?.annually;
+  const n = parseFloat(raw ?? "");
+  return Number.isFinite(n) && n > 0 ? Math.round(n) : null;
+}
 
-const categories: Category[] = [
-  {
-    id: "web-hosting",
-    icon: Globe,
-    title: "Web Hosting",
-    description: "Blazing-fast SSD hosting with free domain, SSL & AI tools",
-    plans: [
-      {
-        name: "Premium",
-        originalPrice: "₹1,091",
-        price: "₹129",
-        period: "/mo",
-        features: [
-          "Up to 3 Websites",
-          "20 GB SSD Storage",
-          "Free Domain (1 Year)",
-          "Free SSL Certificate",
-          "Weekly Auto Backups",
-          "Free Site Migration",
-          "Email Marketing (1 Year)",
-          "AI Website Builder",
-          "2 Email Accounts/Site",
-        ],
-      },
-      {
-        name: "Business",
-        originalPrice: "₹1,595",
-        price: "₹199",
-        period: "/mo",
-        popular: true,
-        features: [
-          "Up to 50 Websites",
-          "50 GB NVMe Storage",
-          "Free Domain (1 Year)",
-          "Free SSL & CDN",
-          "Daily & On-Demand Backups",
-          "AI eCommerce Builder",
-          "WordPress AI Agent",
-          "5 Email Accounts/Site",
-          "WordPress Staging Tool",
-          "Managed WordPress",
-        ],
-      },
-      {
-        name: "Cloud Startup",
-        originalPrice: "₹2,351",
-        price: "₹469",
-        period: "/mo",
-        features: [
-          "Up to 100 Websites",
-          "100 GB NVMe Storage",
-          "4 GB RAM",
-          "2 CPU Cores",
-          "Dedicated IP Address",
-          "Priority 24/7 Support",
-          "100 PHP Workers",
-          "2M Inodes",
-          "10 Email Accounts/Site",
-          "Free CDN Included",
-        ],
-      },
-    ],
-  },
-  {
-    id: "cloud-hosting",
-    icon: Zap,
-    title: "Cloud Hosting",
-    description: "Fully managed cloud with 20x more resources, dedicated IPs & priority support",
-    plans: [
-      {
-        name: "Cloud Startup",
-        originalPrice: "₹2,351",
-        price: "₹469",
-        period: "/mo",
-        specs: ["2 CPU Cores", "4 GB RAM", "100 GB NVMe"],
-        features: [
-          "100 Websites",
-          "Dedicated IP Address",
-          "Priority 24/7 Support",
-          "Free SSL & CDN",
-          "Daily Backups",
-          "100 PHP Workers",
-          "99.9% Uptime SLA",
-          "Free Domain (1 Year)",
-        ],
-      },
-      {
-        name: "Cloud Professional",
-        originalPrice: "₹3,527",
-        price: "₹699",
-        period: "/mo",
-        popular: true,
-        specs: ["4 CPU Cores", "8 GB RAM", "200 GB NVMe"],
-        features: [
-          "200 Websites",
-          "Dedicated IP Address",
-          "Priority 24/7 Support",
-          "Free SSL & CDN",
-          "Daily Backups",
-          "200 PHP Workers",
-          "99.9% Uptime SLA",
-          "Free Domain (1 Year)",
-        ],
-      },
-      {
-        name: "Cloud Enterprise",
-        originalPrice: "₹5,879",
-        price: "₹1,169",
-        period: "/mo",
-        specs: ["8 CPU Cores", "16 GB RAM", "300 GB NVMe"],
-        features: [
-          "300 Websites",
-          "Dedicated IP Address",
-          "Priority 24/7 Support",
-          "Free SSL & CDN",
-          "Daily Backups",
-          "300 PHP Workers",
-          "99.9% Uptime SLA",
-          "Free Domain (1 Year)",
-        ],
-      },
-    ],
-  },
-  {
-    id: "vps-hosting",
-    icon: Server,
-    title: "VPS Hosting",
-    description: "Full root access on AMD EPYC-powered servers with NVMe SSD",
-    plans: [
-      {
-        name: "KVM 1",
-        originalPrice: "₹1,175",
-        price: "₹335",
-        period: "/mo",
-        specs: ["1 vCPU Core", "4 GB RAM", "50 GB NVMe"],
-        features: [
-          "4 TB Bandwidth",
-          "1 Gbps Network Speed",
-          "Free Weekly Backups",
-          "Free Snapshot",
-          "Dedicated IP",
-          "Full Root Access",
-          "AMD EPYC Processor",
-          "Firewall Management",
-        ],
-      },
-      {
-        name: "KVM 2",
-        originalPrice: "₹1,511",
-        price: "₹469",
-        period: "/mo",
-        popular: true,
-        specs: ["2 vCPU Cores", "8 GB RAM", "100 GB NVMe"],
-        features: [
-          "8 TB Bandwidth",
-          "1 Gbps Network Speed",
-          "Free Weekly Backups",
-          "Free Snapshot",
-          "Dedicated IP",
-          "Full Root Access",
-          "AMD EPYC Processor",
-          "Firewall Management",
-        ],
-      },
-      {
-        name: "KVM 4",
-        originalPrice: "₹2,519",
-        price: "₹669",
-        period: "/mo",
-        specs: ["4 vCPU Cores", "16 GB RAM", "200 GB NVMe"],
-        features: [
-          "16 TB Bandwidth",
-          "1 Gbps Network Speed",
-          "Free Weekly Backups",
-          "Free Snapshot",
-          "Dedicated IP",
-          "Full Root Access",
-          "AMD EPYC Processor",
-          "Firewall Management",
-        ],
-      },
-      {
-        name: "KVM 8",
-        originalPrice: "₹5,039",
-        price: "₹1,339",
-        period: "/mo",
-        specs: ["8 vCPU Cores", "32 GB RAM", "400 GB NVMe"],
-        features: [
-          "32 TB Bandwidth",
-          "1 Gbps Network Speed",
-          "Free Weekly Backups",
-          "Free Snapshot",
-          "Dedicated IP",
-          "Full Root Access",
-          "AMD EPYC Processor",
-          "Firewall Management",
-        ],
-      },
-    ],
-  },
-  {
-    id: "wordpress-hosting",
-    icon: Palette,
-    title: "WordPress Hosting",
-    description: "Managed WordPress with AI tools, auto-updates & staging environments",
-    plans: [
-      {
-        name: "Premium",
-        originalPrice: "₹1,091",
-        price: "₹129",
-        period: "/mo",
-        features: [
-          "Up to 3 Websites",
-          "20 GB SSD Storage",
-          "Free Domain (1 Year)",
-          "Free SSL Certificate",
-          "Weekly Auto Backups",
-          "Managed WordPress",
-          "Free Site Migration",
-          "2 Email Accounts/Site",
-        ],
-      },
-      {
-        name: "Business + AI",
-        originalPrice: "₹1,595",
-        price: "₹199",
-        period: "/mo",
-        popular: true,
-        features: [
-          "Up to 50 Websites",
-          "50 GB NVMe Storage",
-          "AI Website Builder",
-          "AI Agent for WordPress",
-          "AI Troubleshooter",
-          "Daily Backups",
-          "WordPress Staging Tool",
-          "Free CDN & SSL",
-          "5 Email Accounts/Site",
-        ],
-      },
-      {
-        name: "Cloud Startup + AI",
-        originalPrice: "₹2,351",
-        price: "₹469",
-        period: "/mo",
-        features: [
-          "Up to 100 Websites",
-          "100 GB NVMe Storage",
-          "4 GB RAM & 2 CPU Cores",
-          "AI Tools Included",
-          "Dedicated IP Address",
-          "Priority 24/7 Support",
-          "100 PHP Workers",
-          "Daily Backups",
-          "10 Email Accounts/Site",
-        ],
-      },
-    ],
-  },
-  {
-    id: "email-hosting",
-    icon: Mail,
-    title: "Business Email",
-    description: "Professional email hosting with your own domain",
-    plans: [
-      {
-        name: "Business Starter",
-        originalPrice: "₹169",
-        price: "₹79",
-        period: "/mo",
-        features: [
-          "10 GB Storage",
-          "Custom Domain Email",
-          "Webmail Access",
-          "Calendar & Contacts",
-          "Anti-Spam Protection",
-          "IMAP/POP3 Support",
-        ],
-      },
-      {
-        name: "Business Premium",
-        originalPrice: "₹299",
-        price: "₹149",
-        period: "/mo",
-        popular: true,
-        features: [
-          "50 GB Storage",
-          "Custom Domain Email",
-          "Webmail Access",
-          "Calendar & Contacts",
-          "Advanced Anti-Spam",
-          "Priority Support",
-          "Email Aliases",
-          "Auto-Reply Rules",
-        ],
-      },
-    ],
-  },
-  {
-    id: "reseller-hosting",
-    icon: Cpu,
-    title: "Reseller & Agency Hosting",
-    description: "White-label hosting to start your own hosting business",
-    plans: [
-      {
-        name: "Agency Starter",
-        originalPrice: "₹1,679",
-        price: "₹539",
-        period: "/mo",
-        features: [
-          "50 Websites",
-          "50 GB NVMe Storage",
-          "White-Label Panel",
-          "Client Management",
-          "Free SSL & CDN",
-          "Daily Backups",
-          "Priority Support",
-        ],
-      },
-      {
-        name: "Agency Pro",
-        originalPrice: "₹2,855",
-        price: "₹899",
-        period: "/mo",
-        popular: true,
-        features: [
-          "100 Websites",
-          "100 GB NVMe Storage",
-          "White-Label Panel",
-          "Client Management",
-          "Dedicated IP",
-          "Free SSL & CDN",
-          "Daily Backups",
-          "Priority 24/7 Support",
-          "Reseller API Access",
-        ],
-      },
-      {
-        name: "Agency Enterprise",
-        originalPrice: "₹5,039",
-        price: "₹1,599",
-        period: "/mo",
-        features: [
-          "300 Websites",
-          "200 GB NVMe Storage",
-          "White-Label Panel",
-          "Full Client Management",
-          "Dedicated IP",
-          "Free SSL & CDN",
-          "Daily Backups",
-          "Priority 24/7 Support",
-          "Reseller API Access",
-          "Custom Branding",
-        ],
-      },
-    ],
-  },
-];
+function formatINR(amount: number): string {
+  return "₹" + amount.toLocaleString("en-IN");
+}
+
+function buildCartUrl(
+  pid: number,
+  name: string,
+  cartType: string,
+  monthly: number,
+  annually: number
+): string {
+  return `/cart?product=${pid}&name=${encodeURIComponent(name)}&type=${encodeURIComponent(cartType)}&price=${monthly}&annualPrice=${annually}`;
+}
+
+interface PlanCardProps {
+  plan: PlanConfig;
+  whmcsProduct: WhmcsProduct | undefined;
+  cartType: string;
+  index: number;
+}
+
+const PlanCard = ({ plan, whmcsProduct, cartType, index }: PlanCardProps) => {
+  const liveMonthly = getWhmcsMonthlyPrice(whmcsProduct);
+  const liveAnnual = getWhmcsAnnualPrice(whmcsProduct);
+
+  const monthly = liveMonthly ?? plan.fallbackMonthly;
+  const annually = liveAnnual ?? plan.fallbackAnnually;
+  const isLive = liveMonthly !== null;
+
+  const cartUrl =
+    plan.pid !== null
+      ? buildCartUrl(plan.pid, plan.name, cartType, monthly, annually)
+      : "/contact";
+
+  const savePct = Math.round(100 - (annually / (monthly * 12)) * 100);
+
+  return (
+    <Card
+      className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-up ${
+        plan.popular ? "border-primary shadow-lg shadow-primary/10 scale-[1.02]" : ""
+      }`}
+      style={{ animationDelay: `${index * 0.1}s` }}
+    >
+      {plan.popular && (
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary to-accent" />
+      )}
+      {plan.popular && (
+        <div className="absolute top-4 right-4">
+          <span className="text-[9px] md:text-[10px] font-bold bg-badge text-badge-foreground px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1">
+            <Star className="w-2.5 h-2.5" /> Most Popular
+          </span>
+        </div>
+      )}
+
+      <CardHeader className="pb-3">
+        <CardTitle className="text-xl">{plan.name}</CardTitle>
+      </CardHeader>
+
+      <CardContent>
+        <div className="mb-4">
+          <span className="text-sm text-muted-foreground line-through">
+            {formatINR(plan.originalPrice)}/mo
+          </span>
+          <div className="flex items-baseline gap-1 mt-1">
+            <span className="text-4xl font-black gradient-text">{formatINR(monthly)}</span>
+            <span className="text-muted-foreground">/mo</span>
+          </div>
+          <div className="flex items-center gap-2 mt-1 flex-wrap">
+            {savePct > 0 && (
+              <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                Save {savePct}% annually
+              </span>
+            )}
+            {isLive && (
+              <span className="text-[10px] text-green-600 dark:text-green-400 font-medium">
+                Live price
+              </span>
+            )}
+          </div>
+        </div>
+
+        {plan.specs && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {plan.specs.map((spec, i) => (
+              <span key={i} className="text-xs font-medium bg-muted px-2 py-1 rounded-md">
+                {spec}
+              </span>
+            ))}
+          </div>
+        )}
+
+        <ul className="space-y-2 mb-6">
+          {plan.features.map((feature, i) => (
+            <li key={i} className="flex items-start gap-2">
+              <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+              <span className="text-sm text-muted-foreground">{feature}</span>
+            </li>
+          ))}
+        </ul>
+
+        <Link to={cartUrl}>
+          <Button
+            className={`w-full ${plan.popular ? "btn-gradient" : ""}`}
+            variant={plan.popular ? "default" : "outline"}
+          >
+            {plan.pid !== null ? "Get Started" : "Contact Us"}
+            <ArrowRight className="ml-2 w-4 h-4" />
+          </Button>
+        </Link>
+      </CardContent>
+    </Card>
+  );
+};
 
 const Pricing = () => {
   const [activeCategory, setActiveCategory] = useState("web-hosting");
+
   const breadcrumbSchema = createBreadcrumbSchema([
     { name: "Home", url: "https://infinitivecloud.com/" },
     { name: "Pricing", url: "https://infinitivecloud.com/pricing" },
   ]);
 
-  const currentCategory = categories.find((c) => c.id === activeCategory)!;
+  const allPids = useMemo(
+    () =>
+      PRODUCT_CATEGORIES.flatMap((c) => c.plans.map((p) => p.pid)).filter(
+        (pid): pid is number => pid !== null
+      ),
+    []
+  );
+
+  const { products } = useWhmcsProducts(allPids);
+
+  const productMap = useMemo(() => {
+    const map = new Map<number, WhmcsProduct>();
+    products.forEach((p) => map.set(p.pid, p));
+    return map;
+  }, [products]);
+
+  const currentCategory = PRODUCT_CATEGORIES.find((c) => c.id === activeCategory)!;
 
   return (
     <div className="min-h-screen">
@@ -443,20 +214,23 @@ const Pricing = () => {
         {/* Category Tabs */}
         <section className="section-container mb-12">
           <div className="flex flex-wrap justify-center gap-2">
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold transition-all ${
-                  activeCategory === cat.id
-                    ? "bg-primary text-primary-foreground shadow-md"
-                    : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
-                }`}
-              >
-                <cat.icon className="w-4 h-4" />
-                {cat.title}
-              </button>
-            ))}
+            {PRODUCT_CATEGORIES.map((cat) => {
+              const Icon = CATEGORY_ICONS[cat.id] ?? Server;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveCategory(cat.id)}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold transition-all ${
+                    activeCategory === cat.id
+                      ? "bg-primary text-primary-foreground shadow-md"
+                      : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  {cat.title}
+                </button>
+              );
+            })}
           </div>
         </section>
 
@@ -467,76 +241,23 @@ const Pricing = () => {
             <p className="text-muted-foreground">{currentCategory.description}</p>
           </div>
 
-          <div className={`grid grid-cols-1 gap-8 ${
-            currentCategory.plans.length === 2
-              ? "md:grid-cols-2 max-w-3xl mx-auto"
-              : currentCategory.plans.length === 4
-              ? "md:grid-cols-2 lg:grid-cols-4"
-              : "md:grid-cols-3"
-          }`}>
+          <div
+            className={`grid grid-cols-1 gap-8 ${
+              currentCategory.plans.length === 2
+                ? "md:grid-cols-2 max-w-3xl mx-auto"
+                : currentCategory.plans.length === 4
+                ? "md:grid-cols-2 lg:grid-cols-4"
+                : "md:grid-cols-3"
+            }`}
+          >
             {currentCategory.plans.map((plan, index) => (
-              <Card
-                key={index}
-                className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-up ${
-                  plan.popular ? "border-primary shadow-lg shadow-primary/10 scale-[1.02]" : ""
-                }`}
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                {plan.popular && (
-                  <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary to-accent" />
-                )}
-                {plan.popular && (
-                  <div className="absolute top-4 right-4">
-                    <span className="text-[9px] md:text-[10px] font-bold bg-badge text-badge-foreground px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1">
-                      <Star className="w-2.5 h-2.5" /> Most Popular
-                    </span>
-                  </div>
-                )}
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-xl">{plan.name}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="mb-4">
-                    <span className="text-sm text-muted-foreground line-through">{plan.originalPrice}/mo</span>
-                    <div className="flex items-baseline gap-1 mt-1">
-                      <span className="text-4xl font-black gradient-text">{plan.price}</span>
-                      <span className="text-muted-foreground">{plan.period}</span>
-                    </div>
-                    <span className="inline-block mt-1 text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                      Save 20% + Extra
-                    </span>
-                  </div>
-
-                  {plan.specs && (
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {plan.specs.map((spec, i) => (
-                        <span key={i} className="text-xs font-medium bg-muted px-2 py-1 rounded-md">
-                          {spec}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-
-                  <ul className="space-y-2 mb-6">
-                    {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-muted-foreground">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Link to={currentCategory.id === "web-hosting" ? (sharedHostingRouteMap[plan.name] || "/solutions/shared-hosting") : "/contact"}>
-                    <Button
-                      className={`w-full ${plan.popular ? "btn-gradient" : ""}`}
-                      variant={plan.popular ? "default" : "outline"}
-                    >
-                      Get Started
-                      <ArrowRight className="ml-2 w-4 h-4" />
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
+              <PlanCard
+                key={plan.name}
+                plan={plan}
+                whmcsProduct={plan.pid !== null ? productMap.get(plan.pid) : undefined}
+                cartType={currentCategory.cartType}
+                index={index}
+              />
             ))}
           </div>
         </section>

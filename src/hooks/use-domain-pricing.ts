@@ -16,40 +16,76 @@ const parsePrice = (val: unknown): number | null => {
   return Number.isFinite(n) && n > 0 ? Math.round(n) : null;
 };
 
-// Module-level cache — single fetch per session
+// Module-level cache
 let cachedPrices: Record<string, DomainPriceEntry> | null = null;
-let fetchStarted = false;
+// Single in-flight promise — prevents duplicate fetches across component mounts
+let fetchPromise: Promise<Record<string, DomainPriceEntry>> | null = null;
 
 async function loadPrices(): Promise<Record<string, DomainPriceEntry>> {
   if (cachedPrices) return cachedPrices;
 
-  // Wait 4 seconds so page load + any user search happens first
-  await new Promise((r) => setTimeout(r, 4000));
+  const map: Record<string, DomainPriceEntry> = {};
 
+  // Primary: get_tld_pricing — WHMCS GetTLDPricing, returns all TLDs at once
   try {
     const res = await fetch(MIDDLEWARE_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "bulk_search", name: "pricing" }),
+      body: JSON.stringify({ action: "get_tld_pricing" }),
     });
     const data = await res.json();
-    const map: Record<string, DomainPriceEntry> = {};
+
+    // WHMCS format: { result: "success", pricing: { "com": { register: {"1":"879"}, renew: {"1":"879"} } } }
+    if (data?.result === "success" && data?.pricing && typeof data.pricing === "object") {
+      for (const [tld, pricing] of Object.entries(data.pricing as Record<string, any>)) {
+        const reg = parsePrice((pricing as any)?.register);
+        const ren = parsePrice((pricing as any)?.renew);
+        if (reg !== null || ren !== null) {
+          map[`.${tld}`] = { register: reg, renew: ren };
+        }
+      }
+    }
+
+    // Also handle flat format: { result: "success", domains: [...] }
     if (data?.result === "success" && Array.isArray(data.domains)) {
       for (const d of data.domains) {
         if (!d.tld) continue;
-        const tld = `.${d.tld}`;
-        map[tld] = {
+        map[`.${d.tld}`] = {
           register: parsePrice(d.pricing?.register),
           renew: parsePrice(d.pricing?.renew),
         };
       }
     }
-    cachedPrices = map;
-    return map;
-  } catch {
-    cachedPrices = {};
-    return {};
+  } catch { /* fall through */ }
+
+  // Fallback: bulk_search with a dummy name — extracts pricing from domain availability response
+  if (Object.keys(map).length === 0) {
+    try {
+      const res = await fetch(MIDDLEWARE_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "bulk_search", name: "example" }),
+      });
+      const data = await res.json();
+      if (data?.result === "success" && Array.isArray(data.domains)) {
+        for (const d of data.domains) {
+          if (!d.tld) continue;
+          map[`.${d.tld}`] = {
+            register: parsePrice(d.pricing?.register),
+            renew: parsePrice(d.pricing?.renew),
+          };
+        }
+      }
+    } catch { /* ignore */ }
   }
+
+  if (Object.keys(map).length > 0) {
+    cachedPrices = map;
+  } else {
+    // Don't cache empty results — allow retry on next component mount
+    fetchPromise = null;
+  }
+  return map;
 }
 
 const listeners = new Set<() => void>();
@@ -69,17 +105,17 @@ export function useDomainPricing(_tlds?: string[]) {
       return;
     }
 
-    // Subscribe to be notified when prices load
     const update = () => {
       setPrices(cachedPrices ?? {});
       setLoading(false);
     };
     listeners.add(update);
 
-    // Only one fetch ever — whichever component mounts first triggers it
-    if (!fetchStarted) {
-      fetchStarted = true;
-      loadPrices().then(() => notifyAll());
+    if (!fetchPromise) {
+      fetchPromise = loadPrices().then(() => {
+        notifyAll();
+        return cachedPrices ?? {};
+      });
     }
 
     return () => { listeners.delete(update); };

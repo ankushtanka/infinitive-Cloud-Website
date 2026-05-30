@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -X POST https://client.infinitivecloud.com/middleware/domainMiddleware.php -H 'Content-Type: application/json' -d '{\"action\":\"add_invoice_payment\",\"invoiceid\":999,\"transid\":\"test123\",\"gateway\":\"razorpay\"}')",
+      "Bash(curl -s -X POST https://client.infinitivecloud.com/middleware/domainMiddleware.php -H 'Content-Type: application/json' -d '{\"action\":\"test\"}')",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s -X POST https://client.infinitivecloud.com/middleware/domainMiddleware.php -H 'Content-Type: application/json' -d '{\"action\":\"get_client\",\"clientid\":1}')",
+      "Bash(curl -s -X POST https://client.infinitivecloud.com/middleware/domainMiddleware.php -H 'Content-Type: application/json' -d '{\"action\":\"domain_search\",\"domain\":\"testdomain12345.co.in\"}')",
+      "Bash(curl -s -X POST https://client.infinitivecloud.com/middleware/domainMiddleware.php -H 'Content-Type: application/json' -d '{\"action\":\"add_invoice_payment\",\"invoiceid\":169,\"transid\":\"pay_TEST123456789\",\"gateway\":\"razorpay\"}')"
+    ]
+  }
+}

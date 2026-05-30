@@ -42,7 +42,7 @@ import {
   Zap,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { placeOrder, validateLogin, type OrderPayload } from "@/lib/whmcs";
+import { placeOrder, validateLogin, markInvoicePaid, checkSingleDomain, type OrderPayload } from "@/lib/whmcs";
 
 // --- Schemas ---
 const newCustomerSchema = z.object({
@@ -141,10 +141,11 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
   const [customerType, setCustomerType] = useState<"new" | "existing">("new");
   const [paymentMethod, setPaymentMethod] = useState("razorpay");
   const [promoCode, setPromoCode] = useState("");
-  const [promoApplied, setPromoApplied] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [domainCheckState, setDomainCheckState] = useState<"idle" | "checking" | "taken" | "unverifiable">("idle");
+  const [unverifiableAcknowledged, setUnverifiableAcknowledged] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState<{ clientid?: number; email: string; firstName: string; lastName: string; phone: string; companyName: string; address1: string; address2: string; city: string; state: string; postcode: string; country: string; domains: { domain?: string; domainname?: string; status?: string }[] } | null>(null);
   const [orderConfirmation, setOrderConfirmation] = useState<OrderConfirmation | null>(null);
 
@@ -257,6 +258,34 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
       return;
     }
 
+    // Domain availability check before payment
+    const domainItem = items.find((i) => i.type === "domain");
+    if (domainItem) {
+      setDomainCheckState("checking");
+      try {
+        const check = await checkSingleDomain(domainItem.name);
+        if (check?.result === "success" && check.available === false) {
+          setDomainCheckState("taken");
+          toast({
+            title: "Domain Already Taken",
+            description: `${domainItem.name} is already registered. Please go back and choose a different domain.`,
+            variant: "destructive",
+          });
+          return;
+        }
+        if (check?.available === null || check?.result !== "success") {
+          // Can't verify (e.g. .in, .co.in, .dev) — require acknowledgment
+          if (!unverifiableAcknowledged) {
+            setDomainCheckState("unverifiable");
+            return;
+          }
+        }
+        setDomainCheckState("idle");
+      } catch {
+        setDomainCheckState("idle");
+      }
+    }
+
     setIsProcessing(true);
     try {
       const whmcsResult = await submitOrderToWhmcs(billingData);
@@ -325,9 +354,18 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
           },
           notes: rzpData.notes || {},
           theme: { color: "#2563eb" },
-          handler: (response: any) => {
-            setOrderConfirmation({ ...pendingConfirmation, paymentId: response.razorpay_payment_id, paymentCancelled: false });
-            toast({ title: "Payment Successful!", description: `Payment ID: ${response.razorpay_payment_id}` });
+          handler: async (response: any) => {
+            const paymentId = response.razorpay_payment_id;
+            // Sync Razorpay payment to WHMCS so invoice is marked paid and order is activated
+            if (pendingConfirmation.invoiceId) {
+              try {
+                await markInvoicePaid(pendingConfirmation.invoiceId, paymentId);
+              } catch (e) {
+                console.error("WHMCS payment sync failed:", e);
+              }
+            }
+            setOrderConfirmation({ ...pendingConfirmation, paymentId, paymentCancelled: false });
+            toast({ title: "Payment Successful!", description: `Payment ID: ${paymentId}` });
           },
           modal: {
             ondismiss: () => {
@@ -426,7 +464,6 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
 
   const applyPromo = () => {
     if (!promoCode.trim()) return;
-    setPromoApplied(true);
     toast({ title: "Promo Code", description: "Invalid or expired promo code.", variant: "destructive" });
   };
 
@@ -904,12 +941,39 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
                   <Tag className="w-3 h-3" />Promo Code
                 </Label>
                 <div className="flex gap-2 mt-2">
-                  <Input placeholder="Enter code" value={promoCode} onChange={(e) => { setPromoCode(e.target.value); setPromoApplied(false); }} className="h-9 text-sm" />
+                  <Input placeholder="Enter code" value={promoCode} onChange={(e) => setPromoCode(e.target.value)} className="h-9 text-sm" />
                   <Button type="button" variant="outline" size="sm" onClick={applyPromo} className="shrink-0">Apply</Button>
                 </div>
               </div>
 
               <Separator className="my-4" />
+
+              {/* Domain taken error */}
+              {domainCheckState === "taken" && (
+                <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 flex gap-2 text-xs text-red-600">
+                  <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+                  <span>This domain is already registered. Please go back and choose a different domain.</span>
+                </div>
+              )}
+
+              {/* Unverifiable domain warning — .in / .co.in / .dev */}
+              {domainCheckState === "unverifiable" && (
+                <div className="mb-4 p-3 rounded-lg bg-amber-500/10 border border-amber-500/30 text-xs text-amber-700 dark:text-amber-400 space-y-2">
+                  <div className="flex gap-2">
+                    <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+                    <span>
+                      We cannot pre-verify availability for this domain type. If it turns out to be already registered, we will process a <strong>full refund within 24 hours</strong>.
+                    </span>
+                  </div>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <Checkbox
+                      checked={unverifiableAcknowledged}
+                      onCheckedChange={(v) => setUnverifiableAcknowledged(!!v)}
+                    />
+                    <span>I understand and want to proceed</span>
+                  </label>
+                </div>
+              )}
 
               {/* Terms */}
               <label htmlFor="terms" className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all duration-200 ${agreedToTerms ? "border-border bg-transparent" : "border-border hover:border-primary/30"}`}>
@@ -924,14 +988,24 @@ const CheckoutForm = ({ subtotal, addonsTotal, total, items, selectedAddons, onB
 
               {/* CTA */}
               {customerType === "new" ? (
-                <Button type="submit" form="new-customer-form" className="w-full btn-gradient mt-5 h-12 text-base font-bold gap-2" disabled={newForm.formState.isSubmitting || isProcessing}>
-                  {isProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : <ShieldCheck className="w-5 h-5" />}
-                  {isProcessing ? "Processing..." : "Place Order"}
+                <Button
+                  type={domainCheckState === "unverifiable" && !unverifiableAcknowledged ? "button" : "submit"}
+                  form="new-customer-form"
+                  className="w-full btn-gradient mt-5 h-12 text-base font-bold gap-2"
+                  disabled={newForm.formState.isSubmitting || isProcessing || domainCheckState === "checking" || domainCheckState === "taken" || (domainCheckState === "unverifiable" && !unverifiableAcknowledged)}
+                >
+                  {(isProcessing || domainCheckState === "checking") ? <Loader2 className="w-5 h-5 animate-spin" /> : <ShieldCheck className="w-5 h-5" />}
+                  {domainCheckState === "checking" ? "Checking domain..." : isProcessing ? "Processing..." : "Place Order"}
                 </Button>
               ) : loggedInUser ? (
-                <Button type="button" className="w-full btn-gradient mt-5 h-12 text-base font-bold gap-2" disabled={isProcessing} onClick={handleExistingPay}>
-                  {isProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : <ShieldCheck className="w-5 h-5" />}
-                  {isProcessing ? "Processing..." : "Place Order"}
+                <Button
+                  type="button"
+                  className="w-full btn-gradient mt-5 h-12 text-base font-bold gap-2"
+                  disabled={isProcessing || domainCheckState === "checking" || domainCheckState === "taken" || (domainCheckState === "unverifiable" && !unverifiableAcknowledged)}
+                  onClick={handleExistingPay}
+                >
+                  {(isProcessing || domainCheckState === "checking") ? <Loader2 className="w-5 h-5 animate-spin" /> : <ShieldCheck className="w-5 h-5" />}
+                  {domainCheckState === "checking" ? "Checking domain..." : isProcessing ? "Processing..." : "Place Order"}
                 </Button>
               ) : (
                 <p className="text-xs text-muted-foreground text-center mt-5">Please login to continue checkout.</p>

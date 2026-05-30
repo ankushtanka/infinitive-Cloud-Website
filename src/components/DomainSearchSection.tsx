@@ -143,6 +143,7 @@ const DomainSearchSection: React.FC = () => {
                   }`}
                 />
                 <Input
+                  id="domain-search-input"
                   type="text"
                   placeholder={
                     domain
@@ -258,9 +259,15 @@ const DomainSearchSection: React.FC = () => {
                     className={`w-8 h-0.5 mx-auto mt-2 mb-3 md:mb-4 rounded-full bg-gradient-to-r ${tld.color} opacity-60`}
                   />
                   <div>
-                    <span className="text-xs md:text-sm text-muted-foreground line-through block mb-0.5">
-                      <span className="font-mono tabular-nums">{tld.original}</span>/yr
-                    </span>
+                    {(() => {
+                      const livePrice = livePrices[tld.ext]?.register ?? tld.price;
+                      const staticOrigNum = parseInt(tld.original.replace(/[₹,]/g, ""), 10);
+                      return livePrice < staticOrigNum ? (
+                        <span className="text-xs md:text-sm text-muted-foreground line-through block mb-0.5">
+                          <span className="font-mono tabular-nums">{tld.original}</span>/yr
+                        </span>
+                      ) : null;
+                    })()}
                     {pricesLoading ? (
                       <span className="inline-block h-9 w-24 rounded-lg bg-muted animate-pulse mt-1" />
                     ) : (
@@ -280,8 +287,16 @@ const DomainSearchSection: React.FC = () => {
                     className="mt-4 md:mt-5 w-full font-semibold text-xs md:text-sm border-primary/20 hover:bg-primary hover:text-primary-foreground transition-colors rounded-lg"
                     onClick={(e) => {
                       e.stopPropagation();
+                      const baseName = domain.trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
+                      if (!baseName) {
+                        const input = document.getElementById('domain-search-input') as HTMLInputElement | null;
+                        input?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        setTimeout(() => input?.focus(), 400);
+                        return;
+                      }
                       const safePrice = livePrices[tld.ext]?.register ?? tld.price;
-                      const params = new URLSearchParams({ domain: `yourdomain${tld.ext}`, price: String(safePrice) });
+                      const renewPrice = livePrices[tld.ext]?.renew ?? 0;
+                      const params = new URLSearchParams({ domain: `${baseName}${tld.ext}`, price: String(safePrice), renewPrice: String(renewPrice) });
                       window.location.href = `/cart?${params.toString()}`;
                     }}
                   >

@@ -1,3 +1,4 @@
+// @ts-ignore: Deno runtime import — resolved by Deno extension at runtime
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
@@ -22,7 +23,7 @@ async function callMiddleware(params: Record<string, string>): Promise<any> {
   } finally { clearTimeout(timer); }
 }
 
-serve(async (req) => {
+serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -69,7 +70,7 @@ serve(async (req) => {
         } else if (clientData?.message?.toLowerCase().includes('duplicate') || clientData?.message?.toLowerCase().includes('already exists')) {
           const existing = await callMiddleware({ action: 'GetClientsDetails', email });
           if (existing?.result === 'success') {
-            clientId = existing.id || existing.userid || existing.client?.id;
+            clientId = Number(existing.id ?? existing.userid ?? existing.client?.id);
           } else {
             return new Response(JSON.stringify({ error: 'Failed to find existing client' }), {
               status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -183,7 +184,7 @@ serve(async (req) => {
       }
 
       case 'DomainRenew': {
-        const { domain, regperiod, email } = body;
+        const { domain, regperiod } = body;
         if (!domain) {
           return new Response(JSON.stringify({ error: 'domain is required' }), {
             status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -244,8 +245,9 @@ serve(async (req) => {
         });
     }
   } catch (error) {
-    console.error('Domain management error:', error);
-    return new Response(JSON.stringify({ error: 'Internal server error', message: error.message }), {
+    const err = error instanceof Error ? error : new Error(String(error));
+    console.error('Domain management error:', err);
+    return new Response(JSON.stringify({ error: 'Internal server error', message: err.message }), {
       status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }

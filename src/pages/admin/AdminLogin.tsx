@@ -23,7 +23,7 @@ const AdminLogin = () => {
     const result = await login(adminId, password);
     setLoading(false);
     if (result.error) {
-      setError("Galat ID ya password. Dobara try karo.");
+      setError("Invalid ID or password. Please try again.");
     } else {
       navigate("/admin/dashboard");
     }
@@ -56,7 +56,7 @@ const AdminLogin = () => {
                   <Input
                     id="adminId"
                     type="text"
-                    placeholder="Admin ID daalo"
+                    placeholder="Enter admin ID"
                     value={adminId}
                     onChange={(e) => setAdminId(e.target.value)}
                     required

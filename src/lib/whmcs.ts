@@ -279,6 +279,11 @@ export async function bulkDomainSearch(name: string): Promise<BulkSearchResult> 
   return api('bulk_search', { name });
 }
 
+/** Check availability of a single full domain (e.g. "myname.co.in") */
+export async function checkSingleDomain(domain: string): Promise<{ result: string; available: boolean | null; domain: string }> {
+  return api('domain_search', { domain });
+}
+
 /** Get all hosting products with live pricing */
 export async function fetchProducts(): Promise<ProductsResult> {
   return api('get_products');
@@ -310,4 +315,9 @@ export async function getTldPricing(tld: string) {
 /** Get single invoice details with line items */
 export async function getInvoiceDetails(invoiceid: number) {
   return api('get_invoice', { invoiceid });
+}
+
+/** Mark a WHMCS invoice as paid after Razorpay payment succeeds */
+export async function markInvoicePaid(invoiceid: number, transid: string): Promise<any> {
+  return api('add_invoice_payment', { invoiceid, transid, gateway: 'razorpay' });
 }
