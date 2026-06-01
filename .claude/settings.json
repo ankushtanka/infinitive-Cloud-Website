@@ -6,7 +6,11 @@
       "Bash(python3 -m json.tool)",
       "Bash(curl -s -X POST https://client.infinitivecloud.com/middleware/domainMiddleware.php -H 'Content-Type: application/json' -d '{\"action\":\"get_client\",\"clientid\":1}')",
       "Bash(curl -s -X POST https://client.infinitivecloud.com/middleware/domainMiddleware.php -H 'Content-Type: application/json' -d '{\"action\":\"domain_search\",\"domain\":\"testdomain12345.co.in\"}')",
-      "Bash(curl -s -X POST https://client.infinitivecloud.com/middleware/domainMiddleware.php -H 'Content-Type: application/json' -d '{\"action\":\"add_invoice_payment\",\"invoiceid\":169,\"transid\":\"pay_TEST123456789\",\"gateway\":\"razorpay\"}')"
+      "Bash(curl -s -X POST https://client.infinitivecloud.com/middleware/domainMiddleware.php -H 'Content-Type: application/json' -d '{\"action\":\"add_invoice_payment\",\"invoiceid\":169,\"transid\":\"pay_TEST123456789\",\"gateway\":\"razorpay\"}')",
+      "Bash(python3 -c ' *)",
+      "Bash(curl -s -X POST https://client.infinitivecloud.com/middleware/domainMiddleware.php -H 'Content-Type: application/json' -d '{\"action\":\"get_products\"}')",
+      "Bash(curl -s -X POST https://client.infinitivecloud.com/middleware/domainMiddleware.php -H 'Content-Type: application/json' -d '{\"action\":\"bulk_search\",\"name\":\"testname\"}')",
+      "Bash(npx tsc *)"
     ]
   }
 }

@@ -18,7 +18,7 @@ const whyFeatures = [
 ];
 
 // ─── Pricing data ────────────────────────────────────────────────────────────
-type Period = "1" | "12" | "24" | "48";
+type Period = "1" | "12" | "24" | "36";
 type FeatureType = "check" | "cross" | "star";
 
 interface PeriodData {
@@ -56,7 +56,7 @@ const PLANS: Plan[] = [
       "1":  { price: 199, noCommit: true, renewsAt: 199 },
       "12": { price: 119, originalPrice: 199, saving: "Save 40% vs monthly", upfront: 1428, renewsAt: 199 },
       "24": { price: 89,  originalPrice: 199, saving: "Save 55% vs monthly", upfront: 2136, renewsAt: 199 },
-      "48": { price: 49,  originalPrice: 199, saving: "Save 75% vs monthly", upfront: 2352, renewsAt: 199 },
+      "36": { price: 49,  originalPrice: 199, saving: "Save 75% vs monthly", upfront: 1764, renewsAt: 199 },
     },
     features: [
       { label: "1 website",                  type: "check" },
@@ -85,7 +85,7 @@ const PLANS: Plan[] = [
       "1":  { price: 349, noCommit: true, renewsAt: 349 },
       "12": { price: 219, originalPrice: 349, saving: "Save 37% vs monthly", upfront: 2628, renewsAt: 349 },
       "24": { price: 169, originalPrice: 349, saving: "Save 52% vs monthly", upfront: 4056, renewsAt: 349 },
-      "48": { price: 99,  originalPrice: 349, saving: "Save 72% vs monthly", upfront: 4752, renewsAt: 349 },
+      "36": { price: 99,  originalPrice: 349, saving: "Save 72% vs monthly", upfront: 3564, renewsAt: 349 },
     },
     features: [
       { label: "5 websites",                 type: "check" },
@@ -114,7 +114,7 @@ const PLANS: Plan[] = [
       "1":  { price: 549, noCommit: true, renewsAt: 549 },
       "12": { price: 349, originalPrice: 549, saving: "Save 36% vs monthly", upfront: 4188, renewsAt: 549 },
       "24": { price: 279, originalPrice: 549, saving: "Save 49% vs monthly", upfront: 6696, renewsAt: 549 },
-      "48": { price: 169, originalPrice: 549, saving: "Save 69% vs monthly", upfront: 8112, renewsAt: 549 },
+      "36": { price: 169, originalPrice: 549, saving: "Save 69% vs monthly", upfront: 6084, renewsAt: 549 },
     },
     features: [
       { label: "Unlimited websites",         type: "check" },
@@ -143,7 +143,7 @@ const PLANS: Plan[] = [
       "1":  { price: 799, noCommit: true, renewsAt: 799 },
       "12": { price: 499, originalPrice: 799, saving: "Save 38% vs monthly", upfront: 5988, renewsAt: 799 },
       "24": { price: 399, originalPrice: 799, saving: "Save 50% vs monthly", upfront: 9576, renewsAt: 799 },
-      "48": { price: 249, originalPrice: 799, saving: "Save 69% vs monthly", upfront: 11952, renewsAt: 799 },
+      "36": { price: 249, originalPrice: 799, saving: "Save 69% vs monthly", upfront: 8964, renewsAt: 799 },
     },
     features: [
       { label: "Unlimited websites",         type: "check" },
@@ -168,7 +168,7 @@ const PERIODS: { key: Period; label: string }[] = [
   { key: "1",  label: "1 month" },
   { key: "12", label: "12 months" },
   { key: "24", label: "24 months" },
-  { key: "48", label: "48 months — Best value" },
+  { key: "36", label: "36 months — Best value" },
 ];
 
 // ─── Feature icon ─────────────────────────────────────────────────────────────
@@ -180,7 +180,7 @@ const FeatureIcon = ({ type }: { type: FeatureType }) => {
 
 // ─── Component ───────────────────────────────────────────────────────────────
 const SharedHosting = () => {
-  const [period, setPeriod] = useState<Period>("48");
+  const [period, setPeriod] = useState<Period>("36");
 
   return (
     <>

@@ -273,69 +273,74 @@ const DomainRegistration = () => {
                 return (
                   <Card
                     key={d.ext}
-                    className={`text-center animate-fade-in-up relative overflow-hidden transition-all duration-300 ${
-                      d.popular ? "border-primary/30 shadow-primary/5 shadow-md" : ""
-                    } ${isExpanded ? "ring-2 ring-primary" : "card-hover"}`}
+                    className={`animate-fade-in-up relative overflow-hidden transition-all duration-300 group ${
+                      d.popular
+                        ? "border-primary/40 shadow-lg shadow-primary/10"
+                        : "border-border"
+                    } ${isExpanded ? "ring-2 ring-primary shadow-lg shadow-primary/20" : "hover:border-primary/30 hover:shadow-md hover:shadow-primary/10 hover:-translate-y-1"}`}
                     style={{ animationDelay: `${i * 0.05}s` }}
                   >
-                    {d.popular && (
-                      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-accent" />
-                    )}
-                    <CardContent className="p-6">
-                      {d.popular && (
-                        <div className="flex items-center justify-center gap-1 mb-2">
-                          <Star className="w-3 h-3 text-primary fill-primary" />
-                          <span className="text-[10px] font-bold text-primary uppercase tracking-wider">Popular</span>
-                        </div>
-                      )}
-                      <h3 className="text-3xl font-black gradient-text mb-1">{d.ext}</h3>
-                      <p className="text-xs text-muted-foreground mb-1">{d.type}</p>
-                      <p className="text-[11px] text-muted-foreground/70 mb-3">{d.desc}</p>
-                      <div>
-                        {d.original && (
-                          <span className="text-xs text-muted-foreground line-through block">{d.original}/yr</span>
-                        )}
-                        {pricesLoading ? (
-                          <span className="inline-block h-7 w-20 rounded bg-muted animate-pulse" />
-                        ) : (
-                          <span className="text-xl font-black text-foreground">{d.price}<span className="text-sm font-medium text-muted-foreground">/yr</span></span>
+                    {/* Top accent bar — all cards, stronger for popular */}
+                    <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary to-accent transition-opacity duration-300 ${d.popular ? "opacity-100" : "opacity-0 group-hover:opacity-60"}`} />
+
+                    <CardContent className="p-5 flex flex-col h-full text-center">
+                      {/* Badge row — fixed height so all cards align */}
+                      <div className="h-5 flex items-center justify-center mb-2">
+                        {d.popular && (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-primary uppercase tracking-wider bg-primary/8 px-2 py-0.5 rounded-full border border-primary/20">
+                            <Star className="w-2.5 h-2.5 fill-primary" /> Popular
+                          </span>
                         )}
                       </div>
 
-                      {/* Status-aware main button */}
-                      {isAvailable ? (
-                        <Button
-                          size="sm"
-                          className="mt-3 w-full text-xs font-bold btn-gradient"
-                          onClick={() => {
-                            const params = new URLSearchParams({ domain: `${baseName}${d.ext}`, price: String(rawPrice), renewPrice: String(renewPrice) });
-                            window.location.href = `/cart?${params.toString()}`;
-                          }}
-                        >
-                          <CheckCircle2 className="w-3 h-3 mr-1" /> Buy Now
-                        </Button>
-                      ) : isTaken ? (
-                        <Button size="sm" variant="outline" className="mt-3 w-full text-xs font-bold text-red-500 border-red-200 cursor-not-allowed" disabled>
-                          <XCircle className="w-3 h-3 mr-1" /> Taken
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="mt-3 w-full text-xs font-bold"
-                          onClick={() => openTldSearch(d.ext)}
-                        >
-                          Register
-                        </Button>
-                      )}
+                      {/* TLD name */}
+                      <h3 className="text-2xl md:text-3xl font-black gradient-text mb-0.5">{d.ext}</h3>
+                      <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-0.5">{d.type}</p>
+                      <p className="text-[11px] text-muted-foreground/60 mb-4 leading-tight">{d.desc}</p>
 
-                      {/* Check availability toggle */}
-                      <button
-                        className="mt-2 w-full text-[11px] text-primary/60 hover:text-primary transition-colors underline-offset-2 hover:underline"
-                        onClick={() => openTldSearch(d.ext)}
-                      >
-                        {isExpanded ? "Close ✕" : "Check availability"}
-                      </button>
+                      {/* Price — fixed min-height so rows align */}
+                      <div className="min-h-[52px] flex flex-col items-center justify-end mb-1">
+                        {d.original && (
+                          <span className="text-xs text-muted-foreground line-through">{d.original}/yr</span>
+                        )}
+                        {pricesLoading ? (
+                          <span className="inline-block h-7 w-24 rounded bg-muted animate-pulse mt-1" />
+                        ) : (
+                          <span className="text-xl md:text-2xl font-black text-foreground">
+                            {d.price}
+                            <span className="text-sm font-medium text-muted-foreground">/yr</span>
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Button — pushed to bottom */}
+                      <div className="mt-auto pt-3">
+                        {isAvailable ? (
+                          <Button
+                            size="sm"
+                            className="w-full text-xs font-bold btn-gradient h-9"
+                            onClick={() => {
+                              const params = new URLSearchParams({ domain: `${baseName}${d.ext}`, price: String(rawPrice), renewPrice: String(renewPrice) });
+                              window.location.href = `/cart?${params.toString()}`;
+                            }}
+                          >
+                            <CheckCircle2 className="w-3 h-3 mr-1" /> Buy Now
+                          </Button>
+                        ) : isTaken ? (
+                          <Button size="sm" variant="outline" className="w-full text-xs font-bold text-red-500 border-red-200 cursor-not-allowed h-9" disabled>
+                            <XCircle className="w-3 h-3 mr-1" /> Taken
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="w-full text-xs font-bold h-9 border-primary/20 hover:bg-primary hover:text-primary-foreground transition-colors"
+                            onClick={() => openTldSearch(d.ext)}
+                          >
+                            {isExpanded ? "Close ✕" : "Check Availability"}
+                          </Button>
+                        )}
+                      </div>
 
                       {/* Inline search — expands when activeTld === d.ext */}
                       {isExpanded && (
@@ -358,9 +363,7 @@ const DomainRegistration = () => {
                               onClick={() => checkTldDomain(d.ext)}
                               disabled={tldStatus === "checking" || !tldInput.trim()}
                             >
-                              {tldStatus === "checking"
-                                ? <Loader2 className="w-3 h-3 animate-spin" />
-                                : "Check"}
+                              {tldStatus === "checking" ? <Loader2 className="w-3 h-3 animate-spin" /> : "Check"}
                             </Button>
                           </div>
 

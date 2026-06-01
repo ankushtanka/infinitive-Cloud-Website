@@ -2,21 +2,22 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Globe, ArrowRight, Shield, Zap, Clock, Lock, Loader2 } from "lucide-react";
+import { Search, Globe, ArrowRight, Shield, Zap, Clock, Lock, Loader2, CheckCircle2, XCircle, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useDomainSearch } from "@/hooks/use-domain-search";
 import DomainResultsGrid from "@/components/DomainResultsGrid";
 import { useDomainPricing } from "@/hooks/use-domain-pricing";
+import { bulkDomainSearch, checkSingleDomain } from "@/lib/whmcs";
 
 const fallbackTlds = [
-  { ext: ".com", price: 799, original: "₹1,199", tag: "Most Popular", color: "from-primary to-accent" },
-  { ext: ".in", price: 449, original: "₹699", tag: "India #1", color: "from-emerald-500 to-teal-500" },
-  { ext: ".co.in", price: 299, original: "₹499", tag: null, color: "from-slate-500 to-slate-600" },
-  { ext: ".net", price: 899, original: "₹1,299", tag: null, color: "from-blue-500 to-indigo-500" },
-  { ext: ".org", price: 749, original: "₹1,099", tag: null, color: "from-violet-500 to-purple-500" },
-  { ext: ".online", price: 199, original: "₹599", tag: "Best Value", color: "from-orange-500 to-amber-500" },
-  { ext: ".site", price: 199, original: "₹499", tag: null, color: "from-pink-500 to-rose-500" },
-  { ext: ".xyz", price: 99, original: "₹299", tag: "Cheapest", color: "from-cyan-500 to-sky-500" },
+  { ext: ".com", price: 799, original: "₹1,199", popular: true, type: "Global", desc: "Most trusted extension worldwide" },
+  { ext: ".in", price: 449, original: "₹699", popular: false, type: "India", desc: "India's official country domain" },
+  { ext: ".co.in", price: 299, original: "₹499", popular: false, type: "India", desc: "Business domain for India" },
+  { ext: ".net", price: 899, original: "₹1,299", popular: false, type: "Network", desc: "Ideal for tech & networks" },
+  { ext: ".org", price: 749, original: "₹1,099", popular: false, type: "Organisation", desc: "Trusted by NGOs & nonprofits" },
+  { ext: ".online", price: 199, original: "₹599", popular: false, type: "Generic", desc: "Best value online presence" },
+  { ext: ".site", price: 199, original: "₹499", popular: false, type: "Generic", desc: "Perfect for any website" },
+  { ext: ".xyz", price: 99, original: "₹299", popular: false, type: "Generic", desc: "Cheapest modern extension" },
 ];
 
 const TLD_KEYS = fallbackTlds.map((t) => t.ext);
@@ -48,6 +49,44 @@ const DomainSearchSection: React.FC = () => {
   const isDeletingRef = useRef(false);
   const { loading, results, suggestions, searched, checkTime, search, reset } = useDomainSearch();
   const { prices: livePrices, loading: pricesLoading } = useDomainPricing(TLD_KEYS);
+
+  // Inline TLD availability check state
+  const [activeTld, setActiveTld] = useState<string | null>(null);
+  const [tldInput, setTldInput] = useState("");
+  const [tldStatus, setTldStatus] = useState<"idle" | "checking" | "available" | "taken" | "unknown">("idle");
+  const tldInputRef = useRef<HTMLInputElement>(null);
+
+  const openTldSearch = (ext: string) => {
+    const opening = activeTld !== ext;
+    setActiveTld(opening ? ext : null);
+    if (!opening) return;
+    const baseName = domain.trim().toLowerCase().replace(/[^a-z0-9-]/g, "");
+    setTldInput(baseName);
+    setTldStatus("idle");
+    setTimeout(() => tldInputRef.current?.focus(), 120);
+  };
+
+  const checkTldDomain = async (ext: string) => {
+    const baseName = tldInput.trim().toLowerCase().replace(/[^a-z0-9-]/g, "");
+    if (!baseName) return;
+    setTldStatus("checking");
+    try {
+      const res = await bulkDomainSearch(baseName);
+      const match = res.domains?.find((d: any) => d.domain === `${baseName}${ext}`);
+      if (match !== undefined) {
+        setTldStatus(match.available ? "available" : "taken");
+      } else {
+        const single = await checkSingleDomain(`${baseName}${ext}`);
+        if (single?.result === "success" && single.available === true) {
+          setTldStatus("available");
+        } else if (single?.result === "success" && single.available === false) {
+          setTldStatus("taken");
+        } else {
+          setTldStatus("unknown");
+        }
+      }
+    } catch { setTldStatus("idle"); }
+  };
 
   useEffect(() => {
     if (domain || inputFocused) return;
@@ -223,88 +262,137 @@ const DomainSearchSection: React.FC = () => {
 
         {/* Default TLD Cards */}
         {!searched && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6 max-w-5xl mx-auto">
-            {fallbackTlds.map((tld, i) => (
-              <Card
-                key={tld.ext}
-                className={`relative overflow-hidden transition-all duration-500 hover:-translate-y-2 cursor-pointer animate-fade-in-up group ${
-                  tld.tag ? "border-primary/20 shadow-md" : "border-border"
-                } ${i >= 4 ? "hidden sm:block" : ""}`}
-                style={{
-                  animationDelay: `${i * 0.06}s`,
-                  boxShadow: "var(--shadow-soft)",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = `0 8px 32px -8px hsl(var(--primary) / 0.3), 0 0 20px hsl(var(--primary) / 0.15)`;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = "var(--shadow-soft)";
-                }}
-              >
-                <div
-                  className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${tld.color} opacity-80 group-hover:opacity-100 transition-opacity`}
-                />
-                {tld.tag && (
-                  <div className="absolute top-2 right-2 md:top-3 md:right-3">
-                    <span className="text-[9px] md:text-[10px] font-bold bg-badge text-badge-foreground px-2 md:px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-md">
-                      {tld.tag}
-                    </span>
-                  </div>
-                )}
-                <CardContent className="p-4 md:p-6 pt-6 md:pt-8 text-center">
-                  <span className="text-xl md:text-3xl font-black text-foreground block tracking-tight">
-                    {tld.ext}
-                  </span>
-                  <div
-                    className={`w-8 h-0.5 mx-auto mt-2 mb-3 md:mb-4 rounded-full bg-gradient-to-r ${tld.color} opacity-60`}
-                  />
-                  <div>
-                    {(() => {
-                      const livePrice = livePrices[tld.ext]?.register ?? tld.price;
-                      const staticOrigNum = parseInt(tld.original.replace(/[₹,]/g, ""), 10);
-                      return livePrice < staticOrigNum ? (
-                        <span className="text-xs md:text-sm text-muted-foreground line-through block mb-0.5">
-                          <span className="font-mono tabular-nums">{tld.original}</span>/yr
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
+            {fallbackTlds.map((tld, i) => {
+              const rawPrice = livePrices[tld.ext]?.register ?? tld.price;
+              const renewPrice = livePrices[tld.ext]?.renew ?? 0;
+              const isExpanded = activeTld === tld.ext;
+              const staticOrigNum = parseInt(tld.original.replace(/[₹,]/g, ""), 10);
+              const showOrig = rawPrice < staticOrigNum;
+
+              return (
+                <Card
+                  key={tld.ext}
+                  className={`animate-fade-in-up relative overflow-hidden transition-all duration-300 group ${
+                    tld.popular ? "border-primary/40 shadow-lg shadow-primary/10" : "border-border"
+                  } ${isExpanded ? "ring-2 ring-primary shadow-lg shadow-primary/20" : "hover:border-primary/30 hover:shadow-md hover:shadow-primary/10 hover:-translate-y-1"} ${i >= 4 ? "hidden sm:block" : ""}`}
+                  style={{ animationDelay: `${i * 0.05}s` }}
+                >
+                  <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary to-accent transition-opacity duration-300 ${tld.popular ? "opacity-100" : "opacity-0 group-hover:opacity-60"}`} />
+                  <CardContent className="p-5 flex flex-col h-full text-center">
+                    {/* Badge row — fixed height so all cards align */}
+                    <div className="h-5 flex items-center justify-center mb-2">
+                      {tld.popular && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-primary uppercase tracking-wider bg-primary/8 px-2 py-0.5 rounded-full border border-primary/20">
+                          <Star className="w-2.5 h-2.5 fill-primary" /> Popular
                         </span>
-                      ) : null;
-                    })()}
-                    {pricesLoading ? (
-                      <span className="inline-block h-9 w-24 rounded-lg bg-muted animate-pulse mt-1" />
-                    ) : (
-                      <>
-                        <span className="text-2xl md:text-4xl font-black gradient-text">
-                          <span className="font-mono tabular-nums">
-                            ₹{(livePrices[tld.ext]?.register ?? tld.price).toLocaleString("en-IN")}
-                          </span>
+                      )}
+                    </div>
+                    <h3 className="text-2xl md:text-3xl font-black gradient-text mb-0.5">{tld.ext}</h3>
+                    <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-0.5">{tld.type}</p>
+                    <p className="text-[11px] text-muted-foreground/60 mb-4 leading-tight">{tld.desc}</p>
+                    {/* Price — fixed min-height */}
+                    <div className="min-h-[52px] flex flex-col items-center justify-end mb-1">
+                      {showOrig && (
+                        <span className="text-xs text-muted-foreground line-through">{tld.original}/yr</span>
+                      )}
+                      {pricesLoading ? (
+                        <span className="inline-block h-7 w-24 rounded bg-muted animate-pulse mt-1" />
+                      ) : (
+                        <span className="text-xl md:text-2xl font-black text-foreground">
+                          ₹{rawPrice.toLocaleString("en-IN")}
+                          <span className="text-sm font-medium text-muted-foreground">/yr</span>
                         </span>
-                        <span className="text-xs md:text-base text-muted-foreground">/yr</span>
-                      </>
+                      )}
+                    </div>
+                    {/* Button pushed to bottom */}
+                    <div className="mt-auto pt-3">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full text-xs font-bold h-9 border-primary/20 hover:bg-primary hover:text-primary-foreground transition-colors"
+                        onClick={() => openTldSearch(tld.ext)}
+                      >
+                        {isExpanded ? "Close ✕" : "Check Availability"}
+                      </Button>
+                    </div>
+
+                    {/* Inline availability check — expands on click */}
+                    {isExpanded && (
+                      <div className="mt-3 pt-3 border-t border-border text-left">
+                        <p className="text-[11px] text-muted-foreground mb-2">
+                          Check a name for <span className="font-bold text-foreground">{tld.ext}</span>
+                        </p>
+                        <div className="flex gap-1.5">
+                          <Input
+                            ref={tldInputRef}
+                            value={tldInput}
+                            onChange={(e) => { setTldInput(e.target.value); setTldStatus("idle"); }}
+                            placeholder={`name${tld.ext}`}
+                            className="h-8 text-xs rounded-lg flex-1 min-w-0"
+                            onKeyDown={(e) => e.key === "Enter" && checkTldDomain(tld.ext)}
+                          />
+                          <Button
+                            size="sm"
+                            className="h-8 px-3 text-xs shrink-0"
+                            onClick={() => checkTldDomain(tld.ext)}
+                            disabled={tldStatus === "checking" || !tldInput.trim()}
+                          >
+                            {tldStatus === "checking" ? <Loader2 className="w-3 h-3 animate-spin" /> : "Check"}
+                          </Button>
+                        </div>
+
+                        {tldStatus === "available" && (
+                          <div className="mt-2 flex items-center justify-between gap-2">
+                            <span className="text-[11px] text-green-600 font-semibold flex items-center gap-1 min-w-0 truncate">
+                              <CheckCircle2 className="w-3 h-3 shrink-0" />
+                              {tldInput.replace(/[^a-z0-9-]/g, "")}{tld.ext} available!
+                            </span>
+                            <Button
+                              size="sm"
+                              className="h-7 px-3 text-[11px] btn-gradient shrink-0"
+                              onClick={() => {
+                                const bn = tldInput.trim().toLowerCase().replace(/[^a-z0-9-]/g, "");
+                                const params = new URLSearchParams({ domain: `${bn}${tld.ext}`, price: String(rawPrice), renewPrice: String(renewPrice) });
+                                window.location.href = `/cart?${params.toString()}`;
+                              }}
+                            >
+                              Buy Now
+                            </Button>
+                          </div>
+                        )}
+
+                        {tldStatus === "taken" && (
+                          <p className="mt-2 text-[11px] text-red-500 flex items-center gap-1">
+                            <XCircle className="w-3 h-3" />
+                            {tldInput.replace(/[^a-z0-9-]/g, "")}{tld.ext} is taken — try another name
+                          </p>
+                        )}
+
+                        {tldStatus === "unknown" && (
+                          <div className="mt-2">
+                            <p className="text-[11px] text-muted-foreground mb-1.5">
+                              Can't auto-check this TLD — proceed to register and we'll verify.
+                            </p>
+                            <Button
+                              size="sm"
+                              className="h-7 w-full px-3 text-[11px] btn-gradient"
+                              onClick={() => {
+                                const bn = tldInput.trim().toLowerCase().replace(/[^a-z0-9-]/g, "");
+                                const params = new URLSearchParams({ domain: `${bn}${tld.ext}`, price: String(rawPrice), renewPrice: String(renewPrice) });
+                                window.location.href = `/cart?${params.toString()}`;
+                              }}
+                            >
+                              Proceed to Register
+                            </Button>
+                          </div>
+                        )}
+                      </div>
                     )}
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="mt-4 md:mt-5 w-full font-semibold text-xs md:text-sm border-primary/20 hover:bg-primary hover:text-primary-foreground transition-colors rounded-lg"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      const baseName = domain.trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
-                      if (!baseName) {
-                        const input = document.getElementById('domain-search-input') as HTMLInputElement | null;
-                        input?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        setTimeout(() => input?.focus(), 400);
-                        return;
-                      }
-                      const safePrice = livePrices[tld.ext]?.register ?? tld.price;
-                      const renewPrice = livePrices[tld.ext]?.renew ?? 0;
-                      const params = new URLSearchParams({ domain: `${baseName}${tld.ext}`, price: String(safePrice), renewPrice: String(renewPrice) });
-                      window.location.href = `/cart?${params.toString()}`;
-                    }}
-                  >
-                    Register
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         )}
 
