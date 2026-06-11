@@ -353,6 +353,12 @@ const ApplicationForm = () => {
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 const Internships = () => {
+  const [qrUrl, setQrUrl] = useState(PAGE_URL);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setQrUrl(`${window.location.origin}/internships`);
+    }
+  }, []);
   return (
     <div className="min-h-screen">
       <Helmet>
