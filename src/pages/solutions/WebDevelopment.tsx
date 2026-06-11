@@ -9,8 +9,10 @@ import {
   Code, Globe, Smartphone, Database, Palette, ShoppingCart,
   CheckCircle2, ArrowRight, Layers, Zap
 } from "lucide-react";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const WebDevelopment = () => {
+  const { c } = usePageContent("web-development");
   const serviceSchema = createServiceSchema(
     "Professional Web Development Services India",
     "Custom website development, e-commerce solutions, progressive web apps, and SaaS platforms. Expert React, Node.js, PHP, and WordPress developers in India.",
@@ -108,12 +110,12 @@ const WebDevelopment = () => {
   return (
     <>
       <Helmet>
-        <title>Top Web Development Company India | Custom Website Design & Development</title>
-        <meta name="description" content="⭐ Leading Web Development Company in India | Custom Websites | E-Commerce | React, Node.js, PHP | 2000+ Websites Built | SEO-Friendly | Mobile Responsive | From ₹10,000. Free Consultation!" />
+        <title>{c("meta_title", "Top Web Development Company India | Custom Website Design & Development")}</title>
+        <meta name="description" content={c("meta_description", "⭐ Leading Web Development Company in India | Custom Websites | E-Commerce | React, Node.js, PHP | 2000+ Websites Built | SEO-Friendly | Mobile Responsive | From ₹10,000. Free Consultation!")} />
         <meta name="keywords" content="web development company India, website development India, custom web development, e-commerce development India, React development company, Node.js developers India, PHP web development, WordPress development, website design company India, best web development company, affordable web development" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/web-development" />
-        <meta property="og:title" content="Best Web Development Company India | Custom Websites & E-Commerce" />
-        <meta property="og:description" content="Professional web development services. 2000+ websites built. React, Node.js, PHP experts. Free consultation!" />
+        <meta property="og:title" content={c("og_title", "Best Web Development Company India | Custom Websites & E-Commerce")} />
+        <meta property="og:description" content={c("og_description", "Professional web development services. 2000+ websites built. React, Node.js, PHP experts. Free consultation!")} />
         <meta property="og:url" content="https://infinitivecloud.com/solutions/web-development" />
         <meta property="og:type" content="service" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
@@ -138,10 +140,10 @@ const WebDevelopment = () => {
                 <span className="text-sm font-semibold text-primary">Expert Development Team</span>
               </div>
               <h1 className="mb-6">
-                Professional <span className="gradient-text">Web Development</span> Services
+                {c("hero_heading") || <>Professional <span className="gradient-text">Web Development</span> Services</>}
               </h1>
               <p className="text-xl md:text-2xl text-foreground mb-6 leading-relaxed">
-                Transform Your Vision into Powerful Digital Experiences
+                {c("hero_subtext", "Transform Your Vision into Powerful Digital Experiences")}
               </p>
               <p className="text-base md:text-lg text-foreground/70 mb-8 max-w-3xl mx-auto leading-relaxed">
                 From stunning corporate websites to complex web applications, our expert developers create 
@@ -295,3 +297,4 @@ const WebDevelopment = () => {
 };
 
 export default WebDevelopment;
+

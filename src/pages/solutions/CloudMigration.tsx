@@ -7,6 +7,7 @@ import { ArrowRight, Cloud, Shield, Clock, Zap, CheckCircle, Headphones } from "
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import CloudMigrationDiagram from "@/components/infographics/CloudMigrationDiagram";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const steps = [
   { step: "01", title: "Assessment & Planning", description: "We analyze your current setup, identify dependencies, and create a detailed migration roadmap with zero downtime strategy." },
@@ -25,15 +26,16 @@ const features = [
 ];
 
 const CloudMigration = () => {
+  const { c } = usePageContent("cloud-migration");
   return (
     <>
       <Helmet>
-        <title>Free Website Migration | Zero Downtime Cloud Migration - Infinitive Cloud</title>
-        <meta name="description" content="Free website migration to Infinitive Cloud with zero downtime. We handle the entire process — files, databases, emails, DNS. Migrate from any hosting provider." />
+        <title>{c("meta_title", "Free Website Migration | Zero Downtime Cloud Migration - Infinitive Cloud")}</title>
+        <meta name="description" content={c("meta_description", "Free website migration to Infinitive Cloud with zero downtime. We handle the entire process — files, databases, emails, DNS. Migrate from any hosting provider.")} />
         <meta name="keywords" content="free website migration, zero downtime migration, cloud migration India, hosting migration" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/cloud-migration" />
-        <meta property="og:title" content="Free Website Migration | Zero Downtime" />
-        <meta property="og:description" content="Free zero-downtime website migration. Files, databases, emails, DNS — we handle everything." />
+        <meta property="og:title" content={c("og_title", "Free Website Migration | Zero Downtime")} />
+        <meta property="og:description" content={c("og_description", "Free zero-downtime website migration. Files, databases, emails, DNS — we handle everything.")} />
         <meta property="og:url" content="https://infinitivecloud.com/solutions/cloud-migration" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
@@ -48,10 +50,10 @@ const CloudMigration = () => {
           <section className="section-container mb-16">
             <div className="max-w-4xl mx-auto text-center animate-fade-in">
               <h1 className="mb-6">
-                Free <span className="gradient-text">Cloud Migration</span>
+                {c("hero_heading") || <>Free <span className="gradient-text">Cloud Migration</span></>}
               </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                Moving to Infinitive Cloud? We handle everything — from files and databases to DNS configuration. Zero downtime, zero hassle, completely free.
+                {c("hero_subtext", "Moving to Infinitive Cloud? We handle everything — from files and databases to DNS configuration. Zero downtime, zero hassle, completely free.")}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
                 <Link to="/contact"><Button className="btn-gradient glow-effect font-bold h-14 px-8">Request Free Migration</Button></Link>

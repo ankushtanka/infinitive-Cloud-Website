@@ -1,33 +1,35 @@
 import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const Privacy = () => {
+  const { c } = usePageContent("privacy");
   return (
     <div className="min-h-screen">
       <Helmet>
-        <title>Privacy Policy - Infinitive Cloud | Data Protection & Security</title>
-        <meta name="description" content="Infinitive Cloud Privacy Policy. Learn how we collect, use, and protect your personal information. Your data security is our priority." />
+        <title>{c("meta_title", "Privacy Policy - Infinitive Cloud | Data Protection & Security")}</title>
+        <meta name="description" content={c("meta_description", "Infinitive Cloud Privacy Policy. Learn how we collect, use, and protect your personal information. Your data security is our priority.")} />
         <link rel="canonical" href="https://infinitivecloud.com/privacy" />
         <meta name="robots" content="index, follow" />
       </Helmet>
-      
+
       <Navigation />
       <main className="pt-24 pb-20">
         <div className="section-container max-w-4xl">
-          <h1 className="mb-6">Privacy Policy</h1>
+          <h1 className="mb-6">{c("page_title", "Privacy Policy")}</h1>
           <p className="text-lg text-muted-foreground mb-8">
             Your privacy is at the core of everything we do. Learn how we collect, use, and safeguard your information.
           </p>
-          
+
           <div className="space-y-8 text-foreground">
             <section>
-              <h2 className="text-2xl font-bold mb-4">Introduction</h2>
+              <h2 className="text-2xl font-bold mb-4">{c("data_collection_title", "Introduction")}</h2>
               <p className="mb-4">
-                Welcome to <strong>Infinitive Cloud</strong>. This Privacy Policy explains how we collect, use, and safeguard your personal information when you visit our website or use our cloud, hosting, development, and AI services. By using our site and services, you agree to the terms described in this policy.
+                {c("intro", "Welcome to Infinitive Cloud. This Privacy Policy explains how we collect, use, and safeguard your personal information when you visit our website or use our cloud, hosting, development, and AI services. By using our site and services, you agree to the terms described in this policy.")}
               </p>
               <p className="text-sm text-muted-foreground">
-                <strong>Last Updated:</strong> January 2025
+                <strong>Last Updated:</strong> {c("last_updated", "January 2025")}
               </p>
             </section>
 

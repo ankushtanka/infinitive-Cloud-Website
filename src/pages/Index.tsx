@@ -17,8 +17,10 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import FAQSection from "@/components/FAQSection";
 import LiveOfferBanner from "@/components/LiveOfferBanner";
 import { StructuredData, organizationSchema, websiteSchema, createBreadcrumbSchema, createFAQSchema } from "@/components/StructuredData";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const Index = () => {
+  const { c } = usePageContent("home");
 
   const breadcrumbSchema = createBreadcrumbSchema([
     { name: "Home", url: "https://infinitivecloud.com/" }
@@ -34,36 +36,45 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       <Helmet>
-        <title>Infinitive Cloud | Best Cloud & Web Hosting Company in India</title>
-        <meta name="description" content="Premium cloud hosting, VPS, dedicated servers & domain services in India. 99.99% uptime SLA, 24×7 support & 14-day free trial. Launch your business with Infinitive Cloud." />
+        <title>{c("meta_title", "Infinitive Cloud | Best Cloud & Web Hosting Company in India")}</title>
+        <meta name="description" content={c("meta_description", "Premium cloud hosting, VPS, dedicated servers & domain services in India. 99.99% uptime SLA, 24×7 support & 14-day free trial. Launch your business with Infinitive Cloud.")} />
         <meta name="keywords" content="cloud hosting India, VPS hosting India, dedicated server India, web hosting India, best hosting provider, managed cloud hosting, affordable web hosting, shared hosting, reseller hosting, SSL certificates" />
         <link rel="canonical" href="https://infinitivecloud.com/" />
-        <meta property="og:title" content="Infinitive Cloud | Best Cloud & Web Hosting Company in India" />
-        <meta property="og:description" content="Premium cloud hosting, VPS, dedicated servers & domain services. 99.99% uptime SLA, 24×7 support & 14-day free trial." />
+        <meta property="og:title" content={c("og_title", "Infinitive Cloud | Best Cloud & Web Hosting Company in India")} />
+        <meta property="og:description" content={c("og_description", "Premium cloud hosting, VPS, dedicated servers & domain services. 99.99% uptime SLA, 24×7 support & 14-day free trial.")} />
         <meta property="og:url" content="https://infinitivecloud.com/" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Infinitive Cloud | Best Cloud & Web Hosting Company in India" />
-        <meta name="twitter:description" content="Premium cloud hosting, VPS, dedicated servers. 99.99% uptime, 24/7 support, 14-day free trial." />
+        <meta name="twitter:title" content={c("og_title", "Infinitive Cloud | Best Cloud & Web Hosting Company in India")} />
+        <meta name="twitter:description" content={c("og_description", "Premium cloud hosting, VPS, dedicated servers. 99.99% uptime, 24/7 support, 14-day free trial.")} />
         <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
-      
+
       <StructuredData data={organizationSchema} />
       <StructuredData data={websiteSchema} />
       <StructuredData data={breadcrumbSchema} />
       <StructuredData data={faqSchema} />
-      <a 
-        href="#main-content" 
+      <a
+        href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:shadow-lg"
       >
         Skip to main content
       </a>
       <Navigation />
       <main id="main-content">
-        <HeroSection />
+        <HeroSection
+          heading={c("hero_heading")}
+          subtext={c("hero_subtext")}
+          ctaPrimary={c("hero_cta_primary")}
+          ctaSecondary={c("hero_cta_secondary")}
+          announcement={c("announcement_enabled") === "true" ? c("announcement_text") : undefined}
+        />
         <TechLogosSection />
-        <DomainSearchSection />
+        <DomainSearchSection
+          title={c("domain_title")}
+          subtitle={c("domain_subtitle")}
+        />
         <HomePricingSection />
         <WhatWeDoSection />
         <PremiumInfographicSection />
@@ -71,10 +82,16 @@ const Index = () => {
         {/* <DomainPriceComparison /> temporarily hidden */}
         <WhyTrustUsSection />
         <ComparisonSection />
-        <TestimonialsSection />
+        <TestimonialsSection
+          title={c("testimonials_title")}
+          subtitle={c("testimonials_subtitle")}
+        />
         <FreeTrialSection />
         <SEOContentSection />
-        <FAQSection />
+        <FAQSection
+          title={c("faq_title")}
+          subtitle={c("faq_subtitle")}
+        />
       </main>
       <Footer />
       {/* <LiveOfferBanner /> */}

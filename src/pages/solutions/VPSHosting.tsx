@@ -5,12 +5,14 @@ import { StructuredData, createServiceSchema, createBreadcrumbSchema, createFAQS
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { 
+import {
   Server, HardDrive, Cpu, Shield, Zap, Lock,
   CheckCircle2, ArrowRight, Network, Settings
 } from "lucide-react";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const VPSHosting = () => {
+  const { c } = usePageContent("vps-hosting");
   const serviceSchema = createServiceSchema(
     "VPS Hosting India - Virtual Private Server Solutions",
     "High-performance VPS hosting in India with NVMe SSD storage, full root access, dedicated resources, and 99.99% uptime. Linux & Windows VPS servers with complete control and flexibility.",
@@ -99,12 +101,12 @@ const VPSHosting = () => {
   return (
     <>
       <Helmet>
-        <title>Best VPS Hosting India | Linux & Windows VPS | NVMe SSD | From ₹799/mo</title>
-        <meta name="description" content="⭐ Premium VPS Hosting India | NVMe SSD Storage | Full Root Access | 99.99% Uptime | Dedicated Resources | Linux & Windows VPS | Starting ₹799/month. Managed VPS available. Free setup!" />
+        <title>{c("meta_title", "Best VPS Hosting India | Linux & Windows VPS | NVMe SSD | From ₹799/mo")}</title>
+        <meta name="description" content={c("meta_description", "⭐ Premium VPS Hosting India | NVMe SSD Storage | Full Root Access | 99.99% Uptime | Dedicated Resources | Linux & Windows VPS | Starting ₹799/month. Managed VPS available. Free setup!")} />
         <meta name="keywords" content="VPS hosting India, best VPS India, cheap VPS hosting, Linux VPS hosting, Windows VPS hosting, managed VPS India, SSD VPS, NVMe VPS, dedicated VPS resources, virtual private server India, VPS India cheap, KVM VPS hosting" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/vps-hosting" />
-        <meta property="og:title" content="Best VPS Hosting India | From ₹799/month | Full Root Access" />
-        <meta property="og:description" content="High-performance VPS hosting with NVMe SSD, dedicated resources, and 24/7 support. Linux & Windows VPS available." />
+        <meta property="og:title" content={c("og_title", "Best VPS Hosting India | From ₹799/month | Full Root Access")} />
+        <meta property="og:description" content={c("og_description", "High-performance VPS hosting with NVMe SSD, dedicated resources, and 24/7 support. Linux & Windows VPS available.")} />
         <meta property="og:url" content="https://infinitivecloud.com/solutions/vps-hosting" />
         <meta property="og:type" content="product" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
@@ -129,10 +131,10 @@ const VPSHosting = () => {
                 <span className="text-sm font-semibold text-primary">Virtual Private Servers</span>
               </div>
               <h1 className="mb-6">
-                Premium <span className="gradient-text">VPS Hosting</span> India
+                {c("hero_heading") || <>Premium <span className="gradient-text">VPS Hosting</span> India</>}
               </h1>
               <p className="text-xl md:text-2xl text-foreground mb-6 leading-relaxed">
-                High-Performance Virtual Private Servers with Complete Control
+                {c("hero_subtext", "High-Performance Virtual Private Servers with Complete Control")}
               </p>
               <p className="text-base md:text-lg text-foreground/70 mb-8 max-w-3xl mx-auto leading-relaxed">
                 Experience the power of dedicated resources with the flexibility of cloud infrastructure. 

@@ -8,6 +8,7 @@ import { useDomainSearch } from "@/hooks/use-domain-search";
 import DomainResultsGrid from "@/components/DomainResultsGrid";
 import { useDomainPricing } from "@/hooks/use-domain-pricing";
 import { bulkDomainSearch, checkSingleDomain } from "@/lib/whmcs";
+import { whmcsDomainUrl } from "@/config/whmcs-links";
 
 const fallbackTlds = [
   { ext: ".com", price: 799, original: "₹1,199", popular: true, type: "Global", desc: "Most trusted extension worldwide" },
@@ -40,7 +41,12 @@ const placeholderWords = [
   "mystartup.xyz",
 ];
 
-const DomainSearchSection: React.FC = () => {
+interface DomainSearchSectionProps {
+  title?: string;
+  subtitle?: string;
+}
+
+const DomainSearchSection: React.FC<DomainSearchSectionProps> = ({ title, subtitle }) => {
   const [domain, setDomain] = useState("");
   const [inputFocused, setInputFocused] = useState(false);
   const [animatedPlaceholder, setAnimatedPlaceholder] = useState("");
@@ -134,12 +140,10 @@ const DomainSearchSection: React.FC = () => {
             <span className="font-mono tabular-nums">₹799</span>/yr
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 md:mb-5 leading-tight">
-            Find Your Perfect{" "}
-            <span className="gradient-text">Domain Name</span>
+            {title ? title : <>Find Your Perfect{" "}<span className="gradient-text">Domain Name</span></>}
           </h2>
           <p className="text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Register your domain at India's lowest prices. Free WHOIS privacy &
-            SSL included with every domain.
+            {subtitle || "Register your domain at India's lowest prices. Free WHOIS privacy & SSL included with every domain."}
           </p>
         </div>
 
@@ -353,8 +357,7 @@ const DomainSearchSection: React.FC = () => {
                               className="h-7 px-3 text-[11px] btn-gradient shrink-0"
                               onClick={() => {
                                 const bn = tldInput.trim().toLowerCase().replace(/[^a-z0-9-]/g, "");
-                                const params = new URLSearchParams({ domain: `${bn}${tld.ext}`, price: String(rawPrice), renewPrice: String(renewPrice) });
-                                window.location.href = `/cart?${params.toString()}`;
+                                window.open(whmcsDomainUrl(`${bn}${tld.ext}`), '_blank');
                               }}
                             >
                               Buy Now
@@ -379,8 +382,7 @@ const DomainSearchSection: React.FC = () => {
                               className="h-7 w-full px-3 text-[11px] btn-gradient"
                               onClick={() => {
                                 const bn = tldInput.trim().toLowerCase().replace(/[^a-z0-9-]/g, "");
-                                const params = new URLSearchParams({ domain: `${bn}${tld.ext}`, price: String(rawPrice), renewPrice: String(renewPrice) });
-                                window.location.href = `/cart?${params.toString()}`;
+                                window.open(whmcsDomainUrl(`${bn}${tld.ext}`), '_blank');
                               }}
                             >
                               Proceed to Register

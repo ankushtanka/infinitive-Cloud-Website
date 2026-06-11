@@ -7,6 +7,7 @@ import ServicesMegaMenu from "@/components/ServicesMegaMenu";
 import CurrencyLanguageDropdown from "@/components/CurrencyLanguageDropdown";
 import ThemeToggle from "@/components/ThemeToggle";
 import { CONTACT, INTEGRATIONS } from "@/config/contact";
+import { useCmsMenu } from "@/hooks/use-cms-menu";
 
 const WHMCS_LOGIN = "https://client.infinitivecloud.com";
 
@@ -62,6 +63,7 @@ const productQuickLinks = [
 
 const Navigation = () => {
   const location = useLocation();
+  const cmsHeaderMenu = useCmsMenu("header");
   const [isOpen, setIsOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [megaMenuCategory, setMegaMenuCategory] = useState<string | undefined>();
@@ -99,11 +101,19 @@ const Navigation = () => {
     return () => document.removeEventListener('click', handleClickOutside);
   }, [servicesOpen]);
 
-  const navLinks = [
+  const staticNavLinks = [
     { label: "Pricing", path: "/pricing" },
     { label: "About", path: "/about" },
     { label: "Contact", path: "/contact" },
   ];
+
+  const cmsNavLinks = (cmsHeaderMenu?.items ?? []).map((item) => ({
+    label: item.label,
+    path: item.url,
+    target: item.target,
+  }));
+
+  const navLinks = [...staticNavLinks, ...cmsNavLinks];
 
   const handleCloseMenus = useCallback(() => {
     setIsOpen(false);
@@ -187,14 +197,27 @@ const Navigation = () => {
               <div className="h-5 w-px bg-border/40 mx-1" />
 
               {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  onClick={handleCloseMenus}
-                  className="relative px-3 py-2 text-foreground hover:text-primary hover:bg-muted/50 transition-all font-bold text-sm rounded-lg"
-                >
-                  {link.label}
-                </Link>
+                link.target === "_blank" ? (
+                  <a
+                    key={link.path}
+                    href={link.path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={handleCloseMenus}
+                    className="relative px-3 py-2 text-foreground hover:text-primary hover:bg-muted/50 transition-all font-bold text-sm rounded-lg"
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    onClick={handleCloseMenus}
+                    className="relative px-3 py-2 text-foreground hover:text-primary hover:bg-muted/50 transition-all font-bold text-sm rounded-lg"
+                  >
+                    {link.label}
+                  </Link>
+                )
               ))}
             </div>
 
@@ -288,14 +311,27 @@ const Navigation = () => {
             </div>
 
             {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                onClick={handleCloseMenus}
-                className="text-foreground hover:text-primary hover:bg-muted transition-colors font-bold py-4 px-4 rounded-lg text-lg"
-              >
-                {link.label}
-              </Link>
+              link.target === "_blank" ? (
+                <a
+                  key={link.path}
+                  href={link.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={handleCloseMenus}
+                  className="text-foreground hover:text-primary hover:bg-muted transition-colors font-bold py-4 px-4 rounded-lg text-lg"
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  onClick={handleCloseMenus}
+                  className="text-foreground hover:text-primary hover:bg-muted transition-colors font-bold py-4 px-4 rounded-lg text-lg"
+                >
+                  {link.label}
+                </Link>
+              )
             ))}
             <Link to="/login" onClick={() => setIsOpen(false)} className="block py-3 px-4 text-foreground font-semibold hover:text-primary transition-colors">
               Login

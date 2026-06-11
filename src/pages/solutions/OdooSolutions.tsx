@@ -5,8 +5,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Settings, ShoppingCart, BarChart3, Users, Globe, Headphones } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const OdooSolutions = () => {
+  const { c } = usePageContent("odoo-solutions");
   const features = [
     { icon: Settings, title: "Custom Implementation", description: "Tailored Odoo setup configured to match your exact business workflows and processes." },
     { icon: ShoppingCart, title: "E-commerce Integration", description: "Full e-commerce module setup with inventory, payments, and shipping automation." },
@@ -19,12 +21,12 @@ const OdooSolutions = () => {
   return (
     <>
       <Helmet>
-        <title>Odoo ERP Solutions | Custom Implementation - Infinitive Cloud</title>
-        <meta name="description" content="Customized Odoo ERP solutions including implementation, e-commerce, accounting, HR, managed hosting, and training. Streamline your entire business operation." />
+        <title>{c("meta_title", "Odoo ERP Solutions | Custom Implementation - Infinitive Cloud")}</title>
+        <meta name="description" content={c("meta_description", "Customized Odoo ERP solutions including implementation, e-commerce, accounting, HR, managed hosting, and training. Streamline your entire business operation.")} />
         <meta name="keywords" content="Odoo ERP India, Odoo implementation, Odoo hosting, ERP solutions, Odoo customization" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/odoo-solutions" />
-        <meta property="og:title" content="Odoo ERP Solutions | Custom Implementation" />
-        <meta property="og:description" content="Customized Odoo ERP — implementation, e-commerce, accounting, HR, hosting & training." />
+        <meta property="og:title" content={c("og_title", "Odoo ERP Solutions | Custom Implementation")} />
+        <meta property="og:description" content={c("og_description", "Customized Odoo ERP — implementation, e-commerce, accounting, HR, hosting & training.")} />
         <meta property="og:url" content="https://infinitivecloud.com/solutions/odoo-solutions" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
@@ -39,10 +41,10 @@ const OdooSolutions = () => {
           <section className="section-container mb-16">
             <div className="max-w-4xl mx-auto text-center animate-fade-in">
               <h1 className="mb-6">
-                <span className="gradient-text">Odoo</span> Solutions
+                {c("hero_heading") || <><span className="gradient-text">Odoo</span> Solutions</>}
               </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                Customized Odoo ERP implementations that streamline your entire business — from sales and inventory to accounting and HR. One platform, every department connected.
+                {c("hero_subtext", "Customized Odoo ERP implementations that streamline your entire business — from sales and inventory to accounting and HR. One platform, every department connected.")}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
                 <Link to="/contact"><Button className="btn-gradient glow-effect font-bold h-14 px-8">Get a Quote</Button></Link>

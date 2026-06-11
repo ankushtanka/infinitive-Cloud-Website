@@ -7,8 +7,10 @@ import { Users, Globe, Shield, Zap, Server, Headphones } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import ResellerDiagram from "@/components/infographics/ResellerDiagram";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const ResellerHosting = () => {
+  const { c } = usePageContent("reseller-hosting");
   const features = [
     { icon: Users, title: "White-Label Branding", description: "Sell hosting under your own brand with fully customizable control panels and branding." },
     { icon: Server, title: "SSD NVMe Infrastructure", description: "Enterprise-grade hardware ensures your clients get fast, reliable hosting." },
@@ -21,12 +23,12 @@ const ResellerHosting = () => {
   return (
     <>
       <Helmet>
-        <title>Reseller Hosting | Start Your Hosting Business - Infinitive Cloud</title>
-        <meta name="description" content="White-label reseller hosting with SSD NVMe, WHM/cPanel, free SSL, and priority support. Start your own hosting business with reliable infrastructure." />
+        <title>{c("meta_title", "Reseller Hosting | Start Your Hosting Business - Infinitive Cloud")}</title>
+        <meta name="description" content={c("meta_description", "White-label reseller hosting with SSD NVMe, WHM/cPanel, free SSL, and priority support. Start your own hosting business with reliable infrastructure.")} />
         <meta name="keywords" content="reseller hosting India, white-label hosting, WHM hosting, start hosting business" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/reseller-hosting" />
-        <meta property="og:title" content="Reseller Hosting | Start Your Hosting Business" />
-        <meta property="og:description" content="White-label reseller hosting with WHM/cPanel, free SSL, and priority support." />
+        <meta property="og:title" content={c("og_title", "Reseller Hosting | Start Your Hosting Business")} />
+        <meta property="og:description" content={c("og_description", "White-label reseller hosting with WHM/cPanel, free SSL, and priority support.")} />
         <meta property="og:url" content="https://infinitivecloud.com/solutions/reseller-hosting" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
@@ -41,10 +43,10 @@ const ResellerHosting = () => {
           <section className="section-container mb-16">
             <div className="max-w-4xl mx-auto text-center animate-fade-in">
               <h1 className="mb-6">
-                <span className="gradient-text">Reseller</span> Hosting
+                {c("hero_heading") || <><span className="gradient-text">Reseller</span> Hosting</>}
               </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                Start and scale your own hosting business with white-label infrastructure. Sell hosting under your brand with enterprise-grade hardware, easy management, and dedicated support.
+                {c("hero_subtext", "Start and scale your own hosting business with white-label infrastructure. Sell hosting under your brand with enterprise-grade hardware, easy management, and dedicated support.")}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
                 <Link to="/contact"><Button className="btn-gradient glow-effect font-bold h-14 px-8">Get a Quote</Button></Link>

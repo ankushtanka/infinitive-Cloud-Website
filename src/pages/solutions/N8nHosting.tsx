@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import n8nHero from "@/assets/n8n-hero-premium.jpg";
 import N8nWorkflowDiagram from "@/components/infographics/N8nWorkflowDiagram";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const features = [
   { icon: Workflow, title: "Pre-installed n8n", desc: "Latest stable n8n is configured, secured and ready — no Docker, no YAML files, no headaches." },
@@ -120,11 +121,12 @@ const faqs = [
 ];
 
 const N8nHosting = () => {
+  const { c } = usePageContent("n8n-hosting");
   return (
     <>
       <Helmet>
-        <title>Self-Hosted n8n Hosting — Own Your Automation | INFINITIVE CLOUD</title>
-        <meta name="description" content="Deploy production-ready, self-hosted n8n on a dedicated VPS in under 2 minutes. Pre-installed, pre-configured, with full root access. From ₹599/mo." />
+        <title>{c("meta_title", "Self-Hosted n8n Hosting — Own Your Automation | INFINITIVE CLOUD")}</title>
+        <meta name="description" content={c("meta_description", "Deploy production-ready, self-hosted n8n on a dedicated VPS in under 2 minutes. Pre-installed, pre-configured, with full root access. From ₹599/mo.")} />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/n8n-hosting" />
       </Helmet>
 
@@ -159,7 +161,7 @@ const N8nHosting = () => {
                   </p>
 
                   <div className="flex flex-col sm:flex-row gap-4">
-                    <Link to="/cart?product=n8n-growth">
+                    <Link to="/contact">
                       <Button size="lg" className="btn-gradient glow-effect h-14 px-8 font-semibold text-base">
                         Deploy n8n Now
                         <ArrowRight className="ml-2 w-5 h-5" />
@@ -314,7 +316,7 @@ const N8nHosting = () => {
                       <span className="text-muted-foreground">{p.period}</span>
                     </div>
 
-                    <Link to="/cart?product=n8n">
+                    <Link to="/contact">
                       <Button
                         className={`w-full h-12 font-semibold mb-8 ${p.highlight ? "btn-gradient glow-effect" : ""}`}
                         variant={p.highlight ? "default" : "outline"}
@@ -473,7 +475,7 @@ const N8nHosting = () => {
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link to="/cart?product=n8n-growth">
+                  <Link to="/contact">
                     <Button
                       size="lg"
                       className="h-14 px-8 font-semibold text-white border-0 bg-gradient-to-r from-cyan-400 to-blue-600 hover:from-cyan-300 hover:to-blue-500 shadow-[0_8px_30px_-8px_rgba(34,211,238,0.5)]"

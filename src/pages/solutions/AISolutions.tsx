@@ -9,8 +9,10 @@ import {
   Sparkles, Bot, Brain, Zap, BarChart, MessageSquare,
   CheckCircle2, ArrowRight, Cpu, Settings
 } from "lucide-react";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const AISolutions = () => {
+  const { c } = usePageContent("ai-solutions");
   const serviceSchema = createServiceSchema(
     "AI Solutions & Artificial Intelligence Development Services",
     "Custom AI solutions including chatbots, machine learning, business automation, NLP, and computer vision. Transform your business with cutting-edge artificial intelligence technology.",
@@ -98,12 +100,12 @@ const AISolutions = () => {
   return (
     <>
       <Helmet>
-        <title>AI Solutions India | #1 AI Development Company | Chatbots, ML, Automation</title>
-        <meta name="description" content="Top-rated AI solutions company in India ⭐ Custom AI chatbots, machine learning, business automation, NLP & computer vision. 500+ AI projects delivered. Free consultation. Get quote today!" />
+        <title>{c("meta_title", "AI Solutions India | #1 AI Development Company | Chatbots, ML, Automation")}</title>
+        <meta name="description" content={c("meta_description", "Top-rated AI solutions company in India ⭐ Custom AI chatbots, machine learning, business automation, NLP & computer vision. 500+ AI projects delivered. Free consultation. Get quote today!")} />
         <meta name="keywords" content="AI solutions India, artificial intelligence company, AI chatbot development India, machine learning services, AI business automation, NLP services India, computer vision, AI development company, best AI company India, ChatGPT integration, OpenAI services" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/ai-solutions" />
-        <meta property="og:title" content="Best AI Solutions Company India | Chatbots & Machine Learning" />
-        <meta property="og:description" content="Leading AI development company in India. Custom chatbots, ML models, automation. 500+ projects. Free consultation!" />
+        <meta property="og:title" content={c("og_title", "Best AI Solutions Company India | Chatbots & Machine Learning")} />
+        <meta property="og:description" content={c("og_description", "Leading AI development company in India. Custom chatbots, ML models, automation. 500+ projects. Free consultation!")} />
         <meta property="og:url" content="https://infinitivecloud.com/solutions/ai-solutions" />
         <meta property="og:type" content="service" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
@@ -128,10 +130,10 @@ const AISolutions = () => {
                 <span className="text-sm font-semibold text-primary">AI-Powered Innovation</span>
               </div>
               <h1 className="mb-6">
-                Transform Business with <span className="gradient-text">AI Solutions</span>
+                {c("hero_heading") || <>Transform Business with <span className="gradient-text">AI Solutions</span></>}
               </h1>
               <p className="text-xl md:text-2xl text-foreground mb-6 leading-relaxed">
-                Intelligent Automation & Machine Learning for Modern Businesses
+                {c("hero_subtext", "Intelligent Automation & Machine Learning for Modern Businesses")}
               </p>
               <p className="text-base md:text-lg text-foreground/70 mb-8 max-w-3xl mx-auto leading-relaxed">
                 Harness the power of artificial intelligence to automate workflows, gain actionable insights, 
@@ -290,3 +292,4 @@ const AISolutions = () => {
 };
 
 export default AISolutions;
+

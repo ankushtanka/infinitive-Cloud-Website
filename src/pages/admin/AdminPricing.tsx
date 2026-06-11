@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { apiFetchContent, apiSaveContent } from "@/lib/api";
+import { useAdmin } from "@/contexts/AdminContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,7 @@ const DEFAULT_TLDS: TldRow[] = [
 
 const AdminPricing = () => {
   const { toast } = useToast();
+  const { token } = useAdmin();
   const [tlds, setTlds] = useState<TldRow[]>(DEFAULT_TLDS);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -40,23 +42,18 @@ const AdminPricing = () => {
   const loadPrices = async () => {
     setLoading(true);
     try {
-      const { data } = await (supabase as any)
-        .from("admin_settings")
-        .select("value")
-        .eq("key", "domain_prices")
-        .maybeSingle();
-
-      if (data?.value) {
-        const saved: Record<string, { price: number; original: number; renew: number }> = data.value;
+      const data = await apiFetchContent("domain_prices");
+      if (data && Object.keys(data).length > 0) {
+        const savedPrices = data as unknown as Record<string, { price: number; original: number; renew: number }>;
         setTlds(DEFAULT_TLDS.map((t) => ({
           ...t,
-          price: saved[t.ext]?.price ?? t.price,
-          original: saved[t.ext]?.original ?? t.original,
-          renew: saved[t.ext]?.renew ?? t.renew,
+          price: savedPrices[t.ext]?.price ?? t.price,
+          original: savedPrices[t.ext]?.original ?? t.original,
+          renew: savedPrices[t.ext]?.renew ?? t.renew,
         })));
       }
     } catch {
-      // table may not exist yet — use defaults
+      // use defaults
     }
     setLoading(false);
   };
@@ -73,28 +70,21 @@ const AdminPricing = () => {
   };
 
   const handleSave = async () => {
+    if (!token) return;
     setSaving(true);
     try {
-      const payload: Record<string, { price: number; original: number; renew: number }> = {};
+      const payload: Record<string, string> = {};
       tlds.forEach((t) => {
-        payload[t.ext] = { price: t.price, original: t.original, renew: t.renew };
+        payload[t.ext] = JSON.stringify({ price: t.price, original: t.original, renew: t.renew });
       });
-
-      const { error } = await (supabase as any)
-        .from("admin_settings")
-        .upsert({ key: "domain_prices", value: payload, updated_at: new Date().toISOString() }, { onConflict: "key" });
-
-      if (error) throw error;
-
+      await apiSaveContent("domain_prices", payload, token);
       setSaved(true);
       toast({ title: "Prices saved!", description: "Domain prices updated successfully." });
       setTimeout(() => setSaved(false), 3000);
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast({
         title: "Save failed",
-        description: err?.message?.includes("relation")
-          ? "Run the SQL migration in Supabase first. See admin/migration.sql"
-          : err?.message ?? "Unknown error",
+        description: (err as Error)?.message ?? "Unknown error",
         variant: "destructive",
       });
     }

@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Calendar, ArrowRight, Cloud, Server, Code, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { StructuredData, createBreadcrumbSchema } from "@/components/StructuredData";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const Blog = () => {
+  const { c } = usePageContent("blog");
   const breadcrumbSchema = createBreadcrumbSchema([
     { name: "Home", url: "https://infinitivecloud.com/" },
     { name: "Blog", url: "https://infinitivecloud.com/blog" }
@@ -67,18 +69,18 @@ const Blog = () => {
   return (
     <div className="min-h-screen">
       <Helmet>
-        <title>Blog - Cloud Computing, Web Development & AI Insights | Infinitive Cloud</title>
-        <meta name="description" content="Expert insights, guides, and best practices on cloud computing, web hosting, development, and AI solutions. Stay updated with the latest technology trends and tips." />
+        <title>{c("meta_title", "Blog - Cloud Computing, Web Development & AI Insights | Infinitive Cloud")}</title>
+        <meta name="description" content={c("meta_description", "Expert insights, guides, and best practices on cloud computing, web hosting, development, and AI solutions. Stay updated with the latest technology trends and tips.")} />
         <meta name="keywords" content="cloud computing blog, web development articles, AI technology insights, hosting tips, technology trends India, IT best practices" />
         <link rel="canonical" href="https://infinitivecloud.com/blog" />
-        <meta property="og:title" content="Tech Blog - Infinitive Cloud" />
-        <meta property="og:description" content="Expert insights on cloud, hosting, development, and AI solutions." />
+        <meta property="og:title" content={c("og_title", "Tech Blog - Infinitive Cloud")} />
+        <meta property="og:description" content={c("og_description", "Expert insights on cloud, hosting, development, and AI solutions.")} />
         <meta property="og:url" content="https://infinitivecloud.com/blog" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Blog - Infinitive Cloud" />
-        <meta name="twitter:description" content="Cloud, hosting, and AI technology insights and guides." />
+        <meta name="twitter:title" content={c("og_title", "Blog - Infinitive Cloud")} />
+        <meta name="twitter:description" content={c("og_description", "Cloud, hosting, and AI technology insights and guides.")} />
         <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       
@@ -90,10 +92,10 @@ const Blog = () => {
         <section className="section-container mb-20">
           <div className="max-w-4xl mx-auto text-center animate-fade-in">
             <h1 className="mb-6">
-              Resources & <span className="gradient-text">Knowledge Hub</span>
+              {c("hero_heading") || <>Resources & <span className="gradient-text">Knowledge Hub</span></>}
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Expert insights, guides, and best practices for cloud, hosting, development, and AI solutions.
+              {c("hero_subtext", "Expert insights, guides, and best practices for cloud, hosting, development, and AI solutions.")}
             </p>
           </div>
         </section>

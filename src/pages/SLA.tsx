@@ -1,40 +1,42 @@
 import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const SLA = () => {
+  const { c } = usePageContent("sla");
   return (
     <div className="min-h-screen">
       <Helmet>
-        <title>Service Level Agreement (SLA) - Infinitive Cloud | 99.99% Uptime Guarantee</title>
-        <meta name="description" content="Infinitive Cloud SLA. Our commitment to 99.99% uptime, performance standards, support response times, and compensation policies." />
+        <title>{c("meta_title", "Service Level Agreement (SLA) - Infinitive Cloud | 99.99% Uptime Guarantee")}</title>
+        <meta name="description" content={c("meta_description", "Infinitive Cloud SLA. Our commitment to 99.99% uptime, performance standards, support response times, and compensation policies.")} />
         <link rel="canonical" href="https://infinitivecloud.com/sla" />
         <meta name="robots" content="index, follow" />
       </Helmet>
-      
+
       <Navigation />
       <main className="pt-24 pb-20">
         <div className="section-container max-w-4xl">
-          <h1 className="mb-6">Service Level Agreement (SLA)</h1>
+          <h1 className="mb-6">{c("page_title", "Service Level Agreement (SLA)")}</h1>
           <p className="text-lg text-muted-foreground mb-8">
             Our commitment to reliability, performance, and uptime.
           </p>
-          
+
           <div className="space-y-8 text-foreground">
             <section>
               <h2 className="text-2xl font-bold mb-4">Overview</h2>
               <p className="mb-4">
-                <strong>Infinitive Cloud</strong> is committed to providing reliable, high-performance cloud and hosting services. This Service Level Agreement (SLA) defines our uptime guarantees, performance standards, and compensation policies.
+                {c("intro", "Infinitive Cloud is committed to providing reliable, high-performance cloud and hosting services. This Service Level Agreement (SLA) defines our uptime guarantees, performance standards, and compensation policies.")}
               </p>
               <p className="text-sm text-muted-foreground">
-                <strong>Last Updated:</strong> January 2025
+                <strong>Last Updated:</strong> {c("last_updated", "January 2025")}
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-bold mb-4">Uptime Guarantee</h2>
               <p className="mb-4">
-                We guarantee <strong>99.99% uptime</strong> for all our hosting and cloud infrastructure services.
+                We guarantee <strong>{c("uptime_guarantee", "99.99%")} uptime</strong> for all our hosting and cloud infrastructure services.
               </p>
               <div className="bg-muted/50 p-6 rounded-lg my-4">
                 <h3 className="font-bold mb-2">Uptime Calculation</h3>

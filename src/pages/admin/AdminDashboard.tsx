@@ -47,6 +47,7 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!supabase) { setLoading(false); return; }
     supabase
       .from("whmcs_order_syncs")
       .select("*")

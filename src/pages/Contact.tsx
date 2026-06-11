@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { FileText, Zap, Shield, TrendingUp } from "lucide-react";
 import { StructuredData, createBreadcrumbSchema } from "@/components/StructuredData";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const FORM_ENDPOINT = "https://formspree.io/f/xdalvqzp";
 
@@ -276,6 +277,7 @@ const ContactForm = () => {
 };
 
 const Contact = () => {
+  const { c } = usePageContent("contact");
   const breadcrumbSchema = createBreadcrumbSchema([
     { name: "Home", url: "https://infinitivecloud.com/" },
     { name: "Contact", url: "https://infinitivecloud.com/contact" }
@@ -307,18 +309,18 @@ const Contact = () => {
   return (
     <div className="min-h-screen">
       <Helmet>
-        <title>Contact Us - Cloud, Hosting & Development Services | Infinitive Cloud</title>
-        <meta name="description" content="Contact us for inquiries about cloud hosting, web development, mobile apps, or AI solutions. Free consultation, detailed responses within 24 hours, no commitment required." />
+        <title>{c("meta_title", "Contact Us - Cloud, Hosting & Development Services | Infinitive Cloud")}</title>
+        <meta name="description" content={c("meta_description", "Contact us for inquiries about cloud hosting, web development, mobile apps, or AI solutions. Free consultation, detailed responses within 24 hours, no commitment required.")} />
         <meta name="keywords" content="IT services contact India, cloud hosting contact, web development inquiry, mobile app contact, AI solutions contact" />
         <link rel="canonical" href="https://infinitivecloud.com/contact" />
-        <meta property="og:title" content="Contact Us - Infinitive Cloud" />
-        <meta property="og:description" content="Send your inquiry for cloud, hosting, development, or AI services." />
+        <meta property="og:title" content={c("og_title", "Contact Us - Infinitive Cloud")} />
+        <meta property="og:description" content={c("og_description", "Send your inquiry for cloud, hosting, development, or AI services.")} />
         <meta property="og:url" content="https://infinitivecloud.com/contact" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Contact - Infinitive Cloud" />
-        <meta name="twitter:description" content="Free consultation and response within 24 hours." />
+        <meta name="twitter:title" content={c("og_title", "Contact - Infinitive Cloud")} />
+        <meta name="twitter:description" content={c("og_description", "Free consultation and response within 24 hours.")} />
         <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
 
@@ -330,10 +332,10 @@ const Contact = () => {
         <section className="section-container mb-20">
           <div className="max-w-4xl mx-auto text-center animate-fade-in">
             <h1 className="mb-6">
-              <span className="gradient-text">Contact Us</span>
+              {c("hero_heading") || <span className="gradient-text">Contact Us</span>}
             </h1>
             <p className="text-xl text-muted-foreground">
-              Tell us about your project or inquiry and we'll provide a tailored response with transparent pricing.
+              {c("hero_subtext", "Tell us about your project or inquiry and we'll provide a tailored response with transparent pricing.")}
             </p>
           </div>
         </section>
@@ -343,9 +345,9 @@ const Contact = () => {
             <div className="lg:col-span-2">
               <Card className="animate-fade-in-up">
                 <CardHeader>
-                  <CardTitle className="text-2xl">Contact Our Team</CardTitle>
+                  <CardTitle className="text-2xl">{c("form_title", "Contact Our Team")}</CardTitle>
                   <CardDescription>
-                    Fill out the details below and receive a personalized response within 24 hours.
+                    {c("form_subtitle", "Fill out the details below and receive a personalized response within 24 hours.")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>

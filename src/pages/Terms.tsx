@@ -1,33 +1,35 @@
 import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const Terms = () => {
+  const { c } = usePageContent("terms");
   return (
     <div className="min-h-screen">
       <Helmet>
-        <title>Terms of Service - Infinitive Cloud | Service Agreement</title>
-        <meta name="description" content="Infinitive Cloud Terms of Service. Read our service agreement, usage policies, and conditions for using our cloud, hosting, and development services." />
+        <title>{c("meta_title", "Terms of Service - Infinitive Cloud | Service Agreement")}</title>
+        <meta name="description" content={c("meta_description", "Infinitive Cloud Terms of Service. Read our service agreement, usage policies, and conditions for using our cloud, hosting, and development services.")} />
         <link rel="canonical" href="https://infinitivecloud.com/terms" />
         <meta name="robots" content="index, follow" />
       </Helmet>
-      
+
       <Navigation />
       <main className="pt-24 pb-20">
         <div className="section-container max-w-4xl">
-          <h1 className="mb-6">Terms of Service</h1>
+          <h1 className="mb-6">{c("page_title", "Terms of Service")}</h1>
           <p className="text-lg text-muted-foreground mb-8">
             Please read these terms carefully before using our services.
           </p>
-          
+
           <div className="space-y-8 text-foreground">
             <section>
-              <h2 className="text-2xl font-bold mb-4">Agreement to Terms</h2>
+              <h2 className="text-2xl font-bold mb-4">{c("usage_title", "Agreement to Terms")}</h2>
               <p className="mb-4">
-                By accessing or using <strong>Infinitive Cloud</strong> services, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.
+                {c("intro", "By accessing or using Infinitive Cloud services, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.")}
               </p>
               <p className="text-sm text-muted-foreground">
-                <strong>Last Updated:</strong> January 2025
+                <strong>Last Updated:</strong> {c("last_updated", "January 2025")}
               </p>
             </section>
 

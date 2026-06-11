@@ -12,6 +12,7 @@ import {
   Cloud, Server, Database, Lock, Zap, Shield,
   CheckCircle2, ArrowRight, Globe, Check, X, Star, Info
 } from "lucide-react";
+import { usePageContent } from "@/hooks/use-page-content";
 
 // ─── Pricing types ────────────────────────────────────────────────────────────
 type Period = "1" | "12" | "24" | "48";
@@ -133,6 +134,7 @@ const FeatureIcon = ({ type }: { type: FeatureType }) => {
 };
 
 const CloudHosting = () => {
+  const { c } = usePageContent("cloud-hosting");
   const [period, setPeriod] = useState<Period>("48");
 
   const serviceSchema = createServiceSchema(
@@ -236,12 +238,12 @@ const CloudHosting = () => {
   return (
     <>
       <Helmet>
-        <title>Best Cloud Hosting India | 99.99% Uptime | Starting ₹499/mo - Infinitive Cloud</title>
-        <meta name="description" content="⭐ #1 Cloud Hosting Provider in India | 99.99% Uptime SLA | SSD NVMe Storage | Auto-Scaling | Free SSL | 24/7 Support | Enterprise Security | Starting ₹499/month. 10,000+ Happy Customers. Get Started Free!" />
+        <title>{c("meta_title", "Best Cloud Hosting India | 99.99% Uptime | Starting ₹499/mo - Infinitive Cloud")}</title>
+        <meta name="description" content={c("meta_description", "⭐ #1 Cloud Hosting Provider in India | 99.99% Uptime SLA | SSD NVMe Storage | Auto-Scaling | Free SSL | 24/7 Support | Enterprise Security | Starting ₹499/month. 10,000+ Happy Customers. Get Started Free!")} />
         <meta name="keywords" content="cloud hosting India, best cloud hosting, cheap cloud hosting India, managed cloud hosting, scalable cloud servers, enterprise cloud hosting, cloud infrastructure India, SSD cloud hosting, AWS alternative India, cloud VPS hosting, business cloud hosting" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/cloud-hosting" />
-        <meta property="og:title" content="Best Cloud Hosting India | 99.99% Uptime | From ₹499/month" />
-        <meta property="og:description" content="Premium cloud hosting with auto-scaling, enterprise security, and expert 24/7 support. Trusted by 10,000+ businesses." />
+        <meta property="og:title" content={c("og_title", "Best Cloud Hosting India | 99.99% Uptime | From ₹499/month")} />
+        <meta property="og:description" content={c("og_description", "Premium cloud hosting with auto-scaling, enterprise security, and expert 24/7 support. Trusted by 10,000+ businesses.")} />
         <meta property="og:url" content="https://infinitivecloud.com/solutions/cloud-hosting" />
         <meta property="og:type" content="product" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
@@ -266,10 +268,10 @@ const CloudHosting = () => {
                 <span className="text-sm font-semibold text-primary">Enterprise Cloud Solutions</span>
               </div>
               <h1 className="mb-6">
-                Premium <span className="gradient-text">Cloud Hosting</span> Solutions
+                {c("hero_heading") || <>Premium <span className="gradient-text">Cloud Hosting</span> Solutions</>}
               </h1>
               <p className="text-xl md:text-2xl text-foreground mb-6 leading-relaxed">
-                Enterprise-Grade Cloud Infrastructure with 99.99% Uptime SLA
+                {c("hero_subtext", "Enterprise-Grade Cloud Infrastructure with 99.99% Uptime SLA")}
               </p>
               <p className="text-base md:text-lg text-foreground/70 mb-8 max-w-3xl mx-auto leading-relaxed">
                 Power your business with scalable cloud servers, automated deployments, and enterprise-level 
@@ -436,7 +438,7 @@ const CloudHosting = () => {
                       </div>
 
                       <Link
-                        to={`/cart?product=${plan.id}&period=${period}&name=${encodeURIComponent(plan.name)}&type=cloud-hosting`}
+                        to="/contact"
                         className="mb-6"
                       >
                         <Button

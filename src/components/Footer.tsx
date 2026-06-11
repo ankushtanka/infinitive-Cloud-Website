@@ -2,9 +2,24 @@ import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { CONTACT } from "@/config/contact";
+import { useCmsMenu } from "@/hooks/use-cms-menu";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const cmsFooterMenu = useCmsMenu("footer");
+
+  // Build CMS footer columns: top-level items with children = columns, flat items = one "Links" column
+  const cmsFooterSections = (() => {
+    if (!cmsFooterMenu || cmsFooterMenu.items.length === 0) return [];
+    const hasColumns = cmsFooterMenu.items.some((i) => i.children.length > 0);
+    if (hasColumns) {
+      return cmsFooterMenu.items.map((item) => ({
+        title: item.label,
+        links: item.children.map((c) => ({ label: c.label, path: c.url, target: c.target })),
+      }));
+    }
+    return [{ title: "Links", links: cmsFooterMenu.items.map((i) => ({ label: i.label, path: i.url, target: i.target })) }];
+  })();
   const footerSections = [
     {
       title: "Hosting",
@@ -88,15 +103,21 @@ const Footer = () => {
             </div>
           </div>
 
-          {footerSections.map(section => (
+          {[...footerSections, ...cmsFooterSections].map(section => (
             <div key={section.title}>
               <h4 className="font-bold text-foreground mb-4">{section.title}</h4>
               <ul className="space-y-2.5">
                 {section.links.map(link => (
                   <li key={link.label}>
-                    <Link to={link.path} className="text-foreground/70 hover:text-primary transition-colors text-sm">
-                      {link.label}
-                    </Link>
+                    {"target" in link && link.target === "_blank" ? (
+                      <a href={link.path} target="_blank" rel="noopener noreferrer" className="text-foreground/70 hover:text-primary transition-colors text-sm">
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link to={link.path} className="text-foreground/70 hover:text-primary transition-colors text-sm">
+                        {link.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

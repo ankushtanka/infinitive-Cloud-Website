@@ -1,12 +1,12 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { apiLogin } from "@/lib/api";
 
-const SESSION_KEY = "ic_admin_session";
-const ADMIN_ID = import.meta.env.VITE_ADMIN_ID as string;
-const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD as string;
+const TOKEN_KEY = "ic_admin_token";
 
 interface AdminContextType {
   isAuthenticated: boolean;
   loading: boolean;
+  token: string | null;
   login: (id: string, password: string) => Promise<{ error?: string }>;
   logout: () => void;
   session: { user: { email: string; last_sign_in_at: string } } | null;
@@ -16,34 +16,42 @@ const AdminContext = createContext<AdminContextType | null>(null);
 
 export function AdminProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const saved = sessionStorage.getItem(SESSION_KEY);
-    if (saved === "true") setIsAuthenticated(true);
+    const saved = sessionStorage.getItem(TOKEN_KEY);
+    if (saved) {
+      setToken(saved);
+      setIsAuthenticated(true);
+    }
     setLoading(false);
   }, []);
 
   const login = async (id: string, password: string): Promise<{ error?: string }> => {
-    if (id === ADMIN_ID && password === ADMIN_PASSWORD) {
-      sessionStorage.setItem(SESSION_KEY, "true");
+    try {
+      const jwt = await apiLogin(id, password);
+      sessionStorage.setItem(TOKEN_KEY, jwt);
+      setToken(jwt);
       setIsAuthenticated(true);
       return {};
+    } catch {
+      return { error: "Invalid ID or password" };
     }
-    return { error: "Invalid ID or password" };
   };
 
   const logout = () => {
-    sessionStorage.removeItem(SESSION_KEY);
+    sessionStorage.removeItem(TOKEN_KEY);
+    setToken(null);
     setIsAuthenticated(false);
   };
 
   const session = isAuthenticated
-    ? { user: { email: ADMIN_ID, last_sign_in_at: new Date().toISOString() } }
+    ? { user: { email: "admin", last_sign_in_at: new Date().toISOString() } }
     : null;
 
   return (
-    <AdminContext.Provider value={{ isAuthenticated, loading, login, logout, session }}>
+    <AdminContext.Provider value={{ isAuthenticated, loading, token, login, logout, session }}>
       {children}
     </AdminContext.Provider>
   );

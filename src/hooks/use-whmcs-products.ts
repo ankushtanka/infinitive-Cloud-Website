@@ -1,19 +1,13 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { fetchProducts as fetchWhmcsProducts } from "@/lib/whmcs";
 
 export interface WhmcsProduct {
   pid: number;
   name: string;
   description: string;
   features: string[];
-  pricing: Record<string, {
-    monthly: string;
-    annually: string;
-    prefix: string;
-    suffix: string;
-    msetupfee: string;
-    asetupfee: string;
-  }>;
+  /** Flat pricing map: { monthly, annually, biennially, triennially } */
+  pricing: Record<string, string>;
   type: string;
   paytype: string;
 }
@@ -26,9 +20,8 @@ interface UseWhmcsProductsResult {
 }
 
 // Global in-memory cache shared across all hook instances
-const cache: Map<string, { products: WhmcsProduct[]; timestamp: number; version?: number }> = new Map();
+const cache: Map<string, { products: WhmcsProduct[]; timestamp: number }> = new Map();
 const CACHE_TTL = 60 * 1000; // 1 minute client-side TTL
-const STALE_TTL = 5 * 60 * 1000; // Serve stale data for up to 5 minutes while revalidating
 
 function parseProducts(rawProducts: any[]): WhmcsProduct[] {
   return rawProducts.map((p: any) => ({
@@ -61,14 +54,13 @@ export function invalidateWhmcsCache() {
 export function useWhmcsProducts(productIds: number[]): UseWhmcsProductsResult {
   const cacheKey = [...productIds].sort().join(',');
   const cached = cache.get(cacheKey);
-  const isFresh = cached && (Date.now() - cached.timestamp < CACHE_TTL);
 
   const [products, setProducts] = useState<WhmcsProduct[]>(cached?.products || []);
   const [loading, setLoading] = useState(!cached && productIds.length > 0);
   const [error, setError] = useState<string | null>(null);
   const fetchingRef = useRef(false);
 
-  const fetchProducts = useCallback(async (skipCache = false) => {
+  const loadProducts = useCallback(async (skipCache = false) => {
     if (!productIds.length || fetchingRef.current) return;
     fetchingRef.current = true;
 
@@ -76,16 +68,19 @@ export function useWhmcsProducts(productIds: number[]): UseWhmcsProductsResult {
       if (!skipCache) setLoading(true);
       setError(null);
 
-      const { data, error: fnError } = await supabase.functions.invoke('whmcs-products', {
-        body: { productIds, skipCache },
-      });
+      const result = await fetchWhmcsProducts();
 
-      if (fnError) throw new Error(fnError.message);
+      if (result.result === 'error') {
+        throw new Error(result.message || 'Failed to load products');
+      }
 
-      const rawProducts = data?.products || [];
-      const parsed = parseProducts(rawProducts);
+      const filtered = productIds.length > 0
+        ? result.products.filter(p => productIds.includes(p.pid))
+        : result.products;
 
-      cache.set(cacheKey, { products: parsed, timestamp: Date.now(), version: data?.version });
+      const parsed = parseProducts(filtered);
+
+      cache.set(cacheKey, { products: parsed, timestamp: Date.now() });
       setProducts(parsed);
       notifyListeners();
     } catch (err: any) {
@@ -108,18 +103,16 @@ export function useWhmcsProducts(productIds: number[]): UseWhmcsProductsResult {
     const now = Date.now();
 
     if (cachedData) {
-      // Always serve cached data immediately
       setProducts(cachedData.products);
       setLoading(false);
 
-      // If stale, revalidate in background
       if (now - cachedData.timestamp > CACHE_TTL) {
-        fetchProducts(true); // skipCache = true for background refresh
+        loadProducts(true);
       }
     } else {
-      fetchProducts();
+      loadProducts();
     }
-  }, [cacheKey, fetchProducts]);
+  }, [cacheKey, loadProducts]);
 
   // Auto-refresh on window focus (stale-while-revalidate)
   useEffect(() => {
@@ -128,13 +121,13 @@ export function useWhmcsProducts(productIds: number[]): UseWhmcsProductsResult {
     const handleFocus = () => {
       const cachedData = cache.get(cacheKey);
       if (!cachedData || Date.now() - cachedData.timestamp > CACHE_TTL) {
-        fetchProducts(true);
+        loadProducts(true);
       }
     };
 
     window.addEventListener('focus', handleFocus);
     return () => window.removeEventListener('focus', handleFocus);
-  }, [cacheKey, fetchProducts]);
+  }, [cacheKey, loadProducts]);
 
   // Listen for cache invalidation from other components
   useEffect(() => {
@@ -143,12 +136,12 @@ export function useWhmcsProducts(productIds: number[]): UseWhmcsProductsResult {
       if (cachedData) {
         setProducts(cachedData.products);
       } else if (productIds.length) {
-        fetchProducts();
+        loadProducts();
       }
     };
     listeners.add(listener);
     return () => { listeners.delete(listener); };
-  }, [cacheKey, fetchProducts]);
+  }, [cacheKey, loadProducts]);
 
-  return { products, loading, error, refresh: () => fetchProducts(false) };
+  return { products, loading, error, refresh: () => loadProducts(false) };
 }

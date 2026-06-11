@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { useParams, useNavigate } from "react-router-dom";
+import { PAGE_DEFAULTS } from "@/config/page-defaults";
+import { apiFetchContent, apiSaveContent, apiResetContent } from "@/lib/api";
+import { useAdmin } from "@/contexts/AdminContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, ExternalLink, Save, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
+import { ArrowLeft, ExternalLink, Save, Loader2, CheckCircle2, AlertCircle, RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface FieldDef {
@@ -14,7 +16,6 @@ interface FieldDef {
   label: string;
   multiline?: boolean;
   type?: string;
-  section?: string;
 }
 
 interface PageConfig {
@@ -25,10 +26,10 @@ interface PageConfig {
 
 // --- Standard field groups ---
 const SEO_FIELDS: FieldDef[] = [
-  { key: "meta_title", label: "SEO Meta Title", section: "seo" },
-  { key: "meta_description", label: "SEO Meta Description", multiline: true, section: "seo" },
-  { key: "og_title", label: "OG / Social Title", section: "seo" },
-  { key: "og_description", label: "OG / Social Description", multiline: true, section: "seo" },
+  { key: "meta_title", label: "SEO Meta Title" },
+  { key: "meta_description", label: "SEO Meta Description", multiline: true },
+  { key: "og_title", label: "OG / Social Title" },
+  { key: "og_description", label: "OG / Social Description", multiline: true },
 ];
 
 const HERO_FIELDS: FieldDef[] = [
@@ -39,11 +40,8 @@ const HERO_FIELDS: FieldDef[] = [
   { key: "hero_cta_secondary", label: "Secondary CTA Button Text" },
 ];
 
-const SOLUTION_SECTIONS = (name: string) => [
-  {
-    key: "hero", label: "Hero Section",
-    fields: HERO_FIELDS,
-  },
+const SOLUTION_SECTIONS = () => [
+  { key: "hero", label: "Hero Section", fields: HERO_FIELDS },
   {
     key: "features", label: "Features Section",
     fields: [
@@ -65,22 +63,17 @@ const SOLUTION_SECTIONS = (name: string) => [
       { key: "faq_subtitle", label: "Section Subtitle", multiline: true },
     ],
   },
-  {
-    key: "seo", label: "SEO / Meta Tags",
-    fields: SEO_FIELDS,
-  },
+  { key: "seo", label: "SEO / Meta Tags", fields: SEO_FIELDS },
 ];
 
 // --- Page configs ---
 const PAGE_CONFIGS: Record<string, PageConfig> = {
   home: {
-    name: "Home Page",
-    route: "/",
+    name: "Home Page", route: "/",
     sections: [
       {
         key: "hero", label: "Hero Section",
         fields: [
-          { key: "hero_badge", label: "Hero Badge Text" },
           { key: "hero_heading", label: "Hero Main Heading" },
           { key: "hero_subtext", label: "Hero Subtext", multiline: true },
           { key: "hero_cta_primary", label: "Primary CTA Button" },
@@ -118,20 +111,13 @@ const PAGE_CONFIGS: Record<string, PageConfig> = {
           { key: "faq_subtitle", label: "Section Subtitle", multiline: true },
         ],
       },
-      {
-        key: "seo", label: "SEO / Meta Tags",
-        fields: SEO_FIELDS,
-      },
+      { key: "seo", label: "SEO / Meta Tags", fields: SEO_FIELDS },
     ],
   },
   about: {
-    name: "About Page",
-    route: "/about",
+    name: "About Page", route: "/about",
     sections: [
-      {
-        key: "hero", label: "Hero Section",
-        fields: HERO_FIELDS,
-      },
+      { key: "hero", label: "Hero Section", fields: HERO_FIELDS },
       {
         key: "mission", label: "Mission & Vision",
         fields: [
@@ -150,20 +136,13 @@ const PAGE_CONFIGS: Record<string, PageConfig> = {
           { key: "team_subtitle", label: "Team Section Subtitle", multiline: true },
         ],
       },
-      {
-        key: "seo", label: "SEO / Meta Tags",
-        fields: SEO_FIELDS,
-      },
+      { key: "seo", label: "SEO / Meta Tags", fields: SEO_FIELDS },
     ],
   },
   pricing: {
-    name: "Pricing Page",
-    route: "/pricing",
+    name: "Pricing Page", route: "/pricing",
     sections: [
-      {
-        key: "hero", label: "Hero Section",
-        fields: HERO_FIELDS,
-      },
+      { key: "hero", label: "Hero Section", fields: HERO_FIELDS },
       {
         key: "sections", label: "Pricing Sections",
         fields: [
@@ -175,15 +154,11 @@ const PAGE_CONFIGS: Record<string, PageConfig> = {
           { key: "pricing_note", label: "Pricing Note / Disclaimer", multiline: true },
         ],
       },
-      {
-        key: "seo", label: "SEO / Meta Tags",
-        fields: SEO_FIELDS,
-      },
+      { key: "seo", label: "SEO / Meta Tags", fields: SEO_FIELDS },
     ],
   },
   contact: {
-    name: "Contact Page",
-    route: "/contact",
+    name: "Contact Page", route: "/contact",
     sections: [
       {
         key: "hero", label: "Page Header",
@@ -210,15 +185,11 @@ const PAGE_CONFIGS: Record<string, PageConfig> = {
           { key: "form_success_message", label: "Success Message After Submit", multiline: true },
         ],
       },
-      {
-        key: "seo", label: "SEO / Meta Tags",
-        fields: SEO_FIELDS,
-      },
+      { key: "seo", label: "SEO / Meta Tags", fields: SEO_FIELDS },
     ],
   },
   blog: {
-    name: "Blog Page",
-    route: "/blog",
+    name: "Blog Page", route: "/blog",
     sections: [
       {
         key: "hero", label: "Blog Header",
@@ -238,15 +209,11 @@ const PAGE_CONFIGS: Record<string, PageConfig> = {
           { key: "cat_ai", label: "AI Category Label" },
         ],
       },
-      {
-        key: "seo", label: "SEO / Meta Tags",
-        fields: SEO_FIELDS,
-      },
+      { key: "seo", label: "SEO / Meta Tags", fields: SEO_FIELDS },
     ],
   },
   careers: {
-    name: "Careers Page",
-    route: "/careers",
+    name: "Careers Page", route: "/careers",
     sections: [
       {
         key: "hero", label: "Hero Section",
@@ -263,20 +230,13 @@ const PAGE_CONFIGS: Record<string, PageConfig> = {
           { key: "perks_subtitle", label: "Section Subtitle", multiline: true },
         ],
       },
-      {
-        key: "seo", label: "SEO / Meta Tags",
-        fields: SEO_FIELDS,
-      },
+      { key: "seo", label: "SEO / Meta Tags", fields: SEO_FIELDS },
     ],
   },
   solutions: {
-    name: "Solutions Overview",
-    route: "/solutions",
+    name: "Solutions Overview", route: "/solutions",
     sections: [
-      {
-        key: "hero", label: "Hero Section",
-        fields: HERO_FIELDS,
-      },
+      { key: "hero", label: "Hero Section", fields: HERO_FIELDS },
       {
         key: "categories", label: "Category Descriptions",
         fields: [
@@ -288,15 +248,11 @@ const PAGE_CONFIGS: Record<string, PageConfig> = {
           { key: "dev_desc", label: "Development Category Description", multiline: true },
         ],
       },
-      {
-        key: "seo", label: "SEO / Meta Tags",
-        fields: SEO_FIELDS,
-      },
+      { key: "seo", label: "SEO / Meta Tags", fields: SEO_FIELDS },
     ],
   },
   knowledgebase: {
-    name: "Knowledgebase",
-    route: "/knowledgebase",
+    name: "Knowledgebase", route: "/knowledgebase",
     sections: [
       {
         key: "hero", label: "Hero Section",
@@ -306,15 +262,11 @@ const PAGE_CONFIGS: Record<string, PageConfig> = {
           { key: "search_placeholder", label: "Search Placeholder" },
         ],
       },
-      {
-        key: "seo", label: "SEO / Meta Tags",
-        fields: SEO_FIELDS,
-      },
+      { key: "seo", label: "SEO / Meta Tags", fields: SEO_FIELDS },
     ],
   },
   quote: {
-    name: "Get a Quote",
-    route: "/quote",
+    name: "Get a Quote", route: "/quote",
     sections: [
       {
         key: "hero", label: "Hero Section",
@@ -332,15 +284,11 @@ const PAGE_CONFIGS: Record<string, PageConfig> = {
           { key: "success_message", label: "Success Message", multiline: true },
         ],
       },
-      {
-        key: "seo", label: "SEO / Meta Tags",
-        fields: SEO_FIELDS,
-      },
+      { key: "seo", label: "SEO / Meta Tags", fields: SEO_FIELDS },
     ],
   },
   privacy: {
-    name: "Privacy Policy",
-    route: "/privacy",
+    name: "Privacy Policy", route: "/privacy",
     sections: [
       {
         key: "content", label: "Page Content",
@@ -359,8 +307,7 @@ const PAGE_CONFIGS: Record<string, PageConfig> = {
     ],
   },
   terms: {
-    name: "Terms of Service",
-    route: "/terms",
+    name: "Terms of Service", route: "/terms",
     sections: [
       {
         key: "content", label: "Page Content",
@@ -378,8 +325,7 @@ const PAGE_CONFIGS: Record<string, PageConfig> = {
     ],
   },
   sla: {
-    name: "SLA Agreement",
-    route: "/sla",
+    name: "SLA Agreement", route: "/sla",
     sections: [
       {
         key: "content", label: "Page Content",
@@ -395,8 +341,7 @@ const PAGE_CONFIGS: Record<string, PageConfig> = {
     ],
   },
   refund: {
-    name: "Refund Policy",
-    route: "/refund",
+    name: "Refund Policy", route: "/refund",
     sections: [
       {
         key: "content", label: "Page Content",
@@ -415,7 +360,6 @@ const PAGE_CONFIGS: Record<string, PageConfig> = {
   },
 };
 
-// Generic solution page config
 const SOLUTION_PAGE_ROUTES: Record<string, { name: string; route: string }> = {
   "shared-hosting": { name: "Shared Hosting", route: "/solutions/shared-hosting" },
   "vps-hosting": { name: "VPS Hosting", route: "/solutions/vps-hosting" },
@@ -428,7 +372,7 @@ const SOLUTION_PAGE_ROUTES: Record<string, { name: string; route: string }> = {
   "gpu-server": { name: "GPU Dedicated Server", route: "/solutions/gpu-dedicated-server" },
   "streaming-servers": { name: "Streaming Servers", route: "/solutions/streaming-servers" },
   "ssl-certificates": { name: "SSL Certificates", route: "/solutions/ssl-certificates" },
-  "domains": { name: "Domain Registration", route: "/solutions/domains" },
+  domains: { name: "Domain Registration", route: "/solutions/domains" },
   "server-management": { name: "Server Management", route: "/solutions/server-management" },
   "cloud-migration": { name: "Cloud Migration", route: "/solutions/cloud-migration" },
   "server-licenses": { name: "Server Licenses", route: "/solutions/server-licenses" },
@@ -438,42 +382,19 @@ const SOLUTION_PAGE_ROUTES: Record<string, { name: string; route: string }> = {
   "odoo-solutions": { name: "Odoo Solutions", route: "/solutions/odoo-solutions" },
   "email-security": { name: "Email Security", route: "/solutions/email-security" },
   "n8n-hosting": { name: "N8n Hosting", route: "/solutions/n8n-hosting" },
-  "openclaw": { name: "Open WebUI Hosting", route: "/solutions/openclaw" },
+  openclaw: { name: "Open WebUI Hosting", route: "/solutions/openclaw" },
   "google-workspace": { name: "Google Workspace", route: "/solutions/google-workspace" },
   "vps-server": { name: "VPS Server", route: "/solutions/vps-server" },
-};
-
-const USER_PAGE_ROUTES: Record<string, { name: string; route: string }> = {
-  login: { name: "Login Page", route: "/login" },
-  dashboard: { name: "User Dashboard", route: "/dashboard" },
-  cart: { name: "Cart / Checkout", route: "/cart" },
-  "free-trial": { name: "Free Trial", route: "/free-trial" },
-  "domain-transfer": { name: "Domain Transfer", route: "/domain-transfer" },
-  "domain-management": { name: "Domain Management", route: "/domain-management" },
-  "order-confirmation": { name: "Order Confirmation", route: "/order-confirmation" },
-  "live-chat": { name: "Live Chat", route: "/live-chat" },
 };
 
 function getConfig(pageKey: string): PageConfig {
   if (PAGE_CONFIGS[pageKey]) return PAGE_CONFIGS[pageKey];
   if (SOLUTION_PAGE_ROUTES[pageKey]) {
     const info = SOLUTION_PAGE_ROUTES[pageKey];
-    return { name: info.name, route: info.route, sections: SOLUTION_SECTIONS(info.name) };
-  }
-  if (USER_PAGE_ROUTES[pageKey]) {
-    const info = USER_PAGE_ROUTES[pageKey];
-    return {
-      name: info.name,
-      route: info.route,
-      sections: [
-        { key: "hero", label: "Page Header", fields: HERO_FIELDS },
-        { key: "seo", label: "SEO / Meta Tags", fields: SEO_FIELDS },
-      ],
-    };
+    return { name: info.name, route: info.route, sections: SOLUTION_SECTIONS() };
   }
   return {
-    name: pageKey,
-    route: "/",
+    name: pageKey, route: "/",
     sections: [
       { key: "hero", label: "Page Content", fields: HERO_FIELDS },
       { key: "seo", label: "SEO / Meta Tags", fields: SEO_FIELDS },
@@ -485,9 +406,9 @@ const AdminPageEditor = () => {
   const { pageKey = "" } = useParams<{ pageKey: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { token } = useAdmin();
 
   const config = getConfig(pageKey);
-  const supabaseKey = `page_content_${pageKey}`;
 
   const [content, setContent] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
@@ -496,18 +417,13 @@ const AdminPageEditor = () => {
   const [activeSection, setActiveSection] = useState(config.sections[0]?.key ?? "");
 
   useEffect(() => {
-    (async () => {
-      try {
-        const { data } = await (supabase as any)
-          .from("admin_settings")
-          .select("value")
-          .eq("key", supabaseKey)
-          .maybeSingle();
-        if (data?.value) setContent(data.value as Record<string, string>);
-      } catch { /* table might not exist yet */ }
+    setLoading(true);
+    apiFetchContent(pageKey).then((saved) => {
+      // Merge saved values over defaults so all fields are pre-filled
+      setContent({ ...(PAGE_DEFAULTS[pageKey] ?? {}), ...saved });
       setLoading(false);
-    })();
-  }, [supabaseKey]);
+    });
+  }, [pageKey]);
 
   const update = (field: string) => (value: string) => {
     setContent((prev) => ({ ...prev, [field]: value }));
@@ -515,25 +431,32 @@ const AdminPageEditor = () => {
   };
 
   const handleSave = async () => {
+    if (!token) {
+      toast({ title: "Not authenticated", variant: "destructive" });
+      return;
+    }
     setSaving(true);
     try {
-      const { error } = await (supabase as any)
-        .from("admin_settings")
-        .upsert({ key: supabaseKey, value: content, updated_at: new Date().toISOString() }, { onConflict: "key" });
-      if (error) throw error;
+      await apiSaveContent(pageKey, content, token);
       setSaved(true);
       toast({ title: "Saved!", description: `${config.name} content updated.` });
       setTimeout(() => setSaved(false), 3000);
     } catch (err: any) {
-      toast({
-        title: "Save failed",
-        description: err?.message?.includes("relation")
-          ? "Run the admin_settings migration in Supabase first."
-          : err?.message ?? "Unknown error",
-        variant: "destructive",
-      });
+      toast({ title: "Save failed", description: err?.message ?? "Unknown error", variant: "destructive" });
     }
     setSaving(false);
+  };
+
+  const handleReset = async () => {
+    if (!token) return;
+    if (!window.confirm("Reset this page to default content? Saved changes will be removed.")) return;
+    try {
+      await apiResetContent(pageKey, token);
+      setContent(PAGE_DEFAULTS[pageKey] ?? {});
+      toast({ title: "Reset to defaults", description: `${config.name} content reset.` });
+    } catch (err: any) {
+      toast({ title: "Reset failed", description: err?.message ?? "Unknown error", variant: "destructive" });
+    }
   };
 
   const currentSection = config.sections.find((s) => s.key === activeSection);
@@ -563,6 +486,14 @@ const AdminPageEditor = () => {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <button
+            onClick={handleReset}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-700 transition-all border border-slate-700"
+            title="Reset to default content"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            Reset
+          </button>
           <a
             href={config.route}
             target="_blank"
@@ -588,7 +519,8 @@ const AdminPageEditor = () => {
         <CardContent className="p-3 flex gap-2.5">
           <AlertCircle className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" />
           <p className="text-blue-300 text-xs leading-relaxed">
-            Content is saved to Supabase under the key <code className="bg-slate-800 px-1 rounded">{supabaseKey}</code>. Each page must be updated to read from Supabase to reflect changes live.
+            Fields are pre-filled with the current live website content. Edit any field and click{" "}
+            <strong>Save Changes</strong> — changes reflect immediately after a page refresh.
           </p>
         </CardContent>
       </Card>

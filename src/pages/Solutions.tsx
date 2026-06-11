@@ -5,8 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Cloud, Server, Globe, Shield, Zap, Database, Lock, HardDrive, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const Solutions = () => {
+  const { c } = usePageContent("solutions");
   const solutions = [
     {
       icon: Server,
@@ -67,18 +69,18 @@ const Solutions = () => {
   return (
     <>
       <Helmet>
-        <title>Hosting Solutions | Cloud, VPS, Dedicated & Shared Hosting - Infinitive Cloud</title>
-        <meta name="description" content="Complete hosting solutions including shared hosting, VPS, cloud hosting, dedicated servers, domain registration, SSL certificates, and managed services. Enterprise-grade infrastructure in India." />
+        <title>{c("meta_title", "Hosting Solutions | Cloud, VPS, Dedicated & Shared Hosting - Infinitive Cloud")}</title>
+        <meta name="description" content={c("meta_description", "Complete hosting solutions including shared hosting, VPS, cloud hosting, dedicated servers, domain registration, SSL certificates, and managed services. Enterprise-grade infrastructure in India.")} />
         <meta name="keywords" content="hosting solutions India, cloud hosting, VPS hosting, dedicated servers, shared hosting, SSL certificates" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions" />
-        <meta property="og:title" content="Hosting Solutions | Cloud, VPS, Dedicated & Shared" />
-        <meta property="og:description" content="Complete hosting solutions — shared, VPS, cloud, dedicated, domains, SSL. Enterprise-grade infrastructure in India." />
+        <meta property="og:title" content={c("og_title", "Hosting Solutions | Cloud, VPS, Dedicated & Shared")} />
+        <meta property="og:description" content={c("og_description", "Complete hosting solutions — shared, VPS, cloud, dedicated, domains, SSL. Enterprise-grade infrastructure in India.")} />
         <meta property="og:url" content="https://infinitivecloud.com/solutions" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Hosting Solutions | Cloud, VPS, Dedicated & Shared" />
-        <meta name="twitter:description" content="Complete hosting solutions — shared, VPS, cloud, dedicated, domains, SSL. Enterprise-grade infrastructure in India." />
+        <meta name="twitter:title" content={c("og_title", "Hosting Solutions | Cloud, VPS, Dedicated & Shared")} />
+        <meta name="twitter:description" content={c("og_description", "Complete hosting solutions — shared, VPS, cloud, dedicated, domains, SSL. Enterprise-grade infrastructure in India.")} />
         <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       
@@ -88,10 +90,10 @@ const Solutions = () => {
           <section className="section-container mb-20">
             <div className="max-w-4xl mx-auto text-center animate-fade-in">
               <h1 className="mb-6">
-                Complete <span className="gradient-text">Hosting Solutions</span>
+                {c("hero_heading") || <>Complete <span className="gradient-text">Hosting Solutions</span></>}
               </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                Everything you need to launch, grow, and scale your online presence. From shared hosting to enterprise dedicated servers — all backed by 99.99% uptime and 24/7 expert support.
+                {c("hero_subtext", "Everything you need to launch, grow, and scale your online presence. From shared hosting to enterprise dedicated servers — all backed by 99.99% uptime and 24/7 expert support.")}
               </p>
             </div>
           </section>

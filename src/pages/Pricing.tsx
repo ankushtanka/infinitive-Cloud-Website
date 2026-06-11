@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet";
+import { usePageContent } from "@/hooks/use-page-content";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +10,7 @@ import { StructuredData, createBreadcrumbSchema } from "@/components/StructuredD
 import { useState, useMemo } from "react";
 import { useWhmcsProducts, WhmcsProduct } from "@/hooks/use-whmcs-products";
 import { PRODUCT_CATEGORIES, PlanConfig } from "@/config/whmcs-products";
+import { whmcsCartUrl } from "@/config/whmcs-links";
 
 const CATEGORY_ICONS: Record<string, React.ElementType> = {
   "web-hosting": Globe,
@@ -20,13 +22,13 @@ const CATEGORY_ICONS: Record<string, React.ElementType> = {
 };
 
 function getWhmcsMonthlyPrice(product: WhmcsProduct | undefined): number | null {
-  const raw = product?.pricing?.INR?.monthly;
+  const raw = product?.pricing?.monthly;
   const n = parseFloat(raw ?? "");
   return Number.isFinite(n) && n > 0 ? Math.round(n) : null;
 }
 
 function getWhmcsAnnualPrice(product: WhmcsProduct | undefined): number | null {
-  const raw = product?.pricing?.INR?.annually;
+  const raw = product?.pricing?.annually;
   const n = parseFloat(raw ?? "");
   return Number.isFinite(n) && n > 0 ? Math.round(n) : null;
 }
@@ -35,37 +37,31 @@ function formatINR(amount: number): string {
   return "₹" + amount.toLocaleString("en-IN");
 }
 
-function buildCartUrl(
-  pid: number,
-  name: string,
-  cartType: string,
-  monthly: number,
-  annually: number
-): string {
-  return `/cart?product=${pid}&name=${encodeURIComponent(name)}&type=${encodeURIComponent(cartType)}&price=${monthly}&annualPrice=${annually}`;
+function buildCartUrl(pid: number): string {
+  return whmcsCartUrl(pid);
 }
 
 interface PlanCardProps {
   plan: PlanConfig;
   whmcsProduct: WhmcsProduct | undefined;
+  loading: boolean;
   cartType: string;
   index: number;
 }
 
-const PlanCard = ({ plan, whmcsProduct, cartType, index }: PlanCardProps) => {
-  const liveMonthly = getWhmcsMonthlyPrice(whmcsProduct);
-  const liveAnnual = getWhmcsAnnualPrice(whmcsProduct);
-
-  const monthly = liveMonthly ?? plan.fallbackMonthly;
-  const annually = liveAnnual ?? plan.fallbackAnnually;
-  const isLive = liveMonthly !== null;
+const PlanCard = ({ plan, whmcsProduct, loading, cartType, index }: PlanCardProps) => {
+  const monthly = getWhmcsMonthlyPrice(whmcsProduct);
+  const annually = getWhmcsAnnualPrice(whmcsProduct);
 
   const cartUrl =
     plan.pid !== null
-      ? buildCartUrl(plan.pid, plan.name, cartType, monthly, annually)
+      ? buildCartUrl(plan.pid)
       : "/contact";
 
-  const savePct = Math.round(100 - (annually / (monthly * 12)) * 100);
+  const savePct =
+    monthly && annually
+      ? Math.round(100 - (annually / (monthly * 12)) * 100)
+      : null;
 
   return (
     <Card
@@ -90,26 +86,31 @@ const PlanCard = ({ plan, whmcsProduct, cartType, index }: PlanCardProps) => {
       </CardHeader>
 
       <CardContent>
-        <div className="mb-4">
-          <span className="text-sm text-muted-foreground line-through">
-            {formatINR(plan.originalPrice)}/mo
-          </span>
-          <div className="flex items-baseline gap-1 mt-1">
-            <span className="text-4xl font-black gradient-text">{formatINR(monthly)}</span>
-            <span className="text-muted-foreground">/mo</span>
-          </div>
-          <div className="flex items-center gap-2 mt-1 flex-wrap">
-            {savePct > 0 && (
-              <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                Save {savePct}% annually
-              </span>
-            )}
-            {isLive && (
-              <span className="text-[10px] text-green-600 dark:text-green-400 font-medium">
-                Live price
-              </span>
-            )}
-          </div>
+        <div className="mb-4 min-h-[72px]">
+          {loading ? (
+            <div className="animate-pulse space-y-2">
+              <div className="h-4 w-16 bg-muted rounded" />
+              <div className="h-9 w-28 bg-muted rounded" />
+            </div>
+          ) : monthly !== null ? (
+            <>
+              <div className="flex items-baseline gap-1 mt-1">
+                <span className="text-4xl font-black gradient-text">{formatINR(monthly)}</span>
+                <span className="text-muted-foreground">/mo</span>
+              </div>
+              <div className="flex items-center gap-2 mt-1 flex-wrap">
+                {savePct !== null && savePct > 0 && (
+                  <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                    Save {savePct}% annually
+                  </span>
+                )}
+              </div>
+            </>
+          ) : (
+            <div className="flex items-baseline gap-1 mt-1">
+              <span className="text-4xl font-black text-muted-foreground/40">—</span>
+            </div>
+          )}
         </div>
 
         {plan.specs && (
@@ -131,21 +132,26 @@ const PlanCard = ({ plan, whmcsProduct, cartType, index }: PlanCardProps) => {
           ))}
         </ul>
 
-        <Link to={cartUrl}>
-          <Button
-            className={`w-full ${plan.popular ? "btn-gradient" : ""}`}
-            variant={plan.popular ? "default" : "outline"}
-          >
-            {plan.pid !== null ? "Get Started" : "Contact Us"}
-            <ArrowRight className="ml-2 w-4 h-4" />
-          </Button>
-        </Link>
+        {plan.pid !== null ? (
+          <a href={cartUrl} target="_blank" rel="noopener noreferrer">
+            <Button className={`w-full ${plan.popular ? "btn-gradient" : ""}`} variant={plan.popular ? "default" : "outline"}>
+              Get Started <ArrowRight className="ml-2 w-4 h-4" />
+            </Button>
+          </a>
+        ) : (
+          <Link to="/contact">
+            <Button className="w-full" variant="outline">
+              Contact Us <ArrowRight className="ml-2 w-4 h-4" />
+            </Button>
+          </Link>
+        )}
       </CardContent>
     </Card>
   );
 };
 
 const Pricing = () => {
+  const { c } = usePageContent("pricing");
   const [activeCategory, setActiveCategory] = useState("web-hosting");
 
   const breadcrumbSchema = createBreadcrumbSchema([
@@ -161,7 +167,7 @@ const Pricing = () => {
     []
   );
 
-  const { products } = useWhmcsProducts(allPids);
+  const { products, loading: priceLoading } = useWhmcsProducts(allPids);
 
   const productMap = useMemo(() => {
     const map = new Map<number, WhmcsProduct>();
@@ -174,24 +180,18 @@ const Pricing = () => {
   return (
     <div className="min-h-screen">
       <Helmet>
-        <title>Pricing - Affordable Cloud Hosting, VPS, WordPress & Reseller Hosting India</title>
-        <meta
-          name="description"
-          content="India's most affordable hosting plans. Web hosting from ₹129/mo, Cloud from ₹469/mo, VPS from ₹335/mo, WordPress from ₹129/mo. 99.9% uptime, 24/7 support."
-        />
-        <meta
-          name="keywords"
-          content="web hosting pricing India, cloud hosting plans, VPS hosting cost, WordPress hosting price, reseller hosting India, cheap hosting India"
-        />
+        <title>{c("meta_title", "Pricing - Affordable Cloud Hosting, VPS, WordPress & Reseller Hosting India")}</title>
+        <meta name="description" content={c("meta_description", "India's most affordable hosting plans. Web hosting from ₹129/mo, Cloud from ₹469/mo, VPS from ₹335/mo, WordPress from ₹129/mo. 99.9% uptime, 24/7 support.")} />
+        <meta name="keywords" content="web hosting pricing India, cloud hosting plans, VPS hosting cost, WordPress hosting price, reseller hosting India, cheap hosting India" />
         <link rel="canonical" href="https://infinitivecloud.com/pricing" />
-        <meta property="og:title" content="Affordable Hosting Plans - Infinitive Cloud" />
-        <meta property="og:description" content="Web hosting from ₹129/mo, Cloud from ₹469/mo, VPS from ₹335/mo. Enterprise features at India's best prices." />
+        <meta property="og:title" content={c("og_title", "Affordable Hosting Plans - Infinitive Cloud")} />
+        <meta property="og:description" content={c("og_description", "Web hosting from ₹129/mo, Cloud from ₹469/mo, VPS from ₹335/mo. Enterprise features at India's best prices.")} />
         <meta property="og:url" content="https://infinitivecloud.com/pricing" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Pricing - Infinitive Cloud" />
-        <meta name="twitter:description" content="Affordable cloud, VPS, WordPress & reseller hosting in India." />
+        <meta name="twitter:title" content={c("og_title", "Pricing - Infinitive Cloud")} />
+        <meta name="twitter:description" content={c("og_description", "Affordable cloud, VPS, WordPress & reseller hosting in India.")} />
         <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
 
@@ -203,10 +203,10 @@ const Pricing = () => {
         <section className="section-container mb-12">
           <div className="max-w-4xl mx-auto text-center animate-fade-in">
             <h1 className="mb-6">
-              Simple, <span className="gradient-text">Transparent Pricing</span>
+              {c("hero_heading") || <>Simple, <span className="gradient-text">Transparent Pricing</span></>}
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Enterprise-grade hosting at India's most competitive prices. All plans include free SSL, 24/7 support & 99.9% uptime guarantee.
+              {c("hero_subtext", "Enterprise-grade hosting at India's most competitive prices. All plans include free SSL, 24/7 support & 99.9% uptime guarantee.")}
             </p>
           </div>
         </section>
@@ -255,6 +255,7 @@ const Pricing = () => {
                 key={plan.name}
                 plan={plan}
                 whmcsProduct={plan.pid !== null ? productMap.get(plan.pid) : undefined}
+                loading={priceLoading}
                 cartType={currentCategory.cartType}
                 index={index}
               />

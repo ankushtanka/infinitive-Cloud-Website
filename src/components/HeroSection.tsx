@@ -34,14 +34,26 @@ const useCountUp = (end: number, duration: number = 2000, suffix: string = "") =
   return { ref, value: count, suffix };
 };
 
-const HeroSection = () => {
+interface HeroSectionProps {
+  heading?: string;
+  subtext?: string;
+  ctaPrimary?: string;
+  ctaSecondary?: string;
+  announcement?: string;
+}
+
+const HeroSection = ({ heading, subtext, ctaPrimary, ctaSecondary, announcement }: HeroSectionProps = {}) => {
   const [activeOffer, setActiveOffer] = useState(0);
 
-  const offers = [
+  const defaultOffers = [
     { text: "🔥 Limited Time: Get 50% OFF on first 3 months", code: "WELCOME50" },
     { text: "🚀 Start your 14-day Free Trial — No credit card required", code: null },
     { text: "⚡ Hosting starting at just ₹79/mo — Launch today!", code: null },
   ];
+
+  const offers = announcement
+    ? [{ text: announcement, code: null }]
+    : defaultOffers;
 
   useEffect(() => {
     const timer = setInterval(() => setActiveOffer((p) => (p + 1) % offers.length), 3500);
@@ -91,14 +103,20 @@ const HeroSection = () => {
       <div className="section-container w-full relative z-10 flex flex-col items-center justify-center flex-1">
         <div className="max-w-5xl w-full flex flex-col items-center text-center">
           <h1 className="mb-4 md:mb-6 font-extrabold leading-[1.3] md:leading-[1.35] text-2xl sm:text-3xl md:text-[clamp(2.5rem,4.5vw,4.5rem)] tracking-tight">
-            <span className="whitespace-nowrap">Premium{" "}
-            <span className="gradient-text">Cloud & Web Hosting</span></span>
-            <br />
-            <span className="text-primary">Built for Speed & Scale</span>
+            {heading ? (
+              <span>{heading}</span>
+            ) : (
+              <>
+                <span className="whitespace-nowrap">Premium{" "}
+                <span className="gradient-text">Cloud & Web Hosting</span></span>
+                <br />
+                <span className="text-primary">Built for Speed & Scale</span>
+              </>
+            )}
           </h1>
 
           <p className="text-sm sm:text-base md:text-xl lg:text-2xl text-muted-foreground mb-4 md:mb-5 max-w-3xl mx-auto leading-relaxed px-2">
-            Managed VPS, dedicated servers, shared hosting & enterprise infrastructure — powered by NVMe SSD, LiteSpeed, and 24/7 expert support.
+            {subtext || "Managed VPS, dedicated servers, shared hosting & enterprise infrastructure — powered by NVMe SSD, LiteSpeed, and 24/7 expert support."}
           </p>
 
           {/* Star rating trust line — inspired by Hostinger/SiteGround */}
@@ -137,7 +155,7 @@ const HeroSection = () => {
                 className="btn-gradient glow-effect text-base md:text-xl px-8 md:px-12 h-12 md:h-16 rounded-xl md:rounded-2xl group font-bold shadow-lg hover:shadow-xl transition-all w-full sm:w-auto"
                 style={{ boxShadow: "var(--shadow-medium)" }}
               >
-                Start Free Trial
+                {ctaPrimary || "Start Free Trial"}
                 <ArrowRight className="ml-2 w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
@@ -147,7 +165,7 @@ const HeroSection = () => {
                 variant="outline"
                 className="text-base md:text-xl px-8 md:px-12 h-12 md:h-16 rounded-xl md:rounded-2xl border-2 border-foreground/20 hover:border-primary hover:bg-primary/10 transition-all font-semibold w-full sm:w-auto"
               >
-                View Plans — From ₹79/mo
+                {ctaSecondary || "View Plans — From ₹79/mo"}
               </Button>
             </Link>
           </div>

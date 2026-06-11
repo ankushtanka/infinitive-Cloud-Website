@@ -1,6 +1,7 @@
 import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { usePageContent } from "@/hooks/use-page-content";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +13,7 @@ import { toast } from "sonner";
 import { StructuredData, createBreadcrumbSchema } from "@/components/StructuredData";
 
 const Quote = () => {
+  const { c } = usePageContent("quote");
   const breadcrumbSchema = createBreadcrumbSchema([
     { name: "Home", url: "https://infinitivecloud.com/" },
     { name: "Quote", url: "https://infinitivecloud.com/quote" }
@@ -84,18 +86,18 @@ const Quote = () => {
   return (
     <div className="min-h-screen">
       <Helmet>
-        <title>Get Custom Quote - Cloud, Hosting & Development Services | Infinitive Cloud</title>
-        <meta name="description" content="Request a custom quote for cloud hosting, web development, mobile apps, or AI solutions. Free consultation, detailed proposal within 24 hours, no commitment required." />
+        <title>{c("meta_title", "Get Custom Quote - Cloud, Hosting & Development Services | Infinitive Cloud")}</title>
+        <meta name="description" content={c("meta_description", "Request a custom quote for cloud hosting, web development, mobile apps, or AI solutions. Free consultation, detailed proposal within 24 hours, no commitment required.")} />
         <meta name="keywords" content="IT services quote India, cloud hosting quote, web development pricing, mobile app cost estimate, AI solutions proposal" />
         <link rel="canonical" href="https://infinitivecloud.com/quote" />
-        <meta property="og:title" content="Get Custom Quote - Infinitive Cloud" />
-        <meta property="og:description" content="Request a personalized proposal for cloud, hosting, development, or AI services." />
+        <meta property="og:title" content={c("og_title", "Get Custom Quote - Infinitive Cloud")} />
+        <meta property="og:description" content={c("og_description", "Request a personalized proposal for cloud, hosting, development, or AI services.")} />
         <meta property="og:url" content="https://infinitivecloud.com/quote" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Get Quote - Infinitive Cloud" />
-        <meta name="twitter:description" content="Free consultation and custom proposal within 24 hours." />
+        <meta name="twitter:title" content={c("og_title", "Get Quote - Infinitive Cloud")} />
+        <meta name="twitter:description" content={c("og_description", "Free consultation and custom proposal within 24 hours.")} />
         <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       
@@ -107,10 +109,10 @@ const Quote = () => {
         <section className="section-container mb-20">
           <div className="max-w-4xl mx-auto text-center animate-fade-in">
             <h1 className="mb-6">
-              Request a <span className="gradient-text">Custom Quote</span>
+              {c("hero_heading") || <>Request a <span className="gradient-text">Custom Quote</span></>}
             </h1>
             <p className="text-xl text-muted-foreground">
-              Tell us about your project and we'll provide a tailored solution with transparent pricing.
+              {c("hero_subtext", "Tell us about your project and we'll provide a tailored solution with transparent pricing.")}
             </p>
           </div>
         </section>

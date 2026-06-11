@@ -7,6 +7,7 @@ import { Check, Shield, Lock, Globe, Zap, Award, ShieldCheck } from "lucide-reac
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import SSLHandshakeDiagram from "@/components/infographics/SSLHandshakeDiagram";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const plans = [
   {
@@ -49,15 +50,16 @@ const benefits = [
 ];
 
 const SSLCertificates = () => {
+  const { c } = usePageContent("ssl-certificates");
   return (
     <>
       <Helmet>
-        <title>SSL Certificates India | Free & Premium SSL from ₹2,999/yr - Infinitive Cloud</title>
-        <meta name="description" content="Secure your website with SSL certificates. Free DV SSL with all hosting plans. Premium OV, EV, and Wildcard SSL certificates with 256-bit encryption and warranty protection." />
+        <title>{c("meta_title", "SSL Certificates India | Free & Premium SSL from ₹2,999/yr - Infinitive Cloud")}</title>
+        <meta name="description" content={c("meta_description", "Secure your website with SSL certificates. Free DV SSL with all hosting plans. Premium OV, EV, and Wildcard SSL certificates with 256-bit encryption and warranty protection.")} />
         <meta name="keywords" content="SSL certificate India, free SSL, EV SSL, OV SSL, wildcard SSL, website security" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/ssl-certificates" />
-        <meta property="og:title" content="SSL Certificates India | Free & Premium SSL" />
-        <meta property="og:description" content="Free DV SSL with hosting. Premium OV, EV, Wildcard SSL with 256-bit encryption." />
+        <meta property="og:title" content={c("og_title", "SSL Certificates India | Free & Premium SSL")} />
+        <meta property="og:description" content={c("og_description", "Free DV SSL with hosting. Premium OV, EV, Wildcard SSL with 256-bit encryption.")} />
         <meta property="og:url" content="https://infinitivecloud.com/solutions/ssl-certificates" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
@@ -73,10 +75,10 @@ const SSLCertificates = () => {
             <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
               <div className="animate-fade-in">
                 <h1 className="mb-6">
-                  <span className="gradient-text">SSL Certificates</span> for Complete Security
+                  {c("hero_heading") || <><span className="gradient-text">SSL Certificates</span> for Complete Security</>}
                 </h1>
                 <p className="text-xl text-muted-foreground max-w-xl leading-relaxed">
-                  Protect your website and build customer trust with industry-standard SSL certificates. Free SSL included with all hosting plans, plus premium options for businesses that need more.
+                  {c("hero_subtext", "Protect your website and build customer trust with industry-standard SSL certificates. Free SSL included with all hosting plans, plus premium options for businesses that need more.")}
                 </p>
                 <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-muted-foreground">
                   <div className="flex items-center gap-2"><Check className="w-4 h-4 text-primary" />Free DV with hosting</div>

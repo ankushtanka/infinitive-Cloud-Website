@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { ShoppingCart, Zap, Shield, Clock, Server, Globe, ArrowRight, Check } from "lucide-react";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const features = [
   { icon: ShoppingCart, title: "WooCommerce Optimized", desc: "Pre-configured servers tuned for WooCommerce performance" },
@@ -22,11 +23,12 @@ const plans = [
 ];
 
 const WooCommerceHosting = () => {
+  const { c } = usePageContent("woocommerce-hosting");
   return (
     <div className="min-h-screen">
       <Helmet>
-        <title>WooCommerce Hosting India | Fast & Secure | Infinitive Cloud</title>
-        <meta name="description" content="High-performance WooCommerce hosting with LiteSpeed cache, free SSL, daily backups & 99.99% uptime. Start your online store with Infinitive Cloud." />
+        <title>{c("meta_title", "WooCommerce Hosting India | Fast & Secure | Infinitive Cloud")}</title>
+        <meta name="description" content={c("meta_description", "High-performance WooCommerce hosting with LiteSpeed cache, free SSL, daily backups & 99.99% uptime. Start your online store with Infinitive Cloud.")} />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/woocommerce-hosting" />
       </Helmet>
 
@@ -40,10 +42,10 @@ const WooCommerceHosting = () => {
               <ShoppingCart className="w-4 h-4" /> WooCommerce Hosting
             </div>
             <h1 className="text-4xl md:text-5xl font-black mb-6">
-              Launch Your <span className="gradient-text">Online Store</span> with Blazing Speed
+              {c("hero_heading") || <>Launch Your <span className="gradient-text">Online Store</span> with Blazing Speed</>}
             </h1>
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Purpose-built WooCommerce hosting with LiteSpeed servers, free SSL, automatic backups, and expert 24/7 support. Start selling in minutes.
+              {c("hero_subtext", "Purpose-built WooCommerce hosting with LiteSpeed servers, free SSL, automatic backups, and expert 24/7 support. Start selling in minutes.")}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/contact">

@@ -42,7 +42,7 @@ function getRecommended(domains: DomainResult[]): string | null {
   return available[0].domain;
 }
 
-const CART_PAGE = "/cart";
+import { whmcsDomainUrl } from "@/config/whmcs-links";
 
 /* ─── Available Card ─── */
 const AvailableCard = ({
@@ -59,7 +59,7 @@ const AvailableCard = ({
   const priceDisplay = formatDomainPrice(r.price, r.currency);
 
   const handleBuyNow = () => {
-    navigate(`${CART_PAGE}?domain=${encodeURIComponent(r.domain)}&price=${r.price || ''}&renewPrice=${r.renewPrice || ''}`);
+    window.open(whmcsDomainUrl(r.domain), '_blank');
   };
 
   return (
@@ -159,7 +159,7 @@ const TakenRow = ({
             size="sm"
             variant="outline"
             className="text-xs h-7 px-3 border-primary/20 hover:bg-primary hover:text-primary-foreground gap-1 rounded-lg"
-            onClick={() => navigate(`${CART_PAGE}?domain=${encodeURIComponent(alternative.domain)}&price=${alternative.price || ''}&renewPrice=${alternative.renewPrice || ''}`)}
+            onClick={() => window.open(whmcsDomainUrl(alternative.domain), '_blank')}
           >
             Register
             <ArrowRight className="w-3 h-3" />

@@ -25,12 +25,13 @@ const AdminSettings = () => {
           <div className="bg-slate-700/40 border border-slate-600 rounded-xl p-4 flex gap-3">
             <Info className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" />
             <div className="text-slate-300 text-sm leading-relaxed">
-              Your admin ID and password are stored in your project's{" "}
-              <code className="bg-slate-800 px-1 rounded text-blue-300">.env</code>{" "}
+              Your admin credentials are stored in the backend server's{" "}
+              <code className="bg-slate-800 px-1 rounded text-blue-300">admin-backend/.env</code>{" "}
               file.<br />
-              To change the password, update{" "}
-              <code className="bg-slate-800 px-1 rounded text-blue-300">VITE_ADMIN_PASSWORD</code>{" "}
-              and restart your server.
+              To change credentials, update{" "}
+              <code className="bg-slate-800 px-1 rounded text-blue-300">ADMIN_ID</code> and{" "}
+              <code className="bg-slate-800 px-1 rounded text-blue-300">ADMIN_PASSWORD</code>{" "}
+              and restart the backend server.
             </div>
           </div>
 
@@ -55,18 +56,15 @@ const AdminSettings = () => {
         <CardContent>
           <ol className="space-y-2 text-sm text-slate-300 list-decimal list-inside leading-relaxed">
             <li>
-              Open the <code className="bg-slate-800 px-1 rounded">.env</code> file in your project folder
+              Open <code className="bg-slate-800 px-1 rounded">admin-backend/.env</code> on your server
             </li>
             <li>
-              Enter your new ID in <code className="bg-slate-800 px-1 rounded">VITE_ADMIN_ID</code>
+              Update <code className="bg-slate-800 px-1 rounded">ADMIN_ID</code> and{" "}
+              <code className="bg-slate-800 px-1 rounded">ADMIN_PASSWORD</code>
             </li>
             <li>
-              Enter your new password in{" "}
-              <code className="bg-slate-800 px-1 rounded">VITE_ADMIN_PASSWORD</code>
-            </li>
-            <li>
-              Save the file and restart the dev server (
-              <code className="bg-slate-800 px-1 rounded">bun run dev</code>)
+              Restart the backend server (
+              <code className="bg-slate-800 px-1 rounded">node server.js</code>)
             </li>
           </ol>
         </CardContent>
@@ -79,7 +77,6 @@ const AdminSettings = () => {
         </CardHeader>
         <CardContent className="space-y-2">
           {[
-            { label: "Supabase Dashboard", url: "https://supabase.com/dashboard" },
             { label: "WHMCS Admin Panel", url: "https://client.infinitivecloud.com/admin" },
             { label: "Razorpay Dashboard", url: "https://dashboard.razorpay.com" },
           ].map((link) => (

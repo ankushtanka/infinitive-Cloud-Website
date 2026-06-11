@@ -50,6 +50,7 @@ function collectTextNodes(root: Node): Text[] {
 }
 
 async function translateBatch(texts: string[], lang: string): Promise<string[]> {
+  if (!supabase) return texts; // Supabase not configured
   try {
     const { data, error } = await supabase.functions.invoke("translate-content", {
       body: { texts, targetLang: lang },

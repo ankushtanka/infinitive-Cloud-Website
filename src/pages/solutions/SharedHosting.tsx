@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -6,6 +6,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Check, X, Star, Server, Shield, Zap, Globe, HardDrive, Headphones, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { usePageContent } from "@/hooks/use-page-content";
+import { whmcsCartUrl } from "@/config/whmcs-links";
+import { useWhmcsProducts } from "@/hooks/use-whmcs-products";
 
 // ─── Features section ────────────────────────────────────────────────────────
 const whyFeatures = [
@@ -37,27 +40,22 @@ interface PlanFeature {
 
 interface Plan {
   id: string;
+  whmcsPid: number | null;
   name: string;
   tagline: string;
   popular?: boolean;
   specs: { ram: string; nvme: string; vcpu: string; bw: string };
-  periods: Record<Period, PeriodData>;
   features: PlanFeature[];
 }
 
 const PLANS: Plan[] = [
   {
     id: "starter",
+    whmcsPid: 1,
     name: "Starter",
     tagline: "Perfect for beginners & portfolios",
     popular: false,
     specs: { ram: "512 MB RAM", nvme: "10 GB NVMe", vcpu: "0.5 vCPU", bw: "Unmetered BW" },
-    periods: {
-      "1":  { price: 199, noCommit: true, renewsAt: 199 },
-      "12": { price: 119, originalPrice: 199, saving: "Save 40% vs monthly", upfront: 1428, renewsAt: 199 },
-      "24": { price: 89,  originalPrice: 199, saving: "Save 55% vs monthly", upfront: 2136, renewsAt: 199 },
-      "36": { price: 49,  originalPrice: 199, saving: "Save 75% vs monthly", upfront: 1764, renewsAt: 199 },
-    },
     features: [
       { label: "1 website",                  type: "check" },
       { label: "10 GB NVMe SSD",             type: "check" },
@@ -77,16 +75,11 @@ const PLANS: Plan[] = [
   },
   {
     id: "premium",
+    whmcsPid: 2,
     name: "Premium",
     tagline: "Best for growing websites & blogs",
     popular: true,
     specs: { ram: "1 GB RAM", nvme: "30 GB NVMe", vcpu: "1 vCPU", bw: "Unmetered BW" },
-    periods: {
-      "1":  { price: 349, noCommit: true, renewsAt: 349 },
-      "12": { price: 219, originalPrice: 349, saving: "Save 37% vs monthly", upfront: 2628, renewsAt: 349 },
-      "24": { price: 169, originalPrice: 349, saving: "Save 52% vs monthly", upfront: 4056, renewsAt: 349 },
-      "36": { price: 99,  originalPrice: 349, saving: "Save 72% vs monthly", upfront: 3564, renewsAt: 349 },
-    },
     features: [
       { label: "5 websites",                 type: "check" },
       { label: "30 GB NVMe SSD",             type: "check" },
@@ -106,16 +99,11 @@ const PLANS: Plan[] = [
   },
   {
     id: "business",
+    whmcsPid: 3,
     name: "Business",
     tagline: "For professionals & small businesses",
     popular: false,
     specs: { ram: "2 GB RAM", nvme: "100 GB NVMe", vcpu: "2 vCPUs", bw: "Unmetered BW" },
-    periods: {
-      "1":  { price: 549, noCommit: true, renewsAt: 549 },
-      "12": { price: 349, originalPrice: 549, saving: "Save 36% vs monthly", upfront: 4188, renewsAt: 549 },
-      "24": { price: 279, originalPrice: 549, saving: "Save 49% vs monthly", upfront: 6696, renewsAt: 549 },
-      "36": { price: 169, originalPrice: 549, saving: "Save 69% vs monthly", upfront: 6084, renewsAt: 549 },
-    },
     features: [
       { label: "Unlimited websites",         type: "check" },
       { label: "100 GB NVMe SSD",            type: "check" },
@@ -135,16 +123,11 @@ const PLANS: Plan[] = [
   },
   {
     id: "enterprise",
+    whmcsPid: null,
     name: "Enterprise",
     tagline: "For agencies & high-traffic sites",
     popular: false,
     specs: { ram: "2 GB RAM", nvme: "Unlimited NVMe", vcpu: "2 vCPUs", bw: "Unmetered BW" },
-    periods: {
-      "1":  { price: 799, noCommit: true, renewsAt: 799 },
-      "12": { price: 499, originalPrice: 799, saving: "Save 38% vs monthly", upfront: 5988, renewsAt: 799 },
-      "24": { price: 399, originalPrice: 799, saving: "Save 50% vs monthly", upfront: 9576, renewsAt: 799 },
-      "36": { price: 249, originalPrice: 799, saving: "Save 69% vs monthly", upfront: 8964, renewsAt: 799 },
-    },
     features: [
       { label: "Unlimited websites",         type: "check" },
       { label: "Unlimited NVMe SSD",         type: "check" },
@@ -178,19 +161,56 @@ const FeatureIcon = ({ type }: { type: FeatureType }) => {
   return <Star className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5 fill-yellow-500" />;
 };
 
+// ─── Live price resolver — returns null only if no WHMCS data at all ─────────
+function resolvePeriod(inr: Record<string, string> | undefined, period: Period): PeriodData | null {
+  if (!inr) return null;
+  const monthly = parseFloat(inr.monthly || "0");
+  const annually = parseFloat(inr.annually || "0");
+  const biennially = parseFloat(inr.biennially || "0");
+  const triennially = parseFloat(inr.triennially || "0");
+  const r = (n: number) => Math.round(n);
+
+  if (period === "1" && monthly > 0)
+    return { price: r(monthly), noCommit: true, renewsAt: r(monthly) };
+  if (period === "12" && annually > 0 && monthly > 0)
+    return { price: r(annually / 12), originalPrice: r(monthly), saving: `Save ${r(100 - (annually / 12 / monthly) * 100)}% vs monthly`, upfront: r(annually), renewsAt: r(monthly) };
+  if (period === "24" && biennially > 0 && monthly > 0)
+    return { price: r(biennially / 24), originalPrice: r(monthly), saving: `Save ${r(100 - (biennially / 24 / monthly) * 100)}% vs monthly`, upfront: r(biennially), renewsAt: r(monthly) };
+  if (period === "36" && triennially > 0 && monthly > 0)
+    return { price: r(triennially / 36), originalPrice: r(monthly), saving: `Save ${r(100 - (triennially / 36 / monthly) * 100)}% vs monthly`, upfront: r(triennially), renewsAt: r(monthly) };
+
+  // Fallback: show best available period when requested one has no WHMCS data
+  if (annually > 0 && monthly > 0)
+    return { price: r(annually / 12), originalPrice: r(monthly), saving: `Save ${r(100 - (annually / 12 / monthly) * 100)}% vs monthly`, upfront: r(annually), renewsAt: r(monthly) };
+  if (monthly > 0)
+    return { price: r(monthly), noCommit: true, renewsAt: r(monthly) };
+
+  return null;
+}
+
 // ─── Component ───────────────────────────────────────────────────────────────
 const SharedHosting = () => {
-  const [period, setPeriod] = useState<Period>("36");
+  const { c } = usePageContent("shared-hosting");
+  const [period, setPeriod] = useState<Period>("12");
+  const { products, loading: priceLoading } = useWhmcsProducts([1, 2, 3]);
+
+  const livePricing = useMemo(() => {
+    const map = new Map<number, Record<string, string>>();
+    products.forEach((p) => {
+      if (p.pricing && Object.keys(p.pricing).length > 0) map.set(p.pid, p.pricing);
+    });
+    return map;
+  }, [products]);
 
   return (
     <>
       <Helmet>
-        <title>Shared Hosting India | Affordable cPanel Hosting from ₹49/mo - Infinitive Cloud</title>
-        <meta name="description" content="Best shared hosting plans in India starting at ₹49/mo. NVMe SSD, free SSL, LiteSpeed servers, cPanel, and 99.99% uptime. Perfect for WordPress, blogs, and business websites." />
+        <title>{c("meta_title", "Shared Hosting India | Affordable cPanel Hosting from ₹49/mo - Infinitive Cloud")}</title>
+        <meta name="description" content={c("meta_description", "Best shared hosting plans in India starting at ₹49/mo. NVMe SSD, free SSL, LiteSpeed servers, cPanel, and 99.99% uptime. Perfect for WordPress, blogs, and business websites.")} />
         <meta name="keywords" content="shared hosting India, cheap web hosting, cPanel hosting, NVMe hosting, LiteSpeed hosting, WordPress hosting India, affordable hosting" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/shared-hosting" />
-        <meta property="og:title" content="Shared Hosting India | cPanel Hosting from ₹49/mo" />
-        <meta property="og:description" content="Best shared hosting in India. NVMe SSD, free SSL, LiteSpeed, cPanel, 99.99% uptime." />
+        <meta property="og:title" content={c("og_title", "Shared Hosting India | cPanel Hosting from ₹49/mo")} />
+        <meta property="og:description" content={c("og_description", "Best shared hosting in India. NVMe SSD, free SSL, LiteSpeed, cPanel, 99.99% uptime.")} />
         <meta property="og:url" content="https://infinitivecloud.com/solutions/shared-hosting" />
         <meta property="og:type" content="website" />
       </Helmet>
@@ -203,10 +223,10 @@ const SharedHosting = () => {
           <section className="section-container mb-16">
             <div className="max-w-4xl mx-auto text-center animate-fade-in">
               <h1 className="mb-6">
-                <span className="gradient-text">Shared Hosting</span> Plans India
+                {c("hero_heading") || <><span className="gradient-text">Shared Hosting</span> Plans India</>}
               </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                Affordable, reliable, and blazing-fast shared hosting powered by NVMe SSD and LiteSpeed technology. Perfect for personal websites, blogs, small businesses, and WordPress sites.
+                {c("hero_subtext", "Affordable, reliable, and blazing-fast shared hosting powered by NVMe SSD and LiteSpeed technology. Perfect for personal websites, blogs, small businesses, and WordPress sites.")}
               </p>
               <div className="flex flex-wrap gap-4 justify-center mt-6 text-sm font-semibold text-primary">
                 {["Free SSL", "NVMe SSD", "LiteSpeed", "cPanel", "99.99% Uptime"].map((t) => (
@@ -247,7 +267,8 @@ const SharedHosting = () => {
             {/* Plan cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
               {PLANS.map((plan) => {
-                const pd = plan.periods[period];
+                const inr = plan.whmcsPid !== null ? livePricing.get(plan.whmcsPid) : undefined;
+                const pd = resolvePeriod(inr, period);
                 return (
                   <Card
                     key={plan.id}
@@ -290,27 +311,40 @@ const SharedHosting = () => {
                       </div>
 
                       {/* Price */}
-                      <div className="mb-1">
-                        {pd.originalPrice && (
-                          <span className="text-sm text-muted-foreground line-through">
-                            ₹{pd.originalPrice}/mo
-                          </span>
+                      <div className="mb-1 min-h-[52px]">
+                        {priceLoading ? (
+                          <div className="animate-pulse space-y-2">
+                            <div className="h-4 w-16 bg-muted rounded" />
+                            <div className="h-9 w-24 bg-muted rounded" />
+                          </div>
+                        ) : pd ? (
+                          <>
+                            {pd.originalPrice && (
+                              <span className="text-sm text-muted-foreground line-through">
+                                ₹{pd.originalPrice}/mo
+                              </span>
+                            )}
+                            <div className="flex items-baseline gap-1">
+                              <span className="text-4xl font-black text-foreground">₹{pd.price}</span>
+                              <span className="text-sm text-muted-foreground">/month</span>
+                            </div>
+                          </>
+                        ) : (
+                          <div className="flex items-baseline gap-1">
+                            <span className="text-4xl font-black text-muted-foreground/40">—</span>
+                          </div>
                         )}
-                        <div className="flex items-baseline gap-1">
-                          <span className="text-4xl font-black text-foreground">₹{pd.price}</span>
-                          <span className="text-sm text-muted-foreground">/month</span>
-                        </div>
                       </div>
 
                       {/* Saving / upfront info */}
                       <div className="min-h-[56px] mb-4 text-sm">
-                        {pd.noCommit ? (
+                        {pd?.noCommit ? (
                           <p className="text-muted-foreground text-xs">
                             No commitment · cancel anytime
                             <br />
                             <em>Renews at ₹{pd.renewsAt}/mo</em>
                           </p>
-                        ) : (
+                        ) : pd ? (
                           <>
                             <p className="text-green-600 dark:text-green-400 font-medium text-xs">{pd.saving}</p>
                             <p className="text-muted-foreground text-xs">
@@ -319,21 +353,31 @@ const SharedHosting = () => {
                               <em>Renews at ₹{pd.renewsAt}/mo</em>
                             </p>
                           </>
-                        )}
+                        ) : null}
                       </div>
 
                       {/* CTA */}
-                      <Link
-                        to={`/cart?product=${plan.id}&period=${period}&name=${encodeURIComponent(plan.name)}&type=shared-hosting`}
-                        className="mb-6"
-                      >
-                        <Button
-                          className={`w-full h-10 font-bold ${plan.popular ? "btn-gradient" : ""}`}
-                          variant={plan.popular ? "default" : "outline"}
+                      {plan.whmcsPid !== null ? (
+                        <a
+                          href={whmcsCartUrl(plan.whmcsPid)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mb-6 block"
                         >
-                          Get started <ArrowRight className="w-4 h-4 ml-1.5" />
-                        </Button>
-                      </Link>
+                          <Button
+                            className={`w-full h-10 font-bold ${plan.popular ? "btn-gradient" : ""}`}
+                            variant={plan.popular ? "default" : "outline"}
+                          >
+                            Get started <ArrowRight className="w-4 h-4 ml-1.5" />
+                          </Button>
+                        </a>
+                      ) : (
+                        <Link to="/contact" className="mb-6 block">
+                          <Button className="w-full h-10 font-bold" variant="outline">
+                            Contact Us <ArrowRight className="w-4 h-4 ml-1.5" />
+                          </Button>
+                        </Link>
+                      )}
 
                       {/* Divider */}
                       <div className="border-t border-border mb-4" />
@@ -366,10 +410,10 @@ const SharedHosting = () => {
           {/* ── Why Choose ── */}
           <section className="section-container mb-20">
             <h2 className="text-center mb-4">
-              Why Choose Our <span className="gradient-text">Shared Hosting</span>
+              {c("features_title") || <>Why Choose Our <span className="gradient-text">Shared Hosting</span></>}
             </h2>
             <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-              Enterprise-grade features at the most affordable prices. Every plan is designed for speed, security, and reliability.
+              {c("features_subtitle", "Enterprise-grade features at the most affordable prices. Every plan is designed for speed, security, and reliability.")}
             </p>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {whyFeatures.map((f, i) => {
@@ -398,9 +442,9 @@ const SharedHosting = () => {
                   Try any shared hosting plan free for 14 days. No credit card required.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link to="/cart?product=starter&period=12&name=Starter&type=shared-hosting">
-                    <Button className="btn-gradient glow-effect font-bold h-14 px-8">Start Free Trial</Button>
-                  </Link>
+                  <a href={whmcsCartUrl(1)} target="_blank" rel="noopener noreferrer">
+                    <Button className="btn-gradient glow-effect font-bold h-14 px-8">Get Started</Button>
+                  </a>
                   <Link to="/contact">
                     <Button variant="outline" className="h-14 px-8 font-semibold">Talk to Sales</Button>
                   </Link>

@@ -31,6 +31,7 @@ import {
   TrendingUp,
   Sparkles,
 } from "lucide-react";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const features = [
   { icon: Cpu, title: "Dedicated vCPU Cores", desc: "Guaranteed compute power. No noisy neighbours, no shared bottlenecks." },
@@ -115,14 +116,12 @@ const faqs = [
 ];
 
 const VPSServer = () => {
+  const { c } = usePageContent("vps-server");
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>VPS Server Hosting India | NVMe SSD & Root Access | Infinitive Cloud</title>
-        <meta
-          name="description"
-          content="Premium VPS hosting with full root access, NVMe SSD, dedicated resources, free DDoS protection and 99.99% uptime SLA. Starting at ₹499/mo."
-        />
+        <title>{c("meta_title", "VPS Server Hosting India | NVMe SSD & Root Access | Infinitive Cloud")}</title>
+        <meta name="description" content={c("meta_description", "Premium VPS hosting with full root access, NVMe SSD, dedicated resources, free DDoS protection and 99.99% uptime SLA. Starting at ₹499/mo.")} />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/vps-server" />
       </Helmet>
 
@@ -156,7 +155,7 @@ const VPSServer = () => {
                   Dedicated resources, NVMe SSD, full root access and 99.99% uptime — backed by engineers who actually pick up the phone.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 mb-10">
-                  <Link to="/cart">
+                  <Link to="/contact">
                     <Button size="lg" className="h-12 px-7 text-base font-semibold bg-gradient-to-r from-primary to-secondary text-primary-foreground hover:opacity-90 shadow-lg shadow-primary/20">
                       Get started — ₹499/mo
                       <ArrowRight className="ml-2 w-4 h-4" />
@@ -281,7 +280,7 @@ const VPSServer = () => {
                         </span>
                         <span className="text-muted-foreground">{plan.period}</span>
                       </div>
-                      <Link to="/cart" className="block mb-8">
+                      <Link to="/contact" className="block mb-8">
                         <Button
                           className={`w-full h-11 font-semibold ${
                             plan.highlight
@@ -522,7 +521,7 @@ const VPSServer = () => {
                   </p>
 
                   <div className="flex flex-col sm:flex-row gap-3 justify-center mb-10">
-                    <Link to="/cart">
+                    <Link to="/contact">
                       <Button
                         size="lg"
                         className="group relative h-12 px-8 text-base font-semibold bg-white text-[hsl(220_60%_10%)] hover:bg-white/95 shadow-xl shadow-primary/30 transition-all hover:-translate-y-0.5"
@@ -572,3 +571,4 @@ const VPSServer = () => {
 };
 
 export default VPSServer;
+

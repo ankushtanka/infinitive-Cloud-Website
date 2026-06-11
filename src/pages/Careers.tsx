@@ -5,8 +5,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Briefcase, Users, Rocket, Heart, Mail } from "lucide-react";
 import { StructuredData, createBreadcrumbSchema } from "@/components/StructuredData";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const Careers = () => {
+  const { c } = usePageContent("careers");
   const breadcrumbSchema = createBreadcrumbSchema([
     { name: "Home", url: "https://infinitivecloud.com/" },
     { name: "Careers", url: "https://infinitivecloud.com/careers" }
@@ -37,18 +39,18 @@ const Careers = () => {
   return (
     <div className="min-h-screen">
       <Helmet>
-        <title>Careers at Infinitive Cloud - Join Our Team | IT Jobs India</title>
-        <meta name="description" content="Join Infinitive Cloud and work on cutting-edge cloud, AI, and development projects. Growth opportunities, collaborative culture, and exciting projects. Ahmedabad, India." />
+        <title>{c("meta_title", "Careers at Infinitive Cloud - Join Our Team | IT Jobs India")}</title>
+        <meta name="description" content={c("meta_description", "Join Infinitive Cloud and work on cutting-edge cloud, AI, and development projects. Growth opportunities, collaborative culture, and exciting projects. Ahmedabad, India.")} />
         <meta name="keywords" content="IT jobs India, cloud computing careers, web development jobs, AI careers Ahmedabad, tech jobs India, software developer jobs" />
         <link rel="canonical" href="https://infinitivecloud.com/careers" />
-        <meta property="og:title" content="Careers at Infinitive Cloud" />
-        <meta property="og:description" content="Join our team building the future of cloud infrastructure and AI solutions." />
+        <meta property="og:title" content={c("og_title", "Careers at Infinitive Cloud")} />
+        <meta property="og:description" content={c("og_description", "Join our team building the future of cloud infrastructure and AI solutions.")} />
         <meta property="og:url" content="https://infinitivecloud.com/careers" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Careers - Infinitive Cloud" />
-        <meta name="twitter:description" content="Join our team and work on cutting-edge technology projects." />
+        <meta name="twitter:title" content={c("og_title", "Careers - Infinitive Cloud")} />
+        <meta name="twitter:description" content={c("og_description", "Join our team and work on cutting-edge technology projects.")} />
         <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       
@@ -60,10 +62,10 @@ const Careers = () => {
         <section className="section-container mb-20">
           <div className="max-w-4xl mx-auto text-center animate-fade-in">
             <h1 className="mb-6">
-              Join <span className="gradient-text">Team Infinitive Cloud</span>
+              {c("hero_heading") || <>Join <span className="gradient-text">Team Infinitive Cloud</span></>}
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Be part of a team that's building the future of cloud infrastructure, hosting, and AI solutions.
+              {c("hero_subtext", "Be part of a team that's building the future of cloud infrastructure, hosting, and AI solutions.")}
             </p>
           </div>
         </section>
@@ -71,7 +73,7 @@ const Careers = () => {
         {/* Why Join Us */}
         <section className="section-container mb-20">
           <div className="text-center mb-12">
-            <h2 className="mb-4">Why Work With Us?</h2>
+            <h2 className="mb-4">{c("perks_title", "Why Work With Us?")}</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

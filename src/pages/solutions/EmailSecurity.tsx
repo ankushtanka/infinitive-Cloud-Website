@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { Mail, Shield, Lock, Monitor, Zap, Globe, ArrowRight, Check, ShieldCheck } from "lucide-react";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const emailServices = [
   {
@@ -49,6 +50,7 @@ const sslPlans = [
 ];
 
 const EmailSecurity = () => {
+  const { c } = usePageContent("email-security");
   const location = useLocation();
 
   useEffect(() => {
@@ -63,8 +65,8 @@ const EmailSecurity = () => {
   return (
     <div className="min-h-screen">
       <Helmet>
-        <title>Business Email & SSL Certificates India | Infinitive Cloud</title>
-        <meta name="description" content="Professional business email (Zoho, Microsoft 365, Google Workspace) and SSL certificates. Secure your business with Infinitive Cloud." />
+        <title>{c("meta_title", "Business Email & SSL Certificates India | Infinitive Cloud")}</title>
+        <meta name="description" content={c("meta_description", "Professional business email (Zoho, Microsoft 365, Google Workspace) and SSL certificates. Secure your business with Infinitive Cloud.")} />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/email-security" />
       </Helmet>
 
@@ -78,10 +80,10 @@ const EmailSecurity = () => {
               <ShieldCheck className="w-4 h-4" /> Email & Security
             </div>
             <h1 className="text-4xl md:text-5xl font-black mb-6">
-              Professional <span className="gradient-text">Email & SSL</span> Solutions
+              {c("hero_heading") || <>Professional <span className="gradient-text">Email & SSL</span> Solutions</>}
             </h1>
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Set up custom domain email with Zoho, Microsoft 365, or Google Workspace. Protect your website with trusted SSL certificates.
+              {c("hero_subtext", "Set up custom domain email with Zoho, Microsoft 365, or Google Workspace. Protect your website with trusted SSL certificates.")}
             </p>
           </div>
         </section>

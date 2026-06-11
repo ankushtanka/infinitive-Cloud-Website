@@ -47,6 +47,7 @@ import {
 import workspaceHero from "@/assets/google-workspace-hero-premium.jpg";
 import WorkspaceHeroDiagram from "@/components/infographics/WorkspaceHeroDiagram";
 import WorkspaceEcosystemDiagram from "@/components/infographics/WorkspaceEcosystemDiagram";
+import { usePageContent } from "@/hooks/use-page-content";
 
 type BillingCycle = "monthly" | "annual";
 
@@ -202,16 +203,14 @@ const formatINR = (n: number) =>
   new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(n);
 
 const GoogleWorkspace = () => {
+  const { c } = usePageContent("google-workspace");
   const [billing, setBilling] = useState<BillingCycle>("annual");
 
   return (
     <>
       <Helmet>
-        <title>Google Workspace Hosting in India — INFINITIVE CLOUD</title>
-        <meta
-          name="description"
-          content="Google Workspace for your business — custom email, Drive, Meet, Docs and more. INR billing, free migration, 24/7 support. Plans from ₹125/user/mo."
-        />
+        <title>{c("meta_title", "Google Workspace Hosting in India — INFINITIVE CLOUD")}</title>
+        <meta name="description" content={c("meta_description", "Google Workspace for your business — custom email, Drive, Meet, Docs and more. INR billing, free migration, 24/7 support. Plans from ₹125/user/mo.")} />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/google-workspace" />
       </Helmet>
 

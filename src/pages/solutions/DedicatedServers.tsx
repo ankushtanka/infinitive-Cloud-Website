@@ -7,6 +7,7 @@ import { Check, Server, Shield, Zap, HardDrive, Globe, Headphones } from "lucide
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import DedicatedServerDiagram from "@/components/infographics/DedicatedServerDiagram";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const plans = [
   {
@@ -48,15 +49,16 @@ const features = [
 ];
 
 const DedicatedServers = () => {
+  const { c } = usePageContent("dedicated-servers");
   return (
     <>
       <Helmet>
-        <title>Dedicated Servers India | Bare Metal from ₹3,999/mo - Infinitive Cloud</title>
-        <meta name="description" content="Enterprise-grade dedicated servers in India starting at ₹3,999/mo. Intel Xeon processors, NVMe SSD, DDoS protection, 99.99% uptime SLA, and 24/7 managed support." />
+        <title>{c("meta_title", "Dedicated Servers India | Bare Metal from ₹3,999/mo - Infinitive Cloud")}</title>
+        <meta name="description" content={c("meta_description", "Enterprise-grade dedicated servers in India starting at ₹3,999/mo. Intel Xeon processors, NVMe SSD, DDoS protection, 99.99% uptime SLA, and 24/7 managed support.")} />
         <meta name="keywords" content="dedicated server India, bare metal server, Intel Xeon server, managed dedicated server, NVMe server India" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/dedicated-servers" />
-        <meta property="og:title" content="Dedicated Servers India | Bare Metal from ₹3,999/mo" />
-        <meta property="og:description" content="Enterprise dedicated servers with Intel Xeon, NVMe SSD, DDoS protection, 99.99% uptime." />
+        <meta property="og:title" content={c("og_title", "Dedicated Servers India | Bare Metal from ₹3,999/mo")} />
+        <meta property="og:description" content={c("og_description", "Enterprise dedicated servers with Intel Xeon, NVMe SSD, DDoS protection, 99.99% uptime.")} />
         <meta property="og:url" content="https://infinitivecloud.com/solutions/dedicated-servers" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
@@ -71,10 +73,10 @@ const DedicatedServers = () => {
           <section className="section-container mb-16">
             <div className="max-w-4xl mx-auto text-center animate-fade-in">
               <h1 className="mb-6">
-                <span className="gradient-text">Dedicated Servers</span> for Maximum Performance
+                {c("hero_heading") || <><span className="gradient-text">Dedicated Servers</span> for Maximum Performance</>}
               </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                Enterprise-grade bare metal servers with full root access, NVMe SSD storage, and 99.99% uptime SLA. Built for high-traffic websites, applications, and compute-intensive workloads.
+                {c("hero_subtext", "Enterprise-grade bare metal servers with full root access, NVMe SSD storage, and 99.99% uptime SLA. Built for high-traffic websites, applications, and compute-intensive workloads.")}
               </p>
             </div>
           </section>
@@ -133,7 +135,7 @@ const DedicatedServers = () => {
           </section>
 
           <section className="section-container mb-20">
-            <h2 className="text-center mb-12">Why Our <span className="gradient-text">Dedicated Servers</span></h2>
+            <h2 className="text-center mb-12">{c("features_title") || <>Why Our <span className="gradient-text">Dedicated Servers</span></>}</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {features.map((f, i) => {
                 const Icon = f.icon;

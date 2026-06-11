@@ -29,6 +29,7 @@ import {
   Sparkles,
   Cpu,
 } from "lucide-react";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const features = [
   { icon: Rocket, title: "One-Click Deploy", desc: "Push to Git or click deploy — your Node.js app is live in seconds." },
@@ -126,14 +127,12 @@ $ git push cloud main
 ✓ Deployed to https://my-app.infinitivecloud.app`;
 
 const NodejsHosting = () => {
+  const { c } = usePageContent("nodejs-hosting");
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Node.js Hosting India | Deploy Express, NestJS, Next.js | Infinitive Cloud</title>
-        <meta
-          name="description"
-          content="Premium Node.js hosting with Git deploy, PM2, auto-scaling, free SSL and 24/7 expert support. Deploy Express, NestJS, Next.js apps in seconds."
-        />
+        <title>{c("meta_title", "Node.js Hosting India | Deploy Express, NestJS, Next.js | Infinitive Cloud")}</title>
+        <meta name="description" content={c("meta_description", "Premium Node.js hosting with Git deploy, PM2, auto-scaling, free SSL and 24/7 expert support. Deploy Express, NestJS, Next.js apps in seconds.")} />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/nodejs-hosting" />
       </Helmet>
 
@@ -167,7 +166,7 @@ const NodejsHosting = () => {
                   Push to Git. We build, scale and keep your app online — with PM2, auto-scaling, free SSL, and engineers on call.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 mb-10">
-                  <Link to="/cart">
+                  <Link to="/contact">
                     <Button size="lg" className="h-12 px-7 text-base font-semibold bg-gradient-to-r from-primary to-secondary text-primary-foreground hover:opacity-90 shadow-lg shadow-primary/20">
                       Start free 14-day trial
                       <ArrowRight className="ml-2 w-4 h-4" />
@@ -247,7 +246,7 @@ const NodejsHosting = () => {
                   <div className="text-sm text-muted-foreground">From code to live URL in under 60 seconds — no server config required.</div>
                 </div>
               </div>
-              <Link to="/cart">
+              <Link to="/contact">
                 <Button variant="outline" className="font-semibold">
                   Try it now <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
@@ -437,7 +436,7 @@ const NodejsHosting = () => {
                         </span>
                         <span className="text-muted-foreground">{plan.period}</span>
                       </div>
-                      <Link to="/cart" className="block mb-8">
+                      <Link to="/contact" className="block mb-8">
                         <Button
                           className={`w-full h-11 font-semibold ${
                             plan.highlight
@@ -586,7 +585,7 @@ const NodejsHosting = () => {
                   </p>
 
                   <div className="flex flex-col sm:flex-row gap-3 justify-center mb-10">
-                    <Link to="/cart">
+                    <Link to="/contact">
                       <Button
                         size="lg"
                         className="group relative h-12 px-8 text-base font-semibold bg-white text-[hsl(220_60%_10%)] hover:bg-white/95 shadow-xl shadow-primary/30 transition-all hover:-translate-y-0.5"
@@ -635,3 +634,4 @@ const NodejsHosting = () => {
 };
 
 export default NodejsHosting;
+

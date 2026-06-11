@@ -4,8 +4,10 @@ import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Target, Eye, CheckCircle2 } from "lucide-react";
 import { StructuredData, createBreadcrumbSchema } from "@/components/StructuredData";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const About = () => {
+  const { c } = usePageContent("about");
   const breadcrumbSchema = createBreadcrumbSchema([
     { name: "Home", url: "https://infinitivecloud.com/" },
     { name: "About", url: "https://infinitivecloud.com/about" }
@@ -22,18 +24,18 @@ const About = () => {
   return (
     <div className="min-h-screen">
       <Helmet>
-        <title>About Infinitive Cloud - Leading IT Solutions Company India | Our Mission & Vision</title>
-        <meta name="description" content="Learn about Infinitive Cloud, a global cloud hosting, web development, and AI solutions company. Our mission is to empower businesses with reliable, scalable digital infrastructure." />
+        <title>{c("meta_title", "About Infinitive Cloud - Leading IT Solutions Company India | Our Mission & Vision")}</title>
+        <meta name="description" content={c("meta_description", "Learn about Infinitive Cloud, a global cloud hosting, web development, and AI solutions company. Our mission is to empower businesses with reliable, scalable digital infrastructure.")} />
         <meta name="keywords" content="about Infinitive Cloud, IT company India, cloud solutions provider, web development company, AI solutions company, digital infrastructure" />
         <link rel="canonical" href="https://infinitivecloud.com/about" />
-        <meta property="og:title" content="About Infinitive Cloud - Leading IT Solutions Company India" />
-        <meta property="og:description" content="Global cloud, hosting, development, and AI solutions company delivering high-performance, scalable, secure digital infrastructure." />
+        <meta property="og:title" content={c("og_title", "About Infinitive Cloud - Leading IT Solutions Company India")} />
+        <meta property="og:description" content={c("og_description", "Global cloud, hosting, development, and AI solutions company delivering high-performance, scalable, secure digital infrastructure.")} />
         <meta property="og:url" content="https://infinitivecloud.com/about" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="About Infinitive Cloud - IT Solutions Company" />
-        <meta name="twitter:description" content="Learn about our mission to empower businesses with reliable cloud infrastructure." />
+        <meta name="twitter:title" content={c("og_title", "About Infinitive Cloud - IT Solutions Company")} />
+        <meta name="twitter:description" content={c("og_description", "Learn about our mission to empower businesses with reliable cloud infrastructure.")} />
         <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       
@@ -45,11 +47,10 @@ const About = () => {
         <section className="section-container mb-20">
           <div className="max-w-4xl mx-auto text-center animate-fade-in">
             <h1 className="mb-6">
-              About <span className="gradient-text">Infinitive Cloud</span>
+              {c("hero_heading") || <>About <span className="gradient-text">Infinitive Cloud</span></>}
             </h1>
             <p className="text-xl text-muted-foreground">
-              A global cloud, hosting, development, and AI solutions company delivering high-performance,
-              scalable, secure, and future-ready digital infrastructure for businesses of all sizes.
+              {c("hero_subtext", "A global cloud, hosting, development, and AI solutions company delivering high-performance, scalable, secure, and future-ready digital infrastructure for businesses of all sizes.")}
             </p>
           </div>
         </section>
@@ -62,11 +63,9 @@ const About = () => {
                 <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-4">
                   <Target className="w-7 h-7 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4">Our Mission</h3>
+                <h3 className="text-2xl font-bold mb-4">{c("mission_title", "Our Mission")}</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Empower businesses worldwide with reliable, scalable cloud and digital solutions that drive growth,
-                  innovation, and transformation. We're committed to making enterprise-grade technology accessible to
-                  organizations of all sizes.
+                  {c("mission_text", "Empower businesses worldwide with reliable, scalable cloud and digital solutions that drive growth, innovation, and transformation. We're committed to making enterprise-grade technology accessible to organizations of all sizes.")}
                 </p>
               </CardContent>
             </Card>
@@ -76,11 +75,9 @@ const About = () => {
                 <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-accent to-primary flex items-center justify-center mb-4">
                   <Eye className="w-7 h-7 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4">Our Vision</h3>
+                <h3 className="text-2xl font-bold mb-4">{c("vision_title", "Our Vision")}</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Build a sustainable, intelligent digital future where every business has access to cutting-edge cloud
-                  infrastructure, AI capabilities, and expert support. We envision a world where technology seamlessly
-                  adapts to business needs.
+                  {c("vision_text", "Build a sustainable, intelligent digital future where every business has access to cutting-edge cloud infrastructure, AI capabilities, and expert support. We envision a world where technology seamlessly adapts to business needs.")}
                 </p>
               </CardContent>
             </Card>
@@ -142,7 +139,7 @@ const About = () => {
         <section className="section-container">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-center mb-12 animate-fade-in">
-              Our <span className="gradient-text">Core Values</span>
+              {c("values_title") || <>Our <span className="gradient-text">Core Values</span></>}
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

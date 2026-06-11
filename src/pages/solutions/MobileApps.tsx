@@ -5,12 +5,14 @@ import { StructuredData, createServiceSchema, createBreadcrumbSchema, createFAQS
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { 
+import {
   Smartphone, Apple, Play, Code2, Zap, Users,
   CheckCircle2, ArrowRight, Layers, Database
 } from "lucide-react";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const MobileApps = () => {
+  const { c } = usePageContent("mobile-apps");
   const serviceSchema = createServiceSchema(
     "Mobile App Development Company India - iOS & Android",
     "Professional mobile app development services in India. Native iOS & Android apps, React Native, Flutter cross-platform development. Expert developers for startups and enterprises.",
@@ -100,12 +102,12 @@ const MobileApps = () => {
   return (
     <>
       <Helmet>
-        <title>Best Mobile App Development Company India | iOS & Android App Developers</title>
-        <meta name="description" content="⭐ Top Mobile App Development Company in India | iOS & Android | React Native | Flutter | 1000+ Apps Built | Startup to Enterprise Solutions | From ₹25,000 | Free Consultation & Quote!" />
+        <title>{c("meta_title", "Best Mobile App Development Company India | iOS & Android App Developers")}</title>
+        <meta name="description" content={c("meta_description", "⭐ Top Mobile App Development Company in India | iOS & Android | React Native | Flutter | 1000+ Apps Built | Startup to Enterprise Solutions | From ₹25,000 | Free Consultation & Quote!")} />
         <meta name="keywords" content="mobile app development company India, iOS app development India, Android app development India, React Native developers, Flutter development company, cross-platform app development, best app developers India, mobile application development, native app development, startup app development" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/mobile-apps" />
-        <meta property="og:title" content="Top Mobile App Development Company India | iOS & Android" />
-        <meta property="og:description" content="Expert mobile app development. 1000+ apps built. Native & cross-platform solutions. Free consultation!" />
+        <meta property="og:title" content={c("og_title", "Top Mobile App Development Company India | iOS & Android")} />
+        <meta property="og:description" content={c("og_description", "Expert mobile app development. 1000+ apps built. Native & cross-platform solutions. Free consultation!")} />
         <meta property="og:url" content="https://infinitivecloud.com/solutions/mobile-apps" />
         <meta property="og:type" content="service" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
@@ -130,10 +132,10 @@ const MobileApps = () => {
                 <span className="text-sm font-semibold text-primary">iOS & Android Experts</span>
               </div>
               <h1 className="mb-6">
-                Expert <span className="gradient-text">Mobile App</span> Development
+                {c("hero_heading") || <>Expert <span className="gradient-text">Mobile App</span> Development</>}
               </h1>
               <p className="text-xl md:text-2xl text-foreground mb-6 leading-relaxed">
-                Transform Ideas into Powerful Mobile Applications
+                {c("hero_subtext", "Transform Ideas into Powerful Mobile Applications")}
               </p>
               <p className="text-base md:text-lg text-foreground/70 mb-8 max-w-3xl mx-auto leading-relaxed">
                 From concept to launch, we create engaging mobile applications for iOS and Android platforms. 

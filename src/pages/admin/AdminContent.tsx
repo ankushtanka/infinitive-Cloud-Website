@@ -1,271 +1,340 @@
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useEffect, useState, useCallback } from "react";
+import { apiFetchContent, apiSaveContent } from "@/lib/api";
+import { useAdmin } from "@/contexts/AdminContext";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Loader2, Save, CheckCircle2, AlertCircle, Home, Globe, Phone, Star } from "lucide-react";
+import { Loader2, Save, Search, ChevronRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-interface ContentData {
-  hero_title: string;
-  hero_subtitle: string;
-  hero_cta_primary: string;
-  hero_cta_secondary: string;
-  announcement_banner: string;
-  announcement_enabled: boolean;
-  domain_section_title: string;
-  domain_section_subtitle: string;
-  contact_email: string;
-  contact_phone: string;
-  contact_whatsapp: string;
-  contact_address: string;
-  footer_tagline: string;
-  about_title: string;
-  about_description: string;
-}
+// ── Field & page definitions ──────────────────────────────────────────────────
 
-const DEFAULT_CONTENT: ContentData = {
-  hero_title: "Enterprise Cloud Infrastructure for India",
-  hero_subtitle: "Deploy your applications on blazing-fast NVMe servers with 99.99% uptime SLA, free SSL, and 24/7 expert support.",
-  hero_cta_primary: "Get Started Free",
-  hero_cta_secondary: "View Pricing",
-  announcement_banner: "",
-  announcement_enabled: false,
-  domain_section_title: "Find Your Perfect Domain Name",
-  domain_section_subtitle: "Register your domain at India's lowest prices. Free WHOIS privacy & SSL included with every domain.",
-  contact_email: "support@infinitivecloud.com",
-  contact_phone: "+91 XXXXX XXXXX",
-  contact_whatsapp: "+91 XXXXX XXXXX",
-  contact_address: "India",
-  footer_tagline: "Enterprise cloud infrastructure for India's growing businesses.",
-  about_title: "Powering India's Digital Future",
-  about_description: "Infinitive Cloud delivers enterprise-grade cloud infrastructure, hosting, and domain services at India's most competitive prices.",
-};
+type FieldType = "text" | "textarea" | "toggle";
+interface FieldDef { key: string; label: string; type: FieldType; }
+interface PageDef  { key: string; label: string; group: string; fields: FieldDef[]; }
 
-const SECTIONS = [
-  { key: "homepage", label: "Homepage", icon: Home },
-  { key: "domain", label: "Domains Section", icon: Globe },
-  { key: "contact", label: "Contact Info", icon: Phone },
-  { key: "about", label: "About / Footer", icon: Star },
+const seo   = (): FieldDef[] => [
+  { key: "meta_title",       label: "Meta Title",          type: "text"     },
+  { key: "meta_description", label: "Meta Description",    type: "textarea" },
+  { key: "og_title",         label: "OG / Social Title",   type: "text"     },
+  { key: "og_description",   label: "OG / Social Desc",    type: "textarea" },
+];
+const hero  = (): FieldDef[] => [
+  { key: "hero_heading", label: "Hero Heading", type: "text"     },
+  { key: "hero_subtext", label: "Hero Subtext", type: "textarea" },
 ];
 
-const Field = ({
-  label, value, onChange, multiline = false, type = "text",
-}: {
-  label: string; value: string; onChange: (v: string) => void; multiline?: boolean; type?: string;
-}) => (
-  <div className="space-y-1.5">
-    <Label className="text-slate-300 text-xs font-medium">{label}</Label>
-    {multiline ? (
-      <Textarea
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-500 resize-none min-h-[80px] text-sm"
-      />
-    ) : (
-      <Input
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-500 h-9 text-sm"
-      />
-    )}
-  </div>
-);
+const PAGES: PageDef[] = [
+  // ── Main pages ──
+  {
+    key: "home", label: "Homepage", group: "Main Pages",
+    fields: [
+      ...seo(),
+      ...hero(),
+      { key: "hero_cta_primary",      label: "CTA Primary Button",    type: "text"     },
+      { key: "hero_cta_secondary",    label: "CTA Secondary Button",  type: "text"     },
+      { key: "announcement_enabled",  label: "Announcement Banner",   type: "toggle"   },
+      { key: "announcement_text",     label: "Announcement Text",     type: "text"     },
+      { key: "domain_title",          label: "Domain Section Title",  type: "text"     },
+      { key: "domain_subtitle",       label: "Domain Section Subtitle", type: "textarea"},
+      { key: "testimonials_title",    label: "Testimonials Title",    type: "text"     },
+      { key: "testimonials_subtitle", label: "Testimonials Subtitle", type: "text"     },
+      { key: "faq_title",             label: "FAQ Title",             type: "text"     },
+      { key: "faq_subtitle",          label: "FAQ Subtitle",          type: "text"     },
+    ],
+  },
+  {
+    key: "about", label: "About", group: "Main Pages",
+    fields: [
+      ...seo(), ...hero(),
+      { key: "mission_title", label: "Mission Title",  type: "text"     },
+      { key: "mission_text",  label: "Mission Text",   type: "textarea" },
+      { key: "vision_title",  label: "Vision Title",   type: "text"     },
+      { key: "vision_text",   label: "Vision Text",    type: "textarea" },
+      { key: "values_title",  label: "Values Title",   type: "text"     },
+    ],
+  },
+  {
+    key: "pricing", label: "Pricing", group: "Main Pages",
+    fields: [...seo(), ...hero()],
+  },
+  {
+    key: "contact", label: "Contact", group: "Main Pages",
+    fields: [
+      ...seo(), ...hero(),
+      { key: "form_title",    label: "Form Title",    type: "text" },
+      { key: "form_subtitle", label: "Form Subtitle", type: "text" },
+    ],
+  },
+  {
+    key: "careers", label: "Careers", group: "Main Pages",
+    fields: [
+      ...seo(), ...hero(),
+      { key: "perks_title", label: "Perks Section Title", type: "text" },
+    ],
+  },
+  {
+    key: "blog",          label: "Blog",          group: "Main Pages", fields: [...seo(), ...hero()],
+  },
+  {
+    key: "solutions",     label: "Solutions",     group: "Main Pages", fields: [...seo(), ...hero()],
+  },
+  {
+    key: "knowledgebase", label: "Knowledgebase", group: "Main Pages",
+    fields: [
+      ...seo(), ...hero(),
+      { key: "search_placeholder", label: "Search Placeholder", type: "text" },
+    ],
+  },
+  {
+    key: "quote", label: "Get a Quote", group: "Main Pages", fields: [...seo(), ...hero()],
+  },
+  // ── Legal pages ──
+  {
+    key: "privacy", label: "Privacy Policy", group: "Legal Pages",
+    fields: [
+      ...seo(),
+      { key: "page_title",           label: "Page Title",            type: "text"     },
+      { key: "last_updated",         label: "Last Updated",          type: "text"     },
+      { key: "intro",                label: "Introduction",          type: "textarea" },
+      { key: "data_collection_title",label: "Data Collection Title", type: "text"     },
+    ],
+  },
+  {
+    key: "terms", label: "Terms of Service", group: "Legal Pages",
+    fields: [
+      ...seo(),
+      { key: "page_title",   label: "Page Title",   type: "text"     },
+      { key: "last_updated", label: "Last Updated", type: "text"     },
+      { key: "intro",        label: "Introduction", type: "textarea" },
+      { key: "usage_title",  label: "Usage Title",  type: "text"     },
+    ],
+  },
+  {
+    key: "sla", label: "SLA", group: "Legal Pages",
+    fields: [
+      ...seo(),
+      { key: "page_title",        label: "Page Title",        type: "text"     },
+      { key: "last_updated",      label: "Last Updated",      type: "text"     },
+      { key: "intro",             label: "Introduction",      type: "textarea" },
+      { key: "uptime_guarantee",  label: "Uptime Guarantee",  type: "text"     },
+    ],
+  },
+  {
+    key: "refund", label: "Refund Policy", group: "Legal Pages",
+    fields: [
+      ...seo(),
+      { key: "page_title",   label: "Page Title",   type: "text"     },
+      { key: "last_updated", label: "Last Updated", type: "text"     },
+      { key: "intro",        label: "Introduction", type: "textarea" },
+    ],
+  },
+  // ── Hosting pages ──
+  {
+    key: "shared-hosting",    label: "Shared Hosting",    group: "Hosting",
+    fields: [
+      ...seo(), ...hero(),
+      { key: "features_title",    label: "Features Title",    type: "text" },
+      { key: "features_subtitle", label: "Features Subtitle", type: "text" },
+    ],
+  },
+  { key: "vps-hosting",        label: "VPS Hosting",        group: "Hosting", fields: [...seo(), ...hero()] },
+  { key: "cloud-hosting",      label: "Cloud Hosting",      group: "Hosting", fields: [...seo(), ...hero()] },
+  { key: "reseller-hosting",   label: "Reseller Hosting",   group: "Hosting", fields: [...seo(), ...hero()] },
+  { key: "wordpress-hosting",  label: "WordPress Hosting",  group: "Hosting", fields: [...seo(), ...hero()] },
+  { key: "woocommerce-hosting",label: "WooCommerce Hosting",group: "Hosting", fields: [...seo(), ...hero()] },
+  { key: "nodejs-hosting",     label: "Node.js Hosting",    group: "Hosting", fields: seo() },
+  { key: "n8n-hosting",        label: "n8n Hosting",        group: "Hosting", fields: seo() },
+  { key: "openclaw",           label: "Openclaw",           group: "Hosting", fields: seo() },
+  // ── Servers ──
+  {
+    key: "dedicated-servers", label: "Dedicated Servers", group: "Servers",
+    fields: [
+      ...seo(), ...hero(),
+      { key: "features_title", label: "Features Title", type: "text" },
+    ],
+  },
+  { key: "vps-server",        label: "VPS Server",        group: "Servers", fields: seo() },
+  { key: "gpu-server",        label: "GPU Server",        group: "Servers", fields: [...seo(), { key: "hero_heading", label: "Hero Heading", type: "text" }] },
+  { key: "streaming-servers", label: "Streaming Servers", group: "Servers", fields: [...seo(), ...hero()] },
+  { key: "server-management", label: "Server Management", group: "Servers", fields: [...seo(), { key: "hero_heading", label: "Hero Heading", type: "text" }] },
+  { key: "server-licenses",   label: "Server Licenses",   group: "Servers", fields: [...seo(), ...hero()] },
+  // ── Domains & Security ──
+  { key: "domains",         label: "Domains",           group: "Domains & Security", fields: [...seo(), ...hero()] },
+  { key: "ssl-certificates",label: "SSL Certificates",  group: "Domains & Security", fields: [...seo(), ...hero()] },
+  { key: "email-security",  label: "Email Security",    group: "Domains & Security", fields: [...seo(), ...hero()] },
+  { key: "google-workspace",label: "Google Workspace",  group: "Domains & Security", fields: seo() },
+  // ── Cloud & Dev ──
+  { key: "cloud-migration", label: "Cloud Migration",   group: "Cloud & Dev", fields: [...seo(), ...hero()] },
+  { key: "web-development", label: "Web Development",   group: "Cloud & Dev", fields: [...seo(), ...hero()] },
+  { key: "mobile-apps",     label: "Mobile Apps",       group: "Cloud & Dev", fields: [...seo(), ...hero()] },
+  { key: "ai-solutions",    label: "AI Solutions",      group: "Cloud & Dev", fields: [...seo(), ...hero()] },
+  { key: "odoo-solutions",  label: "Odoo Solutions",    group: "Cloud & Dev", fields: [...seo(), ...hero()] },
+];
 
-const AdminContent = () => {
+const GROUPS = Array.from(new Set(PAGES.map((p) => p.group)));
+
+// ── Sub-components ────────────────────────────────────────────────────────────
+
+function FieldRow({
+  def, value, onChange,
+}: { def: FieldDef; value: string; onChange: (v: string) => void }) {
+  if (def.type === "toggle") {
+    const enabled = value === "true";
+    return (
+      <div className="flex items-center justify-between py-1">
+        <Label className="text-slate-300 text-xs font-medium">{def.label}</Label>
+        <button
+          type="button"
+          onClick={() => onChange(enabled ? "false" : "true")}
+          className={`relative inline-flex h-5 w-9 rounded-full transition-colors ${enabled ? "bg-primary" : "bg-slate-600"}`}
+        >
+          <span className={`inline-block h-4 w-4 rounded-full bg-white shadow transition-transform mt-0.5 ${enabled ? "translate-x-4" : "translate-x-0.5"}`} />
+        </button>
+      </div>
+    );
+  }
+  return (
+    <div className="space-y-1.5">
+      <Label className="text-slate-300 text-xs font-medium">{def.label}</Label>
+      {def.type === "textarea" ? (
+        <Textarea
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="bg-slate-700/50 border-slate-600 text-white text-sm resize-none min-h-[72px]"
+          placeholder={`Enter ${def.label.toLowerCase()}…`}
+        />
+      ) : (
+        <Input
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="bg-slate-700/50 border-slate-600 text-white h-9 text-sm"
+          placeholder={`Enter ${def.label.toLowerCase()}…`}
+        />
+      )}
+    </div>
+  );
+}
+
+// ── Main component ────────────────────────────────────────────────────────────
+
+export default function AdminContent() {
+  const { token } = useAdmin();
   const { toast } = useToast();
-  const [content, setContent] = useState<ContentData>(DEFAULT_CONTENT);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [activeSection, setActiveSection] = useState("homepage");
 
+  const [search, setSearch] = useState("");
+  const [selectedKey, setSelectedKey] = useState("home");
+  const [content, setContent] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const selectedPage = PAGES.find((p) => p.key === selectedKey)!;
+
+  // Load content whenever selected page changes
   useEffect(() => {
-    (async () => {
-      try {
-        const { data } = await (supabase as any)
-          .from("admin_settings")
-          .select("value")
-          .eq("key", "site_content")
-          .maybeSingle();
-        if (data?.value) {
-          setContent({ ...DEFAULT_CONTENT, ...data.value });
-        }
-      } catch { /* table not yet created */ }
-      setLoading(false);
-    })();
+    setLoading(true);
+    apiFetchContent(selectedKey)
+      .then((data) => setContent(data ?? {}))
+      .catch(() => setContent({}))
+      .finally(() => setLoading(false));
+  }, [selectedKey]);
+
+  const updateField = useCallback((key: string, value: string) => {
+    setContent((prev) => ({ ...prev, [key]: value }));
   }, []);
 
-  const update = (field: keyof ContentData) => (value: string | boolean) => {
-    setContent((prev) => ({ ...prev, [field]: value }));
-    setSaved(false);
-  };
-
   const handleSave = async () => {
+    if (!token) return;
     setSaving(true);
     try {
-      const { error } = await (supabase as any)
-        .from("admin_settings")
-        .upsert({ key: "site_content", value: content, updated_at: new Date().toISOString() }, { onConflict: "key" });
-      if (error) throw error;
-      setSaved(true);
-      toast({ title: "Content saved!", description: "Website content updated successfully." });
-      setTimeout(() => setSaved(false), 3000);
-    } catch (err: any) {
-      toast({
-        title: "Save failed",
-        description: err?.message?.includes("relation")
-          ? "Run the admin_settings migration in Supabase first."
-          : err?.message ?? "Unknown error",
-        variant: "destructive",
-      });
+      await apiSaveContent(selectedKey, content, token);
+      toast({ title: `"${selectedPage.label}" saved!` });
+    } catch {
+      toast({ title: "Save failed", variant: "destructive" });
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
   };
 
+  const filteredPages = PAGES.filter((p) =>
+    p.label.toLowerCase().includes(search.toLowerCase()) ||
+    p.key.toLowerCase().includes(search.toLowerCase())
+  );
+  const filteredGroups = GROUPS.filter((g) => filteredPages.some((p) => p.group === g));
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-black text-white">Website Content</h1>
-          <p className="text-slate-400 text-sm mt-1">Edit text shown across the entire website</p>
+    <div className="flex gap-0 h-full min-h-[calc(100vh-8rem)]">
+      {/* ── Sidebar ── */}
+      <aside className="w-56 flex-shrink-0 border-r border-slate-700 flex flex-col">
+        <div className="p-3 border-b border-slate-700">
+          <div className="relative">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-500" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search pages…"
+              className="w-full bg-slate-800 border border-slate-700 rounded-lg pl-8 pr-3 py-1.5 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-primary/50"
+            />
+          </div>
         </div>
-        <Button
-          onClick={handleSave}
-          disabled={saving || loading}
-          className="btn-gradient font-bold"
-        >
-          {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : saved ? <CheckCircle2 className="w-4 h-4 mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-          {saving ? "Saving..." : saved ? "Saved!" : "Save Changes"}
-        </Button>
-      </div>
-
-      <Card className="bg-blue-500/5 border-blue-500/20">
-        <CardContent className="p-4 flex gap-3">
-          <AlertCircle className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" />
-          <p className="text-blue-300 text-xs leading-relaxed">
-            Changes saved here update the website content stored in Supabase.
-            Make sure the <code className="bg-slate-800 px-1 rounded">admin_settings</code> table migration has been run.
-          </p>
-        </CardContent>
-      </Card>
-
-      <div className="flex gap-6">
-        {/* Section tabs */}
-        <div className="hidden md:flex flex-col gap-1 w-48 flex-shrink-0">
-          {SECTIONS.map((s) => (
-            <button
-              key={s.key}
-              onClick={() => setActiveSection(s.key)}
-              className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium text-left transition-all
-                ${activeSection === s.key
-                  ? "bg-primary/20 text-primary border border-primary/30"
-                  : "text-slate-400 hover:text-white hover:bg-slate-800"
-                }`}
-            >
-              <s.icon className="w-4 h-4" />
-              {s.label}
-            </button>
+        <nav className="flex-1 overflow-y-auto py-2">
+          {filteredGroups.map((group) => (
+            <div key={group} className="mb-1">
+              <p className="px-3 py-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-wider">{group}</p>
+              {filteredPages.filter((p) => p.group === group).map((page) => (
+                <button
+                  key={page.key}
+                  onClick={() => setSelectedKey(page.key)}
+                  className={`w-full flex items-center justify-between px-3 py-2 text-xs font-medium transition-colors ${
+                    selectedKey === page.key
+                      ? "bg-primary/15 text-primary border-r-2 border-primary"
+                      : "text-slate-400 hover:text-white hover:bg-slate-800"
+                  }`}
+                >
+                  {page.label}
+                  {selectedKey === page.key && <ChevronRight className="w-3 h-3" />}
+                </button>
+              ))}
+            </div>
           ))}
+        </nav>
+      </aside>
+
+      {/* ── Editor panel ── */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Top bar */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-700 flex-shrink-0">
+          <div>
+            <h2 className="text-white font-bold text-base">{selectedPage.label}</h2>
+            <p className="text-slate-500 text-xs mt-0.5 font-mono">pageKey: {selectedKey}</p>
+          </div>
+          <Button onClick={handleSave} disabled={saving || loading} className="btn-gradient font-bold h-9 text-sm">
+            {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+            {saving ? "Saving…" : "Save"}
+          </Button>
         </div>
 
-        {/* Mobile section tabs */}
-        <div className="flex md:hidden gap-2 flex-wrap mb-2 w-full">
-          {SECTIONS.map((s) => (
-            <button
-              key={s.key}
-              onClick={() => setActiveSection(s.key)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border
-                ${activeSection === s.key
-                  ? "bg-primary/20 text-primary border-primary/40"
-                  : "bg-slate-800 text-slate-400 border-slate-700"
-                }`}
-            >
-              {s.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Content */}
-        <div className="flex-1 min-w-0">
+        {/* Fields */}
+        <div className="flex-1 overflow-y-auto p-6">
           {loading ? (
-            <div className="flex items-center justify-center py-16">
+            <div className="flex justify-center py-16">
               <Loader2 className="w-6 h-6 animate-spin text-primary" />
             </div>
           ) : (
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardContent className="p-5 space-y-4">
-
-                {activeSection === "homepage" && (
-                  <>
-                    <CardHeader className="p-0 pb-2">
-                      <CardTitle className="text-white text-base">Homepage</CardTitle>
-                    </CardHeader>
-                    <Field label="Hero Title" value={content.hero_title} onChange={update("hero_title")} />
-                    <Field label="Hero Subtitle" value={content.hero_subtitle} onChange={update("hero_subtitle")} multiline />
-                    <div className="grid grid-cols-2 gap-3">
-                      <Field label="Primary CTA Button" value={content.hero_cta_primary} onChange={update("hero_cta_primary")} />
-                      <Field label="Secondary CTA Button" value={content.hero_cta_secondary} onChange={update("hero_cta_secondary")} />
-                    </div>
-                    <div className="border-t border-slate-700 pt-4">
-                      <div className="flex items-center gap-3 mb-3">
-                        <Label className="text-slate-300 text-xs font-medium">Announcement Banner</Label>
-                        <button
-                          onClick={() => update("announcement_enabled")(!content.announcement_enabled)}
-                          className={`relative inline-flex h-5 w-9 rounded-full transition-colors ${content.announcement_enabled ? "bg-primary" : "bg-slate-600"}`}
-                        >
-                          <span className={`inline-block h-4 w-4 rounded-full bg-white shadow transition-transform mt-0.5 ${content.announcement_enabled ? "translate-x-4" : "translate-x-0.5"}`} />
-                        </button>
-                        <span className="text-slate-500 text-xs">{content.announcement_enabled ? "Enabled" : "Disabled"}</span>
-                      </div>
-                      <Field label="Banner Text" value={content.announcement_banner} onChange={update("announcement_banner")} />
-                    </div>
-                  </>
-                )}
-
-                {activeSection === "domain" && (
-                  <>
-                    <CardHeader className="p-0 pb-2">
-                      <CardTitle className="text-white text-base">Domains Section</CardTitle>
-                    </CardHeader>
-                    <Field label="Section Title" value={content.domain_section_title} onChange={update("domain_section_title")} />
-                    <Field label="Section Subtitle" value={content.domain_section_subtitle} onChange={update("domain_section_subtitle")} multiline />
-                  </>
-                )}
-
-                {activeSection === "contact" && (
-                  <>
-                    <CardHeader className="p-0 pb-2">
-                      <CardTitle className="text-white text-base">Contact Information</CardTitle>
-                    </CardHeader>
-                    <Field label="Support Email" value={content.contact_email} onChange={update("contact_email")} type="email" />
-                    <Field label="Phone Number" value={content.contact_phone} onChange={update("contact_phone")} />
-                    <Field label="WhatsApp Number" value={content.contact_whatsapp} onChange={update("contact_whatsapp")} />
-                    <Field label="Office Address" value={content.contact_address} onChange={update("contact_address")} multiline />
-                  </>
-                )}
-
-                {activeSection === "about" && (
-                  <>
-                    <CardHeader className="p-0 pb-2">
-                      <CardTitle className="text-white text-base">About / Footer</CardTitle>
-                    </CardHeader>
-                    <Field label="About Title" value={content.about_title} onChange={update("about_title")} />
-                    <Field label="About Description" value={content.about_description} onChange={update("about_description")} multiline />
-                    <Field label="Footer Tagline" value={content.footer_tagline} onChange={update("footer_tagline")} />
-                  </>
-                )}
-
-              </CardContent>
-            </Card>
+            <div className="max-w-2xl space-y-5">
+              {selectedPage.fields.map((field) => (
+                <FieldRow
+                  key={field.key}
+                  def={field}
+                  value={content[field.key] ?? ""}
+                  onChange={(v) => updateField(field.key, v)}
+                />
+              ))}
+            </div>
           )}
         </div>
       </div>
     </div>
   );
-};
-
-export default AdminContent;
+}

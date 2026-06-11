@@ -64,6 +64,7 @@ const DomainManagement = lazy(() => import("./pages/DomainManagement"));
 const Login = lazy(() => import("./pages/Login"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const FreeTrial = lazy(() => import("./pages/FreeTrial"));
+const Internships = lazy(() => import("./pages/Internships"));
 
 // Admin pages
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
@@ -75,6 +76,15 @@ const AdminContent = lazy(() => import("./pages/admin/AdminContent"));
 const AdminSettings = lazy(() => import("./pages/admin/AdminSettings"));
 const AdminPages = lazy(() => import("./pages/admin/AdminPages"));
 const AdminPageEditor = lazy(() => import("./pages/admin/AdminPageEditor"));
+
+// CMS
+const CMSPageRenderer = lazy(() => import("./pages/CMSPageRenderer"));
+const AdminSEO = lazy(() => import("./pages/admin/AdminSEO"));
+const AdminPagesManager = lazy(() => import("./pages/admin/cms/AdminPagesManager"));
+const AdminPageBuilder = lazy(() => import("./pages/admin/cms/AdminPageBuilder"));
+const AdminBlogManager = lazy(() => import("./pages/admin/cms/AdminBlogManager"));
+const AdminBlogEditor = lazy(() => import("./pages/admin/cms/AdminBlogEditor"));
+const AdminMenuManager = lazy(() => import("./pages/admin/cms/AdminMenuManager"));
 
 const queryClient = new QueryClient();
 
@@ -184,6 +194,7 @@ const App = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/free-trial" element={<FreeTrial />} />
+                <Route path="/internships" element={<Internships />} />
 
                 {/* Admin routes */}
                 <Route path="/admin/login" element={<AdminLogin />} />
@@ -193,10 +204,20 @@ const App = () => {
                   <Route path="orders" element={<AdminOrders />} />
                   <Route path="pricing" element={<AdminPricing />} />
                   <Route path="content" element={<AdminContent />} />
+                  <Route path="seo" element={<AdminSEO />} />
                   <Route path="settings" element={<AdminSettings />} />
                   <Route path="pages" element={<AdminPages />} />
                   <Route path="pages/edit/:pageKey" element={<AdminPageEditor />} />
+                  {/* CMS */}
+                  <Route path="cms/pages" element={<AdminPagesManager />} />
+                  <Route path="cms/pages/:id" element={<AdminPageBuilder />} />
+                  <Route path="cms/blogs" element={<AdminBlogManager />} />
+                  <Route path="cms/blogs/:id" element={<AdminBlogEditor />} />
+                  <Route path="cms/menus" element={<AdminMenuManager />} />
                 </Route>
+
+                {/* CMS dynamic pages — must be last before catch-all */}
+                <Route path="/:slug" element={<CMSPageRenderer />} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />

@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Search, Server, Globe, Shield, Mail, Database, Settings, HelpCircle, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const categories = [
   {
@@ -46,21 +47,22 @@ const categories = [
 ];
 
 const Knowledgebase = () => {
+  const { c } = usePageContent("knowledgebase");
   return (
     <>
       <Helmet>
-        <title>Knowledgebase | Hosting Help & Tutorials - Infinitive Cloud</title>
-        <meta name="description" content="Find answers to common hosting questions. Step-by-step tutorials for cPanel, WordPress, domains, SSL, email, and more. Self-service support from Infinitive Cloud." />
+        <title>{c("meta_title", "Knowledgebase | Hosting Help & Tutorials - Infinitive Cloud")}</title>
+        <meta name="description" content={c("meta_description", "Find answers to common hosting questions. Step-by-step tutorials for cPanel, WordPress, domains, SSL, email, and more. Self-service support from Infinitive Cloud.")} />
         <meta name="keywords" content="hosting help, cPanel tutorial, WordPress guide, domain help, SSL setup guide" />
         <link rel="canonical" href="https://infinitivecloud.com/knowledgebase" />
-        <meta property="og:title" content="Knowledgebase | Hosting Help & Tutorials" />
-        <meta property="og:description" content="Tutorials and guides for cPanel, WordPress, domains, SSL, email, and more." />
+        <meta property="og:title" content={c("og_title", "Knowledgebase | Hosting Help & Tutorials")} />
+        <meta property="og:description" content={c("og_description", "Tutorials and guides for cPanel, WordPress, domains, SSL, email, and more.")} />
         <meta property="og:url" content="https://infinitivecloud.com/knowledgebase" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Knowledgebase | Hosting Help & Tutorials" />
-        <meta name="twitter:description" content="Tutorials and guides for cPanel, WordPress, domains, SSL, email, and more." />
+        <meta name="twitter:title" content={c("og_title", "Knowledgebase | Hosting Help & Tutorials")} />
+        <meta name="twitter:description" content={c("og_description", "Tutorials and guides for cPanel, WordPress, domains, SSL, email, and more.")} />
         <meta name="twitter:image" content="https://infinitivecloud.com/og-image.png" />
       </Helmet>
       <div className="min-h-screen">
@@ -69,15 +71,16 @@ const Knowledgebase = () => {
           <section className="section-container mb-16">
             <div className="max-w-4xl mx-auto text-center animate-fade-in">
               <h1 className="mb-6">
-                <span className="gradient-text">Knowledgebase</span>
+                {c("hero_heading") || <span className="gradient-text">Knowledgebase</span>}
               </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
-                Find answers, tutorials, and step-by-step guides to help you get the most out of your hosting.
+                {c("hero_subtext", "Find answers, tutorials, and step-by-step guides to help you get the most out of your hosting.")}
               </p>
               <div className="max-w-lg mx-auto flex gap-3">
                 <input
                   type="text"
-                  placeholder="Search for articles..."
+                  placeholder={c("search_placeholder", "Search for articles...")}
+
                   className="flex-1 px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                   disabled
                 />

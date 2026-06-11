@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -117,11 +116,8 @@ const AdminOrders = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchOrders = async () => {
-    const { data } = await supabase
-      .from("whmcs_order_syncs")
-      .select("*")
-      .order("created_at", { ascending: false });
-    setOrders((data as Order[]) ?? []);
+    // Orders from Supabase are not available without Supabase config
+    setOrders([]);
     setLoading(false);
     setRefreshing(false);
   };

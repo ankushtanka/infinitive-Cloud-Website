@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
 import NOCMonitoringDiagram from "@/components/infographics/NOCMonitoringDiagram";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const services = [
   { icon: Settings, title: "Server Setup & Configuration", description: "OS provisioning, kernel tuning, firewall, fail2ban, and a CIS-aligned hardening baseline applied on day zero." },
@@ -53,15 +54,16 @@ const faqs = [
 ];
 
 const ServerManagement = () => {
+  const { c } = usePageContent("server-management");
   return (
     <>
       <Helmet>
-        <title>Managed Server Services India | 24/7 NOC - Infinitive Cloud</title>
-        <meta name="description" content="Enterprise-grade managed server services. 24/7 NOC, sub-minute alert response, CIS hardening, patch management, backups, and a named technical account manager." />
+        <title>{c("meta_title", "Managed Server Services India | 24/7 NOC - Infinitive Cloud")}</title>
+        <meta name="description" content={c("meta_description", "Enterprise-grade managed server services. 24/7 NOC, sub-minute alert response, CIS hardening, patch management, backups, and a named technical account manager.")} />
         <meta name="keywords" content="managed server India, server management, 24/7 NOC, server security, server optimization, managed VPS, managed dedicated" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/server-management" />
-        <meta property="og:title" content="Managed Server Services | 24/7 NOC" />
-        <meta property="og:description" content="Engineer-led managed server operations with sub-minute response and a named TAM." />
+        <meta property="og:title" content={c("og_title", "Managed Server Services | 24/7 NOC")} />
+        <meta property="og:description" content={c("og_description", "Engineer-led managed server operations with sub-minute response and a named TAM.")} />
         <meta property="og:url" content="https://infinitivecloud.com/solutions/server-management" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
@@ -89,11 +91,15 @@ const ServerManagement = () => {
                     <Activity className="h-3.5 w-3.5" />
                     Engineer-led NOC · 24 / 7
                   </span>
-                  <h1 className="tracking-tight text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.05]">
-                    <span className="gradient-text">Managed Server</span>
-                    <br />
-                    <span className="text-foreground">operations, on autopilot.</span>
-                  </h1>
+                  {c("hero_heading") ? (
+                    <h1 className="tracking-tight text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.05]">{c("hero_heading")}</h1>
+                  ) : (
+                    <h1 className="tracking-tight text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.05]">
+                      <span className="gradient-text">Managed Server</span>
+                      <br />
+                      <span className="text-foreground">operations, on autopilot.</span>
+                    </h1>
+                  )}
                   <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-xl">
                     Hand off the pager. Our certified engineers run, harden, patch, and tune your servers — Linux or Windows, anywhere they live — with sub-minute alert response and a named account lead.
                   </p>

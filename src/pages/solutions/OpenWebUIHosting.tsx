@@ -34,6 +34,7 @@ import {
 import openwebuiHero from "@/assets/openwebui-hero-premium.jpg";
 import OpenclawArchitectureDiagram from "@/components/infographics/OpenclawArchitectureDiagram";
 import OpenclawHeroDiagram from "@/components/infographics/OpenclawHeroDiagram";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const features = [
   { icon: Lock, title: "Private by default", desc: "Self-hosted on a dedicated VPS — your prompts, documents and embeddings never leave your server." },
@@ -131,11 +132,12 @@ const faqs = [
 ];
 
 const OpenWebUIHosting = () => {
+  const { c } = usePageContent("openclaw");
   return (
     <>
       <Helmet>
-        <title>Openclaw — Self-Hosted Open-Source AI Workspace | INFINITIVE CLOUD</title>
-        <meta name="description" content="Deploy Openclaw — a private, self-hosted, open-source AI platform — on a dedicated VPS in 2 minutes. Bring any LLM, own your data. From ₹799/mo." />
+        <title>{c("meta_title", "Openclaw — Self-Hosted Open-Source AI Workspace | INFINITIVE CLOUD")}</title>
+        <meta name="description" content={c("meta_description", "Deploy Openclaw — a private, self-hosted, open-source AI platform — on a dedicated VPS in 2 minutes. Bring any LLM, own your data. From ₹799/mo.")} />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/openclaw" />
       </Helmet>
 
@@ -168,7 +170,7 @@ const OpenWebUIHosting = () => {
                   </p>
 
                   <div className="flex flex-col sm:flex-row gap-4">
-                    <Link to="/cart?product=openclaw-pro">
+                    <Link to="/contact">
                       <Button size="lg" className="btn-gradient glow-effect h-14 px-8 font-semibold text-base">
                         Get Started
                         <ArrowRight className="ml-2 w-5 h-5" />
@@ -358,7 +360,7 @@ const OpenWebUIHosting = () => {
                       <span className="text-muted-foreground">{p.period}</span>
                     </div>
 
-                    <Link to="/cart?product=openclaw">
+                    <Link to="/contact">
           <Button
                         className={`w-full h-12 font-semibold mb-8 ${p.highlight ? "btn-gradient glow-effect" : ""}`}
                         variant={p.highlight ? "default" : "outline"}
@@ -485,7 +487,7 @@ const OpenWebUIHosting = () => {
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link to="/cart?product=openclaw-pro">
+                  <Link to="/contact">
                     <Button
                       size="lg"
                       className="h-14 px-8 font-semibold text-white border-0 bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 shadow-[0_8px_30px_-8px_rgba(245,158,11,0.5)]"

@@ -1,33 +1,35 @@
 import { Helmet } from "react-helmet";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const Refund = () => {
+  const { c } = usePageContent("refund");
   return (
     <div className="min-h-screen">
       <Helmet>
-        <title>Refund Policy - Infinitive Cloud | Clear & Transparent Terms</title>
-        <meta name="description" content="Infinitive Cloud Refund Policy. Clear and transparent refund terms for cloud hosting, development services, and AI solutions." />
+        <title>{c("meta_title", "Refund Policy - Infinitive Cloud | Clear & Transparent Terms")}</title>
+        <meta name="description" content={c("meta_description", "Infinitive Cloud Refund Policy. Clear and transparent refund terms for cloud hosting, development services, and AI solutions.")} />
         <link rel="canonical" href="https://infinitivecloud.com/refund" />
         <meta name="robots" content="index, follow" />
       </Helmet>
-      
+
       <Navigation />
       <main className="pt-24 pb-20">
         <div className="section-container max-w-4xl">
-          <h1 className="mb-6">Refund Policy</h1>
+          <h1 className="mb-6">{c("page_title", "Refund Policy")}</h1>
           <p className="text-lg text-muted-foreground mb-8">
             Clear and transparent refund terms for all our services.
           </p>
-          
+
           <div className="space-y-8 text-foreground">
             <section>
               <h2 className="text-2xl font-bold mb-4">Our Commitment to You</h2>
               <p className="mb-4">
-                At <strong>Infinitive Cloud</strong>, we stand behind the quality of our services. This Refund Policy outlines the terms and conditions under which refunds are provided for various services. Please read this policy carefully before making a purchase.
+                {c("intro", "At Infinitive Cloud, we stand behind the quality of our services. This Refund Policy outlines the terms and conditions under which refunds are provided for various services. Please read this policy carefully before making a purchase.")}
               </p>
               <p className="text-sm text-muted-foreground">
-                <strong>Last Updated:</strong> January 2025
+                <strong>Last Updated:</strong> {c("last_updated", "January 2025")}
               </p>
             </section>
 

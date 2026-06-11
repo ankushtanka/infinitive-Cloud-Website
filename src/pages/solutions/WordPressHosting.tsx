@@ -8,6 +8,7 @@ import { Check, X, Star, Zap, Shield, Globe, RefreshCw, HardDrive, Headphones, A
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import WordPressStackDiagram from "@/components/infographics/WordPressStackDiagram";
+import { usePageContent } from "@/hooks/use-page-content";
 
 // ─── Why features ─────────────────────────────────────────────────────────────
 const whyFeatures = [
@@ -145,17 +146,18 @@ const FeatureIcon = ({ type }: { type: FeatureType }) => {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 const WordPressHosting = () => {
+  const { c } = usePageContent("wordpress-hosting");
   const [period, setPeriod] = useState<Period>("48");
 
   return (
     <>
       <Helmet>
-        <title>Managed WordPress Hosting India | From ₹69/mo - Infinitive Cloud</title>
-        <meta name="description" content="Managed WordPress hosting with NVMe storage, automatic updates, daily backups, free SSL, AI website builder, and 24/7 expert support. Plans from ₹69/mo." />
+        <title>{c("meta_title", "Managed WordPress Hosting India | From ₹69/mo - Infinitive Cloud")}</title>
+        <meta name="description" content={c("meta_description", "Managed WordPress hosting with NVMe storage, automatic updates, daily backups, free SSL, AI website builder, and 24/7 expert support. Plans from ₹69/mo.")} />
         <meta name="keywords" content="managed WordPress hosting India, fast WordPress hosting, secure WordPress hosting, WP hosting plans" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/wordpress-hosting" />
-        <meta property="og:title" content="Managed WordPress Hosting | Fast & Secure" />
-        <meta property="og:description" content="Managed WordPress hosting with NVMe, auto updates, daily backups, free SSL." />
+        <meta property="og:title" content={c("og_title", "Managed WordPress Hosting | Fast & Secure")} />
+        <meta property="og:description" content={c("og_description", "Managed WordPress hosting with NVMe, auto updates, daily backups, free SSL.")} />
         <meta property="og:url" content="https://infinitivecloud.com/solutions/wordpress-hosting" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
@@ -173,10 +175,10 @@ const WordPressHosting = () => {
           <section className="section-container mb-16">
             <div className="max-w-4xl mx-auto text-center animate-fade-in">
               <h1 className="mb-6">
-                Managed <span className="gradient-text">WordPress Hosting</span>
+                {c("hero_heading") || <>Managed <span className="gradient-text">WordPress Hosting</span></>}
               </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                WordPress hosting optimized for speed, security, and hassle-free management. Focus on your content — we handle everything else.
+                {c("hero_subtext", "WordPress hosting optimized for speed, security, and hassle-free management. Focus on your content — we handle everything else.")}
               </p>
               <div className="flex flex-wrap gap-4 justify-center mt-6 text-sm font-semibold text-primary">
                 {["Free SSL", "NVMe SSD", "LiteSpeed", "One-click WP", "AI Builder"].map((t) => (
@@ -299,7 +301,7 @@ const WordPressHosting = () => {
 
                       {/* CTA */}
                       <Link
-                        to={`/cart?product=${plan.id}&period=${period}&name=${encodeURIComponent(plan.name)}&type=wordpress-hosting`}
+                        to="/contact"
                         className="mb-6"
                       >
                         <Button
@@ -368,7 +370,7 @@ const WordPressHosting = () => {
                   Get started today with managed WordPress hosting. Free migration included.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link to="/cart?product=wp-starter&period=12&name=WP+Starter&type=wordpress-hosting">
+                  <Link to="/contact">
                     <Button className="btn-gradient glow-effect font-bold h-14 px-8">Get Started Now</Button>
                   </Link>
                   <Link to="/contact">

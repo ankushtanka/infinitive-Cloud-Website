@@ -44,16 +44,21 @@ const faqs = [
   },
 ];
 
-const FAQSection = () => {
+interface FAQSectionProps {
+  title?: string;
+  subtitle?: string;
+}
+
+const FAQSection = ({ title, subtitle }: FAQSectionProps = {}) => {
   return (
     <section className="py-12 md:py-24 bg-background">
       <div className="section-container">
         <div className="text-center mb-8 md:mb-12">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
-            Frequently Asked <span className="gradient-text">Questions</span>
+            {title ? title : <>Frequently Asked <span className="gradient-text">Questions</span></>}
           </h2>
           <p className="text-sm md:text-lg text-muted-foreground max-w-xl mx-auto">
-            Got questions? We've got answers.
+            {subtitle || "Got questions? We've got answers."}
           </p>
         </div>
 

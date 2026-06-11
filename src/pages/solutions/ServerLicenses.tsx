@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Shield, Server, Monitor, Database, Globe, Lock, Zap, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const licenses = [
   {
@@ -114,11 +115,12 @@ const licenses = [
 ];
 
 const ServerLicenses = () => {
+  const { c } = usePageContent("server-licenses");
   return (
     <div className="min-h-screen">
       <Helmet>
-        <title>Server & Software Licenses | cPanel, Plesk, Windows | Infinitive Cloud</title>
-        <meta name="description" content="Buy genuine cPanel, CloudLinux, Imunify360, Windows Server, MS SQL, and TSplus licenses at best prices. Instant activation with reliable support from Infinitive Cloud." />
+        <title>{c("meta_title", "Server & Software Licenses | cPanel, Plesk, Windows | Infinitive Cloud")}</title>
+        <meta name="description" content={c("meta_description", "Buy genuine cPanel, CloudLinux, Imunify360, Windows Server, MS SQL, and TSplus licenses at best prices. Instant activation with reliable support from Infinitive Cloud.")} />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/server-licenses" />
       </Helmet>
 
@@ -132,12 +134,15 @@ const ServerLicenses = () => {
             <Badge variant="outline" className="mb-6 px-4 py-1.5 text-sm font-semibold border-primary/30 text-primary">
               <Shield className="w-4 h-4 mr-2" /> Genuine Licenses
             </Badge>
+            {c("hero_heading") ? (
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground mb-6 leading-tight">{c("hero_heading")}</h1>
+          ) : (
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground mb-6 leading-tight">
               Software & Server <span className="text-primary">Licenses</span>
             </h1>
+          )}
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-              Genuine cPanel, CloudLinux, Imunify360, Microsoft Windows & SQL Server licenses with instant activation and reliable support.
-            </p>
+            {c("hero_subtext", "Genuine cPanel, CloudLinux, Imunify360, Microsoft Windows & SQL Server licenses with instant activation and reliable support.")}</p>
             <div className="flex flex-wrap justify-center gap-4">
               <Button size="lg" asChild>
                 <Link to="/contact">Get Custom Quote <ArrowRight className="ml-2 w-4 h-4" /></Link>

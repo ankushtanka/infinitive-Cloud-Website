@@ -55,7 +55,12 @@ const testimonials = [
   },
 ];
 
-const TestimonialsSection = () => {
+interface TestimonialsSectionProps {
+  title?: string;
+  subtitle?: string;
+}
+
+const TestimonialsSection = ({ title, subtitle }: TestimonialsSectionProps = {}) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -68,10 +73,10 @@ const TestimonialsSection = () => {
             4.9/5 Average Rating
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
-            Trusted by <span className="gradient-text">1,000+ Businesses</span>
+            {title ? title : <>Trusted by <span className="gradient-text">1,000+ Businesses</span></>}
           </h2>
           <p className="text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto">
-            See why companies across India choose Infinitive Cloud.
+            {subtitle || "See why companies across India choose Infinitive Cloud."}
           </p>
         </div>
 

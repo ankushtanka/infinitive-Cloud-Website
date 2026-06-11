@@ -11,6 +11,8 @@ import { useDomainSearch } from "@/hooks/use-domain-search";
 import DomainResultsGrid from "@/components/DomainResultsGrid";
 import { useDomainPricing } from "@/hooks/use-domain-pricing";
 import { bulkDomainSearch, checkSingleDomain } from "@/lib/whmcs";
+import { usePageContent } from "@/hooks/use-page-content";
+import { whmcsDomainUrl } from "@/config/whmcs-links";
 
 const staticExtensions = [
   { ext: ".com", type: "Commercial", price: 799, original: "₹1,199", desc: "The world's #1 domain extension", popular: true },
@@ -64,6 +66,7 @@ const placeholderWords = [
 ];
 
 const DomainRegistration = () => {
+  const { c } = usePageContent("domains");
   const [searchParams] = useSearchParams();
   const [domain, setDomain] = useState("");
   const [inputFocused, setInputFocused] = useState(false);
@@ -185,12 +188,12 @@ const DomainRegistration = () => {
   return (
     <>
       <Helmet>
-        <title>Domain Registration India | Register .com .in Domains from ₹99/yr - Infinitive Cloud</title>
-        <meta name="description" content="Register your domain name in India starting at ₹99/yr. 500+ extensions available with free WHOIS privacy, instant activation, and DNS management. Trusted by 1000+ businesses." />
+        <title>{c("meta_title", "Domain Registration India | Register .com .in Domains from ₹99/yr - Infinitive Cloud")}</title>
+        <meta name="description" content={c("meta_description", "Register your domain name in India starting at ₹99/yr. 500+ extensions available with free WHOIS privacy, instant activation, and DNS management. Trusted by 1000+ businesses.")} />
         <meta name="keywords" content="domain registration India, buy domain, .com domain, .in domain, cheap domain India" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/domains" />
-        <meta property="og:title" content="Domain Registration India | .com .in from ₹99/yr" />
-        <meta property="og:description" content="Register domains from ₹99/yr. 500+ extensions, free WHOIS privacy, instant activation." />
+        <meta property="og:title" content={c("og_title", "Domain Registration India | .com .in from ₹99/yr")} />
+        <meta property="og:description" content={c("og_description", "Register domains from ₹99/yr. 500+ extensions, free WHOIS privacy, instant activation.")} />
         <meta property="og:url" content="https://infinitivecloud.com/solutions/domains" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
@@ -210,11 +213,11 @@ const DomainRegistration = () => {
                 Starting at just ₹99/yr
               </div>
               <h1 className="mb-6">
-                Register Your <span className="gradient-text">Dream Domain</span> Starting at ₹99/yr
-              </h1>
+                  {c("hero_heading") || <>Register Your <span className="gradient-text">Dream Domain</span> Starting at ₹99/yr</>}
+                </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
-                Secure your brand online with instant domain registration. Choose from 500+ extensions with free WHOIS privacy, DNS management, and expert support.
-              </p>
+                  {c("hero_subtext", "Secure your brand online with instant domain registration. Choose from 500+ extensions with free WHOIS privacy, DNS management, and expert support.")}
+                </p>
 
               {/* Search Bar */}
               <form onSubmit={handleSearch} className="flex gap-2 max-w-2xl mx-auto mb-4">
@@ -320,8 +323,7 @@ const DomainRegistration = () => {
                             size="sm"
                             className="w-full text-xs font-bold btn-gradient h-9"
                             onClick={() => {
-                              const params = new URLSearchParams({ domain: `${baseName}${d.ext}`, price: String(rawPrice), renewPrice: String(renewPrice) });
-                              window.location.href = `/cart?${params.toString()}`;
+                              window.open(whmcsDomainUrl(`${baseName}${d.ext}`), '_blank');
                             }}
                           >
                             <CheckCircle2 className="w-3 h-3 mr-1" /> Buy Now
@@ -378,8 +380,7 @@ const DomainRegistration = () => {
                                 className="h-7 px-3 text-[11px] btn-gradient shrink-0"
                                 onClick={() => {
                                   const bn = tldInput.trim().toLowerCase().replace(/[^a-z0-9-]/g, "");
-                                  const params = new URLSearchParams({ domain: `${bn}${d.ext}`, price: String(rawPrice), renewPrice: String(renewPrice) });
-                                  window.location.href = `/cart?${params.toString()}`;
+                                  window.open(whmcsDomainUrl(`${bn}${d.ext}`), '_blank');
                                 }}
                               >
                                 Buy Now
@@ -404,8 +405,7 @@ const DomainRegistration = () => {
                                 className="h-7 w-full px-3 text-[11px] btn-gradient"
                                 onClick={() => {
                                   const bn = tldInput.trim().toLowerCase().replace(/[^a-z0-9-]/g, "");
-                                  const params = new URLSearchParams({ domain: `${bn}${d.ext}`, price: String(rawPrice), renewPrice: String(renewPrice) });
-                                  window.location.href = `/cart?${params.toString()}`;
+                                  window.open(whmcsDomainUrl(`${bn}${d.ext}`), '_blank');
                                 }}
                               >
                                 Proceed to Register

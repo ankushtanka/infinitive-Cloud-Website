@@ -8,8 +8,10 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
 import GPUServerDiagram from "@/components/infographics/GPUServerDiagram";
+import { usePageContent } from "@/hooks/use-page-content";
 
 const GPUDedicatedServer = () => {
+  const { c } = usePageContent("gpu-server");
   const features = [
     { icon: Cpu, title: "High-End GPU Power", description: "Intel Xeon processors with NVIDIA GPUs for AI training, rendering, and compute-intensive tasks." },
     { icon: Shield, title: "DDoS Protection", description: "Enterprise-grade DDoS mitigation keeps your server safe from attacks around the clock." },
@@ -22,12 +24,12 @@ const GPUDedicatedServer = () => {
   return (
     <>
       <Helmet>
-        <title>GPU Dedicated Server | High-Performance Computing - Infinitive Cloud</title>
-        <meta name="description" content="High-performance GPU dedicated servers with 99.9% uptime, DDoS protection, up to 96 GB RAM and 100 TB bandwidth. Ideal for AI, rendering, and compute-heavy workloads." />
+        <title>{c("meta_title", "GPU Dedicated Server | High-Performance Computing - Infinitive Cloud")}</title>
+        <meta name="description" content={c("meta_description", "High-performance GPU dedicated servers with 99.9% uptime, DDoS protection, up to 96 GB RAM and 100 TB bandwidth. Ideal for AI, rendering, and compute-heavy workloads.")} />
         <meta name="keywords" content="GPU server India, GPU dedicated server, AI server, machine learning server, NVIDIA GPU server" />
         <link rel="canonical" href="https://infinitivecloud.com/solutions/gpu-dedicated-server" />
-        <meta property="og:title" content="GPU Dedicated Server | AI & High-Performance Computing" />
-        <meta property="og:description" content="GPU dedicated servers for AI, rendering, and compute-heavy workloads. NVIDIA GPUs, 99.9% uptime." />
+        <meta property="og:title" content={c("og_title", "GPU Dedicated Server | AI & High-Performance Computing")} />
+        <meta property="og:description" content={c("og_description", "GPU dedicated servers for AI, rendering, and compute-heavy workloads. NVIDIA GPUs, 99.9% uptime.")} />
         <meta property="og:url" content="https://infinitivecloud.com/solutions/gpu-dedicated-server" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://infinitivecloud.com/og-image.png" />
@@ -54,11 +56,15 @@ const GPUDedicatedServer = () => {
                     <Cpu className="h-3.5 w-3.5" />
                     Accelerated Compute
                   </span>
-                  <h1 className="tracking-tight text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.05]">
-                    <span className="gradient-text">GPU Dedicated</span> Servers
-                    <br />
-                    <span className="text-foreground">built for AI at scale.</span>
-                  </h1>
+                  {c("hero_heading") ? (
+                    <h1 className="tracking-tight text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.05]">{c("hero_heading")}</h1>
+                  ) : (
+                    <h1 className="tracking-tight text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.05]">
+                      <span className="gradient-text">GPU Dedicated</span> Servers
+                      <br />
+                      <span className="text-foreground">built for AI at scale.</span>
+                    </h1>
+                  )}
                   <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-xl">
                     NVIDIA-powered bare-metal GPUs for AI training, inference, 3D rendering, and any workload that needs raw compute. No noisy neighbours — the silicon is yours.
                   </p>
