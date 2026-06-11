@@ -103,6 +103,7 @@ const Navigation = () => {
 
   const staticNavLinks = [
     { label: "Pricing", path: "/pricing" },
+    { label: "Internships", path: "/internships" },
     { label: "About", path: "/about" },
     { label: "Contact", path: "/contact" },
   ];
