@@ -1,8 +1,8 @@
 // Centralized company contact & business config — edit once, updates everywhere
 export const CONTACT = {
-  phone: "+918690393087",
-  phoneDisplay: "+91 8690393087",
-  whatsapp: "918690393087",
+  phone: "+917737393087",
+  phoneDisplay: "+91 7737393087",
+  whatsapp: "917737393087",
   email: {
     info: "info@infinitivecloud.com",
     sales: "sales@infinitivecloud.com",
