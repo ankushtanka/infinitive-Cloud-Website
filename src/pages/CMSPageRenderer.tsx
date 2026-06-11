@@ -13,7 +13,7 @@ function HeroSection({ data }: { data: Record<string, unknown> }) {
   return (
     <section className="relative py-24 px-4 text-center bg-gradient-to-br from-background via-background to-primary/5">
       <div className="max-w-4xl mx-auto">
-        {data.badge && (
+        {!!data.badge && (
           <span className="inline-block mb-4 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-semibold border border-primary/20">
             {String(data.badge)}
           </span>
@@ -21,18 +21,18 @@ function HeroSection({ data }: { data: Record<string, unknown> }) {
         <h1 className="text-4xl md:text-6xl font-black text-foreground mb-6 leading-tight">
           {String(data.heading || "")}
         </h1>
-        {data.subtext && (
+        {!!data.subtext && (
           <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             {String(data.subtext)}
           </p>
         )}
         <div className="flex flex-wrap gap-4 justify-center">
-          {data.cta_primary && (
+          {!!data.cta_primary && (
             <Button size="lg" className="btn-gradient font-bold" asChild>
               <a href={String(data.cta_primary_url || "#")}>{String(data.cta_primary)}</a>
             </Button>
           )}
-          {data.cta_secondary && (
+          {!!data.cta_secondary && (
             <Button size="lg" variant="outline" asChild>
               <a href={String(data.cta_secondary_url || "#")}>{String(data.cta_secondary)}</a>
             </Button>
@@ -48,8 +48,8 @@ function CtaSection({ data }: { data: Record<string, unknown> }) {
     <section className="py-16 px-4 bg-primary/5 border-y border-primary/10">
       <div className="max-w-3xl mx-auto text-center">
         <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">{String(data.heading || "")}</h2>
-        {data.subtext && <p className="text-muted-foreground mb-8 text-lg">{String(data.subtext)}</p>}
-        {data.button_text && (
+        {!!data.subtext && <p className="text-muted-foreground mb-8 text-lg">{String(data.subtext)}</p>}
+        {!!data.button_text && (
           <Button size="lg" className="btn-gradient font-bold" asChild>
             <a href={String(data.button_url || "#")}>{String(data.button_text)}</a>
           </Button>
@@ -68,7 +68,7 @@ function ServicesSection({ data }: { data: Record<string, unknown> }) {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">{String(data.heading || "")}</h2>
-          {data.subtext && <p className="text-muted-foreground text-lg">{String(data.subtext)}</p>}
+          {!!data.subtext && <p className="text-muted-foreground text-lg">{String(data.subtext)}</p>}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {items.map((item, i) => (
@@ -91,10 +91,10 @@ function StatsSection({ data }: { data: Record<string, unknown> }) {
   return (
     <section className="py-16 px-4 bg-primary/5 border-y border-primary/10">
       <div className="max-w-5xl mx-auto">
-        {data.heading && (
+        {!!data.heading && (
           <div className="text-center mb-10">
             <h2 className="text-3xl font-black text-foreground">{String(data.heading)}</h2>
-            {data.subtext && <p className="text-muted-foreground mt-2">{String(data.subtext)}</p>}
+            {!!data.subtext && <p className="text-muted-foreground mt-2">{String(data.subtext)}</p>}
           </div>
         )}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
@@ -120,7 +120,7 @@ function FaqSection({ data }: { data: Record<string, unknown> }) {
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">{String(data.heading || "")}</h2>
-          {data.subtext && <p className="text-muted-foreground text-lg">{String(data.subtext)}</p>}
+          {!!data.subtext && <p className="text-muted-foreground text-lg">{String(data.subtext)}</p>}
         </div>
         <div className="space-y-3">
           {items.map((item, i) => (
@@ -148,7 +148,7 @@ function TestimonialsSection({ data }: { data: Record<string, unknown> }) {
     <section className="py-20 px-4 bg-muted/30">
       <div className="max-w-4xl mx-auto text-center">
         <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">{String(data.heading || "")}</h2>
-        {data.subtext && <p className="text-muted-foreground text-lg">{String(data.subtext)}</p>}
+        {!!data.subtext && <p className="text-muted-foreground text-lg">{String(data.subtext)}</p>}
       </div>
     </section>
   );
@@ -159,7 +159,7 @@ function PricingSection({ data }: { data: Record<string, unknown> }) {
     <section className="py-20 px-4">
       <div className="max-w-4xl mx-auto text-center">
         <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">{String(data.heading || "")}</h2>
-        {data.subtext && <p className="text-muted-foreground text-lg">{String(data.subtext)}</p>}
+        {!!data.subtext && <p className="text-muted-foreground text-lg">{String(data.subtext)}</p>}
       </div>
     </section>
   );
@@ -169,8 +169,8 @@ function TextSection({ data }: { data: Record<string, unknown> }) {
   return (
     <section className="py-16 px-4">
       <div className="max-w-3xl mx-auto prose prose-neutral dark:prose-invert">
-        {data.heading && <h2 className="text-3xl font-black text-foreground mb-6">{String(data.heading)}</h2>}
-        {data.content && <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{String(data.content)}</p>}
+        {!!data.heading && <h2 className="text-3xl font-black text-foreground mb-6">{String(data.heading)}</h2>}
+        {!!data.content && <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{String(data.content)}</p>}
       </div>
     </section>
   );
