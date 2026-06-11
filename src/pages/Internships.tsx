@@ -622,8 +622,8 @@ const Internships = () => {
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">WhatsApp / Call</p>
-                      <a href="https://wa.me/919XXXXXXXXX" target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-                        +91 9XXXXXXXXX
+                      <a href="https://wa.me/+91 8690393087" target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+                        +91 8690393087
                       </a>
                     </div>
                   </div>
