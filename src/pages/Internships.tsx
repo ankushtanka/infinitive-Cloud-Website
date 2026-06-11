@@ -590,7 +590,7 @@ const Internships = () => {
                   </div>
                   <div className="inline-block p-2 bg-white rounded-xl shadow-sm mx-auto">
                     <img
-                      src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(PAGE_URL)}&bgcolor=FFFFFF&color=000000&qzone=1`}
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(qrUrl)}&bgcolor=FFFFFF&color=000000&qzone=1`}
                       alt="QR Code to apply"
                       width={160}
                       height={160}
