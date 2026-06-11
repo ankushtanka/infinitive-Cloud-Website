@@ -101,8 +101,9 @@ const Navigation = () => {
     return () => document.removeEventListener('click', handleClickOutside);
   }, [servicesOpen]);
 
-  const staticNavLinks = [
+  const staticNavLinks: { label: string; path: string; target?: string }[] = [
     { label: "Pricing", path: "/pricing" },
+    { label: "Internships", path: "/internships" },
     { label: "About", path: "/about" },
     { label: "Contact", path: "/contact" },
   ];
