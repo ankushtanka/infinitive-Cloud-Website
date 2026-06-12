@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin } from "lucide-react";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo-icon.png";
 import { CONTACT } from "@/config/contact";
 import { useCmsMenu } from "@/hooks/use-cms-menu";
 

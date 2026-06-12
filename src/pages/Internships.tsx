@@ -6,9 +6,17 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   Brain,
   Cloud,
-  GitBranch,
+  Megaphone,
   Shield,
   Code2,
   Rocket,
@@ -27,7 +35,9 @@ import {
 } from "lucide-react";
 
 // ─── Config ───────────────────────────────────────────────────────────────────
-const FORMSUBMIT_URL = "https://formsubmit.co/ajax/careers@infinitivecloud.com";
+// NOTE: non-AJAX endpoint — FormSubmit only attaches file uploads on a real
+// multipart form POST. The /ajax/ JSON endpoint silently drops attachments.
+const FORMSUBMIT_URL = "https://formsubmit.co/careers@infinitivecloud.com";
 const SHEETS_SCRIPT_URL = import.meta.env.VITE_INTERNSHIP_FORM_URL as string | undefined;
 const PAGE_URL = "https://infinitivecloud.com/internships";
 const ADMIN_EMAIL = "careers@infinitivecloud.com";
@@ -48,7 +58,7 @@ const PROGRAMS = [
   {
     id: "cloud",
     icon: Cloud,
-    label: "Cloud Computing & AWS",
+    label: "Cloud    & Devops",
     color: "from-sky-500 to-blue-600",
     badge: "Industry Leader",
     duration: "3 – 6 months",
@@ -57,15 +67,15 @@ const PROGRAMS = [
     skills: ["AWS", "Terraform", "Docker", "Kubernetes"],
   },
   {
-    id: "devops",
-    icon: GitBranch,
-    label: "DevOps Engineering",
+    id: "digital-marketing",
+    icon: Megaphone,
+    label: "Digital Marketing",
     color: "from-orange-500 to-amber-600",
     badge: "High Demand",
     duration: "3 – 6 months",
     description:
-      "End-to-end CI/CD pipelines, container orchestration, monitoring, and GitOps workflows used in production.",
-    skills: ["Jenkins", "GitHub Actions", "Prometheus", "Linux"],
+      "Plan and run real campaigns — SEO, paid ads, social media, email funnels, and analytics that drive measurable growth.",
+    skills: ["SEO", "Google Ads", "Social Media", "Analytics"],
   },
   {
     id: "cyber",
@@ -171,52 +181,46 @@ const ApplicationForm = () => {
   const [year, setYear] = useState("");
   const [city, setCity] = useState("");
   const [program, setProgram] = useState("");
+  const [programOther, setProgramOther] = useState("");
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const submittedOnce = useRef(false);
 
   const handleReset = () => {
     setName(""); setMobile(""); setEmail(""); setCollege("");
-    setCourse(""); setYear(""); setCity(""); setProgram("");
+    setCourse(""); setYear(""); setCity(""); setProgram(""); setProgramOther("");
     setResumeFile(null); setError(null); setSubmitted(false);
+    submittedOnce.current = false;
     if (fileRef.current) fileRef.current.value = "";
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  // The form posts natively (multipart) to FormSubmit, targeting a hidden
+  // iframe — this is the only way FormSubmit attaches the uploaded resume.
+  // We don't preventDefault so the real POST goes through; we just kick off
+  // the Sheets log and flip into the "submitting" state.
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    // Guard: oversized resume — block the native submit.
+    if (resumeFile && resumeFile.size > 5 * 1024 * 1024) {
+      e.preventDefault();
+      setError("Resume file must be under 5 MB.");
+      return;
+    }
+
     setError(null);
-    setSubmitting(true);
+    submittedOnce.current = true;
 
-    try {
-      // ── 1. Email via FormSubmit ──────────────────────────────────────────
-      const formData = new FormData();
-      formData.append("name", name);
-      formData.append("mobile", mobile);
-      formData.append("email", email);
-      formData.append("college", college);
-      formData.append("course", course);
-      formData.append("year", year);
-      formData.append("city", city);
-      formData.append("program", program);
-      if (resumeFile) formData.append("resume", resumeFile);
-      formData.append("_subject", `New Training Application: ${name} — ${program}`);
-      formData.append("_cc", "ankush@infinitivecloud.com");
-      formData.append("_template", "table");
-      formData.append("_captcha", "false");
+    // CRITICAL: defer the "submitting" state to a macrotask. Setting it now
+    // would disable every field before the browser serializes the form, and
+    // disabled fields (including the resume) are NOT submitted — that's what
+    // made the email arrive empty. setTimeout lets the native POST capture the
+    // still-enabled fields first, then we flip the UI into its loading state.
+    setTimeout(() => {
+      setSubmitting(true);
 
-      const res = await fetch(FORMSUBMIT_URL, {
-        method: "POST",
-        headers: { Accept: "application/json" },
-        body: formData,
-      });
-      const data = await res.json() as { success: string; message?: string };
-      // "false" with activation message = first-time use, still show success
-      const isActivationPending = data.success !== "true" && data.message?.toLowerCase().includes("activation");
-      if (data.success !== "true" && !isActivationPending) throw new Error("Email submission failed");
-
-      // ── 2. Google Sheets via Apps Script (fire-and-forget) ──────────────
+      // Google Sheets via Apps Script (fire-and-forget) — never blocks the UI.
       if (SHEETS_SCRIPT_URL) {
         fetch(SHEETS_SCRIPT_URL, {
           method: "POST",
@@ -224,18 +228,22 @@ const ApplicationForm = () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             timestamp: new Date().toISOString(),
-            name, mobile, email, college, course, year, city, program,
+            name, mobile, email, college, course, year, city,
+            program: program === "Other" ? programOther : program,
             resumeName: resumeFile?.name ?? "",
           }),
-        }).catch(() => {}); // don't block UI on sheets failure
+        }).catch(() => {});
       }
+    }, 0);
+    // native submit continues → posts to hidden iframe → handleFrameLoad()
+  };
 
-      setSubmitted(true);
-    } catch {
-      setError("Network error. Please try again or email us directly at " + ADMIN_EMAIL);
-    } finally {
-      setSubmitting(false);
-    }
+  // Fires when the hidden iframe finishes loading FormSubmit's response.
+  // Initial mount load is ignored via the submittedOnce guard.
+  const handleFrameLoad = () => {
+    if (!submittedOnce.current) return;
+    setSubmitting(false);
+    setSubmitted(true);
   };
 
   if (submitted) return <ThankYou name={name} onReset={handleReset} />;
@@ -245,16 +253,37 @@ const ApplicationForm = () => {
   const labelCls = "block text-sm font-medium text-foreground mb-1";
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+    <form
+      onSubmit={handleSubmit}
+      action={FORMSUBMIT_URL}
+      method="POST"
+      encType="multipart/form-data"
+      target="ic_formsubmit_iframe"
+      className="space-y-5"
+    >
+      {/* Hidden iframe target — keeps the page from navigating on submit */}
+      <iframe
+        name="ic_formsubmit_iframe"
+        title="form-target"
+        className="hidden"
+        onLoad={handleFrameLoad}
+      />
+
+      {/* FormSubmit control fields */}
+      <input type="hidden" name="_subject" value={`New Training Application: ${name} — ${program}`} />
+      <input type="hidden" name="_cc" value="ankush@infinitivecloud.com" />
+      <input type="hidden" name="_template" value="table" />
+      <input type="hidden" name="_captcha" value="false" />
+
       {/* Row 1 */}
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
           <label className={labelCls}>Full Name *</label>
-          <input className={inputCls} placeholder="Rahul Sharma" required value={name} onChange={(e) => setName(e.target.value)} disabled={submitting} />
+          <input name="name" className={inputCls} placeholder="Rahul Sharma" required value={name} onChange={(e) => setName(e.target.value)} disabled={submitting} />
         </div>
         <div>
           <label className={labelCls}>Mobile Number *</label>
-          <input className={inputCls} type="tel" placeholder="+91 98765 43210" required value={mobile} onChange={(e) => setMobile(e.target.value)} disabled={submitting} pattern="[0-9+\s\-]{10,15}" />
+          <input name="mobile" className={inputCls} type="tel" placeholder="+91 98765 43210" required value={mobile} onChange={(e) => setMobile(e.target.value)} disabled={submitting} pattern="[0-9+\s\-]{10,15}" />
         </div>
       </div>
 
@@ -262,11 +291,11 @@ const ApplicationForm = () => {
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
           <label className={labelCls}>Email Address *</label>
-          <input className={inputCls} type="email" placeholder="rahul@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={submitting} />
+          <input name="email" className={inputCls} type="email" placeholder="rahul@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={submitting} />
         </div>
         <div>
           <label className={labelCls}>College / University *</label>
-          <input className={inputCls} placeholder="RGPV, Bhopal" required value={college} onChange={(e) => setCollege(e.target.value)} disabled={submitting} />
+          <input name="college" className={inputCls} placeholder="RGPV, Bhopal" required value={college} onChange={(e) => setCollege(e.target.value)} disabled={submitting} />
         </div>
       </div>
 
@@ -274,11 +303,11 @@ const ApplicationForm = () => {
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
           <label className={labelCls}>Course / Branch *</label>
-          <input className={inputCls} placeholder="B.Tech CSE" required value={course} onChange={(e) => setCourse(e.target.value)} disabled={submitting} />
+          <input name="course" className={inputCls} placeholder="B.Tech CSE" required value={course} onChange={(e) => setCourse(e.target.value)} disabled={submitting} />
         </div>
         <div>
           <label className={labelCls}>Year of Study *</label>
-          <select className={inputCls} required value={year} onChange={(e) => setYear(e.target.value)} disabled={submitting}>
+          <select name="year" className={inputCls} required value={year} onChange={(e) => setYear(e.target.value)} disabled={submitting}>
             <option value="">Select year…</option>
             {YEARS.map((y) => <option key={y} value={y}>{y}</option>)}
           </select>
@@ -289,14 +318,26 @@ const ApplicationForm = () => {
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
           <label className={labelCls}>City *</label>
-          <input className={inputCls} placeholder="Bhopal, Indore, Mumbai…" required value={city} onChange={(e) => setCity(e.target.value)} disabled={submitting} />
+          <input name="city" className={inputCls} placeholder="Bhopal, Indore, Mumbai…" required value={city} onChange={(e) => setCity(e.target.value)} disabled={submitting} />
         </div>
         <div>
           <label className={labelCls}>Program Interested In *</label>
-          <select className={inputCls} required value={program} onChange={(e) => setProgram(e.target.value)} disabled={submitting}>
+          <select name="program" className={inputCls} required value={program} onChange={(e) => setProgram(e.target.value)} disabled={submitting}>
             <option value="">Select program…</option>
             {PROGRAM_LABELS.map((p) => <option key={p} value={p}>{p}</option>)}
+            <option value="Other">Other</option>
           </select>
+          {program === "Other" && (
+            <input
+              name="program_other"
+              className={`${inputCls} mt-2`}
+              placeholder="Which program are you interested in?"
+              required
+              value={programOther}
+              onChange={(e) => setProgramOther(e.target.value)}
+              disabled={submitting}
+            />
+          )}
         </div>
       </div>
 
@@ -315,6 +356,7 @@ const ApplicationForm = () => {
           )}
           <input
             ref={fileRef}
+            name="attachment"
             type="file"
             accept=".pdf,.doc,.docx"
             className="hidden"
@@ -351,6 +393,132 @@ const ApplicationForm = () => {
   );
 };
 
+// ─── "Talk to an Expert" Popup ────────────────────────────────────────────────
+const ExpertCallbackDialog = () => {
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [email, setEmail] = useState("");
+  const [interest, setInterest] = useState("");
+  const [message, setMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [done, setDone] = useState(false);
+  const submittedOnce = useRef(false);
+
+  const inputCls =
+    "w-full rounded-lg border border-input bg-background text-foreground px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition placeholder:text-muted-foreground/60";
+  const labelCls = "block text-sm font-medium text-foreground mb-1";
+
+  const reset = () => {
+    setName(""); setMobile(""); setEmail(""); setInterest(""); setMessage("");
+    setDone(false); setSubmitting(false); submittedOnce.current = false;
+  };
+
+  // Same native multipart-to-hidden-iframe approach as the main form.
+  const handleSubmit = () => {
+    submittedOnce.current = true;
+    setTimeout(() => setSubmitting(true), 0); // let the native POST serialize first
+  };
+
+  const handleFrameLoad = () => {
+    if (!submittedOnce.current) return;
+    setSubmitting(false);
+    setDone(true);
+  };
+
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(v) => {
+        setOpen(v);
+        if (!v) reset(); // clear when closed
+      }}
+    >
+      <DialogTrigger asChild>
+        <Button variant="outline" className="border-primary/40 hover:bg-primary/5">
+          Talk to an Expert <ChevronRight className="w-4 h-4 ml-1" />
+        </Button>
+      </DialogTrigger>
+
+      <DialogContent className="sm:max-w-md">
+        {done ? (
+          <div className="py-6 text-center">
+            <div className="mx-auto w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center mb-4">
+              <CheckCircle2 className="w-8 h-8 text-green-500" />
+            </div>
+            <h3 className="text-xl font-bold mb-2">Request received!</h3>
+            <p className="text-sm text-muted-foreground mb-6">
+              Thanks {name || "there"} — our team will call you back shortly to help
+              you pick the right program.
+            </p>
+            <Button className="btn-gradient" onClick={() => setOpen(false)}>Close</Button>
+          </div>
+        ) : (
+          <>
+            <DialogHeader>
+              <DialogTitle>Talk to an Expert</DialogTitle>
+              <DialogDescription>
+                Share your details and what you're interested in — our team will call
+                you back to recommend the best program.
+              </DialogDescription>
+            </DialogHeader>
+
+            <form
+              onSubmit={handleSubmit}
+              action={FORMSUBMIT_URL}
+              method="POST"
+              target="ic_expert_iframe"
+              className="space-y-4 mt-2"
+            >
+              <iframe name="ic_expert_iframe" title="expert-target" className="hidden" onLoad={handleFrameLoad} />
+              <input type="hidden" name="_subject" value={`Talk to Expert Request: ${name}`} />
+              <input type="hidden" name="_cc" value="ankush@infinitivecloud.com" />
+              <input type="hidden" name="_template" value="table" />
+              <input type="hidden" name="_captcha" value="false" />
+
+              <div>
+                <label className={labelCls}>Full Name *</label>
+                <input name="name" className={inputCls} placeholder="Rahul Sharma" required value={name} onChange={(e) => setName(e.target.value)} />
+              </div>
+              <div className="grid sm:grid-cols-2 gap-3">
+                <div>
+                  <label className={labelCls}>Mobile *</label>
+                  <input name="mobile" type="tel" className={inputCls} placeholder="+91 98765 43210" required value={mobile} onChange={(e) => setMobile(e.target.value)} pattern="[0-9+\s\-]{10,15}" />
+                </div>
+                <div>
+                  <label className={labelCls}>Email *</label>
+                  <input name="email" type="email" className={inputCls} placeholder="rahul@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} />
+                </div>
+              </div>
+              <div>
+                <label className={labelCls}>Interested In *</label>
+                <select name="interest" className={inputCls} required value={interest} onChange={(e) => setInterest(e.target.value)}>
+                  <option value="">Select an area…</option>
+                  {PROGRAM_LABELS.map((p) => <option key={p} value={p}>{p}</option>)}
+                  <option value="Not sure yet">Not sure yet</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div>
+                <label className={labelCls}>Message <span className="text-muted-foreground font-normal">(optional)</span></label>
+                <textarea name="message" rows={3} className={inputCls} placeholder="Tell us a bit about your background or goals…" value={message} onChange={(e) => setMessage(e.target.value)} />
+              </div>
+
+              <Button type="submit" className="w-full btn-gradient font-bold" disabled={submitting}>
+                {submitting ? (
+                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Sending…</>
+                ) : (
+                  <>Request a Callback <ArrowRight className="w-4 h-4 ml-2" /></>
+                )}
+              </Button>
+            </form>
+          </>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 // ─── Main Page ────────────────────────────────────────────────────────────────
 const Internships = () => {
   const qrUrl = PAGE_URL;
@@ -382,7 +550,7 @@ const Internships = () => {
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-sm mb-6">
               <Sparkles className="w-3.5 h-3.5 text-primary" />
               <span className="text-[11px] font-semibold tracking-[0.18em] uppercase text-primary">
-                Training Programs 2025
+                Training Programs 2026
               </span>
             </div>
 
@@ -497,11 +665,7 @@ const Internships = () => {
                       Talk to our team — we'll recommend the best program based on your background and goals.
                     </p>
                   </div>
-                  <a href="/contact">
-                    <Button variant="outline" className="border-primary/40 hover:bg-primary/5">
-                      Talk to an Expert <ChevronRight className="w-4 h-4 ml-1" />
-                    </Button>
-                  </a>
+                  <ExpertCallbackDialog />
                 </CardContent>
               </Card>
             </motion.div>
@@ -514,7 +678,7 @@ const Internships = () => {
         <div className="section-container">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-light mb-4">
-              Why Train with <span className="gradient-text italic">Infinitive Cloud?</span>
+              Why Choose <span className="gradient-text italic">Infinitive Cloud</span> for Your Career Journey
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
               We don't just teach — we get you job-ready through real work experience.
